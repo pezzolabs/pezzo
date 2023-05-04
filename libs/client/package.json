@@ -1,0 +1,27 @@
+{
+  "name": "@pezzo/client",
+  "description": "TypeScript API client for Pezzo",
+  "version": "0.0.4-alpha",
+  "type": "commonjs",
+  "author": "Ariel Weinberger",
+  "keywords": [
+    "pezzo",
+    "api",
+    "client",
+    "typescript",
+    "ai",
+    "prompt",
+    "repository",
+    "openai",
+    "chatgpt",
+    "gpt-3",
+    "gpt-4",
+    "gpt-3.5-turbo"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pezzolabs/pezzo.git"
+  },
+  "homepage": "https://github.com/pezzolabs/pezzo",
+  "license": "MIT"
+}

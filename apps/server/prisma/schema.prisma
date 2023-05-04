@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x"]
+  engineType    = "binary"
+}
+
+generator nestgraphql {
+  provider = "node node_modules/prisma-nestjs-graphql"
+  output   = "../src/@generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Environment {
+  slug               String              @id
+  name               String
+  createdAt          DateTime            @default(now())
+  promptEnvironments PromptEnvironment[]
+}
+
+model Prompt {
+  id                 String              @id @default(cuid())
+  name               String              
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  executions         PromptExecution[]
+  promptEnvironments PromptEnvironment[]
+  versions           PromptVersion[]
+}
+
+model PromptVersion {
+  sha                String              @id
+  content            String
+  mode               PromptModes
+  settings           Json
+  promptId           String
+  prompt             Prompt              @relation(fields: [promptId], references: [id])
+  createdAt          DateTime            @default(now())
+  promptEnvironments PromptEnvironment[]
+  message            String?
+}
+
+enum PromptModes {
+  Chat
+}
+
+model PromptEnvironment {
+  id               String         @id @default(cuid())
+  promptId         String
+  environmentSlug  String
+  createdAt        DateTime       @default(now())
+  prompt           Prompt         @relation(fields: [promptId], references: [id])
+  promptVersionSha String
+  promptVersion    PromptVersion? @relation(fields: [promptVersionSha], references: [sha])
+  environment      Environment    @relation(fields: [environmentSlug], references: [slug])
+}
+
+model PromptExecution {
+  id                  String                @id @default(cuid())
+  prompt              Prompt                @relation(fields: [promptId], references: [id])
+  promptId            String
+  promptVersionSha    String
+  timestamp           DateTime              @default(now())
+  status              PromptExecutionStatus
+  content             String
+  interpolatedContent String
+  settings            Json
+  result              String?
+  duration            Int
+  promptTokens        Int
+  completionTokens    Int
+  totalTokens         Int
+  promptCost          Float
+  completionCost      Float
+  totalCost           Float
+  error               String?
+  variables           Json                  @default("{}")
+}
+
+enum PromptExecutionStatus {
+  Success
+  Error
+}

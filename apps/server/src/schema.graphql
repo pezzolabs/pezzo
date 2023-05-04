@@ -1,0 +1,1151 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreatePromptInput {
+  name: String!
+}
+
+input CreatePromptVersionInput {
+  content: String!
+  message: String!
+  mode: String = "Chat"
+  promptId: String!
+  settings: JSON!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input DateTimeFieldUpdateOperationsInput {
+  set: DateTime
+}
+
+input DateTimeFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: NestedDateTimeFilter
+  notIn: [DateTime!]
+}
+
+input EnumPromptExecutionStatusFieldUpdateOperationsInput {
+  set: PromptExecutionStatus
+}
+
+input EnumPromptExecutionStatusFilter {
+  equals: PromptExecutionStatus
+  in: [PromptExecutionStatus!]
+  not: NestedEnumPromptExecutionStatusFilter
+  notIn: [PromptExecutionStatus!]
+}
+
+input EnumPromptModesFieldUpdateOperationsInput {
+  set: PromptModes
+}
+
+input EnumPromptModesFilter {
+  equals: PromptModes
+  in: [PromptModes!]
+  not: NestedEnumPromptModesFilter
+  notIn: [PromptModes!]
+}
+
+type Environment {
+  _count: EnvironmentCount!
+  createdAt: DateTime!
+  name: String!
+  promptEnvironments: [PromptEnvironment!]
+  slug: ID!
+}
+
+type EnvironmentCount {
+  promptEnvironments: Int!
+}
+
+input EnvironmentCreateInput {
+  createdAt: DateTime
+  name: String!
+  promptEnvironments: PromptEnvironmentCreateNestedManyWithoutEnvironmentInput
+  slug: String!
+}
+
+input EnvironmentCreateNestedOneWithoutPromptEnvironmentsInput {
+  connect: EnvironmentWhereUniqueInput
+  connectOrCreate: EnvironmentCreateOrConnectWithoutPromptEnvironmentsInput
+  create: EnvironmentCreateWithoutPromptEnvironmentsInput
+}
+
+input EnvironmentCreateOrConnectWithoutPromptEnvironmentsInput {
+  create: EnvironmentCreateWithoutPromptEnvironmentsInput!
+  where: EnvironmentWhereUniqueInput!
+}
+
+input EnvironmentCreateWithoutPromptEnvironmentsInput {
+  createdAt: DateTime
+  name: String!
+  slug: String!
+}
+
+input EnvironmentRelationFilter {
+  is: EnvironmentWhereInput
+  isNot: EnvironmentWhereInput
+}
+
+input EnvironmentUpdateOneRequiredWithoutPromptEnvironmentsInput {
+  connect: EnvironmentWhereUniqueInput
+  connectOrCreate: EnvironmentCreateOrConnectWithoutPromptEnvironmentsInput
+  create: EnvironmentCreateWithoutPromptEnvironmentsInput
+  update: EnvironmentUpdateWithoutPromptEnvironmentsInput
+  upsert: EnvironmentUpsertWithoutPromptEnvironmentsInput
+}
+
+input EnvironmentUpdateWithoutPromptEnvironmentsInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
+  slug: StringFieldUpdateOperationsInput
+}
+
+input EnvironmentUpsertWithoutPromptEnvironmentsInput {
+  create: EnvironmentCreateWithoutPromptEnvironmentsInput!
+  update: EnvironmentUpdateWithoutPromptEnvironmentsInput!
+}
+
+input EnvironmentWhereInput {
+  AND: [EnvironmentWhereInput!]
+  NOT: [EnvironmentWhereInput!]
+  OR: [EnvironmentWhereInput!]
+  createdAt: DateTimeFilter
+  name: StringFilter
+  promptEnvironments: PromptEnvironmentListRelationFilter
+  slug: StringFilter
+}
+
+input EnvironmentWhereUniqueInput {
+  slug: String
+}
+
+input FloatFieldUpdateOperationsInput {
+  decrement: Float
+  divide: Float
+  increment: Float
+  multiply: Float
+  set: Float
+}
+
+input FloatFilter {
+  equals: Float
+  gt: Float
+  gte: Float
+  in: [Float!]
+  lt: Float
+  lte: Float
+  not: NestedFloatFilter
+  notIn: [Float!]
+}
+
+input GetDeployedPromptVersionInput {
+  environmentSlug: String!
+  promptId: String!
+}
+
+input GetPromptInput {
+  promptId: String!
+  version: String = "latest"
+}
+
+input GetPromptVersionInput {
+  promptId: String!
+  sha: String!
+}
+
+input IntFieldUpdateOperationsInput {
+  decrement: Int
+  divide: Int
+  increment: Int
+  multiply: Int
+  set: Int
+}
+
+input IntFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntFilter
+  notIn: [Int!]
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+input JsonFilter {
+  equals: JSON
+  not: JSON
+}
+
+type Mutation {
+  createEnvironment(data: EnvironmentCreateInput!): Environment!
+  createPrompt(data: CreatePromptInput!): Prompt!
+  createPromptVersion(data: CreatePromptVersionInput!): PromptVersion!
+  publishPrompt(data: PublishPromptInput!): PromptEnvironment!
+  reportPromptExecution(data: PromptExecutionCreateInput!): PromptExecution!
+  testPrompt(data: TestPromptInput!): PromptExecution!
+  updatePrompt(data: PromptUpdateInput!): Prompt!
+}
+
+input NestedDateTimeFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: NestedDateTimeFilter
+  notIn: [DateTime!]
+}
+
+input NestedEnumPromptExecutionStatusFilter {
+  equals: PromptExecutionStatus
+  in: [PromptExecutionStatus!]
+  not: NestedEnumPromptExecutionStatusFilter
+  notIn: [PromptExecutionStatus!]
+}
+
+input NestedEnumPromptModesFilter {
+  equals: PromptModes
+  in: [PromptModes!]
+  not: NestedEnumPromptModesFilter
+  notIn: [PromptModes!]
+}
+
+input NestedFloatFilter {
+  equals: Float
+  gt: Float
+  gte: Float
+  in: [Float!]
+  lt: Float
+  lte: Float
+  not: NestedFloatFilter
+  notIn: [Float!]
+}
+
+input NestedIntFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntFilter
+  notIn: [Int!]
+}
+
+input NestedStringFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: NestedStringFilter
+  notIn: [String!]
+  startsWith: String
+}
+
+input NestedStringNullableFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: NestedStringNullableFilter
+  notIn: [String!]
+  startsWith: String
+}
+
+input NullableStringFieldUpdateOperationsInput {
+  set: String
+}
+
+type Prompt {
+  _count: PromptCount!
+  createdAt: DateTime!
+  executions: [PromptExecution!]
+  id: ID!
+  latestVersion: PromptVersion
+  name: String!
+  promptEnvironments: [PromptEnvironment!]
+  updatedAt: DateTime!
+  version(data: GetPromptInput!): PromptVersion
+  versions: [PromptVersion!]
+}
+
+type PromptCount {
+  executions: Int!
+  promptEnvironments: Int!
+  versions: Int!
+}
+
+input PromptCreateNestedOneWithoutExecutionsInput {
+  connect: PromptWhereUniqueInput
+  connectOrCreate: PromptCreateOrConnectWithoutExecutionsInput
+  create: PromptCreateWithoutExecutionsInput
+}
+
+input PromptCreateNestedOneWithoutPromptEnvironmentsInput {
+  connect: PromptWhereUniqueInput
+  connectOrCreate: PromptCreateOrConnectWithoutPromptEnvironmentsInput
+  create: PromptCreateWithoutPromptEnvironmentsInput
+}
+
+input PromptCreateNestedOneWithoutVersionsInput {
+  connect: PromptWhereUniqueInput
+  connectOrCreate: PromptCreateOrConnectWithoutVersionsInput
+  create: PromptCreateWithoutVersionsInput
+}
+
+input PromptCreateOrConnectWithoutExecutionsInput {
+  create: PromptCreateWithoutExecutionsInput!
+  where: PromptWhereUniqueInput!
+}
+
+input PromptCreateOrConnectWithoutPromptEnvironmentsInput {
+  create: PromptCreateWithoutPromptEnvironmentsInput!
+  where: PromptWhereUniqueInput!
+}
+
+input PromptCreateOrConnectWithoutVersionsInput {
+  create: PromptCreateWithoutVersionsInput!
+  where: PromptWhereUniqueInput!
+}
+
+input PromptCreateWithoutExecutionsInput {
+  createdAt: DateTime
+  id: String
+  name: String!
+  promptEnvironments: PromptEnvironmentCreateNestedManyWithoutPromptInput
+  updatedAt: DateTime
+  versions: PromptVersionCreateNestedManyWithoutPromptInput
+}
+
+input PromptCreateWithoutPromptEnvironmentsInput {
+  createdAt: DateTime
+  executions: PromptExecutionCreateNestedManyWithoutPromptInput
+  id: String
+  name: String!
+  updatedAt: DateTime
+  versions: PromptVersionCreateNestedManyWithoutPromptInput
+}
+
+input PromptCreateWithoutVersionsInput {
+  createdAt: DateTime
+  executions: PromptExecutionCreateNestedManyWithoutPromptInput
+  id: String
+  name: String!
+  promptEnvironments: PromptEnvironmentCreateNestedManyWithoutPromptInput
+  updatedAt: DateTime
+}
+
+type PromptEnvironment {
+  createdAt: DateTime!
+  environment: Environment!
+  environmentSlug: String!
+  id: ID!
+  prompt: Prompt!
+  promptId: String!
+  promptVersion: PromptVersion
+  promptVersionSha: String!
+}
+
+input PromptEnvironmentCreateManyEnvironmentInput {
+  createdAt: DateTime
+  id: String
+  promptId: String!
+  promptVersionSha: String!
+}
+
+input PromptEnvironmentCreateManyEnvironmentInputEnvelope {
+  data: [PromptEnvironmentCreateManyEnvironmentInput!]!
+  skipDuplicates: Boolean
+}
+
+input PromptEnvironmentCreateManyPromptInput {
+  createdAt: DateTime
+  environmentSlug: String!
+  id: String
+  promptVersionSha: String!
+}
+
+input PromptEnvironmentCreateManyPromptInputEnvelope {
+  data: [PromptEnvironmentCreateManyPromptInput!]!
+  skipDuplicates: Boolean
+}
+
+input PromptEnvironmentCreateManyPromptVersionInput {
+  createdAt: DateTime
+  environmentSlug: String!
+  id: String
+  promptId: String!
+}
+
+input PromptEnvironmentCreateManyPromptVersionInputEnvelope {
+  data: [PromptEnvironmentCreateManyPromptVersionInput!]!
+  skipDuplicates: Boolean
+}
+
+input PromptEnvironmentCreateNestedManyWithoutEnvironmentInput {
+  connect: [PromptEnvironmentWhereUniqueInput!]
+  connectOrCreate: [PromptEnvironmentCreateOrConnectWithoutEnvironmentInput!]
+  create: [PromptEnvironmentCreateWithoutEnvironmentInput!]
+  createMany: PromptEnvironmentCreateManyEnvironmentInputEnvelope
+}
+
+input PromptEnvironmentCreateNestedManyWithoutPromptInput {
+  connect: [PromptEnvironmentWhereUniqueInput!]
+  connectOrCreate: [PromptEnvironmentCreateOrConnectWithoutPromptInput!]
+  create: [PromptEnvironmentCreateWithoutPromptInput!]
+  createMany: PromptEnvironmentCreateManyPromptInputEnvelope
+}
+
+input PromptEnvironmentCreateNestedManyWithoutPromptVersionInput {
+  connect: [PromptEnvironmentWhereUniqueInput!]
+  connectOrCreate: [PromptEnvironmentCreateOrConnectWithoutPromptVersionInput!]
+  create: [PromptEnvironmentCreateWithoutPromptVersionInput!]
+  createMany: PromptEnvironmentCreateManyPromptVersionInputEnvelope
+}
+
+input PromptEnvironmentCreateOrConnectWithoutEnvironmentInput {
+  create: PromptEnvironmentCreateWithoutEnvironmentInput!
+  where: PromptEnvironmentWhereUniqueInput!
+}
+
+input PromptEnvironmentCreateOrConnectWithoutPromptInput {
+  create: PromptEnvironmentCreateWithoutPromptInput!
+  where: PromptEnvironmentWhereUniqueInput!
+}
+
+input PromptEnvironmentCreateOrConnectWithoutPromptVersionInput {
+  create: PromptEnvironmentCreateWithoutPromptVersionInput!
+  where: PromptEnvironmentWhereUniqueInput!
+}
+
+input PromptEnvironmentCreateWithoutEnvironmentInput {
+  createdAt: DateTime
+  id: String
+  prompt: PromptCreateNestedOneWithoutPromptEnvironmentsInput!
+  promptVersion: PromptVersionCreateNestedOneWithoutPromptEnvironmentsInput
+}
+
+input PromptEnvironmentCreateWithoutPromptInput {
+  createdAt: DateTime
+  environment: EnvironmentCreateNestedOneWithoutPromptEnvironmentsInput!
+  id: String
+  promptVersion: PromptVersionCreateNestedOneWithoutPromptEnvironmentsInput
+}
+
+input PromptEnvironmentCreateWithoutPromptVersionInput {
+  createdAt: DateTime
+  environment: EnvironmentCreateNestedOneWithoutPromptEnvironmentsInput!
+  id: String
+  prompt: PromptCreateNestedOneWithoutPromptEnvironmentsInput!
+}
+
+input PromptEnvironmentListRelationFilter {
+  every: PromptEnvironmentWhereInput
+  none: PromptEnvironmentWhereInput
+  some: PromptEnvironmentWhereInput
+}
+
+input PromptEnvironmentScalarWhereInput {
+  AND: [PromptEnvironmentScalarWhereInput!]
+  NOT: [PromptEnvironmentScalarWhereInput!]
+  OR: [PromptEnvironmentScalarWhereInput!]
+  createdAt: DateTimeFilter
+  environmentSlug: StringFilter
+  id: StringFilter
+  promptId: StringFilter
+  promptVersionSha: StringFilter
+}
+
+input PromptEnvironmentUpdateManyMutationInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+}
+
+input PromptEnvironmentUpdateManyWithWhereWithoutPromptInput {
+  data: PromptEnvironmentUpdateManyMutationInput!
+  where: PromptEnvironmentScalarWhereInput!
+}
+
+input PromptEnvironmentUpdateManyWithWhereWithoutPromptVersionInput {
+  data: PromptEnvironmentUpdateManyMutationInput!
+  where: PromptEnvironmentScalarWhereInput!
+}
+
+input PromptEnvironmentUpdateManyWithoutPromptInput {
+  connect: [PromptEnvironmentWhereUniqueInput!]
+  connectOrCreate: [PromptEnvironmentCreateOrConnectWithoutPromptInput!]
+  create: [PromptEnvironmentCreateWithoutPromptInput!]
+  createMany: PromptEnvironmentCreateManyPromptInputEnvelope
+  delete: [PromptEnvironmentWhereUniqueInput!]
+  deleteMany: [PromptEnvironmentScalarWhereInput!]
+  disconnect: [PromptEnvironmentWhereUniqueInput!]
+  set: [PromptEnvironmentWhereUniqueInput!]
+  update: [PromptEnvironmentUpdateWithWhereUniqueWithoutPromptInput!]
+  updateMany: [PromptEnvironmentUpdateManyWithWhereWithoutPromptInput!]
+  upsert: [PromptEnvironmentUpsertWithWhereUniqueWithoutPromptInput!]
+}
+
+input PromptEnvironmentUpdateManyWithoutPromptVersionInput {
+  connect: [PromptEnvironmentWhereUniqueInput!]
+  connectOrCreate: [PromptEnvironmentCreateOrConnectWithoutPromptVersionInput!]
+  create: [PromptEnvironmentCreateWithoutPromptVersionInput!]
+  createMany: PromptEnvironmentCreateManyPromptVersionInputEnvelope
+  delete: [PromptEnvironmentWhereUniqueInput!]
+  deleteMany: [PromptEnvironmentScalarWhereInput!]
+  disconnect: [PromptEnvironmentWhereUniqueInput!]
+  set: [PromptEnvironmentWhereUniqueInput!]
+  update: [PromptEnvironmentUpdateWithWhereUniqueWithoutPromptVersionInput!]
+  updateMany: [PromptEnvironmentUpdateManyWithWhereWithoutPromptVersionInput!]
+  upsert: [PromptEnvironmentUpsertWithWhereUniqueWithoutPromptVersionInput!]
+}
+
+input PromptEnvironmentUpdateWithWhereUniqueWithoutPromptInput {
+  data: PromptEnvironmentUpdateWithoutPromptInput!
+  where: PromptEnvironmentWhereUniqueInput!
+}
+
+input PromptEnvironmentUpdateWithWhereUniqueWithoutPromptVersionInput {
+  data: PromptEnvironmentUpdateWithoutPromptVersionInput!
+  where: PromptEnvironmentWhereUniqueInput!
+}
+
+input PromptEnvironmentUpdateWithoutPromptInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  environment: EnvironmentUpdateOneRequiredWithoutPromptEnvironmentsInput
+  id: StringFieldUpdateOperationsInput
+  promptVersion: PromptVersionUpdateOneWithoutPromptEnvironmentsInput
+}
+
+input PromptEnvironmentUpdateWithoutPromptVersionInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  environment: EnvironmentUpdateOneRequiredWithoutPromptEnvironmentsInput
+  id: StringFieldUpdateOperationsInput
+  prompt: PromptUpdateOneRequiredWithoutPromptEnvironmentsInput
+}
+
+input PromptEnvironmentUpsertWithWhereUniqueWithoutPromptInput {
+  create: PromptEnvironmentCreateWithoutPromptInput!
+  update: PromptEnvironmentUpdateWithoutPromptInput!
+  where: PromptEnvironmentWhereUniqueInput!
+}
+
+input PromptEnvironmentUpsertWithWhereUniqueWithoutPromptVersionInput {
+  create: PromptEnvironmentCreateWithoutPromptVersionInput!
+  update: PromptEnvironmentUpdateWithoutPromptVersionInput!
+  where: PromptEnvironmentWhereUniqueInput!
+}
+
+input PromptEnvironmentWhereInput {
+  AND: [PromptEnvironmentWhereInput!]
+  NOT: [PromptEnvironmentWhereInput!]
+  OR: [PromptEnvironmentWhereInput!]
+  createdAt: DateTimeFilter
+  environment: EnvironmentRelationFilter
+  environmentSlug: StringFilter
+  id: StringFilter
+  prompt: PromptRelationFilter
+  promptId: StringFilter
+  promptVersion: PromptVersionRelationFilter
+  promptVersionSha: StringFilter
+}
+
+input PromptEnvironmentWhereUniqueInput {
+  id: String
+}
+
+type PromptExecution {
+  completionCost: Float!
+  completionTokens: Int!
+  content: String!
+  duration: Int!
+  error: String
+  id: ID!
+  interpolatedContent: String!
+  prompt: Prompt!
+  promptCost: Float!
+  promptId: String!
+  promptTokens: Int!
+  promptVersionSha: String!
+  result: String
+  settings: JSON!
+  status: PromptExecutionStatus!
+  timestamp: DateTime!
+  totalCost: Float!
+  totalTokens: Int!
+  variables: JSON!
+}
+
+input PromptExecutionCreateInput {
+  completionCost: Float!
+  completionTokens: Int!
+  content: String!
+  duration: Int!
+  error: String
+  id: String
+  interpolatedContent: String!
+  prompt: PromptCreateNestedOneWithoutExecutionsInput!
+  promptCost: Float!
+  promptTokens: Int!
+  promptVersionSha: String!
+  result: String
+  settings: JSON!
+  status: PromptExecutionStatus!
+  timestamp: DateTime
+  totalCost: Float!
+  totalTokens: Int!
+  variables: JSON
+}
+
+input PromptExecutionCreateManyPromptInput {
+  completionCost: Float!
+  completionTokens: Int!
+  content: String!
+  duration: Int!
+  error: String
+  id: String
+  interpolatedContent: String!
+  promptCost: Float!
+  promptTokens: Int!
+  promptVersionSha: String!
+  result: String
+  settings: JSON!
+  status: PromptExecutionStatus!
+  timestamp: DateTime
+  totalCost: Float!
+  totalTokens: Int!
+  variables: JSON
+}
+
+input PromptExecutionCreateManyPromptInputEnvelope {
+  data: [PromptExecutionCreateManyPromptInput!]!
+  skipDuplicates: Boolean
+}
+
+input PromptExecutionCreateNestedManyWithoutPromptInput {
+  connect: [PromptExecutionWhereUniqueInput!]
+  connectOrCreate: [PromptExecutionCreateOrConnectWithoutPromptInput!]
+  create: [PromptExecutionCreateWithoutPromptInput!]
+  createMany: PromptExecutionCreateManyPromptInputEnvelope
+}
+
+input PromptExecutionCreateOrConnectWithoutPromptInput {
+  create: PromptExecutionCreateWithoutPromptInput!
+  where: PromptExecutionWhereUniqueInput!
+}
+
+input PromptExecutionCreateWithoutPromptInput {
+  completionCost: Float!
+  completionTokens: Int!
+  content: String!
+  duration: Int!
+  error: String
+  id: String
+  interpolatedContent: String!
+  promptCost: Float!
+  promptTokens: Int!
+  promptVersionSha: String!
+  result: String
+  settings: JSON!
+  status: PromptExecutionStatus!
+  timestamp: DateTime
+  totalCost: Float!
+  totalTokens: Int!
+  variables: JSON
+}
+
+input PromptExecutionListRelationFilter {
+  every: PromptExecutionWhereInput
+  none: PromptExecutionWhereInput
+  some: PromptExecutionWhereInput
+}
+
+input PromptExecutionScalarWhereInput {
+  AND: [PromptExecutionScalarWhereInput!]
+  NOT: [PromptExecutionScalarWhereInput!]
+  OR: [PromptExecutionScalarWhereInput!]
+  completionCost: FloatFilter
+  completionTokens: IntFilter
+  content: StringFilter
+  duration: IntFilter
+  error: StringNullableFilter
+  id: StringFilter
+  interpolatedContent: StringFilter
+  promptCost: FloatFilter
+  promptId: StringFilter
+  promptTokens: IntFilter
+  promptVersionSha: StringFilter
+  result: StringNullableFilter
+  settings: JsonFilter
+  status: EnumPromptExecutionStatusFilter
+  timestamp: DateTimeFilter
+  totalCost: FloatFilter
+  totalTokens: IntFilter
+  variables: JsonFilter
+}
+
+enum PromptExecutionStatus {
+  Error
+  Success
+}
+
+input PromptExecutionUpdateManyMutationInput {
+  completionCost: FloatFieldUpdateOperationsInput
+  completionTokens: IntFieldUpdateOperationsInput
+  content: StringFieldUpdateOperationsInput
+  duration: IntFieldUpdateOperationsInput
+  error: NullableStringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  interpolatedContent: StringFieldUpdateOperationsInput
+  promptCost: FloatFieldUpdateOperationsInput
+  promptTokens: IntFieldUpdateOperationsInput
+  promptVersionSha: StringFieldUpdateOperationsInput
+  result: NullableStringFieldUpdateOperationsInput
+  settings: JSON
+  status: EnumPromptExecutionStatusFieldUpdateOperationsInput
+  timestamp: DateTimeFieldUpdateOperationsInput
+  totalCost: FloatFieldUpdateOperationsInput
+  totalTokens: IntFieldUpdateOperationsInput
+  variables: JSON
+}
+
+input PromptExecutionUpdateManyWithWhereWithoutPromptInput {
+  data: PromptExecutionUpdateManyMutationInput!
+  where: PromptExecutionScalarWhereInput!
+}
+
+input PromptExecutionUpdateManyWithoutPromptInput {
+  connect: [PromptExecutionWhereUniqueInput!]
+  connectOrCreate: [PromptExecutionCreateOrConnectWithoutPromptInput!]
+  create: [PromptExecutionCreateWithoutPromptInput!]
+  createMany: PromptExecutionCreateManyPromptInputEnvelope
+  delete: [PromptExecutionWhereUniqueInput!]
+  deleteMany: [PromptExecutionScalarWhereInput!]
+  disconnect: [PromptExecutionWhereUniqueInput!]
+  set: [PromptExecutionWhereUniqueInput!]
+  update: [PromptExecutionUpdateWithWhereUniqueWithoutPromptInput!]
+  updateMany: [PromptExecutionUpdateManyWithWhereWithoutPromptInput!]
+  upsert: [PromptExecutionUpsertWithWhereUniqueWithoutPromptInput!]
+}
+
+input PromptExecutionUpdateWithWhereUniqueWithoutPromptInput {
+  data: PromptExecutionUpdateWithoutPromptInput!
+  where: PromptExecutionWhereUniqueInput!
+}
+
+input PromptExecutionUpdateWithoutPromptInput {
+  completionCost: FloatFieldUpdateOperationsInput
+  completionTokens: IntFieldUpdateOperationsInput
+  content: StringFieldUpdateOperationsInput
+  duration: IntFieldUpdateOperationsInput
+  error: NullableStringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  interpolatedContent: StringFieldUpdateOperationsInput
+  promptCost: FloatFieldUpdateOperationsInput
+  promptTokens: IntFieldUpdateOperationsInput
+  promptVersionSha: StringFieldUpdateOperationsInput
+  result: NullableStringFieldUpdateOperationsInput
+  settings: JSON
+  status: EnumPromptExecutionStatusFieldUpdateOperationsInput
+  timestamp: DateTimeFieldUpdateOperationsInput
+  totalCost: FloatFieldUpdateOperationsInput
+  totalTokens: IntFieldUpdateOperationsInput
+  variables: JSON
+}
+
+input PromptExecutionUpsertWithWhereUniqueWithoutPromptInput {
+  create: PromptExecutionCreateWithoutPromptInput!
+  update: PromptExecutionUpdateWithoutPromptInput!
+  where: PromptExecutionWhereUniqueInput!
+}
+
+input PromptExecutionWhereInput {
+  AND: [PromptExecutionWhereInput!]
+  NOT: [PromptExecutionWhereInput!]
+  OR: [PromptExecutionWhereInput!]
+  completionCost: FloatFilter
+  completionTokens: IntFilter
+  content: StringFilter
+  duration: IntFilter
+  error: StringNullableFilter
+  id: StringFilter
+  interpolatedContent: StringFilter
+  prompt: PromptRelationFilter
+  promptCost: FloatFilter
+  promptId: StringFilter
+  promptTokens: IntFilter
+  promptVersionSha: StringFilter
+  result: StringNullableFilter
+  settings: JsonFilter
+  status: EnumPromptExecutionStatusFilter
+  timestamp: DateTimeFilter
+  totalCost: FloatFilter
+  totalTokens: IntFilter
+  variables: JsonFilter
+}
+
+input PromptExecutionWhereUniqueInput {
+  id: String
+}
+
+enum PromptModes {
+  Chat
+}
+
+input PromptRelationFilter {
+  is: PromptWhereInput
+  isNot: PromptWhereInput
+}
+
+input PromptUpdateInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  executions: PromptExecutionUpdateManyWithoutPromptInput
+  id: StringFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
+  promptEnvironments: PromptEnvironmentUpdateManyWithoutPromptInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  versions: PromptVersionUpdateManyWithoutPromptInput
+}
+
+input PromptUpdateOneRequiredWithoutPromptEnvironmentsInput {
+  connect: PromptWhereUniqueInput
+  connectOrCreate: PromptCreateOrConnectWithoutPromptEnvironmentsInput
+  create: PromptCreateWithoutPromptEnvironmentsInput
+  update: PromptUpdateWithoutPromptEnvironmentsInput
+  upsert: PromptUpsertWithoutPromptEnvironmentsInput
+}
+
+input PromptUpdateOneRequiredWithoutVersionsInput {
+  connect: PromptWhereUniqueInput
+  connectOrCreate: PromptCreateOrConnectWithoutVersionsInput
+  create: PromptCreateWithoutVersionsInput
+  update: PromptUpdateWithoutVersionsInput
+  upsert: PromptUpsertWithoutVersionsInput
+}
+
+input PromptUpdateWithoutPromptEnvironmentsInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  executions: PromptExecutionUpdateManyWithoutPromptInput
+  id: StringFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  versions: PromptVersionUpdateManyWithoutPromptInput
+}
+
+input PromptUpdateWithoutVersionsInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  executions: PromptExecutionUpdateManyWithoutPromptInput
+  id: StringFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
+  promptEnvironments: PromptEnvironmentUpdateManyWithoutPromptInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input PromptUpsertWithoutPromptEnvironmentsInput {
+  create: PromptCreateWithoutPromptEnvironmentsInput!
+  update: PromptUpdateWithoutPromptEnvironmentsInput!
+}
+
+input PromptUpsertWithoutVersionsInput {
+  create: PromptCreateWithoutVersionsInput!
+  update: PromptUpdateWithoutVersionsInput!
+}
+
+type PromptVersion {
+  _count: PromptVersionCount!
+  content: String!
+  createdAt: DateTime!
+  message: String
+  mode: PromptModes!
+  prompt: Prompt!
+  promptEnvironments: [PromptEnvironment!]
+  promptId: String!
+  settings: JSON!
+  sha: ID!
+}
+
+type PromptVersionCount {
+  promptEnvironments: Int!
+}
+
+input PromptVersionCreateManyPromptInput {
+  content: String!
+  createdAt: DateTime
+  message: String
+  mode: PromptModes!
+  settings: JSON!
+  sha: String!
+}
+
+input PromptVersionCreateManyPromptInputEnvelope {
+  data: [PromptVersionCreateManyPromptInput!]!
+  skipDuplicates: Boolean
+}
+
+input PromptVersionCreateNestedManyWithoutPromptInput {
+  connect: [PromptVersionWhereUniqueInput!]
+  connectOrCreate: [PromptVersionCreateOrConnectWithoutPromptInput!]
+  create: [PromptVersionCreateWithoutPromptInput!]
+  createMany: PromptVersionCreateManyPromptInputEnvelope
+}
+
+input PromptVersionCreateNestedOneWithoutPromptEnvironmentsInput {
+  connect: PromptVersionWhereUniqueInput
+  connectOrCreate: PromptVersionCreateOrConnectWithoutPromptEnvironmentsInput
+  create: PromptVersionCreateWithoutPromptEnvironmentsInput
+}
+
+input PromptVersionCreateOrConnectWithoutPromptEnvironmentsInput {
+  create: PromptVersionCreateWithoutPromptEnvironmentsInput!
+  where: PromptVersionWhereUniqueInput!
+}
+
+input PromptVersionCreateOrConnectWithoutPromptInput {
+  create: PromptVersionCreateWithoutPromptInput!
+  where: PromptVersionWhereUniqueInput!
+}
+
+input PromptVersionCreateWithoutPromptEnvironmentsInput {
+  content: String!
+  createdAt: DateTime
+  message: String
+  mode: PromptModes!
+  prompt: PromptCreateNestedOneWithoutVersionsInput!
+  settings: JSON!
+  sha: String!
+}
+
+input PromptVersionCreateWithoutPromptInput {
+  content: String!
+  createdAt: DateTime
+  message: String
+  mode: PromptModes!
+  promptEnvironments: PromptEnvironmentCreateNestedManyWithoutPromptVersionInput
+  settings: JSON!
+  sha: String!
+}
+
+input PromptVersionListRelationFilter {
+  every: PromptVersionWhereInput
+  none: PromptVersionWhereInput
+  some: PromptVersionWhereInput
+}
+
+input PromptVersionRelationFilter {
+  is: PromptVersionWhereInput
+  isNot: PromptVersionWhereInput
+}
+
+input PromptVersionScalarWhereInput {
+  AND: [PromptVersionScalarWhereInput!]
+  NOT: [PromptVersionScalarWhereInput!]
+  OR: [PromptVersionScalarWhereInput!]
+  content: StringFilter
+  createdAt: DateTimeFilter
+  message: StringNullableFilter
+  mode: EnumPromptModesFilter
+  promptId: StringFilter
+  settings: JsonFilter
+  sha: StringFilter
+}
+
+input PromptVersionUpdateManyMutationInput {
+  content: StringFieldUpdateOperationsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  message: NullableStringFieldUpdateOperationsInput
+  mode: EnumPromptModesFieldUpdateOperationsInput
+  settings: JSON
+  sha: StringFieldUpdateOperationsInput
+}
+
+input PromptVersionUpdateManyWithWhereWithoutPromptInput {
+  data: PromptVersionUpdateManyMutationInput!
+  where: PromptVersionScalarWhereInput!
+}
+
+input PromptVersionUpdateManyWithoutPromptInput {
+  connect: [PromptVersionWhereUniqueInput!]
+  connectOrCreate: [PromptVersionCreateOrConnectWithoutPromptInput!]
+  create: [PromptVersionCreateWithoutPromptInput!]
+  createMany: PromptVersionCreateManyPromptInputEnvelope
+  delete: [PromptVersionWhereUniqueInput!]
+  deleteMany: [PromptVersionScalarWhereInput!]
+  disconnect: [PromptVersionWhereUniqueInput!]
+  set: [PromptVersionWhereUniqueInput!]
+  update: [PromptVersionUpdateWithWhereUniqueWithoutPromptInput!]
+  updateMany: [PromptVersionUpdateManyWithWhereWithoutPromptInput!]
+  upsert: [PromptVersionUpsertWithWhereUniqueWithoutPromptInput!]
+}
+
+input PromptVersionUpdateOneWithoutPromptEnvironmentsInput {
+  connect: PromptVersionWhereUniqueInput
+  connectOrCreate: PromptVersionCreateOrConnectWithoutPromptEnvironmentsInput
+  create: PromptVersionCreateWithoutPromptEnvironmentsInput
+  delete: Boolean
+  disconnect: Boolean
+  update: PromptVersionUpdateWithoutPromptEnvironmentsInput
+  upsert: PromptVersionUpsertWithoutPromptEnvironmentsInput
+}
+
+input PromptVersionUpdateWithWhereUniqueWithoutPromptInput {
+  data: PromptVersionUpdateWithoutPromptInput!
+  where: PromptVersionWhereUniqueInput!
+}
+
+input PromptVersionUpdateWithoutPromptEnvironmentsInput {
+  content: StringFieldUpdateOperationsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  message: NullableStringFieldUpdateOperationsInput
+  mode: EnumPromptModesFieldUpdateOperationsInput
+  prompt: PromptUpdateOneRequiredWithoutVersionsInput
+  settings: JSON
+  sha: StringFieldUpdateOperationsInput
+}
+
+input PromptVersionUpdateWithoutPromptInput {
+  content: StringFieldUpdateOperationsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  message: NullableStringFieldUpdateOperationsInput
+  mode: EnumPromptModesFieldUpdateOperationsInput
+  promptEnvironments: PromptEnvironmentUpdateManyWithoutPromptVersionInput
+  settings: JSON
+  sha: StringFieldUpdateOperationsInput
+}
+
+input PromptVersionUpsertWithWhereUniqueWithoutPromptInput {
+  create: PromptVersionCreateWithoutPromptInput!
+  update: PromptVersionUpdateWithoutPromptInput!
+  where: PromptVersionWhereUniqueInput!
+}
+
+input PromptVersionUpsertWithoutPromptEnvironmentsInput {
+  create: PromptVersionCreateWithoutPromptEnvironmentsInput!
+  update: PromptVersionUpdateWithoutPromptEnvironmentsInput!
+}
+
+input PromptVersionWhereInput {
+  AND: [PromptVersionWhereInput!]
+  NOT: [PromptVersionWhereInput!]
+  OR: [PromptVersionWhereInput!]
+  content: StringFilter
+  createdAt: DateTimeFilter
+  message: StringNullableFilter
+  mode: EnumPromptModesFilter
+  prompt: PromptRelationFilter
+  promptEnvironments: PromptEnvironmentListRelationFilter
+  promptId: StringFilter
+  settings: JsonFilter
+  sha: StringFilter
+}
+
+input PromptVersionWhereUniqueInput {
+  sha: String
+}
+
+input PromptWhereInput {
+  AND: [PromptWhereInput!]
+  NOT: [PromptWhereInput!]
+  OR: [PromptWhereInput!]
+  createdAt: DateTimeFilter
+  executions: PromptExecutionListRelationFilter
+  id: StringFilter
+  name: StringFilter
+  promptEnvironments: PromptEnvironmentListRelationFilter
+  updatedAt: DateTimeFilter
+  versions: PromptVersionListRelationFilter
+}
+
+input PromptWhereUniqueInput {
+  id: String
+}
+
+input PublishPromptInput {
+  environmentSlug: String!
+  promptId: String!
+  promptVersionSha: String!
+}
+
+type Query {
+  deployedPromptVersion(data: GetDeployedPromptVersionInput!): PromptVersion!
+  environment(data: EnvironmentWhereUniqueInput!): Environment!
+  environments: [Environment!]!
+  findPrompt(data: PromptWhereInput!): Prompt!
+  getLatestPrompt(data: PromptWhereUniqueInput!): PromptVersion!
+  prompt(data: GetPromptInput!): Prompt!
+  promptExecution(data: PromptExecutionWhereUniqueInput!): PromptExecution!
+  promptExecutions(data: PromptExecutionWhereInput!): [PromptExecution!]!
+  promptVersion(data: GetPromptVersionInput!): PromptVersion!
+  promptVersions(data: PromptWhereUniqueInput!): [PromptVersion!]!
+  prompts: [Prompt!]!
+}
+
+enum QueryMode {
+  default
+  insensitive
+}
+
+input StringFieldUpdateOperationsInput {
+  set: String
+}
+
+input StringFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: NestedStringFilter
+  notIn: [String!]
+  startsWith: String
+}
+
+input StringNullableFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: NestedStringNullableFilter
+  notIn: [String!]
+  startsWith: String
+}
+
+input TestPromptInput {
+  content: String!
+  mode: String!
+  settings: JSON!
+  variables: JSON
+}
