@@ -80,7 +80,7 @@ Then, start the Pezzo Console:
 npx nx serve console
 ```
 
-You can now access Pezzo at http://localhots:4201 and start working on your prompts!
+You can now access Pezzo at http://localhost:4201 and start working on your prompts!
 
 Looking for code snippets demonstrating how to consume a prompt? Click on the "Consume" button in the prompt editor.
 
