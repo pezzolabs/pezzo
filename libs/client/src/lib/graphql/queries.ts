@@ -1,11 +1,11 @@
-import { graphql } from "../../@generated/graphql";
+import { graphql } from "@pezzo/graphql";
 
 export const GET_PROMPT_VERSION = graphql(/* GraphQL */ `
   query getPromptVersion($data: GetPromptVersionInput!) {
     promptVersion(data: $data) {
-      sha,
-      content,
-      settings,
+      sha
+      content
+      settings
       mode
     }
   }
@@ -23,9 +23,9 @@ export const FIND_PROMPT = graphql(/* GraphQL */ `
 export const GET_DEPLOYED_PROMPT_VERSION = graphql(/* GraphQL */ `
   query deployedPromptVersion($data: GetDeployedPromptVersionInput!) {
     deployedPromptVersion(data: $data) {
-      sha,
-      content,
-      settings,
+      sha
+      content
+      settings
       mode
     }
   }
