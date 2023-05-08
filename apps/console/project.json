@@ -82,7 +82,7 @@
           "push": true,
           "platforms": ["linux/amd64"],
           "metadata": {
-            "images": ["ghcr.io/pezzolabs/pezzo-console:latest"]
+            "images": ["ghcr.io/pezzolabs/pezzo/console"]
           }
         }
       }
