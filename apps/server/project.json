@@ -18,6 +18,11 @@
         "assets": [
           "apps/server/src/assets",
           {
+            "glob": "entrypoint.sh",
+            "input": "apps/server",
+            "output": "."
+          },
+          {
             "glob": "prisma",
             "input": "apps/server",
             "output": "prisma"

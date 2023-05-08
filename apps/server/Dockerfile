@@ -1,7 +1,7 @@
 FROM node:18.12.1-slim AS base
 
 RUN apt-get update
-RUN apt-get install -y openssl
+RUN apt-get install -y openssl curl
 
 WORKDIR /app
 
@@ -10,10 +10,11 @@ COPY ./dist/apps/server/package*.json ./
 RUN npm i --omit=dev
 
 COPY ./dist/apps/server .
+RUN chmod +x ./entrypoint.sh
 
 RUN npx prisma generate
 
 ENV PORT=3000
 EXPOSE $PORT
 
-ENTRYPOINT ["node", "main.js"]
+ENTRYPOINT ["./entrypoint.sh"]

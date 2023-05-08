@@ -1,5 +1,5 @@
 FROM node:18.12.1-alpine AS base
-RUN apk add --update --no-cache python3 make gcc libsass g++
+RUN apk add --update --no-cache python3 make gcc libsass g++ curl
 
 WORKDIR /app
 
