@@ -63,6 +63,7 @@
     "@nrwl/react": "15.9.2",
     "@nrwl/webpack": "^15.9.2",
     "@nrwl/workspace": "15.9.2",
+    "@nx-tools/container-metadata": "^4.0.3",
     "@nx-tools/nx-container": "^4.0.3",
     "@nx/webpack": "^16.0.3",
     "@swc/cli": "~0.1.55",
