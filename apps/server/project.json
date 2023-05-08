@@ -69,11 +69,11 @@
         "command": "npx prisma generate --schema apps/server/prisma/schema.prisma"
       }
     },
-    "graphql:generate": {
+    "graphql:schema-generate": {
+      "dependsOn": ["prisma:generate"],
       "executor": "nx:run-commands",
-      "outputs": ["apps/server/src/generated/graphql.ts"],
       "options": {
-        "command": "npx nx graphql-codegen graphql"
+        "command": "npx ts-node -P apps/server/tsconfig.app.json -r tsconfig-paths/register apps/server/scripts/generate-graphql-schema.ts"
       }
     }
   },

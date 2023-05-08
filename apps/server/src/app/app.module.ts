@@ -12,6 +12,7 @@ import { EnvironmentsModule } from "./environments/environments.module";
 import { formatError } from "../lib/gql-format-error";
 import { PromptEnvironmentsModule } from "./prompt-environments/prompt-environments.module";
 
+const CI = process.env.GITHUB_ACTIONS === "true";
 const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
 
 @Module({
@@ -24,6 +25,9 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
         PORT: Joi.number().default(3000),
         OPENAI_API_KEY: Joi.string().required(),
       }),
+      // In CI, we need to skip validation because we don't have a .env file
+      // This is consumed by the graphql:schema-generate Nx target
+      validate: CI ? () => ({}) : undefined,
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
