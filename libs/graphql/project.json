@@ -6,6 +6,7 @@
   "implicitDependencies": ["server"],
   "targets": {
     "build": {
+      "dependsOn": ["graphql-codegen"],
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
@@ -43,8 +44,8 @@
         }
       }
     },
-    "graphql:codegen": {
-      "dependsOn": ["^graphql:schema-generate"],
+    "graphql-codegen": {
+      "dependsOn": ["^prisma:generate", "^graphql:schema-generate"],
       "executor": "nx:run-commands",
       "options": {
         "cwd": "libs/graphql",
