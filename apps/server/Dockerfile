@@ -1,4 +1,5 @@
 FROM node:18.12.1-slim AS base
+LABEL org.opencontainers.image.source https://github.com/pezzolabs/pezzo
 
 RUN apt-get update
 RUN apt-get install -y openssl curl

@@ -1,4 +1,6 @@
 FROM node:18.12.1-alpine AS base
+LABEL org.opencontainers.image.source https://github.com/pezzolabs/pezzo
+
 RUN apk add --update --no-cache python3 make gcc libsass g++ curl
 
 WORKDIR /app
