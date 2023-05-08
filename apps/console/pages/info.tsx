@@ -1,5 +1,5 @@
-import { version } from '@pezzo/common';
-import { InlineCodeSnippet } from '../components/common/InlineCodeSnippet';
+import { version } from "@pezzo/common";
+import { InlineCodeSnippet } from "../components/common/InlineCodeSnippet";
 
 const InfoPage = () => {
   return (

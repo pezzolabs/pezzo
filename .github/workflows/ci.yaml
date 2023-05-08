@@ -1,0 +1,48 @@
+name: Continuous Integration
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - "main"
+    paths-ignore:
+      - "**/*.md"
+      - ".github/workflows/deploy.yaml"
+  push:
+    branches:
+      - "main"
+    paths-ignore:
+      - "**/*.md"
+      - ".github/workflows/deploy.yaml"
+
+jobs:
+  ci:
+    name: Continuous Integration
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+    
+      - name: Cache node modules
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+          key: cache-node-modules-${{ hashFiles('**/package-lock.json') }}
+
+      - uses: actions/setup-node@v1
+        if: steps.cache.outputs.cache-hit != 'true'
+        with:
+          node-version: 18.x
+
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Lint
+        run: npx nx run-many --target=lint --all --parallel --maxParallel=3 --verbose
+
+      - name: Test
+        run: npx nx run-many --target=test --all --parallel --maxParallel=3

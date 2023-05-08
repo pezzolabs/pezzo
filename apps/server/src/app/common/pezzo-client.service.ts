@@ -11,7 +11,7 @@ export class PezzoClientService {
       pezzoServerUrl: "http://localhost:3000",
       environment: "development",
       openAIConfiguration: {
-        apiKey: configService.get('OPENAI_API_KEY')
+        apiKey: configService.get("OPENAI_API_KEY")
       }
     })
   }
