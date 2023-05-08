@@ -10,6 +10,7 @@ generator client {
 generator nestgraphql {
   provider = "node node_modules/prisma-nestjs-graphql"
   output   = "../src/@generated"
+  binaryTargets = ["native", "debian-openssl-1.1.x", "linux-arm64-openssl-1.1.x"]
 }
 
 datasource db {

@@ -67,6 +67,25 @@
       "options": {
         "lintFilePatterns": ["apps/console/**/*.{ts,tsx,js,jsx}"]
       }
+    },
+    "docker:build": {
+      "executor": "@nx-tools/nx-container:build",
+      "dependsOn": ["build"],
+      "defaultConfiguration": "local",
+      "options": {},
+      "configurations": {
+        "local": {
+          "tags": ["pezzolabs/pezzo-console"],
+          "push": false
+        },
+        "ci": {
+          "push": true,
+          "platforms": ["linux/amd64"],
+          "metadata": {
+            "images": ["ghcr.io/pezzolabs/pezzo/console"]
+          }
+        }
+      }
     }
   },
   "tags": []

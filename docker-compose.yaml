@@ -5,12 +5,46 @@ services:
     image: postgres:latest
     restart: always
     environment:
-      POSTGRES_USER: postgres
+      POSTGRES_USER: postrgres
       POSTGRES_PASSWORD: postgres
     ports:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  pezzo-server:
+    image: pezzolabs/pezzo-server:latest
+    restart: always
+    env_file:
+      - apps/server/.env
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/pezzo
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl 'http://pezzo-server:3000/api/healthz'"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  pezzo-console:
+    image: pezzolabs/pezzo-console:latest
+    restart: always
+    env_file:
+      - apps/console/.env
+    ports:
+      - "4201:4200"
+    depends_on:
+      pezzo-server:
+        condition: service_healthy
 
 volumes:
   postgres_data: ~

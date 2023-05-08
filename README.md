@@ -47,54 +47,81 @@ If you are missing features, please create an issue and we'll consider adding th
 
 # Getting Started
 
-During the Alpha version, Pezzo is self-hosted only. This monorepo uses [Nx Workspaces](https://nx.dev/).
-
-## Step 1: Clone this repository and install dependencies
+Clone the repository:
 
 ```
 git clone git@github.com:pezzolabs/pezzo.git
-cd pezzo
-npm install
 ```
 
-## Step 2: Spin up prerequisites via Docker Compose
+Next, make sure you configure the `.env` file at `apps/server/.env`. You can find an example file at [apps/server/.env.example](apps/server/.env.example)
 
-Pezzo requires a Postgres database. You can spin it up using Docker Compose.
+## 🐳 Option 1: Running Pezzo via Docker Compose
+
+This is a straightforward way to run Pezzo and start using it.
+
+Simply run the following command:
 
 ```
 docker-compose up
 ```
 
-## Step 3: Environment variables
+Pezzo should now be accessible at https://localhost:4201. 🚀
 
-Ensure you fill in environment variables in:
+## 🕹️ Option 2: Running Pezzo in Development Mode
 
-- `apps/server/.env` ([example](apps/server/.env.example))
+This method is useful for contirbutors and developers.
 
-## Step 4: Start Pezzo
+### Prerequisites
 
-To start the Pezzo server, run:
+- Node.js 18+
+- Docker
+- (Recommended) [GraphQL Language Feature Support VSCode Extension](https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql)
+
+### Install dependencies
+
+Install NPM dependencies by running:
 
 ```
-// Generate Prisma model
+npm install
+```
+
+### Spin up development dependencies via Docker Compose
+
+Pezzo relies on a Postgres database. You can spin it up using Docker Compose:
+
+```
+docker-compose -f docker-compose.dev.yaml up
+```
+
+### Start Pezzo
+
+Generate the Prisma client:
+
+```
 npx nx prisma:generate server
+```
 
-// Apply database migrations
-npx dotenv-cli -e apps/server/.env -- npx prisma migrate deploy --schema apps/server/prisma/schema.prisma
+Run the server:
 
-// Start the Pezzo server
+```
 npx nx serve server
 ```
 
-Then, start the Pezzo Console:
+The server is now running. In the background, [graphql-codegen](https://www.npmjs.com/package/@graphql-codegen/cli) has generated GraphQL types based on the actual schema. These can be found at [libs/graphql/src/@generated](libs/graphql/src/@generated). This provides excellent type safety across the monorepo.
+
+In development mode, you want to run `graphql-codegen` in watch mode, so whenever you make changes to the schema, types are generated automatically. In a separate Terminal tab, run:
+
+```
+npx nx graphql-codegen graphql --watch
+```
+
+Finally, you are ready to run the Pezzo Console:
 
 ```
 npx nx serve console
 ```
 
-You can now access Pezzo at http://localhost:4201 and start working on your prompts!
-
-Looking for code snippets demonstrating how to consume a prompt? Click on the "Consume" button in the prompt editor.
+That's it! Pezzo is now accessible at http://localhost:4201. 🚀
 
 # Contributing
 
