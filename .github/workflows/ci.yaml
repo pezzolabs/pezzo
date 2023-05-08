@@ -19,6 +19,8 @@ jobs:
   ci:
     name: Continuous Integration
     runs-on: ubuntu-20.04
+    permissions:
+      packages: write
     steps:
       - uses: actions/checkout@v2
         with:
