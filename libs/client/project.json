@@ -5,6 +5,7 @@
   "projectType": "library",
   "targets": {
     "build": {
+      "dependsOn": ["^graphql-codegen"],
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
