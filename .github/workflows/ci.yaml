@@ -56,6 +56,13 @@ jobs:
       - name: Build
         run: npx nx run-many --target=build --all --parallel --maxParallel=3
 
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: Dockerize
         run: npx nx run-many --target=docker:build --configuration=ci --all --parallel --maxParallel=3
         env:
