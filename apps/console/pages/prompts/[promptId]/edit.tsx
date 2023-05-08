@@ -1,7 +1,5 @@
 const EditPromptPage = () => {
-  return (
-    <div>Edit</div>
-  )
+  return <div>Edit</div>;
 };
 
 export default EditPromptPage;

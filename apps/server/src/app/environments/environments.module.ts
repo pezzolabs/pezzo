@@ -3,9 +3,6 @@ import { PrismaService } from "../prisma.service";
 import { EnvironmentsResolver } from "./environments.resolver";
 
 @Module({
-  providers: [
-    PrismaService,
-    EnvironmentsResolver
-  ]
+  providers: [PrismaService, EnvironmentsResolver],
 })
 export class EnvironmentsModule {}

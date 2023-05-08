@@ -54,7 +54,10 @@ export const PublishPromptModal = ({ open, onClose }: Props) => {
       <Modal
         cancelButtonProps={{
           style: {
-            display: publishPromptMutation.isError || publishPromptMutation.isSuccess ? "" : "none",
+            display:
+              publishPromptMutation.isError || publishPromptMutation.isSuccess
+                ? ""
+                : "none",
           },
         }}
         onCancel={onClose}
@@ -84,7 +87,10 @@ export const PublishPromptModal = ({ open, onClose }: Props) => {
               type="error"
               showIcon
               // eslint-disable-next-line
-              description={(publishPromptMutation.error as unknown as any)?.response?.errors[0]?.message}
+              description={
+                (publishPromptMutation.error as unknown as any)?.response
+                  ?.errors[0]?.message
+              }
             />
           )}
 

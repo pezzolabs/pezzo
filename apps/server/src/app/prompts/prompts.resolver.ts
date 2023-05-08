@@ -51,9 +51,7 @@ export class PromptsResolver {
 
   @Query(() => [PromptVersion])
   async promptVersions(@Args("data") data: PromptWhereUniqueInput) {
-    const promptVersions = await this.promptsService.getPromptVersions(
-      data.id
-    );
+    const promptVersions = await this.promptsService.getPromptVersions(data.id);
     return promptVersions;
   }
 
@@ -83,16 +81,24 @@ export class PromptsResolver {
   }
 
   @Query(() => PromptVersion)
-  async deployedPromptVersion(@Args("data") data: GetDeployedPromptVersionInput) {
+  async deployedPromptVersion(
+    @Args("data") data: GetDeployedPromptVersionInput
+  ) {
     const { environmentSlug, promptId } = data;
     const id = `${environmentSlug}_${promptId}`;
-    const deployed = await this.prisma.promptEnvironment.findUnique({ where: { id }});
+    const deployed = await this.prisma.promptEnvironment.findUnique({
+      where: { id },
+    });
 
     if (!deployed) {
-      throw new NotFoundException(`Prompt was not deployed to the "${environmentSlug}" environment`);
+      throw new NotFoundException(
+        `Prompt was not deployed to the "${environmentSlug}" environment`
+      );
     }
 
-    const promptVersion = await this.promptsService.getPromptVersion(deployed.promptVersionSha);
+    const promptVersion = await this.promptsService.getPromptVersion(
+      deployed.promptVersionSha
+    );
     return promptVersion;
   }
 
@@ -136,13 +142,16 @@ export class PromptsResolver {
   }
 
   @ResolveField(() => PromptVersion, { nullable: true })
-  async version(@Parent() prompt: PrismaPrompt, @Args("data") data: GetPromptInput) {
+  async version(
+    @Parent() prompt: PrismaPrompt,
+    @Args("data") data: GetPromptInput
+  ) {
     const { version } = data;
 
     if (version === "latest") {
       return this.promptsService.getLatestPromptVersion(prompt.id);
     }
-    
+
     return this.promptsService.getPromptVersion(data.version);
   }
 

@@ -19,7 +19,9 @@ interface PromptTesterContextValue {
   runTest: (input: PromptTestInput) => Promise<void>;
   testResult: Partial<GetPromptExecutionQuery["promptExecution"]>;
   isTestInProgress: boolean;
-  loadTestResult: (data: Partial<GetPromptExecutionQuery["promptExecution"]>) => void;
+  loadTestResult: (
+    data: Partial<GetPromptExecutionQuery["promptExecution"]>
+  ) => void;
 }
 
 const CurrentPromptContext = createContext<PromptTesterContextValue>({
@@ -38,7 +40,8 @@ export const usePromptTester = () => {
 
 export const PromptTesterProvider = ({ children }) => {
   const [isTesterOpen, setIsTesterOpen] = useState<boolean>(false);
-  const [testResult, setTestResult] = useState<Partial<TestPromptResult>>(undefined);
+  const [testResult, setTestResult] =
+    useState<Partial<TestPromptResult>>(undefined);
   const [isTestInProgress, setIsTestInProgress] = useState<boolean>(false);
 
   const value = {
@@ -59,7 +62,7 @@ export const PromptTesterProvider = ({ children }) => {
           settings: input.settings,
           variables: input.variables,
           mode: PromptModes.Chat,
-        }
+        },
       });
       setTestResult(result.testPrompt);
       setIsTestInProgress(false);
@@ -68,7 +71,7 @@ export const PromptTesterProvider = ({ children }) => {
     isTestInProgress: isTestInProgress,
     loadTestResult: (data: Partial<PromptExecution>) => {
       setTestResult(data);
-    }
+    },
   };
 
   return (

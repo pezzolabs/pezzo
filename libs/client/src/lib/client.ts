@@ -46,7 +46,7 @@ export class Pezzo {
     let completion: CreateChatCompletionResponse;
     let max_tokens: number = settings.max_tokens;
 
-    // TODO: move over to OpenAIChatCompletion class
+    // TODO: move over to OpenAI integration
     if (options.autoAdjustMaxTokens) {
       const encoder = tiktoken.encoding_for_model(settings.model);
       const modelMaxTokens = settings.model === "gpt-4" ? 4097 : 2048;
@@ -62,7 +62,7 @@ export class Pezzo {
           model: settings.model,
           top_p: settings.top_p,
           temperature: settings.temperature,
-          max_tokens: settings.max_tokens,
+          max_tokens,
           presence_penalty: settings.presence_penalty,
           frequency_penalty: settings.frequency_penalty,
         },

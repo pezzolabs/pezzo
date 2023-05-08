@@ -20,7 +20,11 @@ export const PromptVariables = ({ variables, onVariableChange }: Props) => {
             <PromptVariable
               key={variableName}
               name={variableName}
-              value={isJson(variables[variableName]) ? JSON.stringify(JSON.parse(variables[variableName]), null, 2) : variables[variableName]}
+              value={
+                isJson(variables[variableName])
+                  ? JSON.stringify(JSON.parse(variables[variableName]), null, 2)
+                  : variables[variableName]
+              }
               onChange={(value) => onVariableChange(variableName, value)}
             />
           ))}

@@ -14,10 +14,7 @@
         "packageJson": "libs/client/package.json",
         "updateBuildableProjectDepsInPackageJson": true,
         "main": "libs/client/src/index.ts",
-        "assets": [
-          "libs/client/README.md",
-          "libs/client/LICENSE"
-        ]
+        "assets": ["libs/client/README.md", "libs/client/LICENSE"]
       }
     },
     "publish": {

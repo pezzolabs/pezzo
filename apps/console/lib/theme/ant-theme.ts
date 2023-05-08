@@ -5,7 +5,6 @@ export const antTheme: ThemeConfig = {
   algorithm: theme.darkAlgorithm,
   token: {
     colorPrimary: colors.indigo["400"],
-    fontFamily: "Inter"
+    fontFamily: "Inter",
   },
 };
-

@@ -16,10 +16,15 @@ interface Props {
 }
 
 type Inputs = {
-  message: string
+  message: string;
 };
 
-export const CommitPromptModal = ({ open, onClose, onCommitted, form: editPromptForm }: Props) => {
+export const CommitPromptModal = ({
+  open,
+  onClose,
+  onCommitted,
+  form: editPromptForm,
+}: Props) => {
   const { prompt } = useCurrentPrompt();
   const [form] = Form.useForm<Inputs>();
   const [error, setError] = useState<string | null>(null);
@@ -34,14 +39,14 @@ export const CommitPromptModal = ({ open, onClose, onCommitted, form: editPrompt
           mode: data.mode,
           promptId: data.promptId,
         },
-      })
+      });
     },
     onSuccess: () => {
       form.resetFields();
       queryClient.invalidateQueries(["prompt", prompt.id]);
       onClose();
-    }
-  })
+    },
+  });
 
   const handleFormFinish = async (values) => {
     setError(null);
@@ -52,7 +57,7 @@ export const CommitPromptModal = ({ open, onClose, onCommitted, form: editPrompt
       content: editPromptValues.content,
       settings: editPromptValues.settings,
       mode: PromptModes.Chat,
-      promptId: prompt.id
+      promptId: prompt.id,
     });
 
     form.resetFields();
@@ -65,7 +70,7 @@ export const CommitPromptModal = ({ open, onClose, onCommitted, form: editPrompt
       onCancel={onClose}
       footer={false}
     >
-      { error && <Alert type="error" message={error} /> }
+      {error && <Alert type="error" message={error} />}
       <Form
         form={form}
         layout="vertical"
@@ -77,7 +82,7 @@ export const CommitPromptModal = ({ open, onClose, onCommitted, form: editPrompt
         <Form.Item
           label="Commit message"
           name="message"
-          fieldId='message'
+          fieldId="message"
           rules={[{ required: true, message: "Commit message is required" }]}
         >
           <Input placeholder="e.g. Implement better instructions" />

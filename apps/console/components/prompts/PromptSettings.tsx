@@ -1,6 +1,5 @@
-import { Form, Select,  } from "antd";
+import { Form, Select } from "antd";
 import { PromptSettingsSlider } from "./PromptSettingsSlider";
-
 
 export const PromptSettings = () => {
   return (
@@ -40,7 +39,11 @@ export const PromptSettings = () => {
         <PromptSettingsSlider min={1} max={2048} step={1} />
       </Form.Item>
 
-      <Form.Item label="Top P" name={["settings", "top_p"]} style={{ marginBottom: 8 }}>
+      <Form.Item
+        label="Top P"
+        name={["settings", "top_p"]}
+        style={{ marginBottom: 8 }}
+      >
         <PromptSettingsSlider min={0} max={1} step={0.1} />
       </Form.Item>
 

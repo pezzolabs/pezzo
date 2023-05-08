@@ -10,5 +10,5 @@ export const useEnvironments = () => {
 
   return {
     environments: data?.environments,
-  }
+  };
 };
