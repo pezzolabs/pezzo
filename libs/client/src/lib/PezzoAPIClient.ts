@@ -35,10 +35,7 @@ export class PezzoAPIClient {
     return result.reportPromptExecution;
   }
 
-  async getDeployedPromptVersion(
-    promptId: string,
-    environmentSlug: string
-  ) {
+  async getDeployedPromptVersion(promptId: string, environmentSlug: string) {
     const result = await this.gqlClient.request(GET_DEPLOYED_PROMPT_VERSION, {
       data: {
         promptId,

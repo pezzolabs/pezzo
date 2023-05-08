@@ -7,18 +7,20 @@ import { PromptExecutionWhereInput } from "../../@generated/prompt-execution/pro
 import { PromptExecutionWhereUniqueInput } from "../../@generated/prompt-execution/prompt-execution-where-unique.input";
 import { PromptExecutionStatus } from "../../@generated/prisma/prompt-execution-status.enum";
 import { TestPromptInput } from "./inputs/test-prompt.input";
-import { PezzoClientService } from "../common/pezzo-client.service";
+import { PromptsService } from "./prompts.service";
 
 @Resolver(() => Prompt)
 export class PromptExecutionsResolver {
   constructor(
     private prisma: PrismaService,
-    private pezzoClientService: PezzoClientService
+    private readonly promptsService: PromptsService
   ) {}
 
   @Query(() => PromptExecution)
   async promptExecution(@Args("data") data: PromptExecutionWhereUniqueInput) {
-    const prompt = await this.prisma.promptExecution.findUnique({ where: data });
+    const prompt = await this.prisma.promptExecution.findUnique({
+      where: data,
+    });
     return prompt;
   }
 
@@ -27,8 +29,8 @@ export class PromptExecutionsResolver {
     const executions = await this.prisma.promptExecution.findMany({
       where: data,
       orderBy: {
-        timestamp: "desc"
-      }
+        timestamp: "desc",
+      },
     });
     return executions;
   }
@@ -43,14 +45,20 @@ export class PromptExecutionsResolver {
 
   @Mutation(() => PromptExecution)
   async testPrompt(@Args("data") data: TestPromptInput) {
-    const result = await this.pezzoClientService.pezzo.testPrompt(data.content, data.settings, data.variables || {});
+    const result = await this.promptsService.runTestPrompt(
+      data.content,
+      data.settings,
+      data.variables || {}
+    );
 
     const execution = new PromptExecution();
     execution.id = "test";
     execution.prompt = null;
     execution.promptId = "test";
     execution.timestamp = new Date();
-    execution.status = result.success ? PromptExecutionStatus.Success: PromptExecutionStatus.Error;
+    execution.status = result.success
+      ? PromptExecutionStatus.Success
+      : PromptExecutionStatus.Error;
     execution.content = result.content;
     execution.interpolatedContent = result.interpolatedContent;
     execution.settings = result.settings;

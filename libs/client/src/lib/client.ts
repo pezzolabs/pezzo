@@ -2,13 +2,11 @@ import {
   ConfigurationParameters as OpenAIConfigurationParameters,
   CreateChatCompletionResponse,
 } from "openai";
-import { OpenAIChatSettings } from "@pezzo/common";
-import { interpolateVariables } from "./utils/interpolate-variables";
-import { PromptExecutionStatus } from "../@generated/graphql/graphql";
+import { OpenAIChatSettings, interpolateVariables } from "@pezzo/common";
+import { PromptExecutionStatus } from "@pezzo/graphql";
 import * as tiktoken from "@dqbd/tiktoken";
-import { OpenAIChatCompletion } from "./models/OpenAIChatCompletion";
+import { OpenAIService } from "@pezzo/integrations";
 import { PezzoAPIClient } from "./PezzoAPIClient";
-import { TestPromptResult } from "./types/client.types";
 
 interface PezzoClientOptions {
   pezzoServerUrl: string;
@@ -17,15 +15,13 @@ interface PezzoClientOptions {
 }
 
 export class Pezzo {
-  private readonly openAIChatCompletion: OpenAIChatCompletion;
+  private readonly openAI: OpenAIService;
   private readonly options: PezzoClientOptions;
   private readonly pezzoAPIClient: PezzoAPIClient;
 
   constructor(options: PezzoClientOptions) {
     this.options = options;
-    this.openAIChatCompletion = new OpenAIChatCompletion(
-      options.openAIConfiguration
-    );
+    this.openAI = new OpenAIService(options.openAIConfiguration);
     this.pezzoAPIClient = new PezzoAPIClient({
       graphqlEndpoint: `${options.pezzoServerUrl}/graphql`,
     });
@@ -61,7 +57,7 @@ export class Pezzo {
     }
 
     try {
-      completion = await this.openAIChatCompletion.createChatCompletion(
+      completion = await this.openAI.createChatCompletion(
         {
           model: settings.model,
           top_p: settings.top_p,
@@ -140,79 +136,5 @@ export class Pezzo {
     });
 
     return executionReport;
-  }
-
-  async testPrompt(
-    content: string,
-    settings: OpenAIChatSettings,
-    variables: Record<string, boolean | number | string> = {}
-  ): Promise<TestPromptResult> {
-    const start = performance.now();
-
-    const interpolatedContent = interpolateVariables(content, variables);
-    let completion: CreateChatCompletionResponse;
-
-    try {
-      completion = await this.openAIChatCompletion.createChatCompletion(
-        {
-          model: settings.model,
-          top_p: settings.top_p,
-          temperature: settings.temperature,
-          max_tokens: settings.max_tokens,
-          presence_penalty: settings.presence_penalty,
-          frequency_penalty: settings.frequency_penalty,
-        },
-        interpolatedContent
-      );
-    } catch (error) {
-      const end = performance.now();
-      const duration = Math.ceil(end - start);
-
-      return {
-        success: false,
-        result: null,
-        error: JSON.stringify(error.response.data.error),
-        content,
-        interpolatedContent,
-        settings,
-        duration,
-        promptTokens: 0,
-        completionTokens: 0,
-        totalTokens: 0,
-        promptCost: 0,
-        completionCost: 0,
-        totalCost: 0,
-        variables,
-      };
-    }
-
-    const end = performance.now();
-    const duration = Math.ceil(end - start);
-
-    const result = completion.choices[0].message.content;
-    const promptTokens = completion.usage.prompt_tokens;
-    const completionTokens = completion.usage.completion_tokens;
-    const totalTokens = completion.usage.total_tokens;
-
-    const promptCost = (promptTokens / 1000) * 0.002;
-    const completionCost = (completionTokens / 1000) * 0.002;
-    const totalCost = promptCost + completionCost;
-
-    return {
-      success: true,
-      result,
-      error: null,
-      content,
-      interpolatedContent,
-      settings,
-      duration,
-      promptTokens,
-      completionTokens,
-      totalTokens,
-      promptCost,
-      completionCost,
-      totalCost,
-      variables,
-    };
   }
 }
