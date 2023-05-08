@@ -12,7 +12,7 @@ import { EnvironmentsModule } from "./environments/environments.module";
 import { formatError } from "../lib/gql-format-error";
 import { PromptEnvironmentsModule } from "./prompt-environments/prompt-environments.module";
 
-const CI = process.env.GITHUB_ACTIONS === 'true';
+const CI = process.env.GITHUB_ACTIONS === "true";
 const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
 
 @Module({
