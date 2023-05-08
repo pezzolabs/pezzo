@@ -3,9 +3,10 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client/src",
   "projectType": "library",
+  "implicitDependencies": ["server"],
   "targets": {
     "build": {
-      "dependsOn": ["^graphql-codegen"],
+      "dependsOn": ["^prisma:generate", "^graphql-codegen"],
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
