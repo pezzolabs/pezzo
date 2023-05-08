@@ -70,6 +70,7 @@
       }
     },
     "graphql:schema-generate": {
+      "dependsOn": ["prisma:generate"],
       "executor": "nx:run-commands",
       "options": {
         "command": "npx ts-node -P apps/server/tsconfig.app.json -r tsconfig-paths/register apps/server/scripts/generate-graphql-schema.ts"
