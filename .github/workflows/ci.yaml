@@ -66,4 +66,5 @@ jobs:
       - name: Dockerize
         run: npx nx run-many --target=docker:build --configuration=ci --all --parallel --maxParallel=3
         env:
+          INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           INPUT_TAGS: "type=raw,value=${{ github.run_id }},prefix=gh-\ntype=ref,event=branch,prefix=branch-\ntype=sha,format=short"
