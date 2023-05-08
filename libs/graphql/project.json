@@ -45,7 +45,7 @@
       }
     },
     "graphql-codegen": {
-      "dependsOn": ["^prisma:generate", "^graphql:schema-generate"],
+      "dependsOn": ["^graphql:schema-generate"],
       "executor": "nx:run-commands",
       "options": {
         "cwd": "libs/graphql",
