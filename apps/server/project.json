@@ -8,7 +8,6 @@
       "executor": "@nrwl/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "dependsOn": ["prisma:generate"],
-
       "defaultConfiguration": "production",
       "options": {
         "target": "node",
@@ -16,7 +15,14 @@
         "outputPath": "dist/apps/server",
         "main": "apps/server/src/main.ts",
         "tsConfig": "apps/server/tsconfig.app.json",
-        "assets": ["apps/server/src/assets"],
+        "assets": [
+          "apps/server/src/assets",
+          {
+            "glob": "prisma",
+            "input": "apps/server",
+            "output": "prisma"
+          }
+        ],
         "isolatedConfig": true,
         "webpackConfig": "apps/server/webpack.config.js"
       },
@@ -74,6 +80,25 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "npx ts-node -P apps/server/tsconfig.app.json -r tsconfig-paths/register apps/server/scripts/generate-graphql-schema.ts"
+      }
+    },
+    "docker:build": {
+      "executor": "@nx-tools/nx-container:build",
+      "dependsOn": ["build"],
+      "defaultConfiguration": "local",
+      "options": {},
+      "configurations": {
+        "local": {
+          "tags": ["pezzolabs/pezzo-server"],
+          "push": false
+        },
+        "ci": {
+          "push": true,
+          "platforms": ["linux/amd64"],
+          "metadata": {
+            "images": ["ghcr.io/pezzolabs/pezzo-server:latest"]
+          }
+        }
       }
     }
   },
