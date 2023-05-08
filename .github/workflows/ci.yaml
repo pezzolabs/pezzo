@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-    
+
       - name: Cache node modules
         id: cache
         uses: actions/cache@v3
@@ -41,8 +41,14 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
 
+      - name: Check Formatting
+        run: npx nx format:check --all --verbose
+
       - name: Lint
-        run: npx nx run-many --target=lint --all --parallel --maxParallel=3 --verbose
+        run: npx nx run-many --target=lint --all --parallel --maxParallel=3
 
       - name: Test
         run: npx nx run-many --target=test --all --parallel --maxParallel=3
+
+      - name: Build
+        run npx nx run-many --target=build --all --parallel --maxParallel=3

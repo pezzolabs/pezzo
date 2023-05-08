@@ -24,7 +24,9 @@ export class PromptEnvironmentsResolver {
       });
 
     if (versionAlreadyPublished) {
-      throw new ConflictException(`Prompt version already published to environment "${data.environmentSlug}"`);
+      throw new ConflictException(
+        `Prompt version already published to environment "${data.environmentSlug}"`
+      );
     }
 
     const promptEnvironment =

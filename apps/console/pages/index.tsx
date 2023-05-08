@@ -1,10 +1,7 @@
-
 export function Index() {
   return (
     <>
-      <h1>
-        Prompts
-      </h1>
+      <h1>Prompts</h1>
     </>
   );
 }

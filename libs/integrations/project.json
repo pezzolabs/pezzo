@@ -13,10 +13,7 @@
         "packageJson": "libs/integrations/package.json",
         "updateBuildableProjectDepsInPackageJson": true,
         "main": "libs/integrations/src/index.ts",
-        "assets": [
-          "libs/integrations/README.md",
-          "libs/integrations/LICENSE"
-        ]
+        "assets": ["libs/integrations/README.md", "libs/integrations/LICENSE"]
       }
     },
     "publish": {

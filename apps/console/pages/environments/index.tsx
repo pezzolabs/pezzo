@@ -16,7 +16,6 @@ const EnvironmentsPage = () => {
     queryFn: () => gqlClient.request(GET_ALL_ENVIRONMENTS),
   });
 
-
   return (
     <>
       <CreateEnvironmentModal

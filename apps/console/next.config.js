@@ -24,10 +24,10 @@ const nextConfig = {
       {
         source: "/",
         destination: "/prompts",
-        permanent: true
-      }
-    ]
-  } 
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = withNx(nextConfig);

@@ -8,6 +8,6 @@ import { PromptEnvironmentsService } from "./prompt-environments.service";
     PrismaService,
     PromptEnvironmentsResolver,
     PromptEnvironmentsService,
-  ]
+  ],
 })
 export class PromptEnvironmentsModule {}

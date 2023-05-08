@@ -12,10 +12,12 @@ export type PromptEditFormInputs = {
 function findVariables(text: string): Record<string, null> {
   const regex = /\{\{([\w\s]+)\}\}/g;
   const matches = text.match(regex);
-  const interpolatableValues = matches ? matches.map(match => match.replace(/[{}]/g, "")) : [];
+  const interpolatableValues = matches
+    ? matches.map((match) => match.replace(/[{}]/g, ""))
+    : [];
   const uniqueValues = Array.from(new Set(interpolatableValues));
   const interpolatableObject: Record<string, null> = {};
-  uniqueValues.forEach(value => {
+  uniqueValues.forEach((value) => {
     interpolatableObject[value] = null;
   });
   return interpolatableObject;
@@ -24,7 +26,7 @@ function findVariables(text: string): Record<string, null> {
 export const draftPromptData = {
   content: "Start typing your prompt here...",
   mode: PromptModes.Chat,
-  settings: defaultOpenAIChatSettings
+  settings: defaultOpenAIChatSettings,
 };
 
 export const usePromptEdit = () => {
@@ -32,9 +34,12 @@ export const usePromptEdit = () => {
   const [form] = Form.useForm<PromptEditFormInputs>();
   const [isFormTouched, setIsFormTouched] = useState<boolean>(false);
   const [variables, setVariables] = useState<{ [key: string]: string }>({});
-  const versionInitialSnapshot = isDraft ? draftPromptData : currentPromptVersion;
-  const [content, setContent] = useState<string>(versionInitialSnapshot.content);
-
+  const versionInitialSnapshot = isDraft
+    ? draftPromptData
+    : currentPromptVersion;
+  const [content, setContent] = useState<string>(
+    versionInitialSnapshot.content
+  );
 
   const handleFormValuesChange = () => {
     const { content } = form.getFieldsValue(true);
@@ -57,11 +62,13 @@ export const usePromptEdit = () => {
     const newVariables = { ...variables };
     newVariables[key] = value;
     setVariables(newVariables);
-  }
+  };
 
   const isPromptChanged = () => {
     const contentChanged = content !== versionInitialSnapshot.content;
-    const settingsChanged = JSON.stringify(form.getFieldValue("settings")) !== JSON.stringify(versionInitialSnapshot.settings);
+    const settingsChanged =
+      JSON.stringify(form.getFieldValue("settings")) !==
+      JSON.stringify(versionInitialSnapshot.settings);
     return contentChanged || settingsChanged;
   };
 
@@ -74,4 +81,4 @@ export const usePromptEdit = () => {
     variables,
     setVariable,
   };
-}
+};

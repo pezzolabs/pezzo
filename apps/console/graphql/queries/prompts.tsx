@@ -24,7 +24,7 @@ export const GET_PROMPT = graphql(/* GraphQL */ `
         sha
         content
         settings
-        mode        
+        mode
       }
     }
   }
@@ -42,9 +42,9 @@ export const GET_PROMPT_VERSIONS_LIST = graphql(/* GraphQL */ `
 export const GET_PROMPT_VERSION = graphql(/* GraphQL */ `
   query getPromptVersion($data: GetPromptVersionInput!) {
     promptVersion(data: $data) {
-      sha,
-      content,
-      settings,
+      sha
+      content
+      settings
       mode
     }
   }

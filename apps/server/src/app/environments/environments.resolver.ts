@@ -7,9 +7,7 @@ import { ConflictException } from "@nestjs/common";
 
 @Resolver(() => Environment)
 export class EnvironmentsResolver {
-  constructor(
-    private prisma: PrismaService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   @Query(() => [Environment])
   async environments() {
@@ -19,22 +17,27 @@ export class EnvironmentsResolver {
 
   @Query(() => Environment)
   async environment(@Args("data") data: EnvironmentWhereUniqueInput) {
-    const environment = await this.prisma.environment.findUnique({ where: data });
+    const environment = await this.prisma.environment.findUnique({
+      where: data,
+    });
     return environment;
   }
 
   @Mutation(() => Environment)
   async createEnvironment(@Args("data") data: EnvironmentCreateInput) {
-    const exists = await this.prisma.environment.findUnique({ where: { slug: data.slug } });
+    const exists = await this.prisma.environment.findUnique({
+      where: { slug: data.slug },
+    });
 
     if (exists) {
-      throw new ConflictException(`Environment with slug "${data.slug}" already exists`);
+      throw new ConflictException(
+        `Environment with slug "${data.slug}" already exists`
+      );
     }
 
     const environment = await this.prisma.environment.create({
       data,
     });
-
 
     return environment;
   }

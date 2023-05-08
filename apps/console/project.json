@@ -4,7 +4,6 @@
   "sourceRoot": "apps/console",
   "projectType": "application",
   "targets": {
-
     "build": {
       "dependsOn": ["^graphql-codegen"],
       "executor": "@nrwl/next:build",

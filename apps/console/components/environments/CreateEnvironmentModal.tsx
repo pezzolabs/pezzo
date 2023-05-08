@@ -36,7 +36,7 @@ export const CreateEnvironmentModal = ({ open, onClose, onCreated }: Props) => {
     onError: async ({ response }) => {
       const error = await response.errors[0].message;
       setError(error);
-    }
+    },
   });
 
   const handleFormFinish = async (values) => {
@@ -58,7 +58,7 @@ export const CreateEnvironmentModal = ({ open, onClose, onCreated }: Props) => {
       onCancel={onClose}
       footer={false}
     >
-      { error && <Alert type="error" message={error} /> }
+      {error && <Alert type="error" message={error} />}
       <Form
         form={form}
         layout="vertical"
@@ -71,7 +71,7 @@ export const CreateEnvironmentModal = ({ open, onClose, onCreated }: Props) => {
         <Form.Item
           label="Environment name"
           name="name"
-          fieldId='name'
+          fieldId="name"
           rules={[{ required: true, message: "Environment name is required" }]}
         >
           <Input placeholder="e.g. Development" />

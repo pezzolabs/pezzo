@@ -23,7 +23,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
         DATABASE_URL: Joi.string().required(),
         PORT: Joi.number().default(3000),
         OPENAI_API_KEY: Joi.string().required(),
-      })
+      }),
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -31,11 +31,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
       autoSchemaFile: GQL_SCHEMA_PATH,
       sortSchema: true,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
-      include: [
-        PromptsModule,
-        EnvironmentsModule,
-        PromptEnvironmentsModule
-      ],
+      include: [PromptsModule, EnvironmentsModule, PromptEnvironmentsModule],
       formatError,
     }),
     PromptsModule,
