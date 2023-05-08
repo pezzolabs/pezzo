@@ -17,9 +17,7 @@
           "error",
           {
             "enforceBuildableLibDependency": true,
-            "allow": [
-              "@pezzo/graphql"
-            ],
+            "allow": ["@pezzo/graphql"],
             "depConstraints": [
               {
                 "sourceTag": "*",
