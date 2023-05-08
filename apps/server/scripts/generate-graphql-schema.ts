@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { AppModule } from "../src/app/app.module";
 
 // This script only runs in GitHub Actions
-if (process.env.GITHUB_ACTIONS !== 'true') {
+if (process.env.GITHUB_ACTIONS !== "true") {
   process.exit(0);
 }
 
@@ -21,7 +21,7 @@ export default async function generateGraphQLSchema(): Promise<void> {
 if (require.main === module) {
   generateGraphQLSchema()
     .then(() => {
-      console.log('Schema generated');
+      console.log("Schema generated");
       process.exit(0);
     })
     .catch((error) => {
