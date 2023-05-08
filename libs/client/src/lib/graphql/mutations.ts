@@ -1,4 +1,4 @@
-import { graphql } from "../../@generated/graphql";
+import { graphql } from "@pezzo/graphql";
 
 export const REPORT_PROMPT_EXECUTION = graphql(/* GraphQL */ `
   mutation reportPromptExecution($data: PromptExecutionCreateInput!) {

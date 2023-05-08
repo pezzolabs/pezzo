@@ -26,7 +26,7 @@ model Environment {
 
 model Prompt {
   id                 String              @id @default(cuid())
-  name               String              
+  name               String
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
   executions         PromptExecution[]

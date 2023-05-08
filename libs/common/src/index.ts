@@ -1,6 +1,8 @@
-import * as versionJson from './version.json';
+import * as versionJson from "./version.json";
 
 export const version = versionJson.version;
+
+export * from "./utils";
 
 export interface OpenAIChatSettings {
   model: "gpt-3.5-turbo" | "gpt-4";

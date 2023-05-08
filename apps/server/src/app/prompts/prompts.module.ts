@@ -3,7 +3,7 @@ import { PromptsResolver } from "./prompts.resolver";
 import { PrismaService } from "../prisma.service";
 import { PromptExecutionsResolver } from "./prompt-executions.resolver";
 import { PromptsService } from "./prompts.service";
-import { PezzoClientService } from "../common/pezzo-client.service";
+import { IntegrationService } from "../common/integration.service";
 
 @Module({
   providers: [
@@ -11,7 +11,7 @@ import { PezzoClientService } from "../common/pezzo-client.service";
     PromptsResolver,
     PromptsService,
     PromptExecutionsResolver,
-    PezzoClientService
-  ]
+    IntegrationService,
+  ],
 })
 export class PromptsModule {}
