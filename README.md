@@ -138,4 +138,4 @@ Pezzo is currently in early development stages. As we strive to provide a reliab
 
 # License
 
-This repository's source code is available under the [BSD 3-Clause License](LICENSE).
+This repository's source code is available under the [Apache 2.0 License](LICENSE).
