@@ -23,10 +23,11 @@ jobs:
             node_modules
           key: cache-node-modules-${{ hashFiles('**/package-lock.json') }}
 
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
         if: steps.cache.outputs.cache-hit != 'true'
         with:
           node-version: 18.x
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
