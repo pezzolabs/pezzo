@@ -6,7 +6,7 @@ on:
 
 jobs:
   ci:
-    name: Continuous Integration
+    name: Release
     runs-on: ubuntu-20.04
     permissions:
       packages: write
