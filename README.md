@@ -50,7 +50,7 @@ Clone the repository:
 git clone git@github.com:pezzolabs/pezzo.git
 ```
 
-Next, make sure you configure the `.env` file at `apps/server/.env`. You can find an example file at [apps/server/.env.example](apps/server/.env.example)
+Next, make sure you configure the [.env.local](.env.local).
 
 ## 🐳 Option 1: Running Pezzo via Docker Compose
 
@@ -88,6 +88,11 @@ docker-compose -f docker-compose.dev.yaml up
 Generate the Prisma client:
 ```
 npx nx prisma:generate server
+```
+
+Deploy Prisma migrations:
+```
+npx dotenv-cli -e apps/server/.env -- npx prisma migrate deploy --schema apps/server/prisma/schema.prisma
 ```
 
 Run the server:
