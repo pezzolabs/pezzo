@@ -52,7 +52,7 @@ Clone the repository:
 git clone git@github.com:pezzolabs/pezzo.git
 ```
 
-Next, make sure you configure the [.env.local](.env.local).
+Next, make sure you configure the create a `.env.local` file at the root of your repository and fill in your OpenAI API key. You can find an example at [.env.example](.env.example).
 
 ## 🐳 Option 1: Running Pezzo via Docker Compose
 
