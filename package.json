@@ -12,7 +12,6 @@
     "@emotion/css": "^11.10.6",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
-    "@graphql-codegen/cli": "^3.3.1",
     "@heroicons/react": "^2.0.17",
     "@nestjs/apollo": "^11.0.5",
     "@nestjs/common": "^9.0.0",
@@ -51,6 +50,7 @@
   },
   "devDependencies": {
     "@babel/preset-react": "^7.14.5",
+    "@graphql-codegen/cli": "^3.3.1",
     "@graphql-codegen/client-preset": "^3.0.1",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
