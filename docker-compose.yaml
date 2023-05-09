@@ -18,7 +18,7 @@ services:
       retries: 3
 
   pezzo-server:
-    image: pezzolabs/pezzo-server:latest
+    image: ghcr.io/pezzolabs/pezzo/server:latest
     restart: always
     env_file:
       - ./.env
@@ -38,7 +38,7 @@ services:
       retries: 3
 
   pezzo-console:
-    image: pezzolabs/pezzo-console:latest
+    image: ghcr.io/pezzolabs/pezzo/console:latest
     restart: always
     env_file:
       - ./.env
