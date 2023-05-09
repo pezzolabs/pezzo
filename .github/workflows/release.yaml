@@ -49,4 +49,4 @@ jobs:
         run: npx nx run-many --target=docker:build --configuration=ci --all --parallel --maxParallel=3
         env:
           INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          INPUT_TAGS: "type=semver,pattern={{version}}"
+          INPUT_TAGS: "type=semver,pattern={{version}}\ntype=raw,value=latest"
