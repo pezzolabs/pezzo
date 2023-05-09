@@ -50,10 +50,11 @@ jobs:
         run: npx nx run-many --target=build --all --parallel --maxParallel=3
 
       - name: Dockerize
-        run: npx nx run-many --target=docker:build --configuration=ci --all --parallel --maxParallel=3
+        run: npx nx run-many --target=docker:build --configuration=ci --all --parallel --maxParallel=4
         env:
           INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           INPUT_TAGS: "type=semver,pattern={{version}}\ntype=raw,value=latest"
+          INPUT_PLATFORMS: "linux/amd64,linux/arm64"
 
       - name: NPM Publish (@pezzo/client)
         run: npm publish
