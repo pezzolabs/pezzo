@@ -21,7 +21,9 @@ services:
     image: pezzolabs/pezzo-server:latest
     restart: always
     env_file:
-      - apps/server/.env
+      - ./.env
+      - ./.env.local
+      - ./apps/server/.env
     environment:
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/pezzo
     ports:
@@ -39,7 +41,9 @@ services:
     image: pezzolabs/pezzo-console:latest
     restart: always
     env_file:
-      - apps/console/.env
+      - ./.env
+      - ./.env.local
+      - ./apps/console/.env
     ports:
       - "4201:4200"
     depends_on:
