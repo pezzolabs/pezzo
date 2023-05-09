@@ -56,6 +56,6 @@ jobs:
 
       - name: NPM Publish (@pezzo/client)
         run: npm publish
-        working_directory: dist/libs/client
+        working-directory: dist/libs/client
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
