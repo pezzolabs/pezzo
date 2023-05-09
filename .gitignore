@@ -43,3 +43,5 @@ Thumbs.db
 
 **/@generated
 .nx-container
+
+.env.local

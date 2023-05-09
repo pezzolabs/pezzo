@@ -45,18 +45,21 @@ Below you can find the roadmap with all upcoming features:
 If you are missing features, please create an issue and we'll consider adding them to the roadmap.
 
 # Getting Started
+
 Clone the repository:
+
 ```
 git clone git@github.com:pezzolabs/pezzo.git
 ```
 
-Next, make sure you configure the `.env` file at `apps/server/.env`. You can find an example file at [apps/server/.env.example](apps/server/.env.example)
+Next, make sure you configure the [.env.local](.env.local).
 
 ## 🐳 Option 1: Running Pezzo via Docker Compose
 
 This is a straightforward way to run Pezzo and start using it.
 
 Simply run the following command:
+
 ```
 docker-compose up
 ```
@@ -68,29 +71,43 @@ Pezzo should now be accessible at https://localhost:4201. 🚀
 This method is useful for contirbutors and developers.
 
 ### Prerequisites
-* Node.js 18+
-* Docker
-* (Recommended) [GraphQL Language Feature Support VSCode Extension](https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql)
+
+- Node.js 18+
+- Docker
+- (Recommended) [GraphQL Language Feature Support VSCode Extension](https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql)
 
 ### Install dependencies
+
 Install NPM dependencies by running:
+
 ```
 npm install
 ```
 
 ### Spin up development dependencies via Docker Compose
+
 Pezzo relies on a Postgres database. You can spin it up using Docker Compose:
+
 ```
 docker-compose -f docker-compose.dev.yaml up
 ```
 
 ### Start Pezzo
+
 Generate the Prisma client:
+
 ```
 npx nx prisma:generate server
 ```
 
+Deploy Prisma migrations:
+
+```
+npx dotenv-cli -e apps/server/.env -- npx prisma migrate deploy --schema apps/server/prisma/schema.prisma
+```
+
 Run the server:
+
 ```
 npx nx serve server
 ```
@@ -104,6 +121,7 @@ npx nx graphql-codegen graphql --watch
 ```
 
 Finally, you are ready to run the Pezzo Console:
+
 ```
 npx nx serve console
 ```
