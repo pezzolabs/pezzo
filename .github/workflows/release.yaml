@@ -54,7 +54,7 @@ jobs:
         env:
           INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           INPUT_TAGS: "type=semver,pattern={{version}}\ntype=raw,value=latest"
-          INPUT_PLATFORMS: "linux/amd64,linux/arm64"
+          INPUT_PLATFORMS: "linux/amd64"
 
       - name: NPM Publish (@pezzo/client)
         run: npm publish
