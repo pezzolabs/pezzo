@@ -27,7 +27,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         with:
           node-version: 18.x
-          registry-url: "https://registry.npmjs.org"
+          registry-url: https://registry.npmjs.org
 
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
@@ -57,7 +57,7 @@ jobs:
           INPUT_PLATFORMS: "linux/amd64"
 
       - name: NPM Publish (@pezzo/client)
-        run: npm publish
+        run: npm publish --registry https://registry.npmjs.org --access public
         working-directory: dist/libs/client
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
