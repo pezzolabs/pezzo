@@ -4,8 +4,9 @@
     "allowJs": false,
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "jsxImportSource": "@emotion/react"
+    "strict": false,
+    "jsxImportSource": "@emotion/react",
+    "resolveJsonModule": true
   },
   "files": [],
   "include": [],
