@@ -63,7 +63,9 @@ function getReactAppEnv(environment) {
     )
   );
 
-  console.log(`Replacing environment variable "${environment}" with value ${val}`);
+  console.log(
+    `Replacing environment variable "${environment}" with value ${val}`
+  );
   return val;
 }
 

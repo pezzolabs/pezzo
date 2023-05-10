@@ -45,7 +45,10 @@ export function App() {
                       <Routes>
                         <Route index element={<Navigate to="/prompts" />} />
                         <Route path="/prompts" element={<PromptsPage />} />
-                        <Route path="/prompts/:promptId" element={<PromptPage />} />
+                        <Route
+                          path="/prompts/:promptId"
+                          element={<PromptPage />}
+                        />
                         <Route
                           path="/environments"
                           element={<EnvironmentsPage />}
