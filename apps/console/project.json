@@ -1,50 +1,92 @@
 {
   "name": "console",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/console",
+  "sourceRoot": "apps/console/src",
   "projectType": "application",
   "targets": {
     "build": {
       "dependsOn": ["^graphql-codegen"],
-      "executor": "@nrwl/next:build",
+      "executor": "@nrwl/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "root": "apps/console",
-        "outputPath": "dist/apps/console"
+        "compiler": "swc",
+        "outputPath": "dist/apps/console",
+        "index": "apps/console/src/index.html",
+        "baseHref": "/",
+        "main": "apps/console/src/main.tsx",
+        "tsConfig": "apps/console/tsconfig.app.json",
+        "assets": [
+          "apps/console/src/favicon.ico",
+          "apps/console/src/assets",
+          {
+            "glob": "nginx.conf",
+            "input": "apps/console",
+            "output": "."
+          },
+          {
+            "glob": "**/*",
+            "input": "apps/console/scripts",
+            "output": "scripts"
+          }
+        ],
+        "styles": [],
+        "scripts": [],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/console/webpack.config.js"
       },
       "configurations": {
         "development": {
-          "outputPath": "apps/console"
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
         },
-        "production": {}
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/console/src/environments/environment.ts",
+              "with": "apps/console/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
       }
     },
     "serve": {
       "dependsOn": ["^graphql-codegen"],
-      "executor": "@nrwl/next:server",
+      "executor": "@nrwl/webpack:dev-server",
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "console:build",
-        "dev": true,
-        "proxyConfig": "apps/console/proxy.conf.json",
-        "port": 4201
+        "hmr": true
       },
       "configurations": {
         "development": {
-          "buildTarget": "console:build:development",
-          "dev": true
+          "buildTarget": "console:build:development"
         },
         "production": {
           "buildTarget": "console:build:production",
-          "dev": false
+          "hmr": false
         }
       }
     },
-    "export": {
-      "executor": "@nrwl/next:export",
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "buildTarget": "console:build:production"
+        "lintFilePatterns": ["apps/console/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "serve-static": {
+      "executor": "@nrwl/web:file-server",
+      "options": {
+        "buildTarget": "console:build"
       }
     },
     "test": {
@@ -59,13 +101,6 @@
           "ci": true,
           "codeCoverage": true
         }
-      }
-    },
-    "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["apps/console/**/*.{ts,tsx,js,jsx}"]
       }
     },
     "docker:build": {

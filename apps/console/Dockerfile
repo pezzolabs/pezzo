@@ -1,17 +1,14 @@
-FROM node:18.12.1-alpine AS base
+FROM nginx:1.20-alpine
 LABEL org.opencontainers.image.source https://github.com/pezzolabs/pezzo
 
-RUN apk add --update --no-cache python3 make gcc libsass g++ curl
+RUN apk add --update nodejs
 
 WORKDIR /app
 
-COPY dist/apps/console/package.json .
-
-RUN npm i --omit=dev
-
+COPY dist/apps/console/nginx.conf /etc/nginx/conf.d/default.conf
 COPY dist/apps/console .
 
-ENV PORT=4200
-EXPOSE $PORT
+RUN chmod +x scripts/entrypoint.sh
 
-ENTRYPOINT ["npm", "run", "start"]
+ENTRYPOINT ["./scripts/entrypoint.sh"]
+CMD ["nginx", "-g", "daemon off;"]
