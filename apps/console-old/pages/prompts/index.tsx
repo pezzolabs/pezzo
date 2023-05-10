@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { PromptListItem } from "../../components/prompts/PromptListItem";
-import { GET_ALL_PROMPTS } from "../../../console/graphql/queries/prompts";
+import { GET_ALL_PROMPTS } from "../../graphql/queries/prompts";
 import { gqlClient } from "../../lib/graphql";
 import { PlusOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
