@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Route, Routes, Link } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import "antd/dist/reset.css";
 import "./styles.css";
 
@@ -43,6 +43,7 @@ export function App() {
                     <SideNavigation />
                     <StyledContent>
                       <Routes>
+                        <Route index element={<Navigate to="/prompts" />} />
                         <Route path="/prompts" element={<PromptsPage />} />
                         <Route path="/prompts/:promptId" element={<PromptPage />} />
                         <Route

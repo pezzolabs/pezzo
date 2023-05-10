@@ -5,6 +5,7 @@
   "projectType": "application",
   "targets": {
     "build": {
+      "dependsOn": ["^graphql-codegen"],
       "executor": "@nrwl/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
@@ -15,7 +16,20 @@
         "baseHref": "/",
         "main": "apps/console/src/main.tsx",
         "tsConfig": "apps/console/tsconfig.app.json",
-        "assets": ["apps/console/src/favicon.ico", "apps/console/src/assets"],
+        "assets": [
+          "apps/console/src/favicon.ico",
+          "apps/console/src/assets",
+          {
+            "glob": "nginx.conf",
+            "input": "apps/console",
+            "output": "."
+          },
+          {
+            "glob": "**/*",
+            "input": "apps/console/scripts",
+            "output": "scripts"
+          }
+        ],
         "styles": [],
         "scripts": [],
         "isolatedConfig": true,
@@ -45,6 +59,7 @@
       }
     },
     "serve": {
+      "dependsOn": ["^graphql-codegen"],
       "executor": "@nrwl/webpack:dev-server",
       "defaultConfiguration": "development",
       "options": {
@@ -85,6 +100,25 @@
         "ci": {
           "ci": true,
           "codeCoverage": true
+        }
+      }
+    },
+    "docker:build": {
+      "executor": "@nx-tools/nx-container:build",
+      "dependsOn": ["build"],
+      "defaultConfiguration": "local",
+      "options": {},
+      "configurations": {
+        "local": {
+          "tags": ["ghcr.io/pezzolabs/pezzo/console"],
+          "push": false
+        },
+        "ci": {
+          "push": true,
+          "metadata": {
+            "images": ["ghcr.io/pezzolabs/pezzo/console"],
+            "platforms": ["linux/amd64", "linux/arm64"]
+          }
         }
       }
     }
