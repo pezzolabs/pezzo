@@ -1,9 +1,8 @@
 import { QueryClient } from "@tanstack/react-query";
 import { GraphQLClient } from "graphql-request";
+import { BASE_API_URL } from '../../env';
 
-const GRAPHQL_ENDPOINT = process.env.NX_BASE_API_URL;
-
-export const gqlClient = new GraphQLClient(GRAPHQL_ENDPOINT, {});
+export const gqlClient = new GraphQLClient(BASE_API_URL, {});
 
 export const queryClient = new QueryClient({
   defaultOptions: {
