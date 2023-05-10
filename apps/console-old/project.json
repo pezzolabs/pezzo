@@ -1,5 +1,5 @@
 {
-  "name": "console",
+  "name": "console-old",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/console",
   "projectType": "application",
