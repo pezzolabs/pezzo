@@ -12,6 +12,7 @@ import { CurrentPromptProvider } from "./lib/providers/CurrentPromptContext";
 import { PromptTesterProvider } from "./lib/providers/PromptTesterContext";
 import { EnvironmentsPage } from "./pages/environments";
 import { PromptsPage } from "./pages/prompts";
+import { PromptPage } from "./pages/prompts/[promptId]";
 
 const { Content } = Layout;
 
@@ -42,10 +43,8 @@ export function App() {
                     <SideNavigation />
                     <StyledContent>
                       <Routes>
-                        <Route
-                          path="/prompts"
-                          element={<PromptsPage />}
-                        />
+                        <Route path="/prompts" element={<PromptsPage />} />
+                        <Route path="/prompts/:promptId" element={<PromptPage />} />
                         <Route
                           path="/environments"
                           element={<EnvironmentsPage />}

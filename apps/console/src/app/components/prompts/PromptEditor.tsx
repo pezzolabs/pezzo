@@ -1,5 +1,4 @@
 import CodeMirror from "@uiw/react-codemirror";
-import { EditorView } from "@codemirror/view";
 import { materialInit } from "@uiw/codemirror-theme-material";
 import { css } from "@emotion/css";
 import { colors } from "../../lib/theme/colors";
@@ -32,7 +31,7 @@ export const PromptEditor = ({ value, onChange }: Props) => {
             highlightActiveLine: false,
             highlightSelectionMatches: false,
           }}
-          extensions={[EditorView.lineWrapping]}
+          extensions={[]}
           theme={materialInit({
             settings: {
               fontFamily: "Roboto Mono",

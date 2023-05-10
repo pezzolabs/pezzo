@@ -5,13 +5,13 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import styled from "@emotion/styled";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { PromptHistoryView } from "../../../components/prompts/views/PromptHistoryView";
 import { PromptEditView } from "../../../components/prompts/views/PromptEditView";
 import { css } from "@emotion/css";
 import { DeletePromptConfirmationModal } from "../../../components/prompts/DeletePromptConfirmationModal";
 import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
+import { useNavigate, useParams } from "react-router-dom";
 
 const TabLabel = styled.div`
   display: inline-block;
@@ -23,19 +23,19 @@ const BreadcrumbTitle = styled.span`
   cursor: pointer;
 `;
 
-const PromptPage = () => {
+export const PromptPage = () => {
+  const navigate = useNavigate();
+  const params = useParams();
   const { setCurrentPromptId, prompt } = useCurrentPrompt();
-  const router = useRouter();
   const [activeView, setActiveView] = useState("edit");
   const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] =
     useState(false);
 
   useEffect(() => {
-    if (router.query?.promptId) {
-      setCurrentPromptId(router.query.promptId as string, "latest");
+    if (params.promptId) {
+      setCurrentPromptId(params.promptId as string, "latest");
     }
-  }, [router.query.promptId]);
-
+  }, [params.promptId]);
   const tabs = [
     {
       label: (
@@ -70,7 +70,7 @@ const PromptPage = () => {
               items={[
                 {
                   title: <BreadcrumbTitle>Prompts</BreadcrumbTitle>,
-                  onClick: () => router.push("/prompts"),
+                  onClick: () => navigate("/prompts"),
                 },
                 {
                   title: prompt.name,
@@ -108,5 +108,3 @@ const PromptPage = () => {
     )
   );
 };
-
-export default PromptPage;
