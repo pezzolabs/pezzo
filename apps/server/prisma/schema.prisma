@@ -27,6 +27,7 @@ model Environment {
 
 model Prompt {
   id                 String              @id @default(cuid())
+  integrationId      String
   name               String
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
@@ -35,20 +36,17 @@ model Prompt {
   versions           PromptVersion[]
 }
 
+// ai21-jumbo-instruct
+
 model PromptVersion {
   sha                String              @id
   content            String
-  mode               PromptModes
   settings           Json
   promptId           String
   prompt             Prompt              @relation(fields: [promptId], references: [id])
   createdAt          DateTime            @default(now())
   promptEnvironments PromptEnvironment[]
   message            String?
-}
-
-enum PromptModes {
-  Chat
 }
 
 model PromptEnvironment {

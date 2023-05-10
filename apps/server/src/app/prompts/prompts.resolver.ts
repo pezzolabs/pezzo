@@ -104,7 +104,7 @@ export class PromptsResolver {
 
   @Mutation(() => Prompt)
   async createPrompt(@Args("data") data: CreatePromptInput) {
-    const prompt = await this.promptsService.createPrompt(data.name);
+    const prompt = await this.promptsService.createPrompt(data.name, data.integrationId);
     return prompt;
   }
 

@@ -18,7 +18,8 @@
       "@pezzo/client": ["libs/client/src/index.ts"],
       "@pezzo/common": ["libs/common/src/index.ts"],
       "@pezzo/graphql": ["libs/graphql/src/index.ts"],
-      "@pezzo/integrations": ["libs/integrations/src/index.ts"]
+      "@pezzo/integrations": ["libs/integrations/src/index.ts"],
+      "@pezzo/integrations/*": ["libs/integrations/src/*"],
     }
   },
   "exclude": ["node_modules", "tmp"]

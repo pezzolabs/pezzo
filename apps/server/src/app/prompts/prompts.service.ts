@@ -87,9 +87,10 @@ export class PromptsService {
       variables,
     };
   }
-  async createPrompt(name: string) {
+  async createPrompt(name: string, integrationId: string) {
     const prompt = await this.prisma.prompt.create({
       data: {
+        integrationId,
         name,
         versions: {
           create: [],
@@ -110,7 +111,6 @@ export class PromptsService {
       data: {
         sha,
         content,
-        mode,
         settings: settings as any, // eslint-disable-line @typescript-eslint/no-explicit-any
         promptId,
       },

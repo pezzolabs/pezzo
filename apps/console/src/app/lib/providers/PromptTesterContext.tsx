@@ -2,7 +2,6 @@ import { createContext, useContext, useState } from "react";
 import { OpenAIChatSettings } from "@pezzo/common";
 import { TEST_PROMPT } from "../../graphql/mutations/prompts";
 import { gqlClient } from "../graphql";
-import { PromptModes } from "@prisma/client";
 import { GetPromptExecutionQuery, PromptExecution } from "@pezzo/graphql";
 import { TestPromptResult } from "@pezzo/client";
 
@@ -61,7 +60,6 @@ export const PromptTesterProvider = ({ children }) => {
           content: input.content,
           settings: input.settings,
           variables: input.variables,
-          mode: PromptModes.Chat,
         },
       });
       setTestResult(result.testPrompt);

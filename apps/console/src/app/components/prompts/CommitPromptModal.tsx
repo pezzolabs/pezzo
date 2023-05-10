@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
 import { CREATE_PROMPT_VERSION } from "../../graphql/mutations/prompts";
 import { PromptEditFormInputs } from "../../lib/hooks/usePromptEdit";
-import { CreatePromptVersionInput, PromptModes } from "@pezzo/graphql";
+import { CreatePromptVersionInput } from "@pezzo/graphql";
 
 interface Props {
   open: boolean;
@@ -36,7 +36,6 @@ export const CommitPromptModal = ({
           message: data.message,
           content: data.content,
           settings: data.settings,
-          mode: data.mode,
           promptId: data.promptId,
         },
       });
@@ -56,7 +55,6 @@ export const CommitPromptModal = ({
       message: form.getFieldValue("message"),
       content: editPromptValues.content,
       settings: editPromptValues.settings,
-      mode: PromptModes.Chat,
       promptId: prompt.id,
     });
 
