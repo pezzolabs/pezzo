@@ -1,8 +1,7 @@
 import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
 import { Card, Col, Row, Typography } from "antd";
 import { css } from "@emotion/css";
-import OpenAILogo from "../../assets/openai-logo-white.svg";
-import Image from "next/image";
+import OpenAILogo from "../../../assets/openai-logo-white.svg";
 
 interface Props {
   name: string;
@@ -23,7 +22,7 @@ export const PromptListItem = ({ name, onClick }: Props) => {
               border-radius: 6px;
             `}
           >
-            <Image
+            <img
               src={OpenAILogo}
               alt="OpenAI"
               style={{ width: "100%", height: "100%" }}
