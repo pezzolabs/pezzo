@@ -1,4 +1,4 @@
-export * from "./openai";
+export * from "./types";
 
 import { integration as ai21Integration } from './ai21';
 import { IntegrationDefinition } from "./types";

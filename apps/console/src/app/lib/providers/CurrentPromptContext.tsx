@@ -3,10 +3,12 @@ import { gqlClient } from "../graphql";
 import { GET_PROMPT } from "../../graphql/queries/prompts";
 import { GetPromptQuery, GetPromptVersionQuery } from "@pezzo/graphql";
 import { useQuery } from "@tanstack/react-query";
+import { IntegrationDefinition, getIntegration } from "@pezzo/integrations";
 
 interface CurrentPromptContextValue {
   isDraft: boolean;
   prompt: GetPromptQuery["prompt"];
+  integration: IntegrationDefinition;
   currentPromptVersion: GetPromptVersionQuery["promptVersion"];
   setCurrentPromptId: (promptId: string, version: string) => void;
   isLoading: boolean;
@@ -16,6 +18,7 @@ interface CurrentPromptContextValue {
 const CurrentPromptContext = createContext<CurrentPromptContextValue>({
   isDraft: undefined,
   prompt: undefined,
+  integration: undefined,
   currentPromptVersion: undefined,
   setCurrentPromptId: () => void 0,
   isLoading: false,
@@ -47,6 +50,7 @@ export const CurrentPromptProvider = ({ children }) => {
     isDraft: currentPrompt?.prompt.version === null,
     prompt: currentPrompt?.prompt,
     currentPromptVersion: currentPrompt?.prompt?.version,
+    integration: currentPrompt?.prompt && getIntegration(currentPrompt.prompt.integrationId),
     setCurrentPromptId: (promptId: string, version: string) => {
       setPromptId(promptId);
       setPromptVersion(version);

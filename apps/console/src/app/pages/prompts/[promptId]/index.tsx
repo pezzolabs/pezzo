@@ -1,4 +1,4 @@
-import { Breadcrumb, Button, Col, Row, Space, Tabs } from "antd";
+import { Breadcrumb, Button, Col, Row, Space, Tabs, Typography } from "antd";
 import {
   EditOutlined,
   HistoryOutlined,
@@ -12,6 +12,7 @@ import { css } from "@emotion/css";
 import { DeletePromptConfirmationModal } from "../../../components/prompts/DeletePromptConfirmationModal";
 import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
 import { useNavigate, useParams } from "react-router-dom";
+import { IntegrationDefinition } from "@pezzo/integrations";
 
 const TabLabel = styled.div`
   display: inline-block;
@@ -26,7 +27,7 @@ const BreadcrumbTitle = styled.span`
 export const PromptPage = () => {
   const navigate = useNavigate();
   const params = useParams();
-  const { setCurrentPromptId, prompt } = useCurrentPrompt();
+  const { setCurrentPromptId, prompt, integration } = useCurrentPrompt();
   const [activeView, setActiveView] = useState("edit");
   const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] =
     useState(false);
@@ -73,7 +74,19 @@ export const PromptPage = () => {
                   onClick: () => navigate("/prompts"),
                 },
                 {
-                  title: prompt.name,
+                  title: (
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <img
+                        src={integration.iconBase64}
+                        style={{ borderRadius: 2, height: 18 }}
+                      />
+                      <Typography.Text
+                        style={{ display: "inline-block", marginLeft: 6 }}
+                      >
+                        {integration.name}
+                      </Typography.Text>
+                    </div>
+                  ),
                   key: "prompt",
                 },
               ]}
