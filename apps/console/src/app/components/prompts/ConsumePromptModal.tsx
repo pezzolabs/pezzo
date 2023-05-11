@@ -9,21 +9,22 @@ interface Props {
 }
 
 export const ConsumePromptModal = ({ open, onClose, variables }: Props) => {
-  const { prompt } = useCurrentPrompt();
+  const { prompt, integration } = useCurrentPrompt();
 
-  let codeBlock = `// Import the Pezzo client
-import { pezzo } from "@pezzo/client";
+  let codeBlock = `import { Pezzo } from "@pezzo/client";
+import { AI21Executor } from "@pezzo/client/integrations";  
 
-// Initialize Pezzo with the correct environment
+// Initialize the Pezzo client
 const pezzo = new Pezzo({
-  environment: 'development',
-  openAIConfiguration: {
-    apiKey: '<YOUR_API_KEY>',
-  },
+  pezzoServerURL: "http://localhost:3000",
+  environment: "development",
 });
 
-// Run the prompt and provide variables
-const { result } = await pezzo.runPrompt('${prompt.name}', {\n`;
+// Initialize the AI21 client
+const ai21 = new AI21Executor(pezzo, { apiKey: '...' });
+
+// Run prompt
+const { result } = await ai21.run('${prompt.name}', {\n`;
 
   Object.entries(variables).forEach(([key, value]) => {
     codeBlock += `  ${key}: '...'\n`;
