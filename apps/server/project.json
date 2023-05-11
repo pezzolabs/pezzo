@@ -3,11 +3,12 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/server/src",
   "projectType": "application",
+  "implicitDependencies": ["graphql"],
   "targets": {
     "build": {
+      "dependsOn": ["prisma:generate", "^graphql:codegen:offline"],
       "executor": "@nrwl/webpack:webpack",
       "outputs": ["{options.outputPath}"],
-      "dependsOn": ["prisma:generate"],
       "defaultConfiguration": "production",
       "options": {
         "target": "node",
@@ -84,15 +85,7 @@
       "dependsOn": ["prisma:generate"],
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx ts-node -P apps/server/tsconfig.app.json -r tsconfig-paths/register apps/server/scripts/generate-graphql-schema.ts"
-      }
-    },
-    "graphql:codegen": {
-      "dependsOn": ["graphql:schema-generate"],
-      "executor": "nx:run-commands",
-      "options": {
-        "cwd": "libs/graphql",
-        "command": "npx graphql-codegen"
+        "command": "GITHUB_ACTIONS=true npx ts-node -P apps/server/tsconfig.app.json -r tsconfig-paths/register apps/server/scripts/generate-graphql-schema.ts"
       }
     },
     "docker:build": {

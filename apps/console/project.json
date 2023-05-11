@@ -6,7 +6,7 @@
   "implicitDependencies": ["server"],
   "targets": {
     "build": {
-      "dependsOn": ["^graphql:codegen"],
+      "dependsOn": ["^graphql:codegen:offline"],
       "executor": "@nrwl/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",

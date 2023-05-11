@@ -10,7 +10,6 @@ input CreatePromptInput {
 input CreatePromptVersionInput {
   content: String!
   message: String!
-  mode: String = "Chat"
   promptId: String!
   settings: JSON!
 }
