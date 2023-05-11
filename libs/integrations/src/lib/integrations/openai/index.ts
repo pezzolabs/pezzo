@@ -12,6 +12,35 @@ const integration: IntegrationDefinition = {
   Executor,
   settingsSchema,
   defaultSettings,
+  consumeInstructionsFn: (
+    promptName: string,
+    variables: Record<string, string>
+  ) => {
+    let codeBlock = "";
+
+    codeBlock += `import { Pezzo } from "@pezzo/client";
+import { OpenAIExecutor } from "@pezzo/integrations/openai";  
+
+// Initialize the Pezzo client
+const pezzo = new Pezzo({
+  pezzoServerURL: "http://localhost:3000",
+  environment: "development",
+});
+
+// Initialize the OpenAI client
+const openai = new OpenAIExecutor(pezzo, { apiKey: "..." });
+
+// Run prompt
+const { result } = await openai.run('${promptName}', {\n`;
+
+    Object.entries(variables).forEach(([key, value]) => {
+      codeBlock += `  ${key}: '...'\n`;
+    });
+
+    codeBlock += "});";
+
+    return codeBlock;
+  },
 };
 
 export default integration;

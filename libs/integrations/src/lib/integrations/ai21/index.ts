@@ -12,6 +12,35 @@ const integration: IntegrationDefinition = {
   Executor,
   settingsSchema,
   defaultSettings,
+  consumeInstructionsFn: (
+    promptName: string,
+    variables: Record<string, string>
+  ) => {
+    let codeBlock = "";
+
+    codeBlock += `import { Pezzo } from "@pezzo/client";
+import { AI21Executor } from "@pezzo/integrations/ai21";  
+
+// Initialize the Pezzo client
+const pezzo = new Pezzo({
+  pezzoServerURL: "http://localhost:3000",
+  environment: "development",
+});
+
+// Initialize the AI21 client
+const ai21 = new AI21Executor(pezzo, { apiKey: "..." });
+
+// Run prompt
+const { result } = await ai21.run('${promptName}', {\n`;
+
+    Object.entries(variables).forEach(([key, value]) => {
+      codeBlock += `  ${key}: '...'\n`;
+    });
+
+    codeBlock += "});";
+
+    return codeBlock;
+  },
 };
 
 export default integration;

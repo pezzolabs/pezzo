@@ -1,6 +1,7 @@
 import { Modal, Typography } from "antd";
 import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
 import { Highlight, themes } from "prism-react-renderer";
+import { getIntegration } from "@pezzo/integrations";
 
 interface Props {
   open: boolean;
@@ -11,26 +12,7 @@ interface Props {
 export const ConsumePromptModal = ({ open, onClose, variables }: Props) => {
   const { prompt, integration } = useCurrentPrompt();
 
-  let codeBlock = `import { Pezzo } from "@pezzo/client";
-import { AI21Executor } from "@pezzo/integrations/a21";  
-
-// Initialize the Pezzo client
-const pezzo = new Pezzo({
-  pezzoServerURL: "http://localhost:3000",
-  environment: "development",
-});
-
-// Initialize the AI21 client
-const ai21 = new AI21Executor(pezzo, { apiKey: '...' });
-
-// Run prompt
-const { result } = await ai21.run('${prompt.name}', {\n`;
-
-  Object.entries(variables).forEach(([key, value]) => {
-    codeBlock += `  ${key}: '...'\n`;
-  });
-
-  codeBlock += "});";
+  let codeBlock = integration.consumeInstructionsFn(prompt.name, variables);
 
   return (
     <Modal
@@ -41,10 +23,20 @@ const { result } = await ai21.run('${prompt.name}', {\n`;
       footer={false}
     >
       <Typography.Title level={2} style={{ fontSize: 20, marginTop: 24 }}>
-        Step 1: Install the Pezzo client
+        Step 1: Install the Pezzo client and Pezzo integrations
       </Typography.Title>
-      <pre style={{ background: "#000", padding: 14, borderRadius: 6 }}>
+      <pre
+        style={{
+          background: "#000",
+          padding: 14,
+          borderRadius: 6,
+          whiteSpace: "pre-wrap",
+          wordWrap: "break-word",
+        }}
+      >
         npm install @pezzo/client
+        <br />
+        npm install @pezzo/integrations
       </pre>
 
       <Typography.Title level={2} style={{ fontSize: 20, marginTop: 24 }}>

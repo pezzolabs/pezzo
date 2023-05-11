@@ -9,4 +9,8 @@ export interface IntegrationDefinition {
   Executor: new (...args: any[]) => BaseExecutor;
   settingsSchema: FormSchema;
   defaultSettings: any;
+  consumeInstructionsFn: (
+    promptName: string,
+    variables: Record<string, string>
+  ) => string;
 }
