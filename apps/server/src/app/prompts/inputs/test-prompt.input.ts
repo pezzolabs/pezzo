@@ -10,7 +10,7 @@ export class TestPromptInput {
   content: string;
 
   @Field(() => GraphQLJSON, { nullable: false })
-  settings: { model: string, modelSettings: unknown };
+  settings: { model: string; modelSettings: unknown };
 
   @Field(() => GraphQLJSON, { nullable: true })
   variables?: Record<string, string>;

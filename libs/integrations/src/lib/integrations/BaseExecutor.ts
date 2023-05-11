@@ -28,10 +28,10 @@ export abstract class BaseExecutor {
   async run<T = string>(
     promptName: string,
     variables: Record<string, any> = {},
-    options: ExecuteOptions = {},
+    options: ExecuteOptions = {}
   ) {
     const prompt = await this.pezzo.findPrompt(promptName);
-    const promptVersion = await this.pezzo.getDeployedPromptVersion(prompt.id,);
+    const promptVersion = await this.pezzo.getDeployedPromptVersion(prompt.id);
 
     const settings = promptVersion.settings as any;
     const content = promptVersion.content;
@@ -67,7 +67,8 @@ export abstract class BaseExecutor {
       error: null,
       promptTokens: executionResult.promptTokens,
       completionTokens: executionResult.completionTokens,
-      totalTokens: executionResult.promptTokens + executionResult.completionTokens,
+      totalTokens:
+        executionResult.promptTokens + executionResult.completionTokens,
       promptCost: executionResult.promptCost,
       completionCost: executionResult.completionCost,
       totalCost: executionResult.promptCost + executionResult.completionCost,

@@ -15,7 +15,7 @@ export class PromptExecutionsResolver {
   constructor(
     private prisma: PrismaService,
     private readonly promptsService: PromptsService,
-    private readonly promptTesterService: PromptTesterService,
+    private readonly promptTesterService: PromptTesterService
   ) {}
 
   @Query(() => PromptExecution)
@@ -72,6 +72,5 @@ export class PromptExecutionsResolver {
     execution.variables = result.variables;
 
     return execution;
-
   }
 }

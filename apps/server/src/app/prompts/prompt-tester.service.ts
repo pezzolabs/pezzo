@@ -15,7 +15,7 @@ export class PromptTesterService {
     const interpolatedContent = interpolateVariables(content, variables);
 
     const integration = getIntegration(integrationId);
-    
+
     if (integration.id === "ai21") {
       const executor = new AI21Executor({} as Pezzo, { apiKey: AI21_API_KEY });
       const settings = input.settings as IntegrationSettings;
@@ -28,7 +28,7 @@ export class PromptTesterService {
           settings,
           options: {},
         });
-        
+
         const end = performance.now();
         const duration = Math.ceil(end - start);
 
@@ -49,7 +49,7 @@ export class PromptTesterService {
           variables,
         };
       } catch (error) {
-        console.log('error', error);
+        console.log("error", error);
       }
     }
   }

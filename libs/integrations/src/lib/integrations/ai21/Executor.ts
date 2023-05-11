@@ -1,10 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import { IntegrationSettings } from "./types";
-import {
-  BaseExecutor,
-  ExecuteProps,
-  ExecuteResult,
-} from "../BaseExecutor";
+import { BaseExecutor, ExecuteProps, ExecuteResult } from "../BaseExecutor";
 import { Pezzo } from "@pezzo/client";
 
 interface ExecutorOptions {
@@ -25,13 +21,15 @@ export class Executor extends BaseExecutor {
     });
   }
 
-  async execute<T>(props: ExecuteProps<IntegrationSettings>): Promise<ExecuteResult<T>> {
+  async execute<T>(
+    props: ExecuteProps<IntegrationSettings>
+  ): Promise<ExecuteResult<T>> {
     const { settings, content } = props;
     const url = `https://api.ai21.com/studio/v1/${settings.model}/complete`;
 
     const result = await this.axios.post(url, {
       prompt: content,
-      ...settings.modelSettings
+      ...settings.modelSettings,
     });
 
     const data = result.data as any;

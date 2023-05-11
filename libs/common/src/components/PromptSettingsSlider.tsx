@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { Slider, Row, Col, InputNumber } from "antd";
 
 interface Props {

@@ -11,7 +11,7 @@ export const PromptSettings = ({ integrationId }: Props) => {
 
   const commonStyle = {
     marginBottom: 8,
-  }
+  };
 
   return (
     <>

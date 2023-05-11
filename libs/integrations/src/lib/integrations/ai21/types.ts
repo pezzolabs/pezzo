@@ -7,7 +7,7 @@ export interface AI21CompleteOptions {
 }
 
 export interface IntegrationSettings {
-  model: 'j2-jumbo-instruct' | 'j2-grande-instruct' | 'j2-jumbo' | 'j2-grande';
+  model: "j2-jumbo-instruct" | "j2-grande-instruct" | "j2-jumbo" | "j2-grande";
   modelSettings: {
     numResults: number;
     maxTokens: number;
@@ -41,4 +41,3 @@ export interface IntegrationSettings {
     stopSequences: string[];
   };
 }
-

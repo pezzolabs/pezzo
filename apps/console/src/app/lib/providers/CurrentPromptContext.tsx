@@ -50,7 +50,9 @@ export const CurrentPromptProvider = ({ children }) => {
     isDraft: currentPrompt?.prompt.version === null,
     prompt: currentPrompt?.prompt,
     currentPromptVersion: currentPrompt?.prompt?.version,
-    integration: currentPrompt?.prompt && getIntegration(currentPrompt.prompt.integrationId),
+    integration:
+      currentPrompt?.prompt &&
+      getIntegration(currentPrompt.prompt.integrationId),
     setCurrentPromptId: (promptId: string, version: string) => {
       setPromptId(promptId);
       setPromptVersion(version);

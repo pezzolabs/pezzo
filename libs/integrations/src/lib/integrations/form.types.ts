@@ -4,7 +4,7 @@ interface BaseFormField {
 }
 
 interface SelectFormField extends BaseFormField {
-  type: 'select';
+  type: "select";
   defaultValue: string;
   options: {
     value: string;
@@ -13,7 +13,7 @@ interface SelectFormField extends BaseFormField {
 }
 
 interface SliderFormField extends BaseFormField {
-  type: 'slider';
+  type: "slider";
   min: number;
   max: number;
   step: number;

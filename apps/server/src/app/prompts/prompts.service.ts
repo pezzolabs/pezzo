@@ -7,9 +7,7 @@ import { CreateChatCompletionResponse } from "openai";
 
 @Injectable()
 export class PromptsService {
-  constructor(
-    private prisma: PrismaService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async getPrompt(promptId: string) {
     const prompt = await this.prisma.prompt.findUnique({

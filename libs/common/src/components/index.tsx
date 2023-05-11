@@ -1,1 +1,1 @@
-export * from './PromptSettingsSlider';
+export * from "./PromptSettingsSlider";

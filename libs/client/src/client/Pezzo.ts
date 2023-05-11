@@ -12,7 +12,7 @@ export interface PezzoClientOptions {
 export class Pezzo {
   options: PezzoClientOptions;
   private readonly gqlClient: GraphQLClient;
-  
+
   constructor(options: PezzoClientOptions) {
     this.options = options;
     this.gqlClient = new GraphQLClient(`${options.pezzoServerURL}/graphql`);
