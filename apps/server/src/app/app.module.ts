@@ -23,7 +23,6 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
       validationSchema: Joi.object({
         DATABASE_URL: Joi.string().required(),
         PORT: Joi.number().default(3000),
-        OPENAI_API_KEY: Joi.string().required(),
       }),
       // In CI, we need to skip validation because we don't have a .env file
       // This is consumed by the graphql:schema-generate Nx target
