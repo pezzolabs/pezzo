@@ -1,6 +1,6 @@
 export * from "./types";
 
-import { integration as ai21Integration } from "./ai21";
+import ai21Integration from "./ai21";
 import { IntegrationDefinition } from "./types";
 
 export const getIntegration = (id: string): IntegrationDefinition => {

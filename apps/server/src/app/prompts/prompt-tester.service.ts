@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { TestPromptInput } from "./inputs/test-prompt.input";
 import { getIntegration } from "@pezzo/integrations";
-import { Executor as AI21Executor } from "libs/integrations/src/lib/integrations/ai21/Executor";
+import { Executor as AI21Executor } from "@pezzo/integrations/lib/integrations/ai21/Executor";
 import { Pezzo, TestPromptResult } from "@pezzo/client";
-import { IntegrationSettings } from "libs/integrations/src/lib/integrations/ai21";
+import { IntegrationSettings } from "@pezzo/integrations/lib/integrations/ai21";
 import { interpolateVariables } from "@pezzo/common";
 
 const AI21_API_KEY = process.env.AI21_API_KEY;

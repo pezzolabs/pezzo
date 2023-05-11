@@ -3,10 +3,8 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/graphql/src",
   "projectType": "library",
-  "implicitDependencies": ["server"],
   "targets": {
     "build": {
-      "dependsOn": ["graphql-codegen"],
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
@@ -42,14 +40,6 @@
           "ci": true,
           "codeCoverage": true
         }
-      }
-    },
-    "graphql-codegen": {
-      "dependsOn": ["^graphql:schema-generate"],
-      "executor": "nx:run-commands",
-      "options": {
-        "cwd": "libs/graphql",
-        "command": "npx graphql-codegen"
       }
     }
   },

@@ -3,7 +3,7 @@ import { Executor } from "./Executor";
 import { defaultSettings, settingsSchema } from "./settings";
 export * from "./types";
 
-export const integration: IntegrationDefinition = {
+const integration: IntegrationDefinition = {
   id: "ai21",
   name: "AI21",
   provider: "AI21",
@@ -13,3 +13,5 @@ export const integration: IntegrationDefinition = {
   settingsSchema,
   defaultSettings,
 };
+
+export default integration;

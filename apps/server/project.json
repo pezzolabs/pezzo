@@ -87,6 +87,14 @@
         "command": "npx ts-node -P apps/server/tsconfig.app.json -r tsconfig-paths/register apps/server/scripts/generate-graphql-schema.ts"
       }
     },
+    "graphql:codegen": {
+      "dependsOn": ["graphql:schema-generate"],
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "libs/graphql",
+        "command": "npx graphql-codegen"
+      }
+    },
     "docker:build": {
       "executor": "@nx-tools/nx-container:build",
       "dependsOn": ["build"],
