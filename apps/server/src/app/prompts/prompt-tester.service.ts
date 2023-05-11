@@ -36,8 +36,8 @@ export class PromptTesterService {
     const interpolatedContent = interpolateVariables(content, variables);
 
     const executor = await this.getExecutor(integrationId);
-    let start, end;
-    let settings = input.settings;
+    const settings = input.settings;
+    let start: number, end: number;
     let result: ExecuteResult<any>;
 
     try {

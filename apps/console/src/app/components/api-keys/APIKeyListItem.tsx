@@ -32,7 +32,6 @@ export const APIKeyListItem = ({ provider, value, iconBase64 }: Props) => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["providerAPIKeys"] });
     },
-    onError: async ({ response }) => {},
   });
 
   const [isEditing, setIsEditing] = useState(false);
