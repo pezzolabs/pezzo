@@ -57,6 +57,7 @@ export class PromptsResolver {
 
   @Query(() => Prompt)
   async findPrompt(@Args("data") data: PromptWhereInput) {
+    console.log('data', data);
     const prompt = await this.prisma.prompt.findFirst({
       where: data,
     });

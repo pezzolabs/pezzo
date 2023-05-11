@@ -1,4 +1,4 @@
-import { BaseIntegration } from "./BaseIntegration";
+import { BaseExecutor } from "./BaseExecutor";
 import { FormSchema } from "./form.types";
 
 export interface IntegrationDefinition {
@@ -6,7 +6,7 @@ export interface IntegrationDefinition {
   name: string;
   provider: string;
   iconBase64: string;
-  executor: new (...args: any[]) => BaseIntegration;
+  Executor: new (...args: any[]) => BaseExecutor;
   settingsSchema: FormSchema;
   defaultSettings: any;
 }

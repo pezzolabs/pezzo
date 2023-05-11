@@ -1,12 +1,6 @@
-import { exec } from "child_process";
-import { PezzoAPIClient } from "../PezzoAPIClient";
+import { Pezzo } from "@pezzo/client";
 import { interpolateVariables } from "@pezzo/common";
 import { PromptExecutionStatus } from "@pezzo/graphql";
-
-export interface BaseIntegrationOptions {
-  pezzoServerURL: string;
-  environment: string;
-}
 
 export interface ExecuteProps<T> {
   content: string;
@@ -26,16 +20,8 @@ export interface ExecuteResult<T> {
   result: string;
 }
 
-export abstract class BaseIntegration {
-  private readonly environment: string;
-  private readonly pezzoAPIClient: PezzoAPIClient;
-
-  constructor(options: BaseIntegrationOptions) {
-    this.environment = options.environment;
-    this.pezzoAPIClient = new PezzoAPIClient({
-      graphqlEndpoint: `${options.pezzoServerURL}/graphql`,
-    });
-  }
+export abstract class BaseExecutor {
+  constructor(private readonly pezzo: Pezzo) {}
 
   abstract execute<T>(props: ExecuteProps<unknown>): Promise<ExecuteResult<T>>;
 
@@ -46,11 +32,8 @@ export abstract class BaseIntegration {
   ) {
     // get prompt
 
-    const prompt = await this.pezzoAPIClient.findPrompt(promptName);
-    const promptVersion = await this.pezzoAPIClient.getDeployedPromptVersion(
-      prompt.id,
-      this.environment
-    );
+    const prompt = await this.pezzo.findPrompt(promptName);
+    const promptVersion = await this.pezzo.getDeployedPromptVersion(prompt.id,);
 
     const settings = promptVersion.settings as unknown;
     const content = promptVersion.content;
@@ -67,7 +50,7 @@ export abstract class BaseIntegration {
     const end = performance.now();
     const duration = Math.ceil(end - start);
 
-    const executionReport = await this.pezzoAPIClient.reportPromptExecution({
+    const executionReport = await this.pezzo.reportPromptExecution({
       prompt: {
         connect: {
           id: prompt.id,

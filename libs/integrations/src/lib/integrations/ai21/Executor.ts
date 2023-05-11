@@ -1,24 +1,21 @@
 import axios, { AxiosInstance } from "axios";
 import { IntegrationSettings } from "./types";
 import {
-  BaseIntegration,
-  BaseIntegrationOptions,
+  BaseExecutor,
   ExecuteProps,
   ExecuteResult,
-} from "../BaseIntegration";
+} from "../BaseExecutor";
+import { Pezzo } from "@pezzo/client";
 
-interface AI21ExecutorOptions extends BaseIntegrationOptions {
+interface ExecutorOptions {
   apiKey: string;
 }
 
-export class AI21Executor extends BaseIntegration {
+export class Executor extends BaseExecutor {
   private readonly axios: AxiosInstance;
 
-  constructor(options: AI21ExecutorOptions) {
-    super({
-      pezzoServerURL: options.pezzoServerURL,
-      environment: options.environment,
-    });
+  constructor(pezzo: Pezzo, options: ExecutorOptions) {
+    super(pezzo);
 
     this.axios = axios.create({
       headers: {
