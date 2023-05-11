@@ -6,7 +6,7 @@ export interface AI21CompleteOptions {
   autoParse?: boolean;
 }
 
-export interface Settings {
+export interface IntegrationSettings {
   model: 'j2-jumbo-instruct' | 'j2-grande-instruct' | 'j2-jumbo' | 'j2-grande';
   modelSettings: {
     numResults: number;

@@ -1,5 +1,5 @@
 import { Select, Typography } from "antd";
-import { integrationsList } from "@pezzo/integrations";
+import { integrations } from "@pezzo/integrations";
 import styled from "@emotion/styled";
 
 const Icon = styled.img`
@@ -20,13 +20,15 @@ interface Props {
   onChange: (value: string) => void;
 }
 
+const integrationsArray = Object.values(integrations);
+
 export const PromptIntegrationSelector = ({ onChange }: Props) => {
   return (
     <Select
-      defaultValue={integrationsList[0].id}
+      defaultValue={integrationsArray[0].id}
       onChange={onChange}
       optionLabelProp="label" // https://github.com/ant-design/ant-design/issues/40205#issuecomment-1381281740
-      options={integrationsList.map((integration) => ({
+      options={integrationsArray.map((integration) => ({
         label: (
           <SelectItem>
             <Icon src={integration.iconBase64} />

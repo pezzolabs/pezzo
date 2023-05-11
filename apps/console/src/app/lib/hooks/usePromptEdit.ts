@@ -2,8 +2,7 @@ import { OpenAIChatSettings } from "@pezzo/common";
 import { Form } from "antd";
 import { useEffect, useState } from "react";
 import { useCurrentPrompt } from "../providers/CurrentPromptContext";
-
-import { defaultSettings as AI21DefaultSettings } from "@pezzo/integrations/lib/integrations/ai21";
+import { getIntegration } from "@pezzo/integrations";
 
 export type PromptEditFormInputs = {
   content: string;
@@ -29,7 +28,7 @@ export const getDraftPromptData = (integrationId: string) => {
     case "ai21":
       return {
         content: "Start typing your prompt here...",
-        settings: AI21DefaultSettings,
+        settings: getIntegration(integrationId).defaultSettings,
       };
   }
 };

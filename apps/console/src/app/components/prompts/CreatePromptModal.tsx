@@ -4,7 +4,9 @@ import { CREATE_PROMPT } from "../../graphql/mutations/prompts";
 import { gqlClient, queryClient } from "../../lib/graphql";
 import { css } from "@emotion/css";
 import { PromptIntegrationSelector } from "./PromptIntegrationSelector";
-import { integrationsList } from "@pezzo/integrations";
+import { integrations } from "@pezzo/integrations";
+
+const integrationsArray = Object.values(integrations);
 
 interface Props {
   open: boolean;
@@ -44,7 +46,7 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
         layout="vertical"
         name="basic"
         style={{ maxWidth: 600, marginTop: 20 }}
-        initialValues={{ integrationId: integrationsList[0].id }}
+        initialValues={{ integrationId: integrationsArray[0].id }}
         onFinish={handleFormFinish}
         autoComplete="off"
       >

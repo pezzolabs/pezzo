@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { Settings } from "./types";
+import { IntegrationSettings } from "./types";
 import {
   BaseIntegration,
   BaseIntegrationOptions,
@@ -7,15 +7,14 @@ import {
   ExecuteResult,
 } from "../BaseIntegration";
 
-interface AI21IntegrationOptions extends BaseIntegrationOptions {
+interface AI21ExecutorOptions extends BaseIntegrationOptions {
   apiKey: string;
 }
 
-export class AI21Integration extends BaseIntegration {
+export class AI21Executor extends BaseIntegration {
   private readonly axios: AxiosInstance;
-  private readonly apiKey: string;
 
-  constructor(options: AI21IntegrationOptions) {
+  constructor(options: AI21ExecutorOptions) {
     super({
       pezzoServerURL: options.pezzoServerURL,
       environment: options.environment,
@@ -29,7 +28,7 @@ export class AI21Integration extends BaseIntegration {
     });
   }
 
-  async execute<T>(props: ExecuteProps<Settings>): Promise<ExecuteResult<T>> {
+  async execute<T>(props: ExecuteProps<IntegrationSettings>): Promise<ExecuteResult<T>> {
     const { settings, content } = props;
     const url = `https://api.ai21.com/studio/v1/${settings.model}/complete`;
 

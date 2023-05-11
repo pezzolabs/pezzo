@@ -1,4 +1,4 @@
-import { AI21Integration } from "./AI21Integration";
+import { AI21Executor } from "./Executor";
 
 const apiKey = process.env['AI21_API_KEY'];
 
@@ -6,7 +6,7 @@ if (!apiKey) {
   throw new Error("AI21_API_KEY is not set");
 }
 
-const integration = new AI21Integration({
+const integration = new AI21Executor({
   pezzoServerURL: "http://localhost:3000",
   environment: 'development',
   apiKey,
@@ -17,8 +17,7 @@ interface TaskResponse {
 }
 
 async function main() {
-  const { result } = await integration.run<TaskResponse>("CreateTasks", {
-    goal: "DYI renovation of my bathroom"
+  const { result } = await integration.run<TaskResponse>("TestDellaPrompt", {
   });
   console.log('result', result);
 }
