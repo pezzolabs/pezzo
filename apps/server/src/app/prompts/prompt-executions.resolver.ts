@@ -8,12 +8,14 @@ import { PromptExecutionWhereUniqueInput } from "../../@generated/prompt-executi
 import { PromptExecutionStatus } from "../../@generated/prisma/prompt-execution-status.enum";
 import { TestPromptInput } from "./inputs/test-prompt.input";
 import { PromptsService } from "./prompts.service";
+import { PromptTesterService } from "./prompt-tester.service";
 
 @Resolver(() => Prompt)
 export class PromptExecutionsResolver {
   constructor(
     private prisma: PrismaService,
-    private readonly promptsService: PromptsService
+    private readonly promptsService: PromptsService,
+    private readonly promptTesterService: PromptTesterService,
   ) {}
 
   @Query(() => PromptExecution)
@@ -45,11 +47,7 @@ export class PromptExecutionsResolver {
 
   @Mutation(() => PromptExecution)
   async testPrompt(@Args("data") data: TestPromptInput) {
-    const result = await this.promptsService.runTestPrompt(
-      data.content,
-      data.settings,
-      data.variables || {}
-    );
+    const result = await this.promptTesterService.testPrompt(data);
 
     const execution = new PromptExecution();
     execution.id = "test";
@@ -74,5 +72,6 @@ export class PromptExecutionsResolver {
     execution.variables = result.variables;
 
     return execution;
+
   }
 }

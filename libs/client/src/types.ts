@@ -1,5 +1,3 @@
-import { OpenAIChatSettings } from "@pezzo/common";
-
 export interface TestPromptResult {
   success: boolean;
   result: string | null;
@@ -13,6 +11,6 @@ export interface TestPromptResult {
   duration: number;
   content: string;
   interpolatedContent: string;
-  settings: OpenAIChatSettings;
+  settings: any;
   variables: Record<string, boolean | number | string>;
 }

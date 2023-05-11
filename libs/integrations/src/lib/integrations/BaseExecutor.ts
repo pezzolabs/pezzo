@@ -30,12 +30,10 @@ export abstract class BaseExecutor {
     variables: Record<string, any> = {},
     options: ExecuteOptions = {},
   ) {
-    // get prompt
-
     const prompt = await this.pezzo.findPrompt(promptName);
     const promptVersion = await this.pezzo.getDeployedPromptVersion(prompt.id,);
 
-    const settings = promptVersion.settings as unknown;
+    const settings = promptVersion.settings as any;
     const content = promptVersion.content;
     const interpolatedContent = interpolateVariables(content, variables);
 
@@ -43,7 +41,10 @@ export abstract class BaseExecutor {
 
     const executionResult = await this.execute({
       content: interpolatedContent,
-      settings,
+      settings: {
+        model: settings.model,
+        modelSettings: settings.modelSettings,
+      },
       options,
     });
 

@@ -1123,6 +1123,7 @@ input StringNullableFilter {
 
 input TestPromptInput {
   content: String!
+  integrationId: String!
   settings: JSON!
   variables: JSON
 }
