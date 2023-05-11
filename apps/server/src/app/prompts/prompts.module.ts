@@ -7,9 +7,7 @@ import { PromptTesterService } from "./prompt-tester.service";
 import { CredentialsModule } from "../credentials/credentials.module";
 
 @Module({
-  imports: [
-    CredentialsModule,
-  ],
+  imports: [CredentialsModule],
   providers: [
     PrismaService,
     PromptsResolver,

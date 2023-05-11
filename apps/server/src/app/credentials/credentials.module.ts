@@ -5,6 +5,6 @@ import { ProviderAPIKeysService } from "./provider-api-keys.service";
 
 @Module({
   providers: [PrismaService, ProviderAPIKeysResolver, ProviderAPIKeysService],
-  exports: [ProviderAPIKeysService]
+  exports: [ProviderAPIKeysService],
 })
 export class CredentialsModule {}
