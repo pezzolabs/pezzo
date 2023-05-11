@@ -1,6 +1,5 @@
 import { Pezzo } from "@pezzo/client";
-import { interpolateVariables } from "@pezzo/common";
-import { PromptExecutionStatus } from "@pezzo/graphql";
+import { interpolateVariables } from "../utils/interpolate-variables";
 
 export interface ExecuteProps<T> {
   content: string;
@@ -58,7 +57,7 @@ export abstract class BaseExecutor {
         },
       },
       promptVersionSha: promptVersion.sha,
-      status: PromptExecutionStatus.Success,
+      status: 'Success',
       content,
       variables,
       interpolatedContent,

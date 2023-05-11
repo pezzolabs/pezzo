@@ -13,7 +13,7 @@
         "outputPath": "dist/libs/client",
         "tsConfig": "libs/client/tsconfig.lib.json",
         "packageJson": "libs/client/package.json",
-        "updateBuildableProjectDepsInPackageJson": true,
+        "updateBuildableProjectDepsInPackageJson": false,
         "main": "libs/client/src/index.ts",
         "assets": ["libs/client/README.md", "libs/client/LICENSE"]
       }

@@ -1,4 +1,4 @@
-import { graphql } from "@pezzo/graphql";
+import { graphql } from "../@generated/graphql";
 
 export const GET_PROMPT_VERSION = graphql(/* GraphQL */ `
   query getPromptVersion($data: GetPromptVersionInput!) {

@@ -10,6 +10,3 @@ export const getIntegration = (id: string): IntegrationDefinition => {
 export const integrations: { [key: string]: IntegrationDefinition } = {
   ai21: ai21Integration,
 };
-
-// Export executors
-export const AI21Executor = ai21Integration.Executor;

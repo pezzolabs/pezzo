@@ -12,7 +12,7 @@ export const ConsumePromptModal = ({ open, onClose, variables }: Props) => {
   const { prompt, integration } = useCurrentPrompt();
 
   let codeBlock = `import { Pezzo } from "@pezzo/client";
-import { AI21Executor } from "@pezzo/client/integrations";  
+import { AI21Executor } from "@pezzo/integrations/a21";  
 
 // Initialize the Pezzo client
 const pezzo = new Pezzo({

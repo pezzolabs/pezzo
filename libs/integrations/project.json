@@ -11,7 +11,7 @@
         "outputPath": "dist/libs/integrations",
         "tsConfig": "libs/integrations/tsconfig.lib.json",
         "packageJson": "libs/integrations/package.json",
-        "updateBuildableProjectDepsInPackageJson": true,
+        "updateBuildableProjectDepsInPackageJson": false,
         "main": "libs/integrations/src/index.ts",
         "assets": ["libs/integrations/README.md", "libs/integrations/LICENSE"]
       }
