@@ -41,6 +41,10 @@ export const APIKeysPage = () => {
     <>
       <Typography.Title level={1}>Provider API Keys</Typography.Title>
 
+      <Typography.Paragraph style={{ marginBottom: 30 }}>
+        In order to be able to test your prompts within the Pezzo Console, you must provide an API key for each provider you wish to test. This is optional.
+      </Typography.Paragraph>
+
       <Space direction="vertical">
         {providers.map((item, index) => renderAPIKey(item))}
       </Space>

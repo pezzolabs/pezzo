@@ -6,20 +6,26 @@ import { Executor as AI21Executor } from "@pezzo/integrations/lib/integrations/a
 import { Pezzo, TestPromptResult } from "@pezzo/client";
 import { interpolateVariables } from "@pezzo/common";
 import { ExecuteResult } from "@pezzo/integrations/lib/integrations/BaseExecutor";
+import { ProviderAPIKeysService } from "../credentials/provider-api-keys.service";
 
 const AI21_API_KEY = process.env.AI21_API_KEY;
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 @Injectable()
 export class PromptTesterService {
-  private getExecutor(integrationId: string) {
+  constructor(private providerAPIKeysService: ProviderAPIKeysService) {}
+
+  private async getExecutor(integrationId: string) {
     let executor;
 
+    const { provider } = getIntegration(integrationId);
+    const apiKey = await this.providerAPIKeysService.getByProvider(provider);
+
     if (integrationId === "openai") {
-      executor = new OpenAIExecutor({} as Pezzo, { apiKey: OPENAI_API_KEY });
+      executor = new OpenAIExecutor({} as Pezzo, { apiKey: apiKey.value });
     }
     if (integrationId === "ai21") {
-      executor = new AI21Executor({} as Pezzo, { apiKey: AI21_API_KEY });
+      executor = new AI21Executor({} as Pezzo, { apiKey: apiKey.value });
     }
 
     return executor;
@@ -29,7 +35,7 @@ export class PromptTesterService {
     const { integrationId, content, variables } = input;
     const interpolatedContent = interpolateVariables(content, variables);
 
-    const executor = this.getExecutor(integrationId);
+    const executor = await this.getExecutor(integrationId);
     let start, end;
     let settings = input.settings;
     let result: ExecuteResult<any>;
@@ -43,7 +49,22 @@ export class PromptTesterService {
       });
       end = performance.now();
     } catch (error) {
-      console.log("error", error);
+      return {
+        success: false,
+        result: null,
+        error: JSON.stringify(error.response.data),
+        promptTokens: 0,
+        completionTokens: 0,
+        totalTokens: 0,
+        promptCost: 0,
+        completionCost: 0,
+        totalCost: 0,
+        duration: 0,
+        content,
+        interpolatedContent,
+        settings,
+        variables,
+      };
     }
 
     const duration = Math.ceil(end - start);

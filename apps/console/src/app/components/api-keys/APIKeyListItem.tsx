@@ -73,6 +73,7 @@ export const APIKeyListItem = ({ provider, value, iconBase64 }: Props) => {
               <Input
                 placeholder="Paste your API key"
                 onChange={(e) => setEditValue(e.target.value)}
+                autoComplete="off"
               />
             ) : (
               <Typography.Text style={{ marginLeft: 10, opacity: 0.5 }}>

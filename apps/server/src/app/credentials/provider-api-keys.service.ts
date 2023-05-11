@@ -6,6 +6,11 @@ import { ProviderAPIKey } from "@prisma/client";
 export class ProviderAPIKeysService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async getByProvider(provider: string) {
+    const keys = await this.prisma.providerAPIKey.findFirst({ where: { provider }});
+    return keys;
+  }
+
   async getAllProviderAPIKeys() {
     const keys = await this.prisma.providerAPIKey.findMany();
     return keys;
