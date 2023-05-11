@@ -11,8 +11,7 @@ interface Props {
 
 export const ConsumePromptModal = ({ open, onClose, variables }: Props) => {
   const { prompt, integration } = useCurrentPrompt();
-
-  let codeBlock = integration.consumeInstructionsFn(prompt.name, variables);
+  const codeBlock = integration.consumeInstructionsFn(prompt.name, variables);
 
   return (
     <Modal
