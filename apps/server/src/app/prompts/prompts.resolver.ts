@@ -57,6 +57,7 @@ export class PromptsResolver {
 
   @Query(() => Prompt)
   async findPrompt(@Args("data") data: PromptWhereInput) {
+    console.log("data", data);
     const prompt = await this.prisma.prompt.findFirst({
       where: data,
     });
@@ -104,7 +105,10 @@ export class PromptsResolver {
 
   @Mutation(() => Prompt)
   async createPrompt(@Args("data") data: CreatePromptInput) {
-    const prompt = await this.promptsService.createPrompt(data.name);
+    const prompt = await this.promptsService.createPrompt(
+      data.name,
+      data.integrationId
+    );
     return prompt;
   }
 

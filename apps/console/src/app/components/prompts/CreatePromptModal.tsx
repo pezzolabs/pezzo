@@ -3,6 +3,10 @@ import { Modal, Form, Input, Button } from "antd";
 import { CREATE_PROMPT } from "../../graphql/mutations/prompts";
 import { gqlClient, queryClient } from "../../lib/graphql";
 import { css } from "@emotion/css";
+import { PromptIntegrationSelector } from "./PromptIntegrationSelector";
+import { integrations } from "@pezzo/integrations";
+
+const integrationsArray = Object.values(integrations);
 
 interface Props {
   open: boolean;
@@ -12,6 +16,7 @@ interface Props {
 
 type Inputs = {
   name: string;
+  integrationId: string;
 };
 
 export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
@@ -21,6 +26,7 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
       gqlClient.request(CREATE_PROMPT, {
         data: {
           name: data.name,
+          integrationId: data.integrationId,
         },
       }),
     onSuccess: (data) => {
@@ -29,7 +35,7 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
     },
   });
 
-  const handleFormFinish = (data) => {
+  const handleFormFinish = (data: Inputs) => {
     createPromptMutation.mutate(data);
   };
 
@@ -40,9 +46,20 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
         layout="vertical"
         name="basic"
         style={{ maxWidth: 600, marginTop: 20 }}
+        initialValues={{ integrationId: integrationsArray[0].id }}
         onFinish={handleFormFinish}
         autoComplete="off"
       >
+        <Form.Item
+          label="Integration"
+          name="integrationId"
+          rules={[{ required: true, message: "Integration is required" }]}
+        >
+          <PromptIntegrationSelector
+            onChange={(value) => form.setFieldValue("integration", value)}
+          />
+        </Form.Item>
+
         <Form.Item
           label="Prompt name"
           name="name"

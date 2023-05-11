@@ -3,17 +3,21 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client/src",
   "projectType": "library",
-  "implicitDependencies": ["server", "graphql"],
+  "implicitDependencies": ["graphql", "server"],
   "targets": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^prisma:generate",
+        "^graphql:schema-generate",
+        "^graphql:codegen:offline"
+      ],
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/client",
         "tsConfig": "libs/client/tsconfig.lib.json",
         "packageJson": "libs/client/package.json",
-        "updateBuildableProjectDepsInPackageJson": true,
+        "updateBuildableProjectDepsInPackageJson": false,
         "main": "libs/client/src/index.ts",
         "assets": ["libs/client/README.md", "libs/client/LICENSE"]
       }

@@ -3,7 +3,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "sourceMap": true,
-    "declaration": false,
+    "declaration": true,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -17,8 +17,10 @@
     "paths": {
       "@pezzo/client": ["libs/client/src/index.ts"],
       "@pezzo/common": ["libs/common/src/index.ts"],
+      "@pezzo/common/components": ["libs/common/src/components"],
       "@pezzo/graphql": ["libs/graphql/src/index.ts"],
-      "@pezzo/integrations": ["libs/integrations/src/index.ts"]
+      "@pezzo/integrations": ["libs/integrations/src/index.ts"],
+      "@pezzo/integrations/*": ["libs/integrations/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

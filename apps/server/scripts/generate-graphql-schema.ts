@@ -1,3 +1,5 @@
+process.env.SKIP_CONFIG_VALIDATION = "true";
+
 import { NestFactory } from "@nestjs/core";
 import { PrismaClient } from "@prisma/client";
 import { AppModule } from "../src/app/app.module";

@@ -1,8 +1,9 @@
 import { CodegenConfig } from "@graphql-codegen/cli";
 
-const GITHUB_ACTIONS = process.env.GITHUB_ACTIONS === "true";
+const OFFLINE =
+  process.env.OFFLINE === "true" || process.env.GITHUB_ACTIONS === "true";
 
-const schema = GITHUB_ACTIONS
+const schema = OFFLINE
   ? "../../apps/server/src/schema.graphql"
   : "http://localhost:3000/graphql";
 
@@ -12,6 +13,10 @@ const config: CodegenConfig = {
   ignoreNoDocuments: true, // for better experience with the watcher
   generates: {
     "./src/@generated/graphql/": {
+      preset: "client",
+      plugins: [],
+    },
+    "../client/src/@generated/graphql/": {
       preset: "client",
       plugins: [],
     },

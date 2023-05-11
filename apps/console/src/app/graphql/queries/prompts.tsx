@@ -5,6 +5,7 @@ export const GET_ALL_PROMPTS = graphql(/* GraphQL */ `
     prompts {
       id
       name
+      integrationId
     }
   }
 `);
@@ -13,18 +14,17 @@ export const GET_PROMPT = graphql(/* GraphQL */ `
   query getPrompt($data: GetPromptInput!) {
     prompt(data: $data) {
       id
+      integrationId
       name
       latestVersion {
         sha
         content
         settings
-        mode
       }
       version(data: $data) {
         sha
         content
         settings
-        mode
       }
     }
   }
@@ -45,7 +45,6 @@ export const GET_PROMPT_VERSION = graphql(/* GraphQL */ `
       sha
       content
       settings
-      mode
     }
   }
 `);

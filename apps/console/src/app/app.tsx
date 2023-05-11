@@ -13,6 +13,7 @@ import { PromptTesterProvider } from "./lib/providers/PromptTesterContext";
 import { EnvironmentsPage } from "./pages/environments";
 import { PromptsPage } from "./pages/prompts";
 import { PromptPage } from "./pages/prompts/[promptId]";
+import { APIKeysPage } from "./pages/api-keys";
 
 const { Content } = Layout;
 
@@ -53,6 +54,7 @@ export function App() {
                           path="/environments"
                           element={<EnvironmentsPage />}
                         />
+                        <Route path="/api-keys" element={<APIKeysPage />} />
                       </Routes>
                     </StyledContent>
                   </Layout>

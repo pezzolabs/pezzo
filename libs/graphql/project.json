@@ -6,7 +6,7 @@
   "implicitDependencies": ["server"],
   "targets": {
     "build": {
-      "dependsOn": ["graphql-codegen"],
+      "dependsOn": ["graphql:codegen:offline"],
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
@@ -44,12 +44,20 @@
         }
       }
     },
-    "graphql-codegen": {
+    "graphql:codegen": {
       "dependsOn": ["^graphql:schema-generate"],
       "executor": "nx:run-commands",
       "options": {
         "cwd": "libs/graphql",
         "command": "npx graphql-codegen"
+      }
+    },
+    "graphql:codegen:offline": {
+      "dependsOn": ["^graphql:schema-generate"],
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "libs/graphql",
+        "command": "OFFLINE=true npx graphql-codegen"
       }
     }
   },

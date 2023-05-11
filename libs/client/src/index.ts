@@ -1,2 +1,2 @@
-export * from "./lib/client";
-export * from "./lib/types/client.types";
+export * from "./types";
+export * from "./client/Pezzo";

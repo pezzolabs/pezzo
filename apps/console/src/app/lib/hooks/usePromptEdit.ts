@@ -1,8 +1,8 @@
-import { OpenAIChatSettings, defaultOpenAIChatSettings } from "@pezzo/common";
+import { OpenAIChatSettings } from "@pezzo/common";
 import { Form } from "antd";
 import { useEffect, useState } from "react";
 import { useCurrentPrompt } from "../providers/CurrentPromptContext";
-import { PromptModes } from "@pezzo/graphql";
+import { getIntegration } from "@pezzo/integrations";
 
 export type PromptEditFormInputs = {
   content: string;
@@ -23,19 +23,20 @@ function findVariables(text: string): Record<string, null> {
   return interpolatableObject;
 }
 
-export const draftPromptData = {
-  content: "Start typing your prompt here...",
-  mode: PromptModes.Chat,
-  settings: defaultOpenAIChatSettings,
+export const getDraftPromptData = (integrationId: string) => {
+  return {
+    content: "Start typing your prompt here...",
+    settings: getIntegration(integrationId).defaultSettings,
+  };
 };
 
 export const usePromptEdit = () => {
-  const { currentPromptVersion, isDraft } = useCurrentPrompt();
+  const { prompt, currentPromptVersion, isDraft } = useCurrentPrompt();
   const [form] = Form.useForm<PromptEditFormInputs>();
   const [isFormTouched, setIsFormTouched] = useState<boolean>(false);
   const [variables, setVariables] = useState<{ [key: string]: string }>({});
   const versionInitialSnapshot = isDraft
-    ? draftPromptData
+    ? getDraftPromptData(prompt.integrationId)
     : currentPromptVersion;
   const [content, setContent] = useState<string>(
     versionInitialSnapshot.content

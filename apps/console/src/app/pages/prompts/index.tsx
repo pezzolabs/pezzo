@@ -50,6 +50,7 @@ export const PromptsPage = () => {
             <div key={prompt.id} style={{ marginBottom: 14 }}>
               <PromptListItem
                 name={prompt.name}
+                integrationId={prompt.integrationId}
                 onClick={() => navigate(`/prompts/${prompt.id}`)}
               />
             </div>

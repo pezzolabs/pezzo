@@ -6,7 +6,6 @@ export const GET_PROMPT_VERSION = graphql(/* GraphQL */ `
       sha
       content
       settings
-      mode
     }
   }
 `);
@@ -26,7 +25,6 @@ export const GET_DEPLOYED_PROMPT_VERSION = graphql(/* GraphQL */ `
       sha
       content
       settings
-      mode
     }
   }
 `);

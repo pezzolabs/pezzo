@@ -11,8 +11,8 @@ import { HealthController } from "./health.controller";
 import { EnvironmentsModule } from "./environments/environments.module";
 import { formatError } from "../lib/gql-format-error";
 import { PromptEnvironmentsModule } from "./prompt-environments/prompt-environments.module";
+import { CredentialsModule } from "./credentials/credentials.module";
 
-const CI = process.env.GITHUB_ACTIONS === "true";
 const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
 
 @Module({
@@ -23,11 +23,11 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
       validationSchema: Joi.object({
         DATABASE_URL: Joi.string().required(),
         PORT: Joi.number().default(3000),
-        OPENAI_API_KEY: Joi.string().required(),
       }),
       // In CI, we need to skip validation because we don't have a .env file
       // This is consumed by the graphql:schema-generate Nx target
-      validate: CI ? () => ({}) : undefined,
+      validate:
+        process.env.SKIP_CONFIG_VALIDATION === "true" ? () => ({}) : undefined,
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -35,12 +35,18 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
       autoSchemaFile: GQL_SCHEMA_PATH,
       sortSchema: true,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
-      include: [PromptsModule, EnvironmentsModule, PromptEnvironmentsModule],
+      include: [
+        PromptsModule,
+        EnvironmentsModule,
+        PromptEnvironmentsModule,
+        CredentialsModule,
+      ],
       formatError,
     }),
     PromptsModule,
     EnvironmentsModule,
     PromptEnvironmentsModule,
+    CredentialsModule,
   ],
   controllers: [HealthController],
 })

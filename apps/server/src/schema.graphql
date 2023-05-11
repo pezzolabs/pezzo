@@ -3,15 +3,20 @@
 # ------------------------------------------------------
 
 input CreatePromptInput {
+  integrationId: String!
   name: String!
 }
 
 input CreatePromptVersionInput {
   content: String!
   message: String!
-  mode: String = "Chat"
   promptId: String!
   settings: JSON!
+}
+
+input CreateProviderAPIKeyInput {
+  provider: String!
+  value: String!
 }
 
 """
@@ -43,17 +48,6 @@ input EnumPromptExecutionStatusFilter {
   in: [PromptExecutionStatus!]
   not: NestedEnumPromptExecutionStatusFilter
   notIn: [PromptExecutionStatus!]
-}
-
-input EnumPromptModesFieldUpdateOperationsInput {
-  set: PromptModes
-}
-
-input EnumPromptModesFilter {
-  equals: PromptModes
-  in: [PromptModes!]
-  not: NestedEnumPromptModesFilter
-  notIn: [PromptModes!]
 }
 
 type Environment {
@@ -197,10 +191,12 @@ type Mutation {
   createEnvironment(data: EnvironmentCreateInput!): Environment!
   createPrompt(data: CreatePromptInput!): Prompt!
   createPromptVersion(data: CreatePromptVersionInput!): PromptVersion!
+  deleteProviderAPIKey(data: ProviderAPIKeyWhereUniqueInput!): Boolean!
   publishPrompt(data: PublishPromptInput!): PromptEnvironment!
   reportPromptExecution(data: PromptExecutionCreateInput!): PromptExecution!
   testPrompt(data: TestPromptInput!): PromptExecution!
   updatePrompt(data: PromptUpdateInput!): Prompt!
+  updateProviderAPIKey(data: CreateProviderAPIKeyInput!): ProviderAPIKey!
 }
 
 input NestedDateTimeFilter {
@@ -219,13 +215,6 @@ input NestedEnumPromptExecutionStatusFilter {
   in: [PromptExecutionStatus!]
   not: NestedEnumPromptExecutionStatusFilter
   notIn: [PromptExecutionStatus!]
-}
-
-input NestedEnumPromptModesFilter {
-  equals: PromptModes
-  in: [PromptModes!]
-  not: NestedEnumPromptModesFilter
-  notIn: [PromptModes!]
 }
 
 input NestedFloatFilter {
@@ -287,6 +276,7 @@ type Prompt {
   createdAt: DateTime!
   executions: [PromptExecution!]
   id: ID!
+  integrationId: String!
   latestVersion: PromptVersion
   name: String!
   promptEnvironments: [PromptEnvironment!]
@@ -337,6 +327,7 @@ input PromptCreateOrConnectWithoutVersionsInput {
 input PromptCreateWithoutExecutionsInput {
   createdAt: DateTime
   id: String
+  integrationId: String!
   name: String!
   promptEnvironments: PromptEnvironmentCreateNestedManyWithoutPromptInput
   updatedAt: DateTime
@@ -347,6 +338,7 @@ input PromptCreateWithoutPromptEnvironmentsInput {
   createdAt: DateTime
   executions: PromptExecutionCreateNestedManyWithoutPromptInput
   id: String
+  integrationId: String!
   name: String!
   updatedAt: DateTime
   versions: PromptVersionCreateNestedManyWithoutPromptInput
@@ -356,6 +348,7 @@ input PromptCreateWithoutVersionsInput {
   createdAt: DateTime
   executions: PromptExecutionCreateNestedManyWithoutPromptInput
   id: String
+  integrationId: String!
   name: String!
   promptEnvironments: PromptEnvironmentCreateNestedManyWithoutPromptInput
   updatedAt: DateTime
@@ -813,10 +806,6 @@ input PromptExecutionWhereUniqueInput {
   id: String
 }
 
-enum PromptModes {
-  Chat
-}
-
 input PromptRelationFilter {
   is: PromptWhereInput
   isNot: PromptWhereInput
@@ -826,6 +815,7 @@ input PromptUpdateInput {
   createdAt: DateTimeFieldUpdateOperationsInput
   executions: PromptExecutionUpdateManyWithoutPromptInput
   id: StringFieldUpdateOperationsInput
+  integrationId: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
   promptEnvironments: PromptEnvironmentUpdateManyWithoutPromptInput
   updatedAt: DateTimeFieldUpdateOperationsInput
@@ -852,6 +842,7 @@ input PromptUpdateWithoutPromptEnvironmentsInput {
   createdAt: DateTimeFieldUpdateOperationsInput
   executions: PromptExecutionUpdateManyWithoutPromptInput
   id: StringFieldUpdateOperationsInput
+  integrationId: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
   versions: PromptVersionUpdateManyWithoutPromptInput
@@ -861,6 +852,7 @@ input PromptUpdateWithoutVersionsInput {
   createdAt: DateTimeFieldUpdateOperationsInput
   executions: PromptExecutionUpdateManyWithoutPromptInput
   id: StringFieldUpdateOperationsInput
+  integrationId: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
   promptEnvironments: PromptEnvironmentUpdateManyWithoutPromptInput
   updatedAt: DateTimeFieldUpdateOperationsInput
@@ -881,7 +873,6 @@ type PromptVersion {
   content: String!
   createdAt: DateTime!
   message: String
-  mode: PromptModes!
   prompt: Prompt!
   promptEnvironments: [PromptEnvironment!]
   promptId: String!
@@ -897,7 +888,6 @@ input PromptVersionCreateManyPromptInput {
   content: String!
   createdAt: DateTime
   message: String
-  mode: PromptModes!
   settings: JSON!
   sha: String!
 }
@@ -934,7 +924,6 @@ input PromptVersionCreateWithoutPromptEnvironmentsInput {
   content: String!
   createdAt: DateTime
   message: String
-  mode: PromptModes!
   prompt: PromptCreateNestedOneWithoutVersionsInput!
   settings: JSON!
   sha: String!
@@ -944,7 +933,6 @@ input PromptVersionCreateWithoutPromptInput {
   content: String!
   createdAt: DateTime
   message: String
-  mode: PromptModes!
   promptEnvironments: PromptEnvironmentCreateNestedManyWithoutPromptVersionInput
   settings: JSON!
   sha: String!
@@ -968,7 +956,6 @@ input PromptVersionScalarWhereInput {
   content: StringFilter
   createdAt: DateTimeFilter
   message: StringNullableFilter
-  mode: EnumPromptModesFilter
   promptId: StringFilter
   settings: JsonFilter
   sha: StringFilter
@@ -978,7 +965,6 @@ input PromptVersionUpdateManyMutationInput {
   content: StringFieldUpdateOperationsInput
   createdAt: DateTimeFieldUpdateOperationsInput
   message: NullableStringFieldUpdateOperationsInput
-  mode: EnumPromptModesFieldUpdateOperationsInput
   settings: JSON
   sha: StringFieldUpdateOperationsInput
 }
@@ -1021,7 +1007,6 @@ input PromptVersionUpdateWithoutPromptEnvironmentsInput {
   content: StringFieldUpdateOperationsInput
   createdAt: DateTimeFieldUpdateOperationsInput
   message: NullableStringFieldUpdateOperationsInput
-  mode: EnumPromptModesFieldUpdateOperationsInput
   prompt: PromptUpdateOneRequiredWithoutVersionsInput
   settings: JSON
   sha: StringFieldUpdateOperationsInput
@@ -1031,7 +1016,6 @@ input PromptVersionUpdateWithoutPromptInput {
   content: StringFieldUpdateOperationsInput
   createdAt: DateTimeFieldUpdateOperationsInput
   message: NullableStringFieldUpdateOperationsInput
-  mode: EnumPromptModesFieldUpdateOperationsInput
   promptEnvironments: PromptEnvironmentUpdateManyWithoutPromptVersionInput
   settings: JSON
   sha: StringFieldUpdateOperationsInput
@@ -1055,7 +1039,6 @@ input PromptVersionWhereInput {
   content: StringFilter
   createdAt: DateTimeFilter
   message: StringNullableFilter
-  mode: EnumPromptModesFilter
   prompt: PromptRelationFilter
   promptEnvironments: PromptEnvironmentListRelationFilter
   promptId: StringFilter
@@ -1074,6 +1057,7 @@ input PromptWhereInput {
   createdAt: DateTimeFilter
   executions: PromptExecutionListRelationFilter
   id: StringFilter
+  integrationId: StringFilter
   name: StringFilter
   promptEnvironments: PromptEnvironmentListRelationFilter
   updatedAt: DateTimeFilter
@@ -1081,6 +1065,18 @@ input PromptWhereInput {
 }
 
 input PromptWhereUniqueInput {
+  id: String
+}
+
+type ProviderAPIKey {
+  createdAt: DateTime!
+  id: ID!
+  provider: String!
+  updatedAt: DateTime!
+  value: String!
+}
+
+input ProviderAPIKeyWhereUniqueInput {
   id: String
 }
 
@@ -1102,6 +1098,7 @@ type Query {
   promptVersion(data: GetPromptVersionInput!): PromptVersion!
   promptVersions(data: PromptWhereUniqueInput!): [PromptVersion!]!
   prompts: [Prompt!]!
+  providerAPIKeys: [ProviderAPIKey!]!
 }
 
 enum QueryMode {
@@ -1145,7 +1142,7 @@ input StringNullableFilter {
 
 input TestPromptInput {
   content: String!
-  mode: String!
+  integrationId: String!
   settings: JSON!
   variables: JSON
 }

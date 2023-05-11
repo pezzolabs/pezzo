@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 import { css } from "@emotion/css";
 import {
-  draftPromptData,
+  getDraftPromptData,
   usePromptEdit,
 } from "../../../lib/hooks/usePromptEdit";
 import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
@@ -52,9 +52,11 @@ export const PromptEditView = () => {
 
   const initialValues = {
     settings: isDraft
-      ? draftPromptData.settings
+      ? getDraftPromptData(prompt.integrationId).settings
       : currentPromptVersion.settings,
-    content: isDraft ? draftPromptData.content : currentPromptVersion.content,
+    content: isDraft
+      ? getDraftPromptData(prompt.integrationId).content
+      : currentPromptVersion.content,
   };
 
   return (
@@ -152,7 +154,7 @@ export const PromptEditView = () => {
                 size="middle"
               >
                 <Card title="Settings">
-                  <PromptSettings />
+                  <PromptSettings integrationId={prompt.integrationId} />
                 </Card>
 
                 <Card title="Variables">
