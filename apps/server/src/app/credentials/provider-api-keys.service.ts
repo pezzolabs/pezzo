@@ -7,7 +7,9 @@ export class ProviderAPIKeysService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getByProvider(provider: string) {
-    const keys = await this.prisma.providerAPIKey.findFirst({ where: { provider }});
+    const keys = await this.prisma.providerAPIKey.findFirst({
+      where: { provider },
+    });
     return keys;
   }
 
