@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -22,7 +22,6 @@ services:
     restart: always
     env_file:
       - ./.env
-      - ./.env.local
       - ./apps/server/.env
     environment:
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/pezzo
@@ -42,10 +41,9 @@ services:
     restart: always
     env_file:
       - ./.env
-      - ./.env.local
       - ./apps/console/.env
     ports:
-      - "4201:4200"
+      - "4200:4200"
     depends_on:
       pezzo-server:
         condition: service_healthy

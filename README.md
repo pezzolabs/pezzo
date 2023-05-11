@@ -58,8 +58,6 @@ Clone the repository:
 git clone git@github.com:pezzolabs/pezzo.git
 ```
 
-Next, make sure you configure the create a `.env.local` file at the root of your repository and fill in your OpenAI API key. You can find an example at [.env.example](.env.example).
-
 ## 🐳 Option 1: Running Pezzo via Docker Compose
 
 This is a straightforward way to run Pezzo and start using it.
@@ -70,7 +68,7 @@ Simply run the following command:
 docker-compose up
 ```
 
-Pezzo should now be accessible at https://localhost:4201. 🚀
+Pezzo should now be accessible at https://localhost:4200 🚀
 
 ## 🕹️ Option 2: Running Pezzo in Development Mode
 
@@ -132,7 +130,7 @@ Finally, you are ready to run the Pezzo Console:
 npx nx serve console
 ```
 
-That's it! Pezzo is now accessible at http://localhost:4201. 🚀
+That's it! Pezzo is now accessible at http://localhost:4200 🚀
 
 # Contributing
 
