@@ -1,5 +1,5 @@
 import { Pezzo } from "@pezzo/client";
-import  AI21Integration from "@pezzo/integrations/lib/integrations/ai21";
+import AI21Integration from "@pezzo/integrations/lib/integrations/ai21";
 
 const apiKey = process.env["AI21_API_KEY"];
 

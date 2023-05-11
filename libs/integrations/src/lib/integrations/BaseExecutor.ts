@@ -57,7 +57,7 @@ export abstract class BaseExecutor {
         },
       },
       promptVersionSha: promptVersion.sha,
-      status: 'Success',
+      status: "Success",
       content,
       variables,
       interpolatedContent,
