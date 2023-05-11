@@ -11,6 +11,7 @@ import { HealthController } from "./health.controller";
 import { EnvironmentsModule } from "./environments/environments.module";
 import { formatError } from "../lib/gql-format-error";
 import { PromptEnvironmentsModule } from "./prompt-environments/prompt-environments.module";
+import { CredentialsModule } from "./credentials/credentials.module";
 
 const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
 
@@ -35,12 +36,18 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
       autoSchemaFile: GQL_SCHEMA_PATH,
       sortSchema: true,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
-      include: [PromptsModule, EnvironmentsModule, PromptEnvironmentsModule],
+      include: [
+        PromptsModule,
+        EnvironmentsModule,
+        PromptEnvironmentsModule,
+        CredentialsModule,
+      ],
       formatError,
     }),
     PromptsModule,
     EnvironmentsModule,
     PromptEnvironmentsModule,
+    CredentialsModule,
   ],
   controllers: [HealthController],
 })

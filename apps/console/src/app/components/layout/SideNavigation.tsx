@@ -1,9 +1,8 @@
-import { BoltIcon, ServerStackIcon } from "@heroicons/react/24/solid";
+import { BoltIcon, ServerStackIcon, KeyIcon } from "@heroicons/react/24/solid";
 import { Layout, Menu } from "antd";
 import { css } from "@emotion/css";
 import { useState } from "react";
 import LogoSquare from "../../../assets/logo-square.svg";
-import { InfoCircleFilled } from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const { Sider } = Layout;
@@ -20,9 +19,9 @@ const menuItems = [
     icon: <ServerStackIcon height={18} />,
   },
   {
-    key: "info",
-    label: "Info",
-    icon: <InfoCircleFilled height={18} />,
+    key: "api-keys",
+    label: "API Keys",
+    icon: <KeyIcon height={18} />,
   },
 ];
 

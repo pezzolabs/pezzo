@@ -1,10 +1,7 @@
 import { BaseExecutor, ExecuteProps, ExecuteResult } from "../BaseExecutor";
 import { Pezzo } from "@pezzo/client";
 import { IntegrationSettings } from "./types";
-import {
-  Configuration,
-  OpenAIApi,
-} from "openai";
+import { Configuration, OpenAIApi } from "openai";
 
 interface ExecutorOptions {
   apiKey: string;
@@ -39,8 +36,8 @@ export class Executor extends BaseExecutor {
         {
           role: "user",
           content,
-        }
-      ]
+        },
+      ],
     });
 
     const data = result.data as any;
@@ -49,7 +46,11 @@ export class Executor extends BaseExecutor {
     const promptTokens = usage.prompt_tokens;
     const completionTokens = usage.completion_tokens;
 
-    const { promptCost, completionCost } = this.calculateCost(settings.model, promptTokens, completionTokens);
+    const { promptCost, completionCost } = this.calculateCost(
+      settings.model,
+      promptTokens,
+      completionTokens
+    );
 
     const res = {
       promptTokens,
@@ -62,12 +63,18 @@ export class Executor extends BaseExecutor {
     return res;
   }
 
-  private calculateCost(model: string, promptTokens: number, completionTokens: number) {
+  private calculateCost(
+    model: string,
+    promptTokens: number,
+    completionTokens: number
+  ) {
     const costPer1000TokensPrompt = model === "gpt-4" ? 0.03 : 0.002;
-    const costPer1000TokensCompletions = model === "gpt-3.5-turbo" ? 0.06 : 0.002;
+    const costPer1000TokensCompletions =
+      model === "gpt-3.5-turbo" ? 0.06 : 0.002;
 
     const promptCost = (promptTokens / 1000) * costPer1000TokensPrompt;
-    const completionCost = (completionTokens / 1000) * costPer1000TokensCompletions;
+    const completionCost =
+      (completionTokens / 1000) * costPer1000TokensCompletions;
 
     return {
       promptCost,

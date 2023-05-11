@@ -14,6 +14,11 @@ input CreatePromptVersionInput {
   settings: JSON!
 }
 
+input CreateProviderAPIKeyInput {
+  provider: String!
+  value: String!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -186,10 +191,12 @@ type Mutation {
   createEnvironment(data: EnvironmentCreateInput!): Environment!
   createPrompt(data: CreatePromptInput!): Prompt!
   createPromptVersion(data: CreatePromptVersionInput!): PromptVersion!
+  deleteProviderAPIKey(data: ProviderAPIKeyWhereUniqueInput!): Boolean!
   publishPrompt(data: PublishPromptInput!): PromptEnvironment!
   reportPromptExecution(data: PromptExecutionCreateInput!): PromptExecution!
   testPrompt(data: TestPromptInput!): PromptExecution!
   updatePrompt(data: PromptUpdateInput!): Prompt!
+  updateProviderAPIKey(data: CreateProviderAPIKeyInput!): ProviderAPIKey!
 }
 
 input NestedDateTimeFilter {
@@ -1061,6 +1068,18 @@ input PromptWhereUniqueInput {
   id: String
 }
 
+type ProviderAPIKey {
+  createdAt: DateTime!
+  id: ID!
+  provider: String!
+  updatedAt: DateTime!
+  value: String!
+}
+
+input ProviderAPIKeyWhereUniqueInput {
+  id: String
+}
+
 input PublishPromptInput {
   environmentSlug: String!
   promptId: String!
@@ -1079,6 +1098,7 @@ type Query {
   promptVersion(data: GetPromptVersionInput!): PromptVersion!
   promptVersions(data: PromptWhereUniqueInput!): [PromptVersion!]!
   prompts: [Prompt!]!
+  providerAPIKeys: [ProviderAPIKey!]!
 }
 
 enum QueryMode {

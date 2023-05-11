@@ -12,3 +12,11 @@ export const integrations: { [key: string]: IntegrationDefinition } = {
   openai: openaiIntegration,
   ai21: ai21Integration,
 };
+
+export const getUniqueProviders = (): string[] => {
+  const providers = new Set<string>();
+  for (const integration of Object.values(integrations)) {
+    providers.add(integration.provider);
+  }
+  return Array.from(providers);
+};
