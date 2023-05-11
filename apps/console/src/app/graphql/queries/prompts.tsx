@@ -5,6 +5,7 @@ export const GET_ALL_PROMPTS = graphql(/* GraphQL */ `
     prompts {
       id
       name
+      integrationId
     }
   }
 `);
