@@ -32,10 +32,10 @@ export class PromptsService {
   }
 
   async createPromptVersion(data: CreatePromptVersionInput) {
-    const { mode, content, settings, promptId } = data;
+    const { content, settings, promptId } = data;
 
     const sha = sha256(
-      `${JSON.stringify({ mode, content, settings })}-${promptId}-${Date.now()}`
+      `${JSON.stringify({ content, settings })}-${promptId}-${Date.now()}`
     ) as string;
 
     const version = await this.prisma.promptVersion.create({
