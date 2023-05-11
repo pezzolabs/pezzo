@@ -29,6 +29,11 @@
       "import": "./src/lib/integrations/ai21/index.js",
       "require": "./src/lib/integrations/ai21/index.js",
       "types": "./src/lib/integrations/ai21/index.d.ts"
+    },
+    "./openai": {
+      "import": "./src/lib/integrations/openai/index.js",
+      "require": "./src/lib/integrations/openai/index.js",
+      "types": "./src/lib/integrations/openai/index.d.ts"
     }
   }
 }

@@ -83,7 +83,7 @@ export const PromptPage = () => {
                       <Typography.Text
                         style={{ display: "inline-block", marginLeft: 6 }}
                       >
-                        {integration.name}
+                        {prompt.name}
                       </Typography.Text>
                     </div>
                   ),

@@ -10,7 +10,6 @@ export const settingsSchema: FormSchema = [
     options: [
       { value: "j2-jumbo-instruct", label: "j2-jumbo-instruct" },
       { value: "j2-grande-instruct", label: "j2-grande-instruct" },
-      // Add more options...
     ],
   },
   {

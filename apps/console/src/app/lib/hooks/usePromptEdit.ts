@@ -24,13 +24,10 @@ function findVariables(text: string): Record<string, null> {
 }
 
 export const getDraftPromptData = (integrationId: string) => {
-  switch (integrationId) {
-    case "ai21":
-      return {
-        content: "Start typing your prompt here...",
-        settings: getIntegration(integrationId).defaultSettings,
-      };
-  }
+  return {
+    content: "Start typing your prompt here...",
+    settings: getIntegration(integrationId).defaultSettings,
+  };
 };
 
 export const usePromptEdit = () => {
