@@ -46,6 +46,16 @@ export class SupertokensService {
       }));
     }
 
+    if (
+      this.config.get<string>("GOOGLE_OAUTH_CLIENT_ID") &&
+      this.config.get<string>("GOOGLE_OAUTH_CLIENT_SECRET")
+    ) {
+      providers.push(ThirdParty.Google({
+        clientId: this.config.get<string>("GOOGLE_OAUTH_CLIENT_ID"),
+        clientSecret: this.config.get<string>("GOOGLE_OAUTH_CLIENT_SECRET"),
+      }));
+    }
+
     return providers;
   }
 }

@@ -7,7 +7,7 @@ import {
 
 import { AuthMiddleware } from "./auth.middleware";
 import { SupertokensService } from "./supertokens.service";
-import { AuthMethodsController } from "./auth-methods.controller";
+import { IdentityModule } from "../identity/identity.module";
 
 @Module({
   providers: [],
@@ -22,12 +22,11 @@ export class AuthModule implements NestModule {
   static forRoot(): DynamicModule {
 
     return {
-      controllers: [AuthMethodsController],
       providers: [
         SupertokensService,
       ],
       exports: [],
-      imports: [],
+      imports: [IdentityModule],
       module: AuthModule,
     };
   }

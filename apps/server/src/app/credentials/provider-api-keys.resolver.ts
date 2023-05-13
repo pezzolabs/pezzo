@@ -1,40 +1,42 @@
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
-import { ProviderAPIKey } from "../../@generated/provider-api-key/provider-api-key.model";
-import { CreateProviderAPIKeyInput } from "./inputs/create-provider-api-key.input";
-import { ProviderAPIKeysService } from "./provider-api-keys.service";
-import { ProviderAPIKeyWhereUniqueInput } from "../../@generated/provider-api-key/provider-api-key-where-unique.input";
+import { ProviderApiKey } from "../../@generated/provider-api-key/provider-api-key.model";
+import { CreateProviderApiKeyInput } from "./inputs/create-provider-api-key.input";
+import { ProviderApiKeysService } from "./provider-api-keys.service";
+import { ProviderApiKeyWhereUniqueInput } from "../../@generated/provider-api-key/provider-api-key-where-unique.input";
+import { CurrentUser } from "../identity/current-user.decorator";
+import { RequestUser } from "../identity/users.types";
+import { UseGuards } from "@nestjs/common";
+import { AuthGuard } from "../auth/auth.guard";
 
-@Resolver(() => ProviderAPIKey)
-export class ProviderAPIKeysResolver {
-  constructor(private providerAPIKeysService: ProviderAPIKeysService) {}
+@UseGuards(AuthGuard)
+@Resolver(() => ProviderApiKey)
+export class ProviderApiKeysResolver {
+  constructor(private providerAPIKeysService: ProviderApiKeysService) {}
 
-  @Query(() => [ProviderAPIKey])
-  async providerAPIKeys() {
-    const keys = await this.providerAPIKeysService.getAllProviderAPIKeys();
-    return keys.map((key) => ({ ...key, value: this.censorAPIKey(key.value) }));
+  @Query(() => [ProviderApiKey])
+  async providerApiKeys(@CurrentUser() user: RequestUser) {
+    const keys = await this.providerAPIKeysService.getAllProviderApiKeys(user.orgMemberships[0].organizationId);
+    return keys.map((key) => ({ ...key, value: this.censorApiKey(key.value) }));
   }
 
-  @Mutation(() => ProviderAPIKey)
-  async updateProviderAPIKey(@Args("data") data: CreateProviderAPIKeyInput) {
-    const key = await this.providerAPIKeysService.upsertProviderAPIKey(
+  @Mutation(() => ProviderApiKey)
+  async updateProviderApiKey(
+    @Args("data") data: CreateProviderApiKeyInput,
+    @CurrentUser() user: RequestUser
+  ) {
+    const key = await this.providerAPIKeysService.upsertProviderApiKey(
       data.provider,
-      data.value
+      data.value,
+      user.orgMemberships[0].organizationId
     );
 
     return {
       ...key,
-      value: this.censorAPIKey(key.value),
+      value: this.censorApiKey(key.value),
     };
   }
 
-  private censorAPIKey(value: string) {
+  private censorApiKey(value: string) {
     return value.substring(0, 3) + "..." + value.substring(value.length - 3);
-  }
-
-  @Mutation(() => Boolean)
-  async deleteProviderAPIKey(
-    @Args("data") data: ProviderAPIKeyWhereUniqueInput
-  ) {
-    return this.providerAPIKeysService.deleteProviderAPIKey(data.id);
   }
 }

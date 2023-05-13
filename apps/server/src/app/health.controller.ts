@@ -11,10 +11,4 @@ export class HealthController {
       version,
     };
   }
-
-  @Get("/test")
-  @UseGuards(new AuthGuard())
-  test() {
-    return { test: "OK" };
-  }
 }

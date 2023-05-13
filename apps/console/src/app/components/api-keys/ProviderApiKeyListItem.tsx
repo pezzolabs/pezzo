@@ -20,7 +20,7 @@ interface Props {
   iconBase64: string;
 }
 
-export const APIKeyListItem = ({ provider, value, iconBase64 }: Props) => {
+export const ProviderApiKeyListItem = ({ provider, value, iconBase64 }: Props) => {
   const updateKeyMutation = useMutation({
     mutationFn: (data: CreateProviderApiKeyInput) =>
       gqlClient.request(UPDATE_PROVIDER_API_KEY, {
@@ -29,8 +29,8 @@ export const APIKeyListItem = ({ provider, value, iconBase64 }: Props) => {
           value: data.value,
         },
       }),
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["providerAPIKeys"] });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["providerApiKeys"] });
     },
   });
 

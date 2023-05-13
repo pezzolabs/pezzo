@@ -7,6 +7,7 @@ export class PromptEnvironmentsService {
 
   async createPromptEnvironment(
     promptId: string,
+    environmentId: string,
     environmentSlug: string,
     promptVersionSha: string
   ) {
@@ -14,13 +15,13 @@ export class PromptEnvironmentsService {
       create: {
         id: `${environmentSlug}_${promptId}`,
         promptId,
-        environmentSlug,
+        environmentId,
         promptVersionSha,
       },
       update: {
-        id: `${environmentSlug}_${promptId}`,
+        id: `${environmentId}_${promptId}`,
         promptId,
-        environmentSlug,
+        environmentId,
         promptVersionSha,
       },
       where: {
@@ -32,11 +33,8 @@ export class PromptEnvironmentsService {
   }
 
   async getPromptEnvironment(promptId: string, environmentSlug: string) {
-    const promptEnvironment = await this.prisma.promptEnvironment.findFirst({
-      where: {
-        promptId,
-        environmentSlug,
-      },
+    const promptEnvironment = await this.prisma.promptEnvironment.findUnique({
+      where: { id: `${environmentSlug}_${promptId}` },
     });
 
     return promptEnvironment;

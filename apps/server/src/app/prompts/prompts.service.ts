@@ -18,10 +18,21 @@ export class PromptsService {
     return prompt;
   }
 
-  async createPrompt(name: string, integrationId: string) {
+  async getPromptByName(name: string, organizationId: string) {
+    const prompt = await this.prisma.prompt.findFirst({
+      where: {
+        name,
+        organizationId,
+      },
+    });
+    return prompt;
+  }
+
+  async createPrompt(name: string, integrationId: string, organizationId: string) {
     const prompt = await this.prisma.prompt.create({
       data: {
         integrationId,
+        organizationId,
         name,
         versions: {
           create: [],
