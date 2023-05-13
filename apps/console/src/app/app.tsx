@@ -1,69 +1,85 @@
-import styled from "@emotion/styled";
 import { Navigate, Route, Routes } from "react-router-dom";
+import * as reactRouterDom from "react-router-dom";
 import "antd/dist/reset.css";
 import "./styles.css";
 
 import { ThemeProvider } from "./lib/providers/ThemeProvider";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/graphql";
-import { SideNavigation } from "./components/layout/SideNavigation";
-import { Layout } from "antd";
 import { CurrentPromptProvider } from "./lib/providers/CurrentPromptContext";
 import { PromptTesterProvider } from "./lib/providers/PromptTesterContext";
 import { EnvironmentsPage } from "./pages/environments";
 import { PromptsPage } from "./pages/prompts";
 import { PromptPage } from "./pages/prompts/[promptId]";
 import { APIKeysPage } from "./pages/api-keys";
+import { SideNavigationLayout } from "./components/layout/SideNavigationLayout";
 
-const { Content } = Layout;
+import { initSuperTokens } from "./lib/auth/supertokens";
+import { SuperTokensWrapper } from "supertokens-auth-react";
+import { getSuperTokensRoutesForReactRouterDom } from "supertokens-auth-react/ui";
+import { SessionAuth } from "supertokens-auth-react/recipe/session";
+import { ThirdPartyEmailPasswordPreBuiltUI } from "supertokens-auth-react/recipe/thirdpartyemailpassword/prebuiltui";
 
-const StyledContent = styled(Content)`
-  padding: 22px;
-  min-height: 200px;
-  overflow-y: auto;
-
-  scrollbar-width: none; /* Firefox */
-  ::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
-  }
-  ::-ms-scrollbar {
-    display: none; /* IE */
-  }
-`;
+initSuperTokens();
 
 export function App() {
   return (
     <>
-      <main className="app">
-        <ThemeProvider>
-          <QueryClientProvider client={queryClient}>
-            <CurrentPromptProvider>
-              <PromptTesterProvider>
-                <Layout style={{ height: "100vh", maxHeight: "100vh" }}>
-                  <Layout>
-                    <SideNavigation />
-                    <StyledContent>
-                      <Routes>
-                        <Route index element={<Navigate to="/prompts" />} />
-                        <Route path="/prompts" element={<PromptsPage />} />
-                        <Route
-                          path="/prompts/:promptId"
-                          element={<PromptPage />}
-                        />
-                        <Route
-                          path="/environments"
-                          element={<EnvironmentsPage />}
-                        />
-                        <Route path="/api-keys" element={<APIKeysPage />} />
-                      </Routes>
-                    </StyledContent>
-                  </Layout>
-                </Layout>
-              </PromptTesterProvider>
-            </CurrentPromptProvider>
-          </QueryClientProvider>
-        </ThemeProvider>
-      </main>
+      <ThemeProvider>
+        <main className="app">
+          <SuperTokensWrapper>
+            <QueryClientProvider client={queryClient}>
+              <CurrentPromptProvider>
+                <PromptTesterProvider>
+                  <Routes>
+                    {/* We don't render the SideNavigationLayout for non-authorized routes */}
+                    {getSuperTokensRoutesForReactRouterDom(reactRouterDom, [
+                      ThirdPartyEmailPasswordPreBuiltUI,
+                    ])}
+
+                    {/* Authorized routes */}
+                    <Route element={<SideNavigationLayout />}>
+                      <Route index element={<Navigate to="/prompts" />} />
+                      <Route
+                        path="/prompts"
+                        element={
+                          <SessionAuth>
+                            <PromptsPage />
+                          </SessionAuth>
+                        }
+                      />
+                      <Route
+                        path="/prompts/:promptId"
+                        element={
+                          <SessionAuth>
+                            <PromptPage />
+                          </SessionAuth>
+                        }
+                      />
+                      <Route
+                        path="/environments"
+                        element={
+                          <SessionAuth>
+                            <EnvironmentsPage />
+                          </SessionAuth>
+                        }
+                      />
+                      <Route
+                        path="/api-keys"
+                        element={
+                          <SessionAuth>
+                            <APIKeysPage />
+                          </SessionAuth>
+                        }
+                      />
+                    </Route>
+                  </Routes>
+                </PromptTesterProvider>
+              </CurrentPromptProvider>
+            </QueryClientProvider>
+          </SuperTokensWrapper>
+        </main>
+      </ThemeProvider>
     </>
     // <StyledApp>
     //   <NxWelcome title="console" />

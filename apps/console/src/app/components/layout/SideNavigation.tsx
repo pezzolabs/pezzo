@@ -1,13 +1,19 @@
-import { BoltIcon, ServerStackIcon, KeyIcon } from "@heroicons/react/24/solid";
+import {
+  BoltIcon,
+  ServerStackIcon,
+  KeyIcon,
+  ArrowRightOnRectangleIcon,
+} from "@heroicons/react/24/solid";
 import { Layout, Menu } from "antd";
-import { css } from "@emotion/css";
 import { useState } from "react";
-import LogoSquare from "../../../assets/logo-square.svg";
 import { useNavigate, useLocation } from "react-router-dom";
+import styled from "@emotion/styled";
+import { signOut } from "supertokens-auth-react/recipe/thirdpartyemailpassword";
 
-const { Sider } = Layout;
+import LogoSquare from "../../../assets/logo-square.svg";
+import { colors } from "../../lib/theme/colors";
 
-const menuItems = [
+const topMenuItems = [
   {
     key: "prompts",
     label: "Prompts",
@@ -25,43 +31,74 @@ const menuItems = [
   },
 ];
 
+const bottomMenuItems = [
+  {
+    key: "signout",
+    label: "Sign Out",
+    icon: <ArrowRightOnRectangleIcon height={18} />,
+  },
+];
+
+const SidebarContainer = styled.div`
+  width: 80px;
+  background: #141414;
+  border-inline-end: 1px solid ${colors.neutral["800"]};
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+`;
+
+const Logo = styled.img`
+  width: 36px;
+  margin: 20px auto;
+  display: block;
+`;
+
+const BaseMenu = styled(Menu)`
+  border-inline-end: none !important;
+`;
+
+const TopMenu = styled(BaseMenu)`
+  flex: 100%;
+`;
+
+const BottomMenu = styled(BaseMenu)``;
+
 export const SideNavigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isCollapsed] = useState(true);
 
-  const handleMenuClick = (item) => {
+  const handleTopMenuClick = (item) => {
     navigate(`/${item.key}`);
   };
 
+  const handleBottomMenuClick = async (item) => {
+    if (item.key === "signout") {
+      await signOut();
+      window.location.href = "/login";
+    }
+  };
+
   return (
-    <Sider collapsed={isCollapsed} style={{ overflow: "hidden" }}>
-      <div
-        className={css`
-          width: 80px;
-          padding: 20px;
-          background: #141414;
-          border-inline-end: 1px solid rgba(253, 253, 253, 0.12);
-        `}
-      >
-        <img
-          src={LogoSquare}
-          width={36}
-          style={{ margin: "auto", display: "block" }}
-          alt="Logo"
+    <Layout.Sider collapsed={isCollapsed} style={{ overflow: "hidden" }}>
+      <SidebarContainer>
+        <Logo src={LogoSquare} alt="Logo" />
+        <TopMenu
+          onClick={handleTopMenuClick}
+          defaultSelectedKeys={["prompts"]}
+          selectedKeys={[location.pathname.replace("/", "")]}
+          items={topMenuItems}
+          mode="inline"
         />
-      </div>
-      <Menu
-        onClick={handleMenuClick}
-        className={css`
-          padding: 6px;
-          height: 100%;
-        `}
-        defaultSelectedKeys={["prompts"]}
-        selectedKeys={[location.pathname.replace("/", "")]}
-        mode="inline"
-        items={menuItems}
-      />
-    </Sider>
+        <BottomMenu
+          onClick={handleBottomMenuClick}
+          selectedKeys={null}
+          items={bottomMenuItems}
+          mode="inline"
+        />
+      </SidebarContainer>
+    </Layout.Sider>
   );
 };
