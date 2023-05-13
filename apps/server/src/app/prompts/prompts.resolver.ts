@@ -20,7 +20,8 @@ import { CreatePromptVersionInput } from "./inputs/create-prompt-version.input";
 import { GetPromptVersionInput } from "./inputs/get-prompt-version.input";
 import { GetPromptInput } from "./inputs/get-prompt.input";
 import { GetDeployedPromptVersionInput } from "./inputs/get-deployed-prompt-version.input";
-import { NotFoundException } from "@nestjs/common";
+import { NotFoundException, UseGuards } from "@nestjs/common";
+import { AuthGuard } from "../auth/auth.guard";
 
 @Resolver(() => Prompt)
 export class PromptsResolver {
@@ -30,6 +31,7 @@ export class PromptsResolver {
   ) {}
 
   @Query(() => [Prompt])
+  @UseGuards(new AuthGuard())
   async prompts() {
     const prompts = await this.prisma.prompt.findMany({
       orderBy: {

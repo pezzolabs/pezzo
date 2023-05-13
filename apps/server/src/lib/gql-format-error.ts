@@ -23,7 +23,6 @@ export function formatError(error: GraphQLFormattedError) {
     locations: error.locations,
     extensions: {
       code: HttpStatus[exception.statusCode] || "UNKNOWN_ERROR",
-      stacktrace: error.extensions.stacktrace,
     },
   };
 
