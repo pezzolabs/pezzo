@@ -11,6 +11,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
   supertokens:
     image: supertokens/supertokens-postgresql:5.0
     restart: always

@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
@@ -12,6 +13,7 @@ import { UsersService } from "../identity/users.service";
 import { RequestUser } from "../identity/users.types";
 import { APIKeysService } from "../identity/api-keys.service";
 import { User } from "supertokens-node/recipe/thirdpartyemailpassword";
+import Session, { SessionContainer } from "supertokens-node/recipe/session";
 
 export enum AuthMethod {
   ApiKey = "ApiKey",
@@ -36,7 +38,7 @@ export class AuthGuard implements CanActivate {
       return this.authorizeApiKey(req, res);
     }
 
-    return this.authorizeBearerToken(req, res);
+    return this.authorizeBearerToken(context);
   }
 
   private async authorizeApiKey(req, _res) {
@@ -53,24 +55,32 @@ export class AuthGuard implements CanActivate {
     return true;
   }
 
-  
-  private async authorizeBearerToken(req: any, res: any) {
-    let err = undefined;
-    let supertokensUser: User;
+  private async authorizeBearerToken(context: ExecutionContext) {
+    const gqlCtx = GqlExecutionContext.create(context);
+    const ctx = gqlCtx.getContext();
+    const req = ctx.req;
+    const res = ctx.res;
+
+    let session: SessionContainer;
 
     try {
-      // You can create an optional version of this by passing {sessionRequired: false} to verifySession
-      await verifySession()(req, res, (res) => {
-        err = res;
+      session = await Session.getSession(req, res, {
+        sessionRequired: false,
       });
-  
-      supertokensUser = await ThirdPartyEmailPassword.getUserById(
-        req.session.getUserId()
-      );
-      req["supertokensUser"] = supertokensUser;
+
+      console.log('session', session);
     } catch (error) {
       throw new UnauthorizedException();
     }
+
+    if (!session) {
+      throw new UnauthorizedException();
+    }
+
+    const supertokensUser = await ThirdPartyEmailPassword.getUserById(
+      session.getUserId()
+    );
+    req["supertokensUser"] = supertokensUser;
 
     try {
       const user = await this.usersService.getOrCreateUser(supertokensUser);
@@ -91,11 +101,6 @@ export class AuthGuard implements CanActivate {
       req["user"] = reqUser;
     } catch (error) {
       console.error("Could not fetch or create user", error);
-      throw new InternalServerErrorException();
-    }
-
-    if (err) {
-      console.error("err", err);
       throw new InternalServerErrorException();
     }
 

@@ -45,6 +45,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
       autoSchemaFile: GQL_SCHEMA_PATH,
       sortSchema: true,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
+      context: ({ req, res, next }) => ({ req, res, next }),
       include: [
         PromptsModule,
         EnvironmentsModule,
