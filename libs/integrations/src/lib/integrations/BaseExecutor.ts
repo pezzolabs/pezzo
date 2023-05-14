@@ -2,6 +2,7 @@ import { Pezzo } from "@pezzo/client";
 import { interpolateVariables } from "../utils/interpolate-variables";
 import { GraphQLFormattedError } from "graphql";
 import { PezzoClientError } from "./PezzoClientError";
+import { PromptExecution } from "@prisma/client";
 
 export interface ExecuteProps<T> {
   content: string;
@@ -36,7 +37,7 @@ export abstract class BaseExecutor {
     promptName: string,
     variables: Record<string, any> = {},
     options: ExecuteOptions = {}
-  ) {
+  ): Promise<PromptExecution | void> {
     // let promptVersion;
 
     let prompt;
@@ -107,7 +108,7 @@ export abstract class BaseExecutor {
         );
       }
 
-      return executionReport;
+      return executionReport as PromptExecution;
     } catch (error) {
       // We do not want to fail the request, so we just log the error
       console.error(`Failed to report prompt execution to Pezzo`, error);

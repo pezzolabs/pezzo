@@ -3,11 +3,6 @@ import { REPORT_PROMPT_EXECUTION } from "../graphql/mutations";
 
 import { type Prisma } from "@prisma/client";
 import { GraphQLClient } from "graphql-request";
-import {
-  Prompt,
-  QueryFindPromptWithApiKeyArgs,
-} from "../@generated/graphql/graphql";
-import { FindPromptByNameInput } from "@pezzo/graphql";
 
 export interface PezzoClientOptions {
   serverUrl: string;
