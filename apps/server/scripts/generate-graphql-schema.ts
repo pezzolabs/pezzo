@@ -14,7 +14,7 @@ export default async function generateGraphQLSchema(): Promise<void> {
   // Override PrismaClient $connect to prevent connections to the database
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   PrismaClient.prototype.$connect = async () => {};
-  
+
   // Prevent SuperTokens init
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   supertokens.init = async () => {};
