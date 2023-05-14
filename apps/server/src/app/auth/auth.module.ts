@@ -20,11 +20,8 @@ export class AuthModule implements NestModule {
   }
 
   static forRoot(): DynamicModule {
-
     return {
-      providers: [
-        SupertokensService,
-      ],
+      providers: [SupertokensService],
       exports: [],
       imports: [IdentityModule],
       module: AuthModule,

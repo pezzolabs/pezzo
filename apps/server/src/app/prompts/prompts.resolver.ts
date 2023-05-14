@@ -167,8 +167,9 @@ export class PromptsResolver {
     }
     isOrgMemberOrThrow(user, prompt.organizationId);
 
-
-    const promptVersion = await this.promptsService.getLatestPromptVersion(data.id);
+    const promptVersion = await this.promptsService.getLatestPromptVersion(
+      data.id
+    );
     return promptVersion;
   }
 

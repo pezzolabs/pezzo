@@ -2,7 +2,11 @@ import { Args, Mutation, Resolver } from "@nestjs/graphql";
 import { PromptEnvironment } from "../../@generated/prompt-environment/prompt-environment.model";
 import { PrismaService } from "../prisma.service";
 import { PublishPromptInput } from "./inputs/create-prompt-environment.input";
-import { ConflictException, NotFoundException, UseGuards } from "@nestjs/common";
+import {
+  ConflictException,
+  NotFoundException,
+  UseGuards,
+} from "@nestjs/common";
 import { PromptEnvironmentsService } from "./prompt-environments.service";
 import { EnvironmentsService } from "../environments/environments.service";
 import { AuthGuard } from "../auth/auth.guard";
@@ -19,7 +23,10 @@ export class PromptEnvironmentsResolver {
   ) {}
 
   @Mutation(() => PromptEnvironment)
-  async publishPrompt(@Args("data") data: PublishPromptInput, @CurrentUser() user: RequestUser) {
+  async publishPrompt(
+    @Args("data") data: PublishPromptInput,
+    @CurrentUser() user: RequestUser
+  ) {
     const organizationId = user.orgMemberships[0].organizationId;
 
     const environment = await this.environmentsService.getBySlug(

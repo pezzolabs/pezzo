@@ -13,12 +13,16 @@ export function isOrgMemberOrThrow(user: RequestUser, organizationId: string) {
 }
 
 export function isOrgAdmin(user: RequestUser, organizationId: string) {
-  const membership = user.orgMemberships.find((m) => m.organizationId === organizationId);
+  const membership = user.orgMemberships.find(
+    (m) => m.organizationId === organizationId
+  );
   return membership.role === OrgRole.Admin;
 }
 
 export function isOrgAdminOrThrow(user: RequestUser, organizationId: string) {
-  const membership = user.orgMemberships.find((m) => m.organizationId === organizationId);
+  const membership = user.orgMemberships.find(
+    (m) => m.organizationId === organizationId
+  );
   if (membership.role !== OrgRole.Admin) {
     throw new ForbiddenException();
   }

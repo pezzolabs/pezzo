@@ -16,7 +16,10 @@ export class PromptTesterService {
     let executor;
 
     const { provider } = getIntegration(integrationId);
-    const apiKey = await this.providerAPIKeysService.getByProvider(provider, organizationId);
+    const apiKey = await this.providerAPIKeysService.getByProvider(
+      provider,
+      organizationId
+    );
 
     if (!apiKey) {
       throw new ForbiddenException(`No valid API key found for ${provider}`);
@@ -32,7 +35,10 @@ export class PromptTesterService {
     return executor;
   }
 
-  async testPrompt(input: TestPromptInput, organizationId: string): Promise<TestPromptResult> {
+  async testPrompt(
+    input: TestPromptInput,
+    organizationId: string
+  ): Promise<TestPromptResult> {
     const { integrationId, content, variables } = input;
     const interpolatedContent = interpolateVariables(content, variables);
 

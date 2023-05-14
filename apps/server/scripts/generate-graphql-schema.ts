@@ -12,10 +12,10 @@ if (process.env.GITHUB_ACTIONS !== "true") {
 
 export default async function generateGraphQLSchema(): Promise<void> {
   // Override PrismaClient $connect to prevent connections to the database
-  PrismaClient.prototype.$connect = async () => {}
+  PrismaClient.prototype.$connect = async () => {};
 
   // Prevent SuperTokens init
-  supertokens.init = async () => {}
+  supertokens.init = async () => {};
 
   // Use the side effect of initializing the nest application for generating
   // the Nest.js schema

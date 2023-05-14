@@ -19,7 +19,11 @@ export class ProviderApiKeysService {
     return keys;
   }
 
-  async createProviderApiKey(provider: string, value: string, organizationId: string) {
+  async createProviderApiKey(
+    provider: string,
+    value: string,
+    organizationId: string
+  ) {
     const key = await this.prisma.providerApiKey.create({
       data: {
         provider,
@@ -31,7 +35,11 @@ export class ProviderApiKeysService {
     return key;
   }
 
-  async upsertProviderApiKey(provider: string, value: string, organizationId: string) {
+  async upsertProviderApiKey(
+    provider: string,
+    value: string,
+    organizationId: string
+  ) {
     const exists = await this.prisma.providerApiKey.findFirst({
       where: { provider },
     });

@@ -6,7 +6,13 @@ import { APIKeysService } from "./api-keys.service";
 import { ApiKeysResolver } from "./api-keys.resolver";
 
 @Module({
-  providers: [PrismaService, UsersService, OrganizationsService, APIKeysService, ApiKeysResolver],
-  exports: [UsersService, OrganizationsService, APIKeysService]
+  providers: [
+    PrismaService,
+    UsersService,
+    OrganizationsService,
+    APIKeysService,
+    ApiKeysResolver,
+  ],
+  exports: [UsersService, OrganizationsService, APIKeysService],
 })
 export class IdentityModule {}

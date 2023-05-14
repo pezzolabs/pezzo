@@ -15,7 +15,9 @@ export class ProviderApiKeysResolver {
 
   @Query(() => [ProviderApiKey])
   async providerApiKeys(@CurrentUser() user: RequestUser) {
-    const keys = await this.providerAPIKeysService.getAllProviderApiKeys(user.orgMemberships[0].organizationId);
+    const keys = await this.providerAPIKeysService.getAllProviderApiKeys(
+      user.orgMemberships[0].organizationId
+    );
     return keys.map((key) => ({ ...key, value: this.censorApiKey(key.value) }));
   }
 

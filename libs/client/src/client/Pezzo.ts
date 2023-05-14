@@ -18,15 +18,15 @@ export class Pezzo {
     this.options = options;
     this.gqlClient = new GraphQLClient(`${options.serverUrl}/graphql`, {
       headers: {
-        'x-api-key': options.apiKey,
-      }
+        "x-api-key": options.apiKey,
+      },
     });
   }
 
   async findPrompt(name: string) {
     const result = await this.gqlClient.request(FIND_PROMPT, {
       data: {
-        name
+        name,
       },
     });
 

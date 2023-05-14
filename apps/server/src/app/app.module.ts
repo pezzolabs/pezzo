@@ -28,7 +28,9 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
         SUPERTOKENS_CONNECTION_URI: Joi.string().required(),
         SUPERTOKENS_API_KEY: Joi.string().optional(),
         SUPERTOKENS_API_DOMAIN: Joi.string().default("http://localhost:3000"),
-        SUPERTOKENS_WEBSITE_DOMAIN: Joi.string().default("http://localhost:4200"),
+        SUPERTOKENS_WEBSITE_DOMAIN: Joi.string().default(
+          "http://localhost:4200"
+        ),
         GOOGLE_OAUTH_CLIENT_ID: Joi.string().optional().default(null),
         GOOGLE_OAUTH_CLIENT_SECRET: Joi.string().optional().default(null),
       }),

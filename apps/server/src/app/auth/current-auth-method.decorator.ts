@@ -1,6 +1,6 @@
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { createParamDecorator, ExecutionContext } from "@nestjs/common";
 import { GqlExecutionContext } from "@nestjs/graphql";
-import { AuthMethod as _AuthMethod } from './auth.guard';
+import { AuthMethod as _AuthMethod } from "./auth.guard";
 
 export const CurrentAuthMethod = createParamDecorator(
   (_: unknown, context: ExecutionContext): _AuthMethod => {

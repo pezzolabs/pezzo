@@ -4,7 +4,7 @@ import { PrismaService } from "../prisma.service";
 @Injectable()
 export class APIKeysService {
   constructor(private readonly prisma: PrismaService) {}
-  
+
   async getApiKeyByOrganizationId(organizationId: string) {
     const apiKey = await this.prisma.apiKey.findFirst({
       where: {

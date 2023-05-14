@@ -5,7 +5,7 @@ import ThirdPartyEmailPassword, {
   TypeProvider,
 } from "supertokens-node/recipe/thirdpartyemailpassword";
 import Dashboard from "supertokens-node/recipe/dashboard";
-import ThirdParty from 'supertokens-node/recipe/thirdparty';
+import ThirdParty from "supertokens-node/recipe/thirdparty";
 import { ConfigService } from "@nestjs/config";
 
 @Injectable()
@@ -40,20 +40,26 @@ export class SupertokensService {
       this.config.get<string>("GITHUB_OAUTH_APP_CLIENT_ID") &&
       this.config.get<string>("GITHUB_OAUTH_APP_CLIENT_SECRET")
     ) {
-      providers.push(ThirdParty.Github({
-        clientId: this.config.get<string>("GITHUB_OAUTH_APP_CLIENT_ID"),
-        clientSecret: this.config.get<string>("GITHUB_OAUTH_APP_CLIENT_SECRET"),
-      }));
+      providers.push(
+        ThirdParty.Github({
+          clientId: this.config.get<string>("GITHUB_OAUTH_APP_CLIENT_ID"),
+          clientSecret: this.config.get<string>(
+            "GITHUB_OAUTH_APP_CLIENT_SECRET"
+          ),
+        })
+      );
     }
 
     if (
       this.config.get<string>("GOOGLE_OAUTH_CLIENT_ID") &&
       this.config.get<string>("GOOGLE_OAUTH_CLIENT_SECRET")
     ) {
-      providers.push(ThirdParty.Google({
-        clientId: this.config.get<string>("GOOGLE_OAUTH_CLIENT_ID"),
-        clientSecret: this.config.get<string>("GOOGLE_OAUTH_CLIENT_SECRET"),
-      }));
+      providers.push(
+        ThirdParty.Google({
+          clientId: this.config.get<string>("GOOGLE_OAUTH_CLIENT_ID"),
+          clientSecret: this.config.get<string>("GOOGLE_OAUTH_CLIENT_SECRET"),
+        })
+      );
     }
 
     return providers;

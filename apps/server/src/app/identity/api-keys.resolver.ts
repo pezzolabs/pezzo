@@ -10,7 +10,7 @@ import { RequestUser } from "./users.types";
 @Resolver(() => ApiKey)
 export class ApiKeysResolver {
   constructor(private apiKeysService: APIKeysService) {}
-  
+
   @Query(() => ApiKey)
   currentApiKey(@CurrentUser() user: RequestUser) {
     const organizationid = user.orgMemberships[0].organizationId;

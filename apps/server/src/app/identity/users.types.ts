@@ -7,5 +7,5 @@ export interface RequestUser {
     organizationId: string;
     role: OrgRole;
     memberSince: Date;
-  }[]
+  }[];
 }

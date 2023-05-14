@@ -28,7 +28,11 @@ export class PromptsService {
     return prompt;
   }
 
-  async createPrompt(name: string, integrationId: string, organizationId: string) {
+  async createPrompt(
+    name: string,
+    integrationId: string,
+    organizationId: string
+  ) {
     const prompt = await this.prisma.prompt.create({
       data: {
         integrationId,

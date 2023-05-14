@@ -30,7 +30,9 @@ export const PezzoApiKeyListItem = ({ value }: Props) => {
               whiteSpace: "nowrap",
             }}
           >
-            <Typography.Text style={{ fontFamily: 'Roboto Mono' }}>{value}</Typography.Text>
+            <Typography.Text style={{ fontFamily: "Roboto Mono" }}>
+              {value}
+            </Typography.Text>
           </Col>
           <Col
             flex="10%"

@@ -6,10 +6,7 @@ import { EnvironmentsModule } from "../environments/environments.module";
 import { IdentityModule } from "../identity/identity.module";
 
 @Module({
-  imports: [
-    IdentityModule,
-    EnvironmentsModule,
-  ],
+  imports: [IdentityModule, EnvironmentsModule],
   providers: [
     PrismaService,
     PromptEnvironmentsResolver,
