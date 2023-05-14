@@ -1,10 +1,12 @@
 import { Module } from "@nestjs/common";
-import { ProviderAPIKeysResolver } from "./provider-api-keys.resolver";
+import { ProviderApiKeysResolver } from "./provider-api-keys.resolver";
 import { PrismaService } from "../prisma.service";
-import { ProviderAPIKeysService } from "./provider-api-keys.service";
+import { ProviderApiKeysService } from "./provider-api-keys.service";
+import { IdentityModule } from "../identity/identity.module";
 
 @Module({
-  providers: [PrismaService, ProviderAPIKeysResolver, ProviderAPIKeysService],
-  exports: [ProviderAPIKeysService],
+  imports: [IdentityModule],
+  providers: [PrismaService, ProviderApiKeysResolver, ProviderApiKeysService],
+  exports: [ProviderApiKeysService],
 })
 export class CredentialsModule {}

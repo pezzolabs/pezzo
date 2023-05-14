@@ -8,8 +8,8 @@ generator client {
 }
 
 generator nestgraphql {
-  provider = "node node_modules/prisma-nestjs-graphql"
-  output   = "../src/@generated"
+  provider      = "node node_modules/prisma-nestjs-graphql"
+  output        = "../src/@generated"
   binaryTargets = ["native", "debian-openssl-1.1.x", "linux-arm64-openssl-1.1.x"]
 }
 
@@ -18,22 +18,59 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id             String               @id
+  email          String               @unique
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  orgMemberships OrganizationMember[]
+}
+
+model Organization {
+  id              String               @id @default(cuid())
+  name            String
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  members         OrganizationMember[]
+  apiKeys         ApiKey[]
+  providerApiKeys ProviderApiKey[]
+}
+
+model OrganizationMember {
+  id             String       @id @default(cuid())
+  organizationId String
+  userId         String
+  role           OrgRole      @default(Admin)
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+enum OrgRole {
+  Admin
+}
+
 model Environment {
-  slug               String              @id
+  id                 String              @id @default(cuid())
+  slug               String
   name               String
-  createdAt          DateTime            @default(now())
+  organizationId     String
   promptEnvironments PromptEnvironment[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
 }
 
 model Prompt {
   id                 String              @id @default(cuid())
   integrationId      String
+  organizationId     String
   name               String
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
   executions         PromptExecution[]
   promptEnvironments PromptEnvironment[]
   versions           PromptVersion[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
 }
 
 model PromptVersion {
@@ -50,12 +87,12 @@ model PromptVersion {
 model PromptEnvironment {
   id               String         @id @default(cuid())
   promptId         String
-  environmentSlug  String
+  environmentId    String
   createdAt        DateTime       @default(now())
   prompt           Prompt         @relation(fields: [promptId], references: [id])
   promptVersionSha String
   promptVersion    PromptVersion? @relation(fields: [promptVersionSha], references: [sha])
-  environment      Environment    @relation(fields: [environmentSlug], references: [slug])
+  environment      Environment    @relation(fields: [environmentId], references: [id])
 }
 
 model PromptExecution {
@@ -85,10 +122,20 @@ enum PromptExecutionStatus {
   Error
 }
 
-model ProviderAPIKey {
-  id String @id @default(cuid())
-  provider String
-  value String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model ApiKey {
+  id             String       @id
+  name           String       @default("Default")
+  organizationId String
+  Organization   Organization @relation(fields: [organizationId], references: [id])
+  createdAt      DateTime     @default(now())
+}
+
+model ProviderApiKey {
+  id             String       @id @default(cuid())
+  provider       String
+  value          String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }

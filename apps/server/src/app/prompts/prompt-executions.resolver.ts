@@ -9,7 +9,17 @@ import { PromptExecutionStatus } from "../../@generated/prisma/prompt-execution-
 import { TestPromptInput } from "./inputs/test-prompt.input";
 import { PromptsService } from "./prompts.service";
 import { PromptTesterService } from "./prompt-tester.service";
+import { CurrentUser } from "../identity/current-user.decorator";
+import { RequestUser } from "../identity/users.types";
+import { AuthGuard } from "../auth/auth.guard";
+import {
+  ForbiddenException,
+  NotFoundException,
+  UseGuards,
+} from "@nestjs/common";
+import { ApiKeyOrgId } from "../identity/api-key-org-id";
 
+@UseGuards(AuthGuard)
 @Resolver(() => Prompt)
 export class PromptExecutionsResolver {
   constructor(
@@ -38,16 +48,38 @@ export class PromptExecutionsResolver {
   }
 
   @Mutation(() => PromptExecution)
-  async reportPromptExecution(@Args("data") data: PromptExecutionCreateInput) {
+  async reportPromptExecutionWithApiKey(
+    @Args("data") data: PromptExecutionCreateInput,
+    @ApiKeyOrgId() orgId: string
+  ) {
+    const promptId = data.prompt.connect.id;
+
+    const prompt = await this.promptsService.getPrompt(promptId);
+
+    if (!prompt) {
+      throw new NotFoundException();
+    }
+
+    if (prompt.organizationId !== orgId) {
+      throw new ForbiddenException();
+    }
+
     const execution = await this.prisma.promptExecution.create({
       data,
     });
     return execution;
   }
 
+  @UseGuards(AuthGuard)
   @Mutation(() => PromptExecution)
-  async testPrompt(@Args("data") data: TestPromptInput) {
-    const result = await this.promptTesterService.testPrompt(data);
+  async testPrompt(
+    @Args("data") data: TestPromptInput,
+    @CurrentUser() user: RequestUser
+  ) {
+    const result = await this.promptTesterService.testPrompt(
+      data,
+      user.orgMemberships[0].organizationId
+    );
 
     const execution = new PromptExecution();
     execution.id = "test";
