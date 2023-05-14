@@ -1,14 +1,8 @@
 import { Space, Typography } from "antd";
 import { integrations } from "@pezzo/integrations";
-import styled from "@emotion/styled";
-import { useQuery } from "@tanstack/react-query";
-import { gqlClient } from "../../lib/graphql";
-import {
-  GET_CURRENT_PEZZO_API_KEY,
-  GET_ALL_PROVIDER_API_KEYS,
-} from "../../graphql/queries/api-keys";
 import { ProviderApiKeyListItem } from "../../components/api-keys/ProviderApiKeyListItem";
 import { PezzoApiKeyListItem } from "../../components/api-keys/PezzoApiKeyListItem";
+import { useApiKeys, useProviderApiKeys } from "../../lib/hooks/queries";
 
 export const APIKeysPage = () => {
   const providers = Object.values(integrations).map((integration) => ({
@@ -17,15 +11,8 @@ export const APIKeysPage = () => {
     provider: integration.provider,
   }));
 
-  const { data: apiKeyData } = useQuery({
-    queryKey: ["apiKeys"],
-    queryFn: () => gqlClient.request(GET_CURRENT_PEZZO_API_KEY),
-  });
-
-  const { data: providerApiKeysData } = useQuery({
-    queryKey: ["providerApiKeys"],
-    queryFn: () => gqlClient.request(GET_ALL_PROVIDER_API_KEYS),
-  });
+  const { data: apiKeyData } = useApiKeys();
+  const { data: providerApiKeysData } = useProviderApiKeys();
 
   const renderProviderApiKey = (provider) => {
     const apiKey = providerApiKeysData.providerApiKeys.find(
