@@ -6,7 +6,12 @@
   "implicitDependencies": ["graphql"],
   "targets": {
     "build": {
-      "dependsOn": ["prisma:generate", "^graphql:codegen:offline"],
+      "dependsOn": [
+        "prisma:generate",
+        "^graphql:codegen:offline",
+        "^prebuild",
+        "prebuild"
+      ],
       "executor": "@nrwl/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
@@ -40,7 +45,7 @@
     "serve": {
       "executor": "@nrwl/js:node",
       "defaultConfiguration": "development",
-      "dependsOn": ["prisma:generate"],
+      "dependsOn": ["prisma:generate", "^prebuild", "prebuild"],
       "options": {
         "buildTarget": "server:build"
       },

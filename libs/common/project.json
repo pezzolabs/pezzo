@@ -4,7 +4,7 @@
   "sourceRoot": "libs/common/src",
   "projectType": "library",
   "targets": {
-    "sync-version": {
+    "prebuild": {
       "executor": "nx:run-commands",
       "options": {
         "command": "npx tsx libs/common/scripts/sync-version.ts"
