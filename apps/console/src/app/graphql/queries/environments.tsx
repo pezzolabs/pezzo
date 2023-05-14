@@ -10,7 +10,7 @@ export const GET_ALL_ENVIRONMENTS = graphql(/* GraphQL */ `
 `);
 
 export const GET_ENVIRONMENT = graphql(/* GraphQL */ `
-  query Environment($data: EnvironmentWhereUniqueInput!) {
+  query Environment($data: GetEnvironmentBySlugInput!) {
     environment(data: $data) {
       slug
       name

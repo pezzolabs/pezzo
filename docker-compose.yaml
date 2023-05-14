@@ -17,6 +17,14 @@ services:
       timeout: 5s
       retries: 3
 
+  supertokens:
+    image: supertokens/supertokens-postgresql:5.0
+    restart: always
+    ports:
+      - "3567:3567"
+    environment:
+      POSTGRES_CONNECTION_URI: postgres://postgres:postgres@postgres:5432/supertokens
+
   pezzo-server:
     image: ghcr.io/pezzolabs/pezzo/server:latest
     restart: always

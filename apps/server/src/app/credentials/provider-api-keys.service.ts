@@ -2,39 +2,50 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 
 @Injectable()
-export class ProviderAPIKeysService {
+export class ProviderApiKeysService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getByProvider(provider: string) {
-    const keys = await this.prisma.providerAPIKey.findFirst({
-      where: { provider },
+  async getByProvider(provider: string, organizationId: string) {
+    const keys = await this.prisma.providerApiKey.findFirst({
+      where: { provider, organizationId },
     });
     return keys;
   }
 
-  async getAllProviderAPIKeys() {
-    const keys = await this.prisma.providerAPIKey.findMany();
+  async getAllProviderApiKeys(organizationId: string) {
+    const keys = await this.prisma.providerApiKey.findMany({
+      where: { organizationId },
+    });
     return keys;
   }
 
-  async createProviderAPIKey(provider: string, value: string) {
-    const key = await this.prisma.providerAPIKey.create({
+  async createProviderApiKey(
+    provider: string,
+    value: string,
+    organizationId: string
+  ) {
+    const key = await this.prisma.providerApiKey.create({
       data: {
         provider,
         value,
+        organizationId,
       },
     });
 
     return key;
   }
 
-  async upsertProviderAPIKey(provider: string, value: string) {
-    const exists = await this.prisma.providerAPIKey.findFirst({
+  async upsertProviderApiKey(
+    provider: string,
+    value: string,
+    organizationId: string
+  ) {
+    const exists = await this.prisma.providerApiKey.findFirst({
       where: { provider },
     });
 
     if (exists) {
-      const key = await this.prisma.providerAPIKey.update({
+      const key = await this.prisma.providerApiKey.update({
         where: {
           id: exists.id,
         },
@@ -46,18 +57,19 @@ export class ProviderAPIKeysService {
       return key;
     }
 
-    const key = await this.prisma.providerAPIKey.create({
+    const key = await this.prisma.providerApiKey.create({
       data: {
         provider,
         value,
+        organizationId,
       },
     });
 
     return key;
   }
 
-  async deleteProviderAPIKey(id: string) {
-    await this.prisma.providerAPIKey.delete({
+  async deleteProviderApiKey(id: string) {
+    await this.prisma.providerApiKey.delete({
       where: {
         id,
       },

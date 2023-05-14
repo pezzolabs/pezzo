@@ -1,10 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
-import { Modal, Form, Input, Button } from "antd";
+import { Modal, Form, Input, Button, Alert } from "antd";
 import { CREATE_PROMPT } from "../../graphql/mutations/prompts";
 import { gqlClient, queryClient } from "../../lib/graphql";
 import { css } from "@emotion/css";
 import { PromptIntegrationSelector } from "./PromptIntegrationSelector";
 import { integrations } from "@pezzo/integrations";
+import { useState } from "react";
 
 const integrationsArray = Object.values(integrations);
 
@@ -21,6 +22,8 @@ type Inputs = {
 
 export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
   const [form] = Form.useForm<Inputs>();
+  const [error, setError] = useState<string | null>(null);
+
   const createPromptMutation = useMutation({
     mutationFn: (data: Inputs) =>
       gqlClient.request(CREATE_PROMPT, {
@@ -33,14 +36,21 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
       onCreated(data.createPrompt.id);
       queryClient.invalidateQueries({ queryKey: ["prompts"] });
     },
+    onError: async ({ response }) => {
+      const error = await response.errors[0].message;
+      setError(error);
+    },
   });
 
   const handleFormFinish = (data: Inputs) => {
+    setError(null);
     createPromptMutation.mutate(data);
+    form.resetFields();
   };
 
   return (
     <Modal title="New Prompt" open={open} onCancel={onClose} footer={false}>
+      {error && <Alert type="error" message={error} />}
       <Form
         form={form}
         layout="vertical"

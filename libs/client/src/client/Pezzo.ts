@@ -5,7 +5,8 @@ import { type Prisma } from "@prisma/client";
 import { GraphQLClient } from "graphql-request";
 
 export interface PezzoClientOptions {
-  pezzoServerURL: string;
+  serverUrl: string;
+  apiKey: string;
   environment: string;
 }
 
@@ -15,19 +16,21 @@ export class Pezzo {
 
   constructor(options: PezzoClientOptions) {
     this.options = options;
-    this.gqlClient = new GraphQLClient(`${options.pezzoServerURL}/graphql`);
+    this.gqlClient = new GraphQLClient(`${options.serverUrl}/graphql`, {
+      headers: {
+        "x-api-key": options.apiKey,
+      },
+    });
   }
 
   async findPrompt(name: string) {
     const result = await this.gqlClient.request(FIND_PROMPT, {
       data: {
-        name: {
-          equals: name,
-        },
+        name,
       },
     });
 
-    return result.findPrompt;
+    return result.findPromptWithApiKey;
   }
 
   async reportPromptExecution(data: Prisma.PromptExecutionCreateInput) {
@@ -35,7 +38,7 @@ export class Pezzo {
       data: data as any, // eslint-disable-line @typescript-eslint/no-explicit-any
     });
 
-    return result.reportPromptExecution;
+    return result.reportPromptExecutionWithApiKey;
   }
 
   async getDeployedPromptVersion(promptId: string) {
@@ -45,6 +48,6 @@ export class Pezzo {
         environmentSlug: this.options.environment,
       },
     });
-    return result.deployedPromptVersion;
+    return result.deployedPromptVersionWithApiKey;
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable } from "@nestjs/common";
 import { TestPromptInput } from "./inputs/test-prompt.input";
 import { getIntegration } from "@pezzo/integrations";
 import { Executor as OpenAIExecutor } from "@pezzo/integrations/lib/integrations/openai/Executor";
@@ -6,20 +6,24 @@ import { Executor as AI21Executor } from "@pezzo/integrations/lib/integrations/a
 import { Pezzo, TestPromptResult } from "@pezzo/client";
 import { interpolateVariables } from "@pezzo/common";
 import { ExecuteResult } from "@pezzo/integrations/lib/integrations/BaseExecutor";
-import { ProviderAPIKeysService } from "../credentials/provider-api-keys.service";
-
-const AI21_API_KEY = process.env.AI21_API_KEY;
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+import { ProviderApiKeysService } from "../credentials/provider-api-keys.service";
 
 @Injectable()
 export class PromptTesterService {
-  constructor(private providerAPIKeysService: ProviderAPIKeysService) {}
+  constructor(private providerAPIKeysService: ProviderApiKeysService) {}
 
-  private async getExecutor(integrationId: string) {
+  private async getExecutor(integrationId: string, organizationId: string) {
     let executor;
 
     const { provider } = getIntegration(integrationId);
-    const apiKey = await this.providerAPIKeysService.getByProvider(provider);
+    const apiKey = await this.providerAPIKeysService.getByProvider(
+      provider,
+      organizationId
+    );
+
+    if (!apiKey) {
+      throw new ForbiddenException(`No valid API key found for ${provider}`);
+    }
 
     if (integrationId === "openai") {
       executor = new OpenAIExecutor({} as Pezzo, { apiKey: apiKey.value });
@@ -31,11 +35,14 @@ export class PromptTesterService {
     return executor;
   }
 
-  async testPrompt(input: TestPromptInput): Promise<TestPromptResult> {
+  async testPrompt(
+    input: TestPromptInput,
+    organizationId: string
+  ): Promise<TestPromptResult> {
     const { integrationId, content, variables } = input;
     const interpolatedContent = interpolateVariables(content, variables);
 
-    const executor = await this.getExecutor(integrationId);
+    const executor = await this.getExecutor(integrationId, organizationId);
     const settings = input.settings;
     let start: number, end: number;
     let result: ExecuteResult<any>;

@@ -1,33 +1,64 @@
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { Environment } from "../../@generated/environment/environment.model";
 import { PrismaService } from "../prisma.service";
-import { EnvironmentWhereUniqueInput } from "../../@generated/environment/environment-where-unique.input";
-import { EnvironmentCreateInput } from "../../@generated/environment/environment-create.input";
-import { ConflictException } from "@nestjs/common";
+import {
+  ConflictException,
+  NotFoundException,
+  UseGuards,
+} from "@nestjs/common";
+import { CreateEnvironmentInput } from "./inputs/create-environment.input";
+import { CurrentUser } from "../identity/current-user.decorator";
+import { RequestUser } from "../identity/users.types";
+import { AuthGuard } from "../auth/auth.guard";
+import { GetEnvironmentBySlugInput } from "./inputs/get-environment-by-slug.input";
+import { EnvironmentsService } from "./environments.service";
 
+@UseGuards(AuthGuard)
 @Resolver(() => Environment)
 export class EnvironmentsResolver {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private environmentsService: EnvironmentsService
+  ) {}
 
   @Query(() => [Environment])
-  async environments() {
-    const environments = await this.prisma.environment.findMany();
+  async environments(@CurrentUser() user: RequestUser) {
+    const environments = await this.prisma.environment.findMany({
+      where: {
+        organizationId: user.orgMemberships[0].organizationId,
+      },
+    });
     return environments;
   }
 
   @Query(() => Environment)
-  async environment(@Args("data") data: EnvironmentWhereUniqueInput) {
-    const environment = await this.prisma.environment.findUnique({
-      where: data,
-    });
+  async environment(
+    @Args("data") data: GetEnvironmentBySlugInput,
+    @CurrentUser() user: RequestUser
+  ) {
+    const environment = await this.environmentsService.getBySlug(
+      data.slug,
+      user.orgMemberships[0].organizationId
+    );
+
+    if (!environment) {
+      throw new NotFoundException(
+        `Environment with slug "${data.slug}" not found`
+      );
+    }
+
     return environment;
   }
 
   @Mutation(() => Environment)
-  async createEnvironment(@Args("data") data: EnvironmentCreateInput) {
-    const exists = await this.prisma.environment.findUnique({
-      where: { slug: data.slug },
-    });
+  async createEnvironment(
+    @Args("data") data: CreateEnvironmentInput,
+    @CurrentUser() user: RequestUser
+  ) {
+    const exists = await this.environmentsService.getBySlug(
+      data.slug,
+      user.orgMemberships[0].organizationId
+    );
 
     if (exists) {
       throw new ConflictException(
@@ -36,7 +67,11 @@ export class EnvironmentsResolver {
     }
 
     const environment = await this.prisma.environment.create({
-      data,
+      data: {
+        name: data.name,
+        slug: data.slug,
+        organizationId: user.orgMemberships[0].organizationId,
+      },
     });
 
     return environment;

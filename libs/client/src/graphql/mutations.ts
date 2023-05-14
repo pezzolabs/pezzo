@@ -2,7 +2,7 @@ import { graphql } from "../@generated/graphql";
 
 export const REPORT_PROMPT_EXECUTION = graphql(/* GraphQL */ `
   mutation reportPromptExecution($data: PromptExecutionCreateInput!) {
-    reportPromptExecution(data: $data) {
+    reportPromptExecutionWithApiKey(data: $data) {
       id
       promptId
       status

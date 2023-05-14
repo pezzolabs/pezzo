@@ -2,6 +2,7 @@ import { Modal, Typography } from "antd";
 import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
 import { Highlight, themes } from "prism-react-renderer";
 import { getIntegration } from "@pezzo/integrations";
+import { useApiKeys } from "../../lib/hooks/queries";
 
 interface Props {
   open: boolean;
@@ -11,7 +12,17 @@ interface Props {
 
 export const ConsumePromptModal = ({ open, onClose, variables }: Props) => {
   const { prompt, integration } = useCurrentPrompt();
-  const codeBlock = integration.consumeInstructionsFn(prompt.name, variables);
+  const { data: pezzoApiKeysData } = useApiKeys();
+
+  if (!pezzoApiKeysData) {
+    return null;
+  }
+
+  const codeBlock = integration.consumeInstructionsFn(
+    prompt.name,
+    variables,
+    pezzoApiKeysData.currentApiKey.id
+  );
 
   return (
     <Modal
@@ -42,7 +53,7 @@ export const ConsumePromptModal = ({ open, onClose, variables }: Props) => {
         Step 2: Consume the client to run your prompt
       </Typography.Title>
       <Highlight theme={themes.vsDark} code={codeBlock} language="ts">
-        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+        {({ style, tokens, getLineProps, getTokenProps }) => (
           <pre
             style={{
               ...style,

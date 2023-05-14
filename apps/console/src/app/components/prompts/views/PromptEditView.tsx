@@ -1,4 +1,4 @@
-import { Form, Space, Button, Row, Col, Card } from "antd";
+import { Form, Space, Button, Row, Col, Card, Tooltip } from "antd";
 import { PromptEditor } from "../PromptEditor";
 import { PromptSettings } from "../PromptSettings";
 import {
@@ -21,6 +21,7 @@ import { PromptVersionSelector } from "../PromptVersionSelector";
 import { CommitPromptModal } from "../CommitPromptModal";
 import { PublishPromptModal } from "../PublishPromptModal";
 import { ConsumePromptModal } from "../ConsumePromptModal";
+import { useProviderApiKeys } from "../../../lib/hooks/queries";
 
 export const PromptEditView = () => {
   const {
@@ -30,12 +31,19 @@ export const PromptEditView = () => {
     variables,
     setVariable,
   } = usePromptEdit();
-  const { prompt, currentPromptVersion, isDraft } = useCurrentPrompt();
+  const { prompt, currentPromptVersion, integration, isDraft } =
+    useCurrentPrompt();
   const { openTester, runTest, isTestInProgress } = usePromptTester();
   const [isCommitModalOpen, setIsCommitModalOpen] = useState(false);
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
   const [isConsumePromptModalOpen, setIsConsumePromptModalOpen] =
     useState(false);
+
+  const { data: providerApiKeysData } = useProviderApiKeys();
+
+  const isTestEnabled = !!providerApiKeysData?.providerApiKeys.find(
+    (apiKey) => apiKey.provider === integration.provider
+  );
 
   useEffect(() => {
     form.resetFields();
@@ -118,14 +126,22 @@ export const PromptEditView = () => {
               Commit
             </Button>
 
-            <Button
-              onClick={handleTest}
-              loading={isTestInProgress}
-              icon={<ExperimentOutlined />}
-              type="default"
+            <Tooltip
+              title={
+                !isTestEnabled &&
+                `Configure an API key for the ${integration.provider} to use the Test feature.`
+              }
             >
-              Test
-            </Button>
+              <Button
+                onClick={handleTest}
+                loading={isTestInProgress}
+                icon={<ExperimentOutlined />}
+                disabled={!isTestEnabled}
+                type="default"
+              >
+                Test
+              </Button>
+            </Tooltip>
           </Space>
         </Col>
       </Row>
