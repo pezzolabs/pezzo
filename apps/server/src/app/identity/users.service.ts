@@ -42,13 +42,13 @@ export class UsersService {
   }
 
   async getOrCreateUser(userInfo: SupertokensUser): Promise<User> {
-    console.log('userInfo', userInfo);
+    console.log("userInfo", userInfo);
     const user = await this.prisma.user.findUnique({
       where: { email: userInfo.email },
       include: { orgMemberships: true },
     });
 
-    console.log('foundUser', user);
+    console.log("foundUser", user);
 
     if (user) {
       return user;

@@ -25,7 +25,6 @@ services:
     environment:
       POSTGRES_CONNECTION_URI: postgres://postgres:postgres@postgres:5432/supertokens
 
-
   pezzo-server:
     image: ghcr.io/pezzolabs/pezzo/server:latest
     restart: always

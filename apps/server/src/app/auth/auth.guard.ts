@@ -68,7 +68,7 @@ export class AuthGuard implements CanActivate {
         sessionRequired: false,
       });
 
-      console.log('session', session);
+      console.log("session", session);
     } catch (error) {
       throw new UnauthorizedException();
     }
