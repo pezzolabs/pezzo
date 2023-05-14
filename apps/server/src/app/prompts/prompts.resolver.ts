@@ -105,7 +105,7 @@ export class PromptsResolver {
     });
 
     if (!prompt) {
-      throw new NotFoundException();
+      throw new NotFoundException(`Prompt "${data.name}" not found"`);
     }
 
     isOrgMemberOrThrow(user, prompt.organizationId);
@@ -125,7 +125,7 @@ export class PromptsResolver {
     });
 
     if (!prompt) {
-      throw new NotFoundException();
+      throw new NotFoundException(`Prompt "${data.name}" not found"`);
     }
 
     return prompt;

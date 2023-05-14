@@ -1,5 +1,7 @@
 import { Pezzo } from "@pezzo/client";
 import { interpolateVariables } from "../utils/interpolate-variables";
+import { GraphQLFormattedError } from "graphql";
+import { PezzoClientError } from "./PezzoClientError";
 
 export interface ExecuteProps<T> {
   content: string;
@@ -12,11 +14,17 @@ export interface ExecuteOptions {
 }
 
 export interface ExecuteResult<T> {
+  status: "Success" | "Error";
   promptTokens: number;
   completionTokens: number;
   promptCost: number;
   completionCost: number;
-  result: string;
+  error?: {
+    error;
+    printableError: string;
+    status: number;
+  };
+  result?: string;
 }
 
 export abstract class BaseExecutor {
@@ -29,8 +37,24 @@ export abstract class BaseExecutor {
     variables: Record<string, any> = {},
     options: ExecuteOptions = {}
   ) {
-    const prompt = await this.pezzo.findPrompt(promptName);
-    const promptVersion = await this.pezzo.getDeployedPromptVersion(prompt.id);
+    // let promptVersion;
+
+    let prompt;
+    let promptVersion;
+
+    try {
+      prompt = await this.pezzo.findPrompt(promptName);
+    } catch (_error) {
+      const error = _error.response.errors[0] as GraphQLFormattedError;
+      throw new PezzoClientError(error.message, error);
+    }
+
+    try {
+      promptVersion = await this.pezzo.getDeployedPromptVersion(prompt.id);
+    } catch (_error) {
+      const error = _error.response.errors[0] as GraphQLFormattedError;
+      throw new PezzoClientError(error.message, error);
+    }
 
     const settings = promptVersion.settings as any;
     const content = promptVersion.content;
@@ -50,30 +74,43 @@ export abstract class BaseExecutor {
     const end = performance.now();
     const duration = Math.ceil(end - start);
 
-    const executionReport = await this.pezzo.reportPromptExecution({
-      prompt: {
-        connect: {
-          id: prompt.id,
+    try {
+      const executionReport = await this.pezzo.reportPromptExecution({
+        prompt: {
+          connect: {
+            id: prompt.id,
+          },
         },
-      },
-      promptVersionSha: promptVersion.sha,
-      status: "Success",
-      content,
-      variables,
-      interpolatedContent,
-      settings: settings as any, // eslint-disable-line @typescript-eslint/no-explicit-any
-      result: executionResult.result,
-      error: null,
-      promptTokens: executionResult.promptTokens,
-      completionTokens: executionResult.completionTokens,
-      totalTokens:
-        executionResult.promptTokens + executionResult.completionTokens,
-      promptCost: executionResult.promptCost,
-      completionCost: executionResult.completionCost,
-      totalCost: executionResult.promptCost + executionResult.completionCost,
-      duration,
-    });
+        promptVersionSha: promptVersion.sha,
+        status: executionResult.status,
+        content,
+        variables,
+        interpolatedContent,
+        settings: settings as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+        result: executionResult.result,
+        error: executionResult.error.printableError,
+        promptTokens: executionResult.promptTokens,
+        completionTokens: executionResult.completionTokens,
+        totalTokens:
+          executionResult.promptTokens + executionResult.completionTokens,
+        promptCost: executionResult.promptCost,
+        completionCost: executionResult.completionCost,
+        totalCost: executionResult.promptCost + executionResult.completionCost,
+        duration,
+      });
 
-    return executionReport;
+      if (executionResult.error) {
+        throw new PezzoClientError(
+          "Prompt execution failed. Check the Pezzo History to see what went wrong.",
+          executionResult.error.error,
+          executionResult.error.status
+        );
+      }
+
+      return executionReport;
+    } catch (error) {
+      // We do not want to fail the request, so we just log the error
+      console.error(`Failed to report prompt execution to Pezzo`, error);
+    }
   }
 }
