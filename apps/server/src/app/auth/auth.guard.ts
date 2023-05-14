@@ -11,6 +11,7 @@ import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpass
 import { UsersService } from "../identity/users.service";
 import { RequestUser } from "../identity/users.types";
 import { APIKeysService } from "../identity/api-keys.service";
+import { User } from "supertokens-node/recipe/thirdpartyemailpassword";
 
 export enum AuthMethod {
   ApiKey = "ApiKey",
@@ -52,18 +53,24 @@ export class AuthGuard implements CanActivate {
     return true;
   }
 
+  
   private async authorizeBearerToken(req: any, res: any) {
     let err = undefined;
+    let supertokensUser: User;
 
-    // You can create an optional version of this by passing {sessionRequired: false} to verifySession
-    await verifySession()(req, res, (res) => {
-      err = res;
-    });
-
-    const supertokensUser = await ThirdPartyEmailPassword.getUserById(
-      req.session.getUserId()
-    );
-    req["supertokensUser"] = supertokensUser;
+    try {
+      // You can create an optional version of this by passing {sessionRequired: false} to verifySession
+      await verifySession()(req, res, (res) => {
+        err = res;
+      });
+  
+      supertokensUser = await ThirdPartyEmailPassword.getUserById(
+        req.session.getUserId()
+      );
+      req["supertokensUser"] = supertokensUser;
+    } catch (error) {
+      throw new UnauthorizedException();
+    }
 
     try {
       const user = await this.usersService.getOrCreateUser(supertokensUser);
@@ -89,8 +96,9 @@ export class AuthGuard implements CanActivate {
 
     if (err) {
       console.error("err", err);
-      throw new UnauthorizedException();
+      throw new InternalServerErrorException();
     }
+
     req.authMethod = AuthMethod.BearerToken;
     return true;
   }
