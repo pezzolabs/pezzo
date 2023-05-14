@@ -12,6 +12,7 @@ import { signOut } from "supertokens-auth-react/recipe/thirdpartyemailpassword";
 
 import LogoSquare from "../../../assets/logo-square.svg";
 import { colors } from "../../lib/theme/colors";
+import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 
 const topMenuItems = [
   {
@@ -32,6 +33,11 @@ const topMenuItems = [
 ];
 
 const bottomMenuItems = [
+  {
+    key: "info",
+    label: "Info",
+    icon: <QuestionMarkCircleIcon height={18} />,
+  },
   {
     key: "signout",
     label: "Sign Out",
@@ -78,6 +84,10 @@ export const SideNavigation = () => {
     if (item.key === "signout") {
       await signOut();
       window.location.href = "/login";
+    }
+
+    if (item.key === "info") {
+      navigate("/info");
     }
   };
 

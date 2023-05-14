@@ -19,6 +19,7 @@ import { SuperTokensWrapper } from "supertokens-auth-react";
 import { getSuperTokensRoutesForReactRouterDom } from "supertokens-auth-react/ui";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
 import { ThirdPartyEmailPasswordPreBuiltUI } from "supertokens-auth-react/recipe/thirdpartyemailpassword/prebuiltui";
+import { InfoPage } from "./pages/InfoPage";
 
 initSuperTokens();
 
@@ -72,6 +73,7 @@ export function App() {
                           </SessionAuth>
                         }
                       />
+                      <Route path="/info" element={<InfoPage />} />
                     </Route>
                   </Routes>
                 </PromptTesterProvider>

@@ -6,7 +6,7 @@
   "implicitDependencies": ["server"],
   "targets": {
     "build": {
-      "dependsOn": ["^graphql:codegen:offline"],
+      "dependsOn": ["^graphql:codegen:offline", "^prebuild", "prebuild"],
       "executor": "@nrwl/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
@@ -60,7 +60,7 @@
       }
     },
     "serve": {
-      "dependsOn": ["^graphql:codegen"],
+      "dependsOn": ["^graphql:codegen", "^prebuild", "prebuild"],
       "executor": "@nrwl/webpack:dev-server",
       "defaultConfiguration": "development",
       "options": {
