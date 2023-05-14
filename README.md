@@ -90,7 +90,7 @@ npm install
 
 ### Spin up development dependencies via Docker Compose
 
-Pezzo relies on a Postgres database. You can spin it up using Docker Compose:
+Pezzo relies on Postgres and [Supertokens](https://supertokens.com/). You can spin it up using Docker Compose:
 
 ```
 docker-compose -f docker-compose.dev.yaml up

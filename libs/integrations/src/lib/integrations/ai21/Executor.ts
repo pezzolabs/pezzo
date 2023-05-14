@@ -27,27 +27,48 @@ export class Executor extends BaseExecutor {
     const { settings, content } = props;
     const url = `https://api.ai21.com/studio/v1/${settings.model}/complete`;
 
-    const result = await this.axios.post(url, {
-      prompt: content,
-      ...settings.modelSettings,
-    });
+    try {
+      const result = await this.axios.post(url, {
+        prompt: content,
+        ...settings.modelSettings,
+      });
 
-    const data = result.data as any;
+      const data = result.data as any;
 
-    const promptTokens = data.prompt.tokens.length;
-    const completionTokens = data.completions[0].data.tokens.length;
-    const costPer1000Tokens = this.getCostPer1000Tokens(settings.model);
+      const promptTokens = data.prompt.tokens.length;
+      const completionTokens = data.completions[0].data.tokens.length;
+      const costPer1000Tokens = this.getCostPer1000Tokens(settings.model);
 
-    const promptCost = (promptTokens / 1000) * costPer1000Tokens;
-    const completionCost = (completionTokens / 1000) * costPer1000Tokens;
+      const promptCost = (promptTokens / 1000) * costPer1000Tokens;
+      const completionCost = (completionTokens / 1000) * costPer1000Tokens;
 
-    return {
-      promptTokens,
-      completionTokens,
-      promptCost,
-      completionCost,
-      result: data.completions[0].data.text,
-    };
+      return {
+        status: "Success",
+        promptTokens,
+        completionTokens,
+        promptCost,
+        completionCost,
+        result: data.completions[0].data.text,
+      };
+    } catch (error) {
+      console.log("error", error);
+      const errorResult = error.response.data;
+      const statusCode = error.response.status;
+
+      return {
+        status: "Error",
+        promptTokens: 0,
+        completionTokens: 0,
+        promptCost: 0,
+        completionCost: 0,
+        result: null,
+        error: {
+          error: errorResult,
+          printableError: JSON.stringify(errorResult),
+          status: statusCode,
+        },
+      };
+    }
   }
 
   private getCostPer1000Tokens(model: string) {
