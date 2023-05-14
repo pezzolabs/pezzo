@@ -31,7 +31,8 @@ export const PromptEditView = () => {
     variables,
     setVariable,
   } = usePromptEdit();
-  const { prompt, currentPromptVersion, integration, isDraft } = useCurrentPrompt();
+  const { prompt, currentPromptVersion, integration, isDraft } =
+    useCurrentPrompt();
   const { openTester, runTest, isTestInProgress } = usePromptTester();
   const [isCommitModalOpen, setIsCommitModalOpen] = useState(false);
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
@@ -125,7 +126,12 @@ export const PromptEditView = () => {
               Commit
             </Button>
 
-            <Tooltip title={!isTestEnabled && `Configure an API key for the ${integration.provider} to use the Test feature.`}>
+            <Tooltip
+              title={
+                !isTestEnabled &&
+                `Configure an API key for the ${integration.provider} to use the Test feature.`
+              }
+            >
               <Button
                 onClick={handleTest}
                 loading={isTestInProgress}

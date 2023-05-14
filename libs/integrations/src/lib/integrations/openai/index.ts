@@ -15,7 +15,7 @@ const integration: IntegrationDefinition = {
   consumeInstructionsFn: (
     promptName: string,
     variables: Record<string, string>,
-    pezzoApiKey: string,
+    pezzoApiKey: string
   ) => {
     let codeBlock = "";
 

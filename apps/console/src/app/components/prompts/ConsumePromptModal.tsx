@@ -18,7 +18,11 @@ export const ConsumePromptModal = ({ open, onClose, variables }: Props) => {
     return null;
   }
 
-  const codeBlock = integration.consumeInstructionsFn(prompt.name, variables, pezzoApiKeysData.currentApiKey.id);
+  const codeBlock = integration.consumeInstructionsFn(
+    prompt.name,
+    variables,
+    pezzoApiKeysData.currentApiKey.id
+  );
 
   return (
     <Modal

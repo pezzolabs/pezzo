@@ -12,6 +12,6 @@ export interface IntegrationDefinition {
   consumeInstructionsFn: (
     promptName: string,
     variables: Record<string, string>,
-    pezzoApiKey: string,
+    pezzoApiKey: string
   ) => string;
 }
