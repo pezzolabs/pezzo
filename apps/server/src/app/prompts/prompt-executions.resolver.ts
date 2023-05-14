@@ -18,6 +18,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiKeyOrgId } from "../identity/api-key-org-id";
+import { isOrgMemberOrThrow } from "../identity/identity.utils";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Prompt)
@@ -29,21 +30,48 @@ export class PromptExecutionsResolver {
   ) {}
 
   @Query(() => PromptExecution)
-  async promptExecution(@Args("data") data: PromptExecutionWhereUniqueInput) {
-    const prompt = await this.prisma.promptExecution.findUnique({
+  async promptExecution(
+    @Args("data") data: PromptExecutionWhereUniqueInput,
+    @CurrentUser() user: RequestUser
+  ) {
+    const promptExecution = await this.prisma.promptExecution.findUnique({
       where: data,
     });
-    return prompt;
+
+    if (!promptExecution) {
+      throw new NotFoundException();
+    }
+
+    const prompt = await this.promptsService.getPrompt(
+      promptExecution.promptId
+    );
+
+    isOrgMemberOrThrow(user, prompt.organizationId);
+
+    return promptExecution;
   }
 
   @Query(() => [PromptExecution])
-  async promptExecutions(@Args("data") data: PromptExecutionWhereInput) {
+  async promptExecutions(
+    @Args("data") data: PromptExecutionWhereInput,
+    @CurrentUser() user: RequestUser
+  ) {
+    const promptId = data.promptId.equals;
+    const prompt = await this.promptsService.getPrompt(promptId);
+
+    if (!prompt) {
+      throw new NotFoundException();
+    }
+
+    isOrgMemberOrThrow(user, prompt.organizationId);
+
     const executions = await this.prisma.promptExecution.findMany({
       where: data,
       orderBy: {
         timestamp: "desc",
       },
     });
+
     return executions;
   }
 
@@ -53,7 +81,6 @@ export class PromptExecutionsResolver {
     @ApiKeyOrgId() orgId: string
   ) {
     const promptId = data.prompt.connect.id;
-
     const prompt = await this.promptsService.getPrompt(promptId);
 
     if (!prompt) {
