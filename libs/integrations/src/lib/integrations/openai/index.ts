@@ -14,7 +14,8 @@ const integration: IntegrationDefinition = {
   defaultSettings,
   consumeInstructionsFn: (
     promptName: string,
-    variables: Record<string, string>
+    variables: Record<string, string>,
+    pezzoApiKey: string,
   ) => {
     let codeBlock = "";
 
@@ -23,8 +24,9 @@ import { OpenAIExecutor } from "@pezzo/integrations/openai";
 
 // Initialize the Pezzo client
 const pezzo = new Pezzo({
-  pezzoServerURL: "http://localhost:3000",
+  serverUrl: "http://localhost:3000",
   environment: "development",
+  apiKey: "${pezzoApiKey}",
 });
 
 // Initialize the OpenAI client
