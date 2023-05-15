@@ -45,6 +45,7 @@ Below you can find the roadmap with all upcoming features:
 | Documentation Site         | ✅ Done        |
 | Official Helm Chart        | ✅ Done        |
 | API Keys Support           | ✅ Done        |
+| Pezzo OpenAI Integration   | ✅ Done        |
 | Pezzo Client for Node.js   | ✅ Done        |
 | Test Coverage              | 🔜 Coming Soon |
 | Pezzo Client for Python    | 🔜 Coming Soon |
