@@ -12,7 +12,6 @@ import { css } from "@emotion/css";
 import { DeletePromptConfirmationModal } from "../../../components/prompts/DeletePromptConfirmationModal";
 import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
 import { useNavigate, useParams } from "react-router-dom";
-import { IntegrationDefinition } from "@pezzo/integrations";
 
 const TabLabel = styled.div`
   display: inline-block;
@@ -100,13 +99,13 @@ export const PromptPage = () => {
             `}
           >
             <Space wrap>
-              <Button
+              {/* <Button
                 danger
                 icon={<DeleteOutlined />}
                 onClick={() => setIsDeleteConfirmationModalOpen(true)}
               >
                 Delete
-              </Button>
+              </Button> */}
             </Space>
           </Col>
         </Row>
