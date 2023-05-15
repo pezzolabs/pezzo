@@ -5,7 +5,8 @@ import { gqlClient, queryClient } from "../../lib/graphql";
 import { css } from "@emotion/css";
 import { PromptIntegrationSelector } from "./PromptIntegrationSelector";
 import { integrations } from "@pezzo/integrations";
-import { useState } from "react";
+import { CreatePromptMutation } from "@pezzo/graphql";
+import { GraphQLErrorResponse } from "../../graphql/types";
 
 const integrationsArray = Object.values(integrations);
 
@@ -22,9 +23,12 @@ type Inputs = {
 
 export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
   const [form] = Form.useForm<Inputs>();
-  const [error, setError] = useState<string | null>(null);
 
-  const createPromptMutation = useMutation({
+  const { mutate, error } = useMutation<
+    CreatePromptMutation,
+    GraphQLErrorResponse,
+    Inputs
+  >({
     mutationFn: (data: Inputs) =>
       gqlClient.request(CREATE_PROMPT, {
         data: {
@@ -36,21 +40,18 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
       onCreated(data.createPrompt.id);
       queryClient.invalidateQueries({ queryKey: ["prompts"] });
     },
-    onError: async ({ response }) => {
-      const error = await response.errors[0].message;
-      setError(error);
-    },
   });
 
   const handleFormFinish = (data: Inputs) => {
-    setError(null);
-    createPromptMutation.mutate(data);
+    mutate(data);
     form.resetFields();
   };
 
   return (
     <Modal title="New Prompt" open={open} onCancel={onClose} footer={false}>
-      {error && <Alert type="error" message={error} />}
+      {error && (
+        <Alert type="error" message={error.response.errors[0].message} />
+      )}
       <Form
         form={form}
         layout="vertical"
