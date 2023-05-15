@@ -89,7 +89,7 @@ export abstract class BaseExecutor {
         interpolatedContent,
         settings: settings as any, // eslint-disable-line @typescript-eslint/no-explicit-any
         result: executionResult.result,
-        error: executionResult?.error?.printableError,
+        error: executionResult?.error.printableError,
         promptTokens: executionResult.promptTokens,
         completionTokens: executionResult.completionTokens,
         totalTokens:
