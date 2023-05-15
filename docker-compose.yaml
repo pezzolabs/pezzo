@@ -33,6 +33,7 @@ services:
       - ./apps/server/.env
     environment:
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/pezzo
+      - SUPERTOKENS_CONNECTION_URI=http://supertokens:3567
     ports:
       - "3000:3000"
     depends_on:
@@ -51,7 +52,7 @@ services:
       - ./.env
       - ./apps/console/.env
     ports:
-      - "4200:4200"
+      - "4200:8080"
     depends_on:
       pezzo-server:
         condition: service_healthy
