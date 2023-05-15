@@ -59,7 +59,7 @@ If you are missing features, please create an issue and we'll consider adding th
 Clone the repository:
 
 ```
-git clone git@github.com:pezzolabs/pezzo.git
+git clone https://github.com/pezzolabs/pezzo.git
 ```
 
 ## 🐳 Option 1: Running Pezzo via Docker Compose
