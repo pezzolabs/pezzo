@@ -3,8 +3,9 @@ import { Modal, Form, Input, Button, Alert } from "antd";
 import { gqlClient, queryClient } from "../../lib/graphql";
 import { css } from "@emotion/css";
 import { slugify } from "../../lib/utils/string-utils";
-import { useState } from "react";
 import { CREATE_ENVIRONMENT } from "../../graphql/mutations/environments";
+import { CreateEnvironmentMutation } from "@pezzo/graphql";
+import { GraphQLErrorResponse } from "../../graphql/types";
 
 interface Props {
   open: boolean;
@@ -19,9 +20,12 @@ type Inputs = {
 
 export const CreateEnvironmentModal = ({ open, onClose, onCreated }: Props) => {
   const [form] = Form.useForm<Inputs>();
-  const [error, setError] = useState<string | null>(null);
 
-  const createEnvironmentMutation = useMutation({
+  const { mutate, error } = useMutation<
+    CreateEnvironmentMutation,
+    GraphQLErrorResponse,
+    Inputs
+  >({
     mutationFn: (data: Inputs) =>
       gqlClient.request(CREATE_ENVIRONMENT, {
         data: {
@@ -33,15 +37,10 @@ export const CreateEnvironmentModal = ({ open, onClose, onCreated }: Props) => {
       onCreated(data.createEnvironment.name);
       queryClient.invalidateQueries({ queryKey: ["environments"] });
     },
-    onError: async ({ response }) => {
-      const error = await response.errors[0].message;
-      setError(error);
-    },
   });
 
-  const handleFormFinish = async (values) => {
-    setError(null);
-    createEnvironmentMutation.mutate(values);
+  const handleFormFinish = async (values: Inputs) => {
+    mutate(values);
     form.resetFields();
   };
 
@@ -58,7 +57,9 @@ export const CreateEnvironmentModal = ({ open, onClose, onCreated }: Props) => {
       onCancel={onClose}
       footer={false}
     >
-      {error && <Alert type="error" message={error} />}
+      {error && (
+        <Alert type="error" message={error.response.errors[0].message} />
+      )}
       <Form
         form={form}
         layout="vertical"

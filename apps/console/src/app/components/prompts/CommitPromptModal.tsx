@@ -6,7 +6,11 @@ import { useState } from "react";
 import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
 import { CREATE_PROMPT_VERSION } from "../../graphql/mutations/prompts";
 import { PromptEditFormInputs } from "../../lib/hooks/usePromptEdit";
-import { CreatePromptVersionInput } from "@pezzo/graphql";
+import {
+  CreatePromptVersionInput,
+  CreatePromptVersionMutation,
+} from "@pezzo/graphql";
+import { GraphQLErrorResponse } from "../../graphql/types";
 
 interface Props {
   open: boolean;
@@ -23,13 +27,22 @@ export const CommitPromptModal = ({
   open,
   onClose,
   onCommitted,
+
   form: editPromptForm,
 }: Props) => {
   const { prompt } = useCurrentPrompt();
   const [form] = Form.useForm<Inputs>();
-  const [error, setError] = useState<string | null>(null);
 
-  const createPromptVersionMutation = useMutation({
+  const { mutate, error } = useMutation<
+    CreatePromptVersionMutation,
+    GraphQLErrorResponse,
+    {
+      message: string;
+      content: string;
+      settings: string;
+      promptId: string;
+    }
+  >({
     mutationFn: (data: CreatePromptVersionInput) => {
       return gqlClient.request(CREATE_PROMPT_VERSION, {
         data: {
@@ -47,11 +60,10 @@ export const CommitPromptModal = ({
     },
   });
 
-  const handleFormFinish = async (values) => {
-    setError(null);
+  const handleFormFinish = async (values: Inputs) => {
     const editPromptValues = editPromptForm.getFieldsValue(true);
 
-    createPromptVersionMutation.mutate({
+    mutate({
       message: form.getFieldValue("message"),
       content: editPromptValues.content,
       settings: editPromptValues.settings,
@@ -68,7 +80,9 @@ export const CommitPromptModal = ({
       onCancel={onClose}
       footer={false}
     >
-      {error && <Alert type="error" message={error} />}
+      {error && (
+        <Alert type="error" message={error.response.errors[0].message} />
+      )}
       <Form
         form={form}
         layout="vertical"
