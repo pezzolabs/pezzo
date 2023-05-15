@@ -9,7 +9,7 @@
 </p>
 <br />
 <p align="center">
-  <a href="https://bit.ly/pezzo-demo-github">
+  <a href="https://bit.ly/pezzo-demo-github" target="_blank">
   <img src=".github/assets/banner-video.png" width="700px">
 </p>
 
