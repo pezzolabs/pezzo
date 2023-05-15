@@ -38,15 +38,16 @@ Below you can find the roadmap with all upcoming features:
 
 | **Feature**                | **Status**     |
 | -------------------------- | -------------- |
-| Demo app                   | 🚧 In Progress |
-| Logger                     | 🚧 In Progress |
-| Error Handling             | 🚧 In Progress |
-| Public Sandbox Environment | 🚧 In Progress |
 | Documentation Site         | ✅ Done        |
+| Auth                       | ✅ Done        |
 | Official Helm Chart        | ✅ Done        |
 | API Keys Support           | ✅ Done        |
 | Pezzo OpenAI Integration   | ✅ Done        |
 | Pezzo Client for Node.js   | ✅ Done        |
+| Demo app                   | 🚧 In Progress |
+| Logger                     | 🚧 In Progress |
+| Error Handling             | 🚧 In Progress |
+| Public Sandbox Environment | 🚧 In Progress |
 | Test Coverage              | 🔜 Coming Soon |
 | Pezzo Client for Python    | 🔜 Coming Soon |
 | Pezzo Client for Golang    | 🔜 Coming Soon |
