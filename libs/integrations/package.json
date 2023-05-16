@@ -1,7 +1,7 @@
 {
   "name": "@pezzo/integrations",
   "description": "Pezzo integrations for various platforms",
-  "version": "0.0.11-alpha",
+  "version": "0.0.15-alpha",
   "type": "commonjs",
   "author": "Ariel Weinberger",
   "keywords": [
@@ -24,6 +24,11 @@
   },
   "homepage": "https://github.com/pezzolabs/pezzo",
   "license": "MIT",
+  "dependencies": {
+    "openai": "^3.2.1",
+    "axios": "^1.4.0",
+    "tslib": "^2.3.0"
+  },
   "exports": {
     "./ai21": {
       "import": "./src/lib/integrations/ai21/index.js",
