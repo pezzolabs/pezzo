@@ -8,10 +8,11 @@ import { SupertokensExceptionFilter } from "./app/auth/auth.filter";
 async function bootstrap() {
   const globalPrefix = "api";
   const app = await NestFactory.create(AppModule);
+
   app.enableCors({
-    origin: ["http://localhost:4200"],
-    allowedHeaders: ["content-type", ...supertokens.getAllCORSHeaders()],
+    origin: true,
     credentials: true,
+    allowedHeaders: ["content-type", ...supertokens.getAllCORSHeaders()],
   });
 
   app.setGlobalPrefix(globalPrefix);
