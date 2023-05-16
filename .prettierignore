@@ -3,3 +3,4 @@
 /coverage
 apps/server/src/schema.graphql
 **/@generated
+libs/common/src/version.json
