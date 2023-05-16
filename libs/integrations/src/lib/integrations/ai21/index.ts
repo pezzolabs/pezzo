@@ -21,12 +21,12 @@ const integration: IntegrationDefinition = {
     let codeBlock = "";
 
     codeBlock += `import { Pezzo } from "@pezzo/client";
-import { AI21Executor } from "@pezzo/integrations/ai21";  
+import { AI21Executor } from "@pezzo/integrations/ai21";
 
 // Initialize the Pezzo client
 const pezzo = new Pezzo({
   serverUrl: "http://localhost:3000",
-  environment: "development", <-- Environment slug
+  environment: "development", // <-- Environment slug
   apiKey: "${pezzoApiKey}",
 });
 
