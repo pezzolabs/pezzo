@@ -2,34 +2,20 @@ name: Report a bug 🐛
 description: Create a report to help us improve
 labels: "bug"
 body:
-- type: markdown
-  attributes:
-    value: |
-      ## Self-help
-      Thank you for considering to open a bug report!
-
-      Before you do, however, make sure to check our existing resources to see if it has already been discussed/reported:
-      - [Reported bugs](https://github.com/pezzolabs/pezzo/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Abug)
-      - [GitHub Discussions](https://github.com/pezzolabs/pezzo/discussions)
 - type: textarea
   attributes:
     label: Report
-    description: "What bug have you encountered?"
-    placeholder: "A clear and concise description of what the bug is."
+    description: "What issue have you encountered?"
+    placeholder: "A clear and concise description of what issue bug is."
+  validations:
+    required: true
 - type: textarea
   attributes:
     label: Expected behavior
     description: What did you expect to happen?
     placeholder: What did you expect to happen?
   validations:
-    required: true
-- type: textarea
-  attributes:
-    label: Actual behavior
-    description: Also tell us, what did you see is happen?
-    placeholder: Tell us what you see that is happening
-  validations:
-    required: true
+    required: false
 - type: textarea
   attributes:
     label: Steps to reproduce the problem
@@ -39,11 +25,11 @@ body:
       2.
       3.
   validations:
-    required: true
+    required: false
 - type: textarea
   attributes:
-    label: Logs from the Pezzo server/client
-    description: "Provide ogs from the Pezzo server/client, if need be."
+    label: Logs (if applicable)
+    description: "Provide any logs, if applicable. This will help us identify the issue."
     value: |
       ```
       example
@@ -59,12 +45,12 @@ body:
     required: false
 - type: dropdown
   attributes:
-    label: Platform
-    description: Where is your cluster running?
+    label: How do you use Pezzo?
+    description: Where 
     options:
-    - Amazon Web Services
-    - Google Cloud
-    - Microsoft Azure
-    - Other
+    - Local Development Setup
+    - Docker Compose
+    - Kubernetes Deployment
+    - Pezzo Cloud
   validations:
     required: false
