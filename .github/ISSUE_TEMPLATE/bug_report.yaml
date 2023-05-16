@@ -1,0 +1,70 @@
+name: Report a bug 🐛
+description: Create a report to help us improve
+labels: "bug"
+body:
+- type: markdown
+  attributes:
+    value: |
+      ## Self-help
+      Thank you for considering to open a bug report!
+
+      Before you do, however, make sure to check our existing resources to see if it has already been discussed/reported:
+      - [Reported bugs](https://github.com/pezzolabs/pezzo/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Abug)
+      - [GitHub Discussions](https://github.com/pezzolabs/pezzo/discussions)
+- type: textarea
+  attributes:
+    label: Report
+    description: "What bug have you encountered?"
+    placeholder: "A clear and concise description of what the bug is."
+- type: textarea
+  attributes:
+    label: Expected behavior
+    description: What did you expect to happen?
+    placeholder: What did you expect to happen?
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Actual behavior
+    description: Also tell us, what did you see is happen?
+    placeholder: Tell us what you see that is happening
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Steps to reproduce the problem
+    description: "How can we reproduce this bug? Please walk us through it step by step."
+    value: |
+      1.
+      2.
+      3.
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Logs from the Pezzo server/client
+    description: "Provide ogs from the Pezzo server/client, if need be."
+    value: |
+      ```
+      example
+      ```
+  validations:
+    required: false
+- type: input
+  attributes:
+    label: Pezzo version
+    description: >
+      What version of Pezzo are you using?
+  validations:
+    required: false
+- type: dropdown
+  attributes:
+    label: Platform
+    description: Where is your cluster running?
+    options:
+    - Amazon Web Services
+    - Google Cloud
+    - Microsoft Azure
+    - Other
+  validations:
+    required: false
