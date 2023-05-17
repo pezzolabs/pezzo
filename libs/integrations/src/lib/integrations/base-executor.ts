@@ -59,7 +59,7 @@ export abstract class BaseExecutor {
     options: ExecuteOptions = {}
   ) {
     const prompt = await this.getPrompt(promptName);
-    const promptVersion = await this.getPromptVersion(prompt.id);
+    const promptVersion = await this.getPromptVersion<T>(prompt.id);
     const { settings, content } = promptVersion;
     const interpolatedContent = interpolateVariables(content, variables);
     const start = performance.now();

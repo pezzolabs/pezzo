@@ -1,8 +1,8 @@
 import { FIND_PROMPT, GET_DEPLOYED_PROMPT_VERSION } from "../graphql/queries";
 import { REPORT_PROMPT_EXECUTION } from "../graphql/mutations";
 import { GraphQLClient } from "graphql-request";
-import { PromptExecution, PromptExecutionCreateInput } from "@pezzo/graphql";
-import { IntegrationBaseSettings } from "../types";
+// import { PromptExecution, PromptExecutionCreateInput } from "@pezzo/graphql"; --> This needs to be fixed
+import { IntegrationBaseSettings, PromptExecutionStatus } from "../types";
 
 export interface PezzoClientOptions {
   serverUrl: string;
@@ -34,19 +34,19 @@ export class Pezzo {
   }
 
   async reportPromptExecution<T>(
-    data: PromptExecutionCreateInput,
+    data: unknown,
     autoParseJSON?: boolean
   ): Promise<{
     id: string;
     promptId: string;
-    status: PromptExecution["status"];
+    status: PromptExecutionStatus;
     result?: T;
     totalCost: number;
     totalTokens: number;
     duration: number;
   }> {
     const result = await this.gqlClient.request(REPORT_PROMPT_EXECUTION, {
-      data,
+      data: data as unknown,
     });
 
     const { result: resultString, ...rest } =
