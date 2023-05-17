@@ -5,9 +5,7 @@ import { OpenAIExecutor } from "@pezzo/integrations/lib/integrations/openai/exec
 import { AI21Executor } from "@pezzo/integrations/lib/integrations/ai21/executor";
 import { TestPromptResult } from "@pezzo/client";
 import { interpolateVariables } from "@pezzo/common";
-
 import { ProviderApiKeysService } from "../credentials/provider-api-keys.service";
-import { ExecuteResult } from "@pezzo/integrations/lib/integrations/base-executor";
 
 @Injectable()
 export class PromptTesterService {
@@ -54,7 +52,7 @@ export class PromptTesterService {
 
     return {
       ...result,
-      error: result.error.error.message,
+      error: (result.error.error as Error).message,
       success: result.error === null,
       content,
       interpolatedContent,
