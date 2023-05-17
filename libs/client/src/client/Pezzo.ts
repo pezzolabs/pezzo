@@ -47,7 +47,7 @@ export class Pezzo {
     duration: number;
   }> {
     const result = await this.gqlClient.request(REPORT_PROMPT_EXECUTION, {
-      data: data as unknown,
+      data: data as any, // eslint-disable-line @typescript-eslint/no-explicit-any
     });
 
     const { result: resultString, ...rest } =
