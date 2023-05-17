@@ -1,14 +1,14 @@
 import axios, { AxiosInstance } from "axios";
 import { AI21IntegrationSettings } from "./types";
 import { BaseExecutor, ExecuteProps, ExecuteResult } from "../base-executor";
-import { PromptExecutionStatus } from "@pezzo/client";
+import { Pezzo, PromptExecutionStatus } from "@pezzo/client";
 import { ExecutorOptions } from "../types";
 
 export class AI21Executor extends BaseExecutor {
   private readonly axios: AxiosInstance;
 
-  constructor(options: ExecutorOptions) {
-    super();
+  constructor(pezzoClient: Pezzo, options: ExecutorOptions) {
+    super(pezzoClient);
     this.axios = axios.create({
       headers: {
         Authorization: `Bearer ${options.apiKey}`,

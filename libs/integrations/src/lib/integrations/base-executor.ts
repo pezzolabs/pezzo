@@ -29,19 +29,15 @@ export interface ExecuteResult<T> {
 }
 
 export abstract class BaseExecutor {
-  private pezzoClient?: Pezzo;
+  private pezzoClient: Pezzo;
+
+  constructor(pezzoClient: Pezzo) {
+    this.pezzoClient = pezzoClient;
+  }
 
   abstract execute(props: ExecuteProps): Promise<ExecuteResult<string>>;
 
-  setPezzoClient(pezzoClient: Pezzo): this {
-    this.pezzoClient = pezzoClient;
-    return this;
-  }
-
   private getPrompt(promptName: string) {
-    if (!this.pezzoClient) {
-      throw new Error("You must set the Pezzo client before running a prompt.");
-    }
     try {
       return this.pezzoClient.findPrompt(promptName);
     } catch (error) {
@@ -50,9 +46,6 @@ export abstract class BaseExecutor {
   }
 
   private getPromptVersion<T>(promptId: string) {
-    if (!this.pezzoClient) {
-      throw new Error("You must set the Pezzo client before running a prompt.");
-    }
     try {
       return this.pezzoClient.getDeployedPromptVersion<T>(promptId);
     } catch (error) {
@@ -65,9 +58,6 @@ export abstract class BaseExecutor {
     variables: Record<string, string> = {},
     options: ExecuteOptions = {}
   ) {
-    if (!this.pezzoClient) {
-      throw new Error("You must set the Pezzo client before running a prompt.");
-    }
     const prompt = await this.getPrompt(promptName);
     const promptVersion = await this.getPromptVersion(prompt.id);
     const { settings, content } = promptVersion;

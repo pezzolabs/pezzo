@@ -8,8 +8,8 @@ import { initSdk } from "./sdk";
 export class OpenAIExecutor extends BaseExecutor {
   private readonly openai: OpenAIApi;
 
-  constructor(options: ExecutorOptions) {
-    super();
+  constructor(pezzoClient: Pezzo, options: ExecutorOptions) {
+    super(pezzoClient);
     this.openai = initSdk(options.apiKey);
   }
 
@@ -55,8 +55,10 @@ export class OpenAIExecutor extends BaseExecutor {
         result: data.choices[0]?.message.content,
       };
     } catch (error) {
-      const errorResult = error.response.data.error;
-      const statusCode = error.response.status;
+      const errorResult = error.response
+        ? error?.response.data.error
+        : { message: error.message };
+      const statusCode = error.response ? error?.response.status : 500;
 
       return {
         status: PromptExecutionStatus.Error,

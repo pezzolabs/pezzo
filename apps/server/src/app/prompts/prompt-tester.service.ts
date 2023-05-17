@@ -3,10 +3,11 @@ import { TestPromptInput } from "./inputs/test-prompt.input";
 import { getIntegration } from "@pezzo/integrations";
 import { OpenAIExecutor } from "@pezzo/integrations/lib/integrations/openai/executor";
 import { AI21Executor } from "@pezzo/integrations/lib/integrations/ai21/executor";
-import { TestPromptResult } from "@pezzo/client";
+import { Pezzo, TestPromptResult } from "@pezzo/client";
 import { ProviderApiKeysService } from "../credentials/provider-api-keys.service";
 import { interpolateVariables } from "@pezzo/integrations/lib/utils/interpolate-variables";
 
+const noop = {} as Pezzo;
 @Injectable()
 export class PromptTesterService {
   constructor(private providerAPIKeysService: ProviderApiKeysService) {}
@@ -24,9 +25,10 @@ export class PromptTesterService {
 
     switch (integrationId) {
       case "openai":
-        return new OpenAIExecutor({ apiKey: apiKey.value });
+        console.log({ integrationId, apiKey });
+        return new OpenAIExecutor(noop, { apiKey: apiKey.value });
       case "ai21":
-        return new AI21Executor({ apiKey: apiKey.value });
+        return new AI21Executor(noop, { apiKey: apiKey.value });
     }
   }
 
@@ -37,7 +39,10 @@ export class PromptTesterService {
     const { integrationId, content, variables } = input;
     const interpolatedContent = interpolateVariables(content, variables);
 
+    console.log({ interpolatedContent, content, variables });
+
     const executor = await this.executorFactory(integrationId, organizationId);
+
     const settings = input.settings;
 
     const start = performance.now();
