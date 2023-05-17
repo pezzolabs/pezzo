@@ -1,7 +1,7 @@
 {
   "name": "@pezzo/integrations",
   "description": "Pezzo integrations for various platforms",
-  "version": "0.0.15-alpha",
+  "version": "0.0.16-alpha",
   "type": "commonjs",
   "author": "Ariel Weinberger",
   "keywords": [
