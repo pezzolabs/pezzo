@@ -1,4 +1,4 @@
-import { BaseExecutor } from "./BaseExecutor";
+import { BaseExecutor } from "./base-executor";
 import { FormSchema } from "./form.types";
 
 export interface IntegrationDefinition {
@@ -14,4 +14,13 @@ export interface IntegrationDefinition {
     variables: Record<string, string>,
     pezzoApiKey: string
   ) => string;
+}
+
+export interface IntegrationBaseSettings<T> {
+  model: string;
+  modelSettings: T;
+}
+
+export interface ExecutorOptions {
+  apiKey: string;
 }

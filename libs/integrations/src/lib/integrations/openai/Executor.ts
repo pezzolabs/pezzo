@@ -1,28 +1,21 @@
-import { BaseExecutor, ExecuteProps, ExecuteResult } from "../BaseExecutor";
+import { BaseExecutor, ExecuteProps, ExecuteResult } from "../base-executor";
 import { Pezzo } from "@pezzo/client";
-import { IntegrationSettings } from "./types";
-import { Configuration, OpenAIApi } from "openai";
+import { OpenAIIntegrationSettings, ExecutorOptions } from "./types";
+import { OpenAIApi } from "openai";
+import { PromptExecutionStatus } from "@pezzo/integrations/@generated/graphql/graphql";
+import { initSdk } from "./sdk";
 
-interface ExecutorOptions {
-  apiKey: string;
-}
-
-export class Executor extends BaseExecutor {
+export class OpenAIExecutor extends BaseExecutor {
   private readonly openai: OpenAIApi;
 
-  constructor(pezzo: Pezzo, options: ExecutorOptions) {
-    super(pezzo);
-
-    const configuration = new Configuration({
-      apiKey: options.apiKey,
-    });
-
-    this.openai = new OpenAIApi(configuration);
+  constructor(options: ExecutorOptions) {
+    super();
+    this.openai = initSdk(options.apiKey);
   }
 
-  async execute<T>(
-    props: ExecuteProps<IntegrationSettings>
-  ): Promise<ExecuteResult<T>> {
+  async execute(
+    props: ExecuteProps<OpenAIIntegrationSettings>
+  ): Promise<ExecuteResult<string>> {
     const { settings, content } = props;
 
     try {
@@ -41,7 +34,7 @@ export class Executor extends BaseExecutor {
         ],
       });
 
-      const data = result.data as any;
+      const data = result.data;
       const { usage } = data;
 
       const promptTokens = usage.prompt_tokens;
@@ -54,20 +47,19 @@ export class Executor extends BaseExecutor {
       );
 
       return {
-        status: "Success",
+        status: PromptExecutionStatus.Success,
         promptTokens,
         completionTokens,
         promptCost,
         completionCost,
-        result: data.choices[0].message.content,
+        result: data.choices[0]?.message.content,
       };
     } catch (error) {
       const errorResult = error.response.data.error;
       const statusCode = error.response.status;
-      console.log("statusCOde", statusCode);
 
       return {
-        status: "Error",
+        status: PromptExecutionStatus.Error,
         promptTokens: 0,
         completionTokens: 0,
         promptCost: 0,

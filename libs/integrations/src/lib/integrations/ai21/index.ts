@@ -1,9 +1,8 @@
 import { IntegrationDefinition } from "../types";
-import { Executor } from "./Executor";
+import { AI21Executor } from "./executor";
 import { defaultSettings, settingsSchema } from "./settings";
 export * from "./types";
 
-export const AI21Executor = Executor;
 const integration: IntegrationDefinition = {
   id: "ai21",
   name: "AI21",
@@ -38,7 +37,7 @@ const ai21 = new AI21Executor(pezzo, {
 // Run prompt
 const { result } = await ai21.run('${promptName}', {\n`;
 
-    Object.entries(variables).forEach(([key, value]) => {
+    Object.entries(variables).forEach(([key]) => {
       codeBlock += `  ${key}: '...'\n`;
     });
 

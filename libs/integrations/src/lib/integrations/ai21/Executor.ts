@@ -1,18 +1,14 @@
 import axios, { AxiosInstance } from "axios";
-import { IntegrationSettings } from "./types";
-import { BaseExecutor, ExecuteProps, ExecuteResult } from "../BaseExecutor";
-import { Pezzo } from "@pezzo/client";
+import { AI21IntegrationSettings } from "./types";
+import { BaseExecutor, ExecuteProps, ExecuteResult } from "../base-executor";
+import { PromptExecutionStatus } from "@pezzo/client";
+import { ExecutorOptions } from "../types";
 
-interface ExecutorOptions {
-  apiKey: string;
-}
-
-export class Executor extends BaseExecutor {
+export class AI21Executor extends BaseExecutor {
   private readonly axios: AxiosInstance;
 
-  constructor(pezzo: Pezzo, options: ExecutorOptions) {
-    super(pezzo);
-
+  constructor(options: ExecutorOptions) {
+    super();
     this.axios = axios.create({
       headers: {
         Authorization: `Bearer ${options.apiKey}`,
@@ -21,10 +17,11 @@ export class Executor extends BaseExecutor {
     });
   }
 
-  async execute<T>(
-    props: ExecuteProps<IntegrationSettings>
-  ): Promise<ExecuteResult<T>> {
+  async execute(
+    props: ExecuteProps<AI21IntegrationSettings>
+  ): Promise<ExecuteResult<string>> {
     const { settings, content } = props;
+
     const url = `https://api.ai21.com/studio/v1/${settings.model}/complete`;
 
     try {
@@ -43,7 +40,7 @@ export class Executor extends BaseExecutor {
       const completionCost = (completionTokens / 1000) * costPer1000Tokens;
 
       return {
-        status: "Success",
+        status: PromptExecutionStatus.Success,
         promptTokens,
         completionTokens,
         promptCost,
@@ -56,7 +53,7 @@ export class Executor extends BaseExecutor {
       const statusCode = error.response.status;
 
       return {
-        status: "Error",
+        status: PromptExecutionStatus.Error,
         promptTokens: 0,
         completionTokens: 0,
         promptCost: 0,

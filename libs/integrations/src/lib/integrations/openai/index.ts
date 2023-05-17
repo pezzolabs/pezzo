@@ -1,9 +1,8 @@
 import { IntegrationDefinition } from "../types";
-import { Executor } from "./Executor";
+import { OpenAIExecutor } from "./executor";
 import { defaultSettings, settingsSchema } from "./settings";
 export * from "./types";
 
-export const OpenAIExecutor = Executor;
 const integration: IntegrationDefinition = {
   id: "openai",
   name: "OpenAI",
@@ -21,7 +20,7 @@ const integration: IntegrationDefinition = {
     let codeBlock = "";
 
     codeBlock += `import { Pezzo } from "@pezzo/client";
-import { OpenAIExecutor } from "@pezzo/integrations/openai";  
+import { OpenAIExecutor } from "@pezzo/integrations/openai";
 
 // Initialize the Pezzo client
 const pezzo = new Pezzo({
@@ -38,7 +37,7 @@ const openai = new OpenAIExecutor(pezzo, {
 // Run prompt
 const { result } = await openai.run('${promptName}', {\n`;
 
-    Object.entries(variables).forEach(([key, value]) => {
+    Object.entries(variables).forEach(([key]) => {
       codeBlock += `  ${key}: '...'\n`;
     });
 
