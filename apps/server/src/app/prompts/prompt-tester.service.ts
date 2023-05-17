@@ -37,8 +37,6 @@ export class PromptTesterService {
     const { integrationId, content, variables } = input;
     const interpolatedContent = interpolateVariables(content, variables);
 
-    console.log({ interpolatedContent, content, variables });
-
     const executor = await this.executorFactory(integrationId, organizationId);
 
     const settings = input.settings;
