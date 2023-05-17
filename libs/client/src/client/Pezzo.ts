@@ -1,10 +1,7 @@
 import { FIND_PROMPT, GET_DEPLOYED_PROMPT_VERSION } from "../graphql/queries";
 import { REPORT_PROMPT_EXECUTION } from "../graphql/mutations";
 import { GraphQLClient } from "graphql-request";
-import {
-  PromptExecution,
-  PromptExecutionCreateInput,
-} from "../@generated/graphql/graphql";
+import { PromptExecution, PromptExecutionCreateInput } from "@pezzo/graphql";
 import { IntegrationBaseSettings } from "../types";
 
 export interface PezzoClientOptions {
