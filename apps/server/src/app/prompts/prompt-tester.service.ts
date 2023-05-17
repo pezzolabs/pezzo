@@ -25,7 +25,6 @@ export class PromptTesterService {
 
     switch (integrationId) {
       case "openai":
-        console.log({ integrationId, apiKey });
         return new OpenAIExecutor(noop, { apiKey: apiKey.value });
       case "ai21":
         return new AI21Executor(noop, { apiKey: apiKey.value });

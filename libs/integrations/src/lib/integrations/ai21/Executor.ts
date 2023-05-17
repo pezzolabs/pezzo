@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { AI21IntegrationSettings } from "./types";
+import { AI21CompletionResponse, AI21IntegrationSettings } from "./types";
 import { BaseExecutor, ExecuteProps, ExecuteResult } from "../base-executor";
 import { Pezzo, PromptExecutionStatus } from "@pezzo/client";
 import { ExecutorOptions } from "../types";
@@ -25,12 +25,12 @@ export class AI21Executor extends BaseExecutor {
     const url = `https://api.ai21.com/studio/v1/${settings.model}/complete`;
 
     try {
-      const result = await this.axios.post(url, {
+      const result = await this.axios.post<AI21CompletionResponse>(url, {
         prompt: content,
         ...settings.modelSettings,
       });
 
-      const data = result.data as any;
+      const data = result.data;
 
       const promptTokens = data.prompt.tokens.length;
       const completionTokens = data.completions[0].data.tokens.length;

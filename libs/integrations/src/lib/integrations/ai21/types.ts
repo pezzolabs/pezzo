@@ -8,6 +8,13 @@ export interface AI21CompleteOptions {
   autoParse?: boolean;
 }
 
+export interface AI21CompletionResponse {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  prompt: { tokens: any[] };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  completions: { data: { tokens: any[]; text: string } }[];
+}
+
 export type AI21IntegrationSettings = IntegrationBaseSettings<{
   numResults: number;
   maxTokens: number;
