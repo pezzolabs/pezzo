@@ -50,7 +50,7 @@ export class PromptTesterService {
     try {
       start = performance.now();
       result = await executor.execute({
-        content,
+        content: interpolatedContent,
         settings: settings as any,
         options: {},
       });
