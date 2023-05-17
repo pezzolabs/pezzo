@@ -4,8 +4,8 @@ import { getIntegration } from "@pezzo/integrations";
 import { OpenAIExecutor } from "@pezzo/integrations/lib/integrations/openai/executor";
 import { AI21Executor } from "@pezzo/integrations/lib/integrations/ai21/executor";
 import { TestPromptResult } from "@pezzo/client";
-import { interpolateVariables } from "@pezzo/common";
 import { ProviderApiKeysService } from "../credentials/provider-api-keys.service";
+import { interpolateVariables } from "@pezzo/integrations/lib/utils/interpolate-variables";
 
 @Injectable()
 export class PromptTesterService {
@@ -42,7 +42,7 @@ export class PromptTesterService {
 
     const start = performance.now();
     const result = await executor.execute({
-      content,
+      content: interpolatedContent,
       settings: settings as never,
       options: {},
     });
@@ -52,8 +52,8 @@ export class PromptTesterService {
 
     return {
       ...result,
-      error: (result.error.error as Error).message,
-      success: result.error === null,
+      error: result?.error ? (result?.error.error as Error).message : null,
+      success: !result?.error,
       content,
       interpolatedContent,
       duration,
