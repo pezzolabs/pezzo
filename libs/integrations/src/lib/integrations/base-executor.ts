@@ -3,7 +3,6 @@ import { Pezzo } from "@pezzo/client";
 import { GraphQLFormattedError } from "graphql";
 import { interpolateVariables } from "../utils/interpolate-variables";
 import { PezzoClientError } from "./types";
-import { PromptExecutionStatus } from "../../@generated/graphql/graphql";
 
 export interface ExecuteProps<T = unknown> {
   content: string;
@@ -16,7 +15,7 @@ export interface ExecuteOptions {
 }
 
 export interface ExecuteResult<T> {
-  status: PromptExecutionStatus;
+  status: "Success" | "Error";
   promptTokens: number;
   completionTokens: number;
   promptCost: number;
@@ -126,7 +125,7 @@ export abstract class BaseExecutor {
       this.pezzoClient.reportPromptExecution<T>({
         prompt: promptConnect,
         promptVersionSha: promptVersion.sha,
-        status: PromptExecutionStatus.Error,
+        status: "Error",
         content,
         variables,
         interpolatedContent,

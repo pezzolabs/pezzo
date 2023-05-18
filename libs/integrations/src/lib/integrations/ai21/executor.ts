@@ -3,7 +3,6 @@ import { AI21CompletionResponse, AI21IntegrationSettings } from "./types";
 import { BaseExecutor, ExecuteProps, ExecuteResult } from "../base-executor";
 import { Pezzo } from "@pezzo/client";
 import { ExecutorOptions } from "../types";
-import { PromptExecutionStatus } from "../../../@generated/graphql/graphql";
 
 export class AI21Executor extends BaseExecutor {
   private readonly axios: AxiosInstance;
@@ -41,7 +40,7 @@ export class AI21Executor extends BaseExecutor {
       const completionCost = (completionTokens / 1000) * costPer1000Tokens;
 
       return {
-        status: PromptExecutionStatus.Success,
+        status: "Success",
         promptTokens,
         completionTokens,
         promptCost,
@@ -53,7 +52,7 @@ export class AI21Executor extends BaseExecutor {
       const statusCode = error.response.status;
 
       return {
-        status: PromptExecutionStatus.Error,
+        status: "Error",
         promptTokens: 0,
         completionTokens: 0,
         promptCost: 0,
