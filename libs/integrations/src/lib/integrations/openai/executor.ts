@@ -2,7 +2,6 @@ import { BaseExecutor, ExecuteProps, ExecuteResult } from "../base-executor";
 import { Pezzo } from "@pezzo/client";
 import { OpenAIIntegrationSettings, ExecutorOptions } from "./types";
 import { OpenAIApi } from "openai";
-import { PromptExecutionStatus } from "@pezzo/integrations/@generated/graphql/graphql";
 import { initSdk } from "./sdk";
 
 export class OpenAIExecutor extends BaseExecutor {
@@ -47,7 +46,7 @@ export class OpenAIExecutor extends BaseExecutor {
       );
 
       return {
-        status: PromptExecutionStatus.Success,
+        status: "success",
         promptTokens,
         completionTokens,
         promptCost,
@@ -61,7 +60,7 @@ export class OpenAIExecutor extends BaseExecutor {
       const statusCode = error.response ? error?.response.status : 500;
 
       return {
-        status: PromptExecutionStatus.Error,
+        status: "error",
         promptTokens: 0,
         completionTokens: 0,
         promptCost: 0,

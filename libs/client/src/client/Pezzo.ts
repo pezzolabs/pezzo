@@ -1,7 +1,6 @@
 import { FIND_PROMPT, GET_DEPLOYED_PROMPT_VERSION } from "../graphql/queries";
 import { REPORT_PROMPT_EXECUTION } from "../graphql/mutations";
 import { GraphQLClient } from "graphql-request";
-import { type Prisma } from "@prisma/client";
 // import { PromptExecution, PromptExecutionCreateInput } from "@pezzo/graphql"; --> This needs to be fixed
 import { IntegrationBaseSettings, PromptExecutionStatus } from "../types";
 

@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import { AI21CompletionResponse, AI21IntegrationSettings } from "./types";
 import { BaseExecutor, ExecuteProps, ExecuteResult } from "../base-executor";
-import { Pezzo, PromptExecutionStatus } from "@pezzo/client";
+import { Pezzo } from "@pezzo/client";
 import { ExecutorOptions } from "../types";
 
 export class AI21Executor extends BaseExecutor {
@@ -40,7 +40,7 @@ export class AI21Executor extends BaseExecutor {
       const completionCost = (completionTokens / 1000) * costPer1000Tokens;
 
       return {
-        status: PromptExecutionStatus.Success,
+        status: "success",
         promptTokens,
         completionTokens,
         promptCost,
@@ -48,12 +48,11 @@ export class AI21Executor extends BaseExecutor {
         result: data.completions[0].data.text,
       };
     } catch (error) {
-      console.log("error", error);
       const errorResult = error.response.data;
       const statusCode = error.response.status;
 
       return {
-        status: PromptExecutionStatus.Error,
+        status: "error",
         promptTokens: 0,
         completionTokens: 0,
         promptCost: 0,
