@@ -1,5 +1,5 @@
 import { FormSchema } from "../form.types";
-import { IntegrationSettings } from "./types";
+import { OpenAIIntegrationSettings } from "./types";
 
 export const settingsSchema: FormSchema = [
   {
@@ -54,7 +54,7 @@ export const settingsSchema: FormSchema = [
   },
 ];
 
-export const defaultSettings: IntegrationSettings = {
+export const defaultSettings: OpenAIIntegrationSettings = {
   model: "gpt-3.5-turbo",
   modelSettings: {
     temperature: 0.7,

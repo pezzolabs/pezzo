@@ -1,18 +1,14 @@
 import axios, { AxiosInstance } from "axios";
-import { IntegrationSettings } from "./types";
-import { BaseExecutor, ExecuteProps, ExecuteResult } from "../BaseExecutor";
+import { AI21CompletionResponse, AI21IntegrationSettings } from "./types";
+import { BaseExecutor, ExecuteProps, ExecuteResult } from "../base-executor";
 import { Pezzo } from "@pezzo/client";
+import { ExecutorOptions } from "../types";
 
-interface ExecutorOptions {
-  apiKey: string;
-}
-
-export class Executor extends BaseExecutor {
+export class AI21Executor extends BaseExecutor {
   private readonly axios: AxiosInstance;
 
-  constructor(pezzo: Pezzo, options: ExecutorOptions) {
-    super(pezzo);
-
+  constructor(pezzoClient: Pezzo, options: ExecutorOptions) {
+    super(pezzoClient);
     this.axios = axios.create({
       headers: {
         Authorization: `Bearer ${options.apiKey}`,
@@ -21,19 +17,20 @@ export class Executor extends BaseExecutor {
     });
   }
 
-  async execute<T>(
-    props: ExecuteProps<IntegrationSettings>
-  ): Promise<ExecuteResult<T>> {
+  async execute(
+    props: ExecuteProps<AI21IntegrationSettings>
+  ): Promise<ExecuteResult<string>> {
     const { settings, content } = props;
+
     const url = `https://api.ai21.com/studio/v1/${settings.model}/complete`;
 
     try {
-      const result = await this.axios.post(url, {
+      const result = await this.axios.post<AI21CompletionResponse>(url, {
         prompt: content,
         ...settings.modelSettings,
       });
 
-      const data = result.data as any;
+      const data = result.data;
 
       const promptTokens = data.prompt.tokens.length;
       const completionTokens = data.completions[0].data.tokens.length;
@@ -51,7 +48,6 @@ export class Executor extends BaseExecutor {
         result: data.completions[0].data.text,
       };
     } catch (error) {
-      console.log("error", error);
       const errorResult = error.response.data;
       const statusCode = error.response.status;
 
