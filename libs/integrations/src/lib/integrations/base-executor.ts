@@ -3,6 +3,7 @@ import { Pezzo } from "@pezzo/client";
 import { GraphQLFormattedError } from "graphql";
 import { interpolateVariables } from "../utils/interpolate-variables";
 import { PezzoClientError } from "./types";
+import { PromptExecutionStatus } from "../../@generated/graphql/graphql";
 
 export interface ExecuteProps<T = unknown> {
   content: string;
@@ -15,7 +16,7 @@ export interface ExecuteOptions {
 }
 
 export interface ExecuteResult<T> {
-  status: "success" | "error";
+  status: PromptExecutionStatus;
   promptTokens: number;
   completionTokens: number;
   promptCost: number;
@@ -89,20 +90,47 @@ export abstract class BaseExecutor {
     const end = performance.now();
     const duration = Math.ceil(end - start);
 
-    return this.pezzoClient.reportPromptExecution<T>(
-      {
-        prompt: {
-          connect: {
-            id: prompt.id,
-          },
+    const promptConnect = {
+      connect: {
+        id: prompt.id,
+      },
+    };
+
+    try {
+      return this.pezzoClient.reportPromptExecution<T>(
+        {
+          prompt: promptConnect,
+          promptVersionSha: promptVersion.sha,
+          status: executionResult.status,
+          content,
+          variables,
+          interpolatedContent,
+          settings,
+          result: executionResult.result,
+          ...(executionResult.error && {
+            error: executionResult?.error.printableError,
+          }),
+          promptTokens: executionResult.promptTokens,
+          completionTokens: executionResult.completionTokens,
+          totalTokens:
+            executionResult.promptTokens + executionResult.completionTokens,
+          promptCost: executionResult.promptCost,
+          completionCost: executionResult.completionCost,
+          totalCost:
+            executionResult.promptCost + executionResult.completionCost,
+          duration,
         },
+        options.autoParseJSON
+      );
+    } catch (e) {
+      this.pezzoClient.reportPromptExecution<T>({
+        prompt: promptConnect,
         promptVersionSha: promptVersion.sha,
-        status: executionResult.status,
+        status: PromptExecutionStatus.Error,
         content,
         variables,
         interpolatedContent,
         settings,
-        result: executionResult.result,
         ...(executionResult.error && {
           error: executionResult?.error.printableError,
         }),
@@ -114,8 +142,8 @@ export abstract class BaseExecutor {
         completionCost: executionResult.completionCost,
         totalCost: executionResult.promptCost + executionResult.completionCost,
         duration,
-      },
-      options.autoParseJSON
-    );
+      });
+      throw e;
+    }
   }
 }
