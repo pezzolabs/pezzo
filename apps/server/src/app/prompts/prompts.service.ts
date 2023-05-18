@@ -2,8 +2,6 @@ import { PrismaService } from "../prisma.service";
 import sha256 from "sha256";
 import { Injectable } from "@nestjs/common";
 import { CreatePromptVersionInput } from "./inputs/create-prompt-version.input";
-import { OpenAIChatSettings, interpolateVariables } from "@pezzo/common";
-import { CreateChatCompletionResponse } from "openai";
 
 @Injectable()
 export class PromptsService {

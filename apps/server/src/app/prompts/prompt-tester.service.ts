@@ -1,20 +1,17 @@
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import { TestPromptInput } from "./inputs/test-prompt.input";
 import { getIntegration } from "@pezzo/integrations";
-import { Executor as OpenAIExecutor } from "@pezzo/integrations/lib/integrations/openai/Executor";
-import { Executor as AI21Executor } from "@pezzo/integrations/lib/integrations/ai21/Executor";
+import { OpenAIExecutor, AI21Executor } from "@pezzo/integrations";
 import { Pezzo, TestPromptResult } from "@pezzo/client";
-import { interpolateVariables } from "@pezzo/common";
-import { ExecuteResult } from "@pezzo/integrations/lib/integrations/BaseExecutor";
 import { ProviderApiKeysService } from "../credentials/provider-api-keys.service";
+import { interpolateVariables } from "@pezzo/integrations/lib/utils/interpolate-variables";
 
+const noop = {} as Pezzo;
 @Injectable()
 export class PromptTesterService {
   constructor(private providerAPIKeysService: ProviderApiKeysService) {}
 
-  private async getExecutor(integrationId: string, organizationId: string) {
-    let executor;
-
+  private async executorFactory(integrationId: string, organizationId: string) {
     const { provider } = getIntegration(integrationId);
     const apiKey = await this.providerAPIKeysService.getByProvider(
       provider,
@@ -25,14 +22,12 @@ export class PromptTesterService {
       throw new ForbiddenException(`No valid API key found for ${provider}`);
     }
 
-    if (integrationId === "openai") {
-      executor = new OpenAIExecutor({} as Pezzo, { apiKey: apiKey.value });
+    switch (integrationId) {
+      case "openai":
+        return new OpenAIExecutor(noop, { apiKey: apiKey.value });
+      case "ai21":
+        return new AI21Executor(noop, { apiKey: apiKey.value });
     }
-    if (integrationId === "ai21") {
-      executor = new AI21Executor({} as Pezzo, { apiKey: apiKey.value });
-    }
-
-    return executor;
   }
 
   async testPrompt(
@@ -42,55 +37,31 @@ export class PromptTesterService {
     const { integrationId, content, variables } = input;
     const interpolatedContent = interpolateVariables(content, variables);
 
-    const executor = await this.getExecutor(integrationId, organizationId);
-    const settings = input.settings;
-    let start: number, end: number;
-    let result: ExecuteResult<any>;
+    const executor = await this.executorFactory(integrationId, organizationId);
 
-    try {
-      start = performance.now();
-      result = await executor.execute({
-        content: interpolatedContent,
-        settings: settings as any,
-        options: {},
-      });
-      end = performance.now();
-    } catch (error) {
-      return {
-        success: false,
-        result: null,
-        error: JSON.stringify(error.response.data),
-        promptTokens: 0,
-        completionTokens: 0,
-        totalTokens: 0,
-        promptCost: 0,
-        completionCost: 0,
-        totalCost: 0,
-        duration: 0,
-        content,
-        interpolatedContent,
-        settings,
-        variables,
-      };
-    }
+    const settings = input.settings;
+
+    const start = performance.now();
+    const result = await executor.execute({
+      content: interpolatedContent,
+      settings: settings as never,
+      options: {},
+    });
+    const end = performance.now();
 
     const duration = Math.ceil(end - start);
 
     return {
-      success: true,
-      result: result.result,
-      error: null,
+      ...result,
+      error: result?.error ? (result?.error.error as Error).message : null,
+      success: !result?.error,
       content,
       interpolatedContent,
-      settings,
       duration,
-      promptTokens: result.promptTokens,
-      completionTokens: result.completionTokens,
-      totalTokens: result.promptTokens + result.completionTokens,
-      promptCost: result.promptCost,
-      completionCost: result.completionCost,
-      totalCost: result.promptCost + result.completionCost,
+      settings,
       variables,
+      totalTokens: 0,
+      totalCost: 0,
     };
   }
 }

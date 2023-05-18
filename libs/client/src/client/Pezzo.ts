@@ -1,8 +1,8 @@
 import { FIND_PROMPT, GET_DEPLOYED_PROMPT_VERSION } from "../graphql/queries";
 import { REPORT_PROMPT_EXECUTION } from "../graphql/mutations";
-
-import { type Prisma } from "@prisma/client";
 import { GraphQLClient } from "graphql-request";
+// import { PromptExecution, PromptExecutionCreateInput } from "@pezzo/graphql"; --> This needs to be fixed
+import { IntegrationBaseSettings, PromptExecutionStatus } from "../types";
 
 export interface PezzoClientOptions {
   serverUrl: string;
@@ -33,21 +33,48 @@ export class Pezzo {
     return result.findPromptWithApiKey;
   }
 
-  async reportPromptExecution(data: Prisma.PromptExecutionCreateInput) {
+  async reportPromptExecution<T>(
+    data: unknown,
+    autoParseJSON?: boolean
+  ): Promise<{
+    id: string;
+    promptId: string;
+    status: PromptExecutionStatus;
+    result?: T;
+    totalCost: number;
+    totalTokens: number;
+    duration: number;
+  }> {
     const result = await this.gqlClient.request(REPORT_PROMPT_EXECUTION, {
       data: data as any, // eslint-disable-line @typescript-eslint/no-explicit-any
     });
 
-    return result.reportPromptExecutionWithApiKey;
+    const { result: resultString, ...rest } =
+      result.reportPromptExecutionWithApiKey;
+
+    const report = { ...rest };
+
+    if (result) {
+      return {
+        ...report,
+        result: autoParseJSON
+          ? (JSON.parse(resultString) as T)
+          : (resultString as T),
+      };
+    }
+    return report;
   }
 
-  async getDeployedPromptVersion(promptId: string) {
+  async getDeployedPromptVersion<T>(promptId: string) {
     const result = await this.gqlClient.request(GET_DEPLOYED_PROMPT_VERSION, {
       data: {
         promptId,
         environmentSlug: this.options.environment,
       },
     });
-    return result.deployedPromptVersionWithApiKey;
+
+    const { settings, ...rest } = result.deployedPromptVersionWithApiKey;
+
+    return { ...rest, settings: settings as IntegrationBaseSettings<T> };
   }
 }

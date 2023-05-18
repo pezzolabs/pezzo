@@ -1,28 +1,20 @@
-import { BaseExecutor, ExecuteProps, ExecuteResult } from "../BaseExecutor";
+import { BaseExecutor, ExecuteProps, ExecuteResult } from "../base-executor";
 import { Pezzo } from "@pezzo/client";
-import { IntegrationSettings } from "./types";
-import { Configuration, OpenAIApi } from "openai";
+import { OpenAIIntegrationSettings, ExecutorOptions } from "./types";
+import { OpenAIApi } from "openai";
+import { initSdk } from "./sdk";
 
-interface ExecutorOptions {
-  apiKey: string;
-}
-
-export class Executor extends BaseExecutor {
+export class OpenAIExecutor extends BaseExecutor {
   private readonly openai: OpenAIApi;
 
-  constructor(pezzo: Pezzo, options: ExecutorOptions) {
-    super(pezzo);
-
-    const configuration = new Configuration({
-      apiKey: options.apiKey,
-    });
-
-    this.openai = new OpenAIApi(configuration);
+  constructor(pezzoClient: Pezzo, options: ExecutorOptions) {
+    super(pezzoClient);
+    this.openai = initSdk(options.apiKey);
   }
 
-  async execute<T>(
-    props: ExecuteProps<IntegrationSettings>
-  ): Promise<ExecuteResult<T>> {
+  async execute(
+    props: ExecuteProps<OpenAIIntegrationSettings>
+  ): Promise<ExecuteResult<string>> {
     const { settings, content } = props;
 
     try {
@@ -41,7 +33,7 @@ export class Executor extends BaseExecutor {
         ],
       });
 
-      const data = result.data as any;
+      const data = result.data;
       const { usage } = data;
 
       const promptTokens = usage.prompt_tokens;
@@ -59,12 +51,13 @@ export class Executor extends BaseExecutor {
         completionTokens,
         promptCost,
         completionCost,
-        result: data.choices[0].message.content,
+        result: data.choices[0]?.message.content,
       };
     } catch (error) {
-      const errorResult = error.response.data.error;
-      const statusCode = error.response.status;
-      console.log("statusCOde", statusCode);
+      const errorResult = error.response
+        ? error?.response.data.error
+        : { message: error.message };
+      const statusCode = error.response ? error?.response.status : 500;
 
       return {
         status: "Error",
