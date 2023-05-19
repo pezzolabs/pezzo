@@ -32,6 +32,7 @@ import { FindPromptByNameInput } from "./inputs/find-prompt-by-name.input";
 import { EnvironmentsService } from "../environments/environments.service";
 import { GetProjectPromptsInput } from "./inputs/get-project-prompts.input";
 import { ApiKeyProjectId } from "../identity/api-key-project-id.decorator";
+import { ResolveDeployedVersionInput } from "./inputs/resolve-deployed-version.input";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Prompt)
@@ -180,46 +181,6 @@ export class PromptsResolver {
   }
 
   @Query(() => PromptVersion)
-  async deployedPromptVersionWithApiKey(
-    @Args("data") data: GetDeployedPromptVersionInput,
-    @ApiKeyProjectId() projectId: string
-  ) {
-    const { environmentSlug, promptId } = data;
-    const prompt = await this.promptsService.getPrompt(promptId);
-
-    if (!prompt) {
-      throw new NotFoundException(`Prompt with id "${promptId}" not found`);
-    }
-
-    const environment = await this.environmentsService.getBySlug(
-      environmentSlug,
-      projectId
-    );
-
-    if (!environment) {
-      throw new NotFoundException(
-        `Environment with slug "${environmentSlug}" not found`
-      );
-    }
-
-    const deployedPrompt = await this.prisma.promptEnvironment.findFirst({
-      where: { promptId, environmentId: environment.id },
-    });
-
-    if (!deployedPrompt) {
-      throw new NotFoundException(
-        `Prompt was not deployed to the "${environmentSlug}" environment`
-      );
-    }
-
-    const promptVersion = await this.promptsService.getPromptVersion(
-      deployedPrompt.promptVersionSha
-    );
-
-    return promptVersion;
-  }
-
-  @Query(() => PromptVersion)
   async deployedPromptVersion(
     @Args("data") data: GetDeployedPromptVersionInput,
     @CurrentUser() user: RequestUser
@@ -282,7 +243,7 @@ export class PromptsResolver {
     const prompt = await this.promptsService.createPrompt(
       data.name,
       data.integrationId,
-      data.projectId,
+      data.projectId
     );
     return prompt;
   }
@@ -334,6 +295,42 @@ export class PromptsResolver {
       },
     });
     return executions;
+  }
+
+  @ResolveField(() => PromptVersion)
+  async deployedVersion(
+    @Parent() prompt: PrismaPrompt,
+    @Args("data") data: ResolveDeployedVersionInput
+  ) {
+    const { projectId } = prompt;
+    const { environmentSlug } = data;
+
+    const environment = await this.environmentsService.getBySlug(
+      environmentSlug,
+      projectId
+    );
+
+    if (!environment) {
+      throw new NotFoundException(
+        `Environment with slug "${environmentSlug}" not found`
+      );
+    }
+
+    const deployedPrompt = await this.prisma.promptEnvironment.findFirst({
+      where: { promptId: prompt.id, environmentId: environment.id },
+    });
+
+    if (!deployedPrompt) {
+      throw new NotFoundException(
+        `Prompt was not deployed to the "${environmentSlug}" environment`
+      );
+    }
+
+    const promptVersion = await this.promptsService.getPromptVersion(
+      deployedPrompt.promptVersionSha
+    );
+
+    return promptVersion;
   }
 
   @ResolveField(() => [PromptVersion])

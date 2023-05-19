@@ -1,7 +1,6 @@
-import { FIND_PROMPT, GET_DEPLOYED_PROMPT_VERSION } from "../graphql/queries";
+import { GET_DEPLOYED_PROMPT_VERSION } from "../graphql/queries";
 import { REPORT_PROMPT_EXECUTION } from "../graphql/mutations";
 import { GraphQLClient } from "graphql-request";
-// import { PromptExecution, PromptExecutionCreateInput } from "@pezzo/graphql"; --> This needs to be fixed
 import { IntegrationBaseSettings, PromptExecutionStatus } from "../types";
 
 export interface PezzoClientOptions {
@@ -21,16 +20,6 @@ export class Pezzo {
         "x-api-key": options.apiKey,
       },
     });
-  }
-
-  async findPrompt(name: string) {
-    const result = await this.gqlClient.request(FIND_PROMPT, {
-      data: {
-        name,
-      },
-    });
-
-    return result.findPromptWithApiKey;
   }
 
   async reportPromptExecution<T>(
@@ -65,16 +54,25 @@ export class Pezzo {
     return report;
   }
 
-  async getDeployedPromptVersion<T>(promptId: string) {
+  async getDeployedPromptVersion<T>(promptName: string) {
     const result = await this.gqlClient.request(GET_DEPLOYED_PROMPT_VERSION, {
       data: {
-        promptId,
-        environmentSlug: this.options.environment,
+        name: promptName,
       },
+      deployedVersionData: {
+        environmentSlug: this.options.environment,
+      }
     });
 
-    const { settings, ...rest } = result.deployedPromptVersionWithApiKey;
+    const prompt = result.findPromptWithApiKey;
 
-    return { ...rest, settings: settings as IntegrationBaseSettings<T> };
+    return {
+      id: prompt.id,
+      deployedVersion: {
+        sha: prompt.deployedVersion.sha,
+        content: prompt.deployedVersion.content,
+        settings: prompt.deployedVersion.settings as IntegrationBaseSettings<T>
+      }
+    };
   }
 }

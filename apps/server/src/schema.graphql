@@ -389,6 +389,7 @@ input ProjectWhereUniqueInput {
 type Prompt {
   _count: PromptCount!
   createdAt: DateTime!
+  deployedVersion(data: ResolveDeployedVersionInput!): PromptVersion!
   executions: [PromptExecution!]
   id: ID!
   integrationId: String!
@@ -1180,7 +1181,6 @@ input PublishPromptInput {
 type Query {
   currentApiKey(data: GetApiKeyInput!): ApiKey!
   deployedPromptVersion(data: GetDeployedPromptVersionInput!): PromptVersion!
-  deployedPromptVersionWithApiKey(data: GetDeployedPromptVersionInput!): PromptVersion!
   environment(data: GetEnvironmentBySlugInput!): Environment!
   environments(data: GetEnvironmentsInput!): [Environment!]!
   findPrompt(data: FindPromptByNameInput!): Prompt!
@@ -1200,6 +1200,10 @@ type Query {
 enum QueryMode {
   default
   insensitive
+}
+
+input ResolveDeployedVersionInput {
+  environmentSlug: String!
 }
 
 input StringFieldUpdateOperationsInput {

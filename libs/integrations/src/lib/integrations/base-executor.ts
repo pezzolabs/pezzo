@@ -38,29 +38,15 @@ export abstract class BaseExecutor {
 
   abstract execute(props: ExecuteProps): Promise<ExecuteResult<string>>;
 
-  private getPrompt(promptName: string) {
-    try {
-      return this.pezzoClient.findPrompt(promptName);
-    } catch (error) {
-      throw new PezzoClientError<GraphQLFormattedError>(error.message, error);
-    }
-  }
-
-  private getPromptVersion<T>(promptId: string) {
-    try {
-      return this.pezzoClient.getDeployedPromptVersion<T>(promptId);
-    } catch (error) {
-      throw new PezzoClientError<GraphQLFormattedError>(error.message, error);
-    }
-  }
-
   async run<T>(
     promptName: string,
     variables: Record<string, string> = {},
     options: ExecuteOptions = {}
   ) {
-    const prompt = await this.getPrompt(promptName);
-    const promptVersion = await this.getPromptVersion<T>(prompt.id);
+    // const prompt = await this.getPrompt(promptName);
+    // const promptVersion = await this.getPromptVersion<T>(prompt.id);
+    const prompt = await this.pezzoClient.getDeployedPromptVersion(promptName);
+    const promptVersion = prompt.deployedVersion;
     const { settings, content } = promptVersion;
     const interpolatedContent = interpolateVariables(content, variables);
     const start = performance.now();
