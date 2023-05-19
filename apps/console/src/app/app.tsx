@@ -20,91 +20,68 @@ import { getSuperTokensRoutesForReactRouterDom } from "supertokens-auth-react/ui
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
 import { ThirdPartyEmailPasswordPreBuiltUI } from "supertokens-auth-react/recipe/thirdpartyemailpassword/prebuiltui";
 import { InfoPage } from "./pages/InfoPage";
+import { EntryPoint } from "./pages/entrypoint";
 
 initSuperTokens();
 
 export function App() {
   return (
-    <>
-      <ThemeProvider>
-        <main className="app">
-          <SuperTokensWrapper>
-            <QueryClientProvider client={queryClient}>
-              <CurrentPromptProvider>
-                <PromptTesterProvider>
-                  <Routes>
-                    {/* We don't render the SideNavigationLayout for non-authorized routes */}
-                    {getSuperTokensRoutesForReactRouterDom(reactRouterDom, [
-                      ThirdPartyEmailPasswordPreBuiltUI,
-                    ])}
+    <ThemeProvider>
+      <main className="app">
+        <SuperTokensWrapper>
+          <QueryClientProvider client={queryClient}>
+            <CurrentPromptProvider>
+              <PromptTesterProvider>
+                <Routes>
+                  {/* We don't render the SideNavigationLayout for non-authorized routes */}
+                  {getSuperTokensRoutesForReactRouterDom(reactRouterDom, [
+                    ThirdPartyEmailPasswordPreBuiltUI,
+                  ])}
 
-                    {/* Authorized routes */}
-                    <Route element={<SideNavigationLayout />}>
-                      <Route index element={<Navigate to="/prompts" />} />
-                      <Route
-                        path="/prompts"
-                        element={
-                          <SessionAuth>
-                            <PromptsPage />
-                          </SessionAuth>
-                        }
-                      />
-                      <Route
-                        path="/prompts/:promptId"
-                        element={
-                          <SessionAuth>
-                            <PromptPage />
-                          </SessionAuth>
-                        }
-                      />
-                      <Route
-                        path="/environments"
-                        element={
-                          <SessionAuth>
-                            <EnvironmentsPage />
-                          </SessionAuth>
-                        }
-                      />
-                      <Route
-                        path="/api-keys"
-                        element={
-                          <SessionAuth>
-                            <APIKeysPage />
-                          </SessionAuth>
-                        }
-                      />
-                      <Route path="/info" element={<InfoPage />} />
-                    </Route>
-                  </Routes>
-                </PromptTesterProvider>
-              </CurrentPromptProvider>
-            </QueryClientProvider>
-          </SuperTokensWrapper>
-        </main>
-      </ThemeProvider>
-    </>
-    // <StyledApp>
-    //   <NxWelcome title="console" />
-
-    //   {/* START: routes */}
-    //   {/* These routes and navigation have been generated for you */}
-    //   {/* Feel free to move and update them to fit your needs */}
-    //   <br />
-    //   <hr />
-    //   <br />
-    //   <div role="navigation">
-    //     <ul>
-    //       <li>
-    //         <Link to="/">Home</Link>
-    //       </li>
-    //       <li>
-    //         <Link to="/page-2">Page 2</Link>
-    //       </li>
-    //     </ul>
-    //   </div>
-
-    //   {/* END: routes */}
-    // </StyledApp>
+                  {/* Authorized routes */}
+                  <Route element={<SideNavigationLayout />}>
+                    <Route index element={<EntryPoint />} />
+                    <Route
+                      path="/prompts"
+                      element={
+                        <SessionAuth>
+                          <PromptsPage />
+                        </SessionAuth>
+                      }
+                    />
+                    <Route
+                      path="/prompts/:promptId"
+                      element={
+                        <SessionAuth>
+                          <PromptPage />
+                        </SessionAuth>
+                      }
+                    />
+                    <Route
+                      path="/environments"
+                      element={
+                        <SessionAuth>
+                          <EnvironmentsPage />
+                        </SessionAuth>
+                      }
+                    />
+                    <Route
+                      path="/api-keys"
+                      element={
+                        <SessionAuth>
+                          <APIKeysPage />
+                        </SessionAuth>
+                      }
+                    />
+                    <Route path="/info" element={<InfoPage />} />
+                  </Route>
+                </Routes>
+              </PromptTesterProvider>
+            </CurrentPromptProvider>
+          </QueryClientProvider>
+        </SuperTokensWrapper>
+      </main>
+    </ThemeProvider>
   );
 }
 

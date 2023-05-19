@@ -1,21 +1,23 @@
-import { useQuery } from "@tanstack/react-query";
 import { PromptListItem } from "../../components/prompts/PromptListItem";
-import { GET_ALL_PROMPTS } from "../../graphql/queries/prompts";
-import { gqlClient } from "../../lib/graphql";
 import { PlusOutlined } from "@ant-design/icons";
 import { CreatePromptModal } from "../../components/prompts/CreatePromptModal";
 import { useState } from "react";
 import { css } from "@emotion/css";
 import { Button, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useGetPrompts } from "../../lib/hooks/queries";
+import { useSessionContext } from "supertokens-auth-react/recipe/session";
 
 export const PromptsPage = () => {
   const navigate = useNavigate();
   const [isCreatePromptModalOpen, setIsCreatePromptModalOpen] = useState(false);
-  const { data, isLoading } = useQuery({
-    queryKey: ["prompts"],
-    queryFn: () => gqlClient.request(GET_ALL_PROMPTS),
-  });
+  const sessionData = useSessionContext();
+  const { data, isLoading } = useGetPrompts();
+
+  // we have to strictly check for true here because of typescript issues with the useSessionContext hook
+  if (sessionData.loading === true) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <>
