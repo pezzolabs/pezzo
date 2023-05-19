@@ -1,18 +1,15 @@
 import {
   CanActivate,
   ExecutionContext,
-  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { verifySession } from "supertokens-node/recipe/session/framework/express";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
 import { UsersService } from "../identity/users.service";
 import { RequestUser } from "../identity/users.types";
 import { APIKeysService } from "../identity/api-keys.service";
-import { User } from "supertokens-node/recipe/thirdpartyemailpassword";
 import Session, { SessionContainer } from "supertokens-node/recipe/session";
 
 export enum AuthMethod {
@@ -66,11 +63,12 @@ export class AuthGuard implements CanActivate {
     try {
       session = await Session.getSession(req, res, {
         sessionRequired: false,
+        antiCsrfCheck: process.env.NODE_ENV === "development" ? false : true,
       });
     } catch (error) {
       throw new UnauthorizedException();
     }
-
+    
     if (!session) {
       throw new UnauthorizedException();
     }
