@@ -51,9 +51,10 @@ export class PromptTesterService {
 
     const duration = Math.ceil(end - start);
 
+    console.log(result?.error);
     return {
       ...result,
-      error: result?.error ? (result?.error.error as Error).message : null,
+      error: result?.error ? result.error.printableError : null,
       success: !result?.error,
       content,
       interpolatedContent,
