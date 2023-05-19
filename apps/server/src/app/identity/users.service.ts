@@ -30,14 +30,6 @@ export class UsersService {
         },
       }),
     ]);
-
-    const key = `pez_${randomBytes(32).toString("hex")}`;
-    await this.prisma.apiKey.create({
-      data: {
-        id: key,
-        organizationId: org.id,
-      },
-    });
     return user;
   }
 

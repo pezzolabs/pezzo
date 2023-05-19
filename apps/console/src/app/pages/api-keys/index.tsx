@@ -3,6 +3,7 @@ import { integrations } from "@pezzo/integrations";
 import { ProviderApiKeyListItem } from "../../components/api-keys/ProviderApiKeyListItem";
 import { PezzoApiKeyListItem } from "../../components/api-keys/PezzoApiKeyListItem";
 import { useApiKeys, useProviderApiKeys } from "../../lib/hooks/queries";
+import { useCurrentProject } from "../../lib/providers/CurrentProjectContext";
 
 export const APIKeysPage = () => {
   const providers = Object.values(integrations).map((integration) => ({

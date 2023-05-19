@@ -8,4 +8,7 @@ export interface RequestUser {
     role: OrgRole;
     memberSince: Date;
   }[];
+  projects: {
+    id: string;
+  }[];
 }

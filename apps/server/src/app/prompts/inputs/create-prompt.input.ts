@@ -7,4 +7,7 @@ export class CreatePromptInput {
 
   @Field(() => String, { nullable: false })
   integrationId: string;
+
+  @Field(() => String, { nullable: false })
+  projectId: string;
 }

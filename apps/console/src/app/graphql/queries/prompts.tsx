@@ -1,8 +1,8 @@
 import { graphql } from "@pezzo/graphql";
 
 export const GET_ALL_PROMPTS = graphql(/* GraphQL */ `
-  query getAllPrompts {
-    prompts {
+  query getAllPrompts($data: GetProjectPromptsInput!) {
+    prompts(data: $data) {
       id
       name
       integrationId

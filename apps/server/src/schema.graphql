@@ -3,21 +3,28 @@
 # ------------------------------------------------------
 
 type ApiKey {
-  Organization: Organization!
   createdAt: DateTime!
   id: ID!
   name: String!
-  organizationId: String!
+  project: Project!
+  projectId: String!
 }
 
 input CreateEnvironmentInput {
   name: String!
+  projectId: String!
   slug: String!
+}
+
+input CreateProjectInput {
+  name: String!
+  organizationId: String!
 }
 
 input CreatePromptInput {
   integrationId: String!
   name: String!
+  projectId: String!
 }
 
 input CreatePromptVersionInput {
@@ -28,6 +35,7 @@ input CreatePromptVersionInput {
 }
 
 input CreateProviderApiKeyInput {
+  projectId: String!
   provider: String!
   value: String!
 }
@@ -68,7 +76,7 @@ type Environment {
   createdAt: DateTime!
   id: ID!
   name: String!
-  organizationId: String!
+  projectId: String!
   promptEnvironments: [PromptEnvironment!]
   slug: String!
   updatedAt: DateTime!
@@ -93,7 +101,7 @@ input EnvironmentCreateWithoutPromptEnvironmentsInput {
   createdAt: DateTime
   id: String
   name: String!
-  organizationId: String!
+  projectId: String!
   slug: String!
   updatedAt: DateTime
 }
@@ -115,7 +123,7 @@ input EnvironmentUpdateWithoutPromptEnvironmentsInput {
   createdAt: DateTimeFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  organizationId: StringFieldUpdateOperationsInput
+  projectId: StringFieldUpdateOperationsInput
   slug: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
@@ -132,7 +140,7 @@ input EnvironmentWhereInput {
   createdAt: DateTimeFilter
   id: StringFilter
   name: StringFilter
-  organizationId: StringFilter
+  projectId: StringFilter
   promptEnvironments: PromptEnvironmentListRelationFilter
   slug: StringFilter
   updatedAt: DateTimeFilter
@@ -165,13 +173,26 @@ input FloatFilter {
   notIn: [Float!]
 }
 
+input GetApiKeyInput {
+  projectId: String!
+}
+
 input GetDeployedPromptVersionInput {
   environmentSlug: String!
   promptId: String!
 }
 
 input GetEnvironmentBySlugInput {
+  projectId: String!
   slug: String!
+}
+
+input GetEnvironmentsInput {
+  projectId: String!
+}
+
+input GetProjectPromptsInput {
+  projectId: String!
 }
 
 input GetPromptInput {
@@ -182,6 +203,10 @@ input GetPromptInput {
 input GetPromptVersionInput {
   promptId: String!
   sha: String!
+}
+
+input GetProviderApiKeysInput {
+  projectId: String!
 }
 
 input IntFieldUpdateOperationsInput {
@@ -215,6 +240,7 @@ input JsonFilter {
 
 type Mutation {
   createEnvironment(data: CreateEnvironmentInput!): Environment!
+  createProject(data: CreateProjectInput!): Project!
   createPrompt(data: CreatePromptInput!): Prompt!
   createPromptVersion(data: CreatePromptVersionInput!): PromptVersion!
   publishPrompt(data: PublishPromptInput!): PromptEnvironment!
@@ -302,19 +328,17 @@ enum OrgRole {
 
 type Organization {
   _count: OrganizationCount!
-  apiKeys: [ApiKey!]
   createdAt: DateTime!
   id: ID!
   members: [OrganizationMember!]
   name: String!
-  providerApiKeys: [ProviderApiKey!]
+  projects: [Project!]
   updatedAt: DateTime!
 }
 
 type OrganizationCount {
-  apiKeys: Int!
   members: Int!
-  providerApiKeys: Int!
+  projects: Int!
 }
 
 type OrganizationMember {
@@ -328,6 +352,40 @@ type OrganizationMember {
   userId: String!
 }
 
+type Project {
+  _count: ProjectCount!
+  apiKeys: [ApiKey!]
+  createdAt: DateTime!
+  id: ID!
+  members: [ProjectMember!]
+  name: String!
+  organization: Organization!
+  organizationId: String!
+  providerApiKeys: [ProviderApiKey!]
+  slug: String!
+  updatedAt: DateTime!
+}
+
+type ProjectCount {
+  apiKeys: Int!
+  members: Int!
+  providerApiKeys: Int!
+}
+
+type ProjectMember {
+  createdAt: DateTime!
+  id: ID!
+  project: Project!
+  projectId: String!
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
+input ProjectWhereUniqueInput {
+  id: String
+}
+
 type Prompt {
   _count: PromptCount!
   createdAt: DateTime!
@@ -336,7 +394,7 @@ type Prompt {
   integrationId: String!
   latestVersion: PromptVersion
   name: String!
-  organizationId: String!
+  projectId: String!
   promptEnvironments: [PromptEnvironment!]
   updatedAt: DateTime!
   version(data: GetPromptInput!): PromptVersion
@@ -387,7 +445,7 @@ input PromptCreateWithoutExecutionsInput {
   id: String
   integrationId: String!
   name: String!
-  organizationId: String!
+  projectId: String!
   promptEnvironments: PromptEnvironmentCreateNestedManyWithoutPromptInput
   updatedAt: DateTime
   versions: PromptVersionCreateNestedManyWithoutPromptInput
@@ -399,7 +457,7 @@ input PromptCreateWithoutPromptEnvironmentsInput {
   id: String
   integrationId: String!
   name: String!
-  organizationId: String!
+  projectId: String!
   updatedAt: DateTime
   versions: PromptVersionCreateNestedManyWithoutPromptInput
 }
@@ -410,7 +468,7 @@ input PromptCreateWithoutVersionsInput {
   id: String
   integrationId: String!
   name: String!
-  organizationId: String!
+  projectId: String!
   promptEnvironments: PromptEnvironmentCreateNestedManyWithoutPromptInput
   updatedAt: DateTime
 }
@@ -847,7 +905,7 @@ input PromptUpdateInput {
   id: StringFieldUpdateOperationsInput
   integrationId: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  organizationId: StringFieldUpdateOperationsInput
+  projectId: StringFieldUpdateOperationsInput
   promptEnvironments: PromptEnvironmentUpdateManyWithoutPromptInput
   updatedAt: DateTimeFieldUpdateOperationsInput
   versions: PromptVersionUpdateManyWithoutPromptInput
@@ -875,7 +933,7 @@ input PromptUpdateWithoutPromptEnvironmentsInput {
   id: StringFieldUpdateOperationsInput
   integrationId: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  organizationId: StringFieldUpdateOperationsInput
+  projectId: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
   versions: PromptVersionUpdateManyWithoutPromptInput
 }
@@ -886,7 +944,7 @@ input PromptUpdateWithoutVersionsInput {
   id: StringFieldUpdateOperationsInput
   integrationId: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  organizationId: StringFieldUpdateOperationsInput
+  projectId: StringFieldUpdateOperationsInput
   promptEnvironments: PromptEnvironmentUpdateManyWithoutPromptInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
@@ -1092,7 +1150,7 @@ input PromptWhereInput {
   id: StringFilter
   integrationId: StringFilter
   name: StringFilter
-  organizationId: StringFilter
+  projectId: StringFilter
   promptEnvironments: PromptEnvironmentListRelationFilter
   updatedAt: DateTimeFilter
   versions: PromptVersionListRelationFilter
@@ -1105,8 +1163,8 @@ input PromptWhereUniqueInput {
 type ProviderApiKey {
   createdAt: DateTime!
   id: ID!
-  organization: Organization!
-  organizationId: String!
+  project: Project!
+  projectId: String!
   provider: String!
   updatedAt: DateTime!
   value: String!
@@ -1114,26 +1172,29 @@ type ProviderApiKey {
 
 input PublishPromptInput {
   environmentSlug: String!
+  projectId: String!
   promptId: String!
   promptVersionSha: String!
 }
 
 type Query {
-  currentApiKey: ApiKey!
+  currentApiKey(data: GetApiKeyInput!): ApiKey!
   deployedPromptVersion(data: GetDeployedPromptVersionInput!): PromptVersion!
   deployedPromptVersionWithApiKey(data: GetDeployedPromptVersionInput!): PromptVersion!
   environment(data: GetEnvironmentBySlugInput!): Environment!
-  environments: [Environment!]!
+  environments(data: GetEnvironmentsInput!): [Environment!]!
   findPrompt(data: FindPromptByNameInput!): Prompt!
   findPromptWithApiKey(data: FindPromptByNameInput!): Prompt!
   getLatestPrompt(data: PromptWhereUniqueInput!): PromptVersion!
+  project(data: ProjectWhereUniqueInput!): Project!
+  projects: [Project!]!
   prompt(data: GetPromptInput!): Prompt!
   promptExecution(data: PromptExecutionWhereUniqueInput!): PromptExecution!
   promptExecutions(data: PromptExecutionWhereInput!): [PromptExecution!]!
   promptVersion(data: GetPromptVersionInput!): PromptVersion!
   promptVersions(data: PromptWhereUniqueInput!): [PromptVersion!]!
-  prompts: [Prompt!]!
-  providerApiKeys: [ProviderApiKey!]!
+  prompts(data: GetProjectPromptsInput!): [Prompt!]!
+  providerApiKeys(data: GetProviderApiKeysInput!): [ProviderApiKey!]!
 }
 
 enum QueryMode {
@@ -1178,11 +1239,13 @@ input StringNullableFilter {
 input TestPromptInput {
   content: String!
   integrationId: String!
+  projectId: String!
   settings: JSON!
   variables: JSON
 }
 
 type User {
+  ProjectMember: [ProjectMember!]
   _count: UserCount!
   createdAt: DateTime!
   email: String!
@@ -1192,5 +1255,6 @@ type User {
 }
 
 type UserCount {
+  ProjectMember: Int!
   orgMemberships: Int!
 }

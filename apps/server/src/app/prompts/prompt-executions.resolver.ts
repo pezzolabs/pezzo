@@ -18,7 +18,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiKeyOrgId } from "../identity/api-key-org-id";
-import { isOrgMemberOrThrow } from "../identity/identity.utils";
+import { isProjectMemberOrThrow } from "../identity/identity.utils";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Prompt)
@@ -46,7 +46,7 @@ export class PromptExecutionsResolver {
       promptExecution.promptId
     );
 
-    isOrgMemberOrThrow(user, prompt.organizationId);
+    isProjectMemberOrThrow(user, prompt.projectId);
 
     return promptExecution;
   }
@@ -63,7 +63,7 @@ export class PromptExecutionsResolver {
       throw new NotFoundException();
     }
 
-    isOrgMemberOrThrow(user, prompt.organizationId);
+    isProjectMemberOrThrow(user, prompt.projectId);
 
     const executions = await this.prisma.promptExecution.findMany({
       where: data,
@@ -80,21 +80,22 @@ export class PromptExecutionsResolver {
     @Args("data") data: PromptExecutionCreateInput,
     @ApiKeyOrgId() orgId: string
   ) {
-    const promptId = data.prompt.connect.id;
-    const prompt = await this.promptsService.getPrompt(promptId);
+    // const promptId = data.prompt.connect.id;
+    // const prompt = await this.promptsService.getPrompt(promptId);
 
-    if (!prompt) {
-      throw new NotFoundException();
-    }
+    // if (!prompt) {
+    //   throw new NotFoundException();
+    // }
 
-    if (prompt.organizationId !== orgId) {
-      throw new ForbiddenException();
-    }
+    // if (prompt.organizationId !== orgId) {
+    //   throw new ForbiddenException();
+    // }
 
-    const execution = await this.prisma.promptExecution.create({
-      data,
-    });
-    return execution;
+    // const execution = await this.prisma.promptExecution.create({
+    //   data,
+    // });
+    // return execution;
+    return {};
   }
 
   @UseGuards(AuthGuard)
@@ -103,9 +104,11 @@ export class PromptExecutionsResolver {
     @Args("data") data: TestPromptInput,
     @CurrentUser() user: RequestUser
   ) {
+    isProjectMemberOrThrow(user, data.projectId);
+
     const result = await this.promptTesterService.testPrompt(
       data,
-      user.orgMemberships[0].organizationId
+      data.projectId
     );
 
     const execution = new PromptExecution();

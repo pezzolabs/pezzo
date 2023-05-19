@@ -1,20 +1,14 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { useQuery } from "@tanstack/react-query";
 import { Button, List, Typography } from "antd";
 import { InlineCodeSnippet } from "../../components/common/InlineCodeSnippet";
 import { CreateEnvironmentModal } from "../../components/environments/CreateEnvironmentModal";
-import { GET_ALL_ENVIRONMENTS } from "../../graphql/queries/environments";
-import { gqlClient } from "../../lib/graphql";
 import { useState } from "react";
+import { useEnvironments } from "../../lib/hooks/useEnvironments";
 
 export const EnvironmentsPage = () => {
+  const { environments } = useEnvironments();
   const [isCreateEnvironmentModalOpen, setIsCreateEnvironmentModalOpen] =
     useState(false);
-
-  const { data } = useQuery({
-    queryKey: ["environments"],
-    queryFn: () => gqlClient.request(GET_ALL_ENVIRONMENTS),
-  });
 
   return (
     <>
@@ -33,11 +27,11 @@ export const EnvironmentsPage = () => {
         </Button>
       </div>
 
-      {data?.environments && (
+      {environments && (
         <List
           style={{ maxWidth: 600 }}
           bordered
-          dataSource={data.environments}
+          dataSource={environments}
           renderItem={(item) => (
             <List.Item>
               <Typography.Text>

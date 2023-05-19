@@ -8,13 +8,16 @@ import { useState } from "react";
 import { css } from "@emotion/css";
 import { Button, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useCurrentProject } from "../../lib/providers/CurrentProjectContext";
 
 export const PromptsPage = () => {
+  const { project } = useCurrentProject();
   const navigate = useNavigate();
   const [isCreatePromptModalOpen, setIsCreatePromptModalOpen] = useState(false);
   const { data, isLoading } = useQuery({
     queryKey: ["prompts"],
-    queryFn: () => gqlClient.request(GET_ALL_PROMPTS),
+    queryFn: () =>
+      gqlClient.request(GET_ALL_PROMPTS, { data: { projectId: project.id } }),
   });
 
   return (
@@ -22,7 +25,7 @@ export const PromptsPage = () => {
       <CreatePromptModal
         open={isCreatePromptModalOpen}
         onClose={() => setIsCreatePromptModalOpen(false)}
-        onCreated={(id) => navigate(`/prompts/${id}`)}
+        onCreated={(id) => navigate(`/projects/${project.id}/prompts/${id}`)}
       />
 
       <Typography.Title level={1}>Prompts</Typography.Title>
@@ -51,7 +54,7 @@ export const PromptsPage = () => {
               <PromptListItem
                 name={prompt.name}
                 integrationId={prompt.integrationId}
-                onClick={() => navigate(`/prompts/${prompt.id}`)}
+                onClick={() => navigate(`/projects/${project.id}/prompts/${prompt.id}`)}
               />
             </div>
           ))}

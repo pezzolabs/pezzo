@@ -3,10 +3,11 @@ import styled from "@emotion/styled";
 import { CloseOutlined, EditOutlined, SaveOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { UPDATE_PROVIDER_API_KEY } from "../../graphql/mutations/provider-api-keys";
+import { UPDATE_PROVIDER_API_KEY } from "../../graphql/mutations/api-keys";
 import { gqlClient, queryClient } from "../../lib/graphql";
 import { CreateProviderApiKeyInput } from "@pezzo/graphql";
 import { useEffect } from "react";
+import { useCurrentProject } from "../../lib/providers/CurrentProjectContext";
 
 const APIKeyContainer = styled.div`
   display: flex;
@@ -25,12 +26,14 @@ export const ProviderApiKeyListItem = ({
   value,
   iconBase64,
 }: Props) => {
+  const { project } = useCurrentProject();
   const updateKeyMutation = useMutation({
     mutationFn: (data: CreateProviderApiKeyInput) =>
       gqlClient.request(UPDATE_PROVIDER_API_KEY, {
         data: {
           provider: data.provider,
           value: data.value,
+          projectId: data.projectId,
         },
       }),
     onSuccess: () => {
@@ -52,7 +55,7 @@ export const ProviderApiKeyListItem = ({
   };
 
   const handleSave = async () => {
-    await updateKeyMutation.mutateAsync({ provider, value: editValue });
+    await updateKeyMutation.mutateAsync({ provider, value: editValue, projectId: project.id });
     setIsEditing(false);
   };
 

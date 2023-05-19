@@ -11,7 +11,7 @@ import { PrismaService } from "../prisma.service";
 import { PromptWhereUniqueInput } from "../../@generated/prompt/prompt-where-unique.input";
 import { PromptUpdateInput } from "../../@generated/prompt/prompt-update.input";
 import { PromptExecution } from "../../@generated/prompt-execution/prompt-execution.model";
-import { Prompt as PrismaPrompt, User } from "@prisma/client";
+import { Prompt as PrismaPrompt } from "@prisma/client";
 import { CreatePromptInput } from "./inputs/create-prompt.input";
 import { PromptsService } from "./prompts.service";
 import { PromptVersion } from "../../@generated/prompt-version/prompt-version.model";
@@ -24,13 +24,14 @@ import {
   NotFoundException,
   UseGuards,
 } from "@nestjs/common";
-import { AuthGuard, AuthMethod } from "../auth/auth.guard";
+import { AuthGuard } from "../auth/auth.guard";
 import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
-import { isOrgMemberOrThrow } from "../identity/identity.utils";
+import { isProjectMemberOrThrow } from "../identity/identity.utils";
 import { ApiKeyOrgId } from "../identity/api-key-org-id";
 import { FindPromptByNameInput } from "./inputs/find-prompt-by-name.input";
 import { EnvironmentsService } from "../environments/environments.service";
+import { GetProjectPromptsInput } from "./inputs/get-project-prompts.input";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Prompt)
@@ -42,17 +43,21 @@ export class PromptsResolver {
   ) {}
 
   @Query(() => [Prompt])
-  async prompts(@CurrentUser() user: RequestUser) {
+  async prompts(
+    @Args("data") data: GetProjectPromptsInput,
+    @CurrentUser() user: RequestUser
+  ) {
+    isProjectMemberOrThrow(user, data.projectId);
+
     const prompts = await this.prisma.prompt.findMany({
       where: {
-        organizationId: {
-          in: user.orgMemberships.map((m) => m.organizationId),
-        },
+        projectId: data.projectId,
       },
       orderBy: {
         createdAt: "desc",
       },
     });
+
     return prompts;
   }
 
@@ -71,7 +76,7 @@ export class PromptsResolver {
       throw new NotFoundException();
     }
 
-    isOrgMemberOrThrow(user, prompt.organizationId);
+    isProjectMemberOrThrow(user, prompt.projectId);
     return prompt;
   }
 
@@ -86,8 +91,7 @@ export class PromptsResolver {
       throw new NotFoundException();
     }
 
-    isOrgMemberOrThrow(user, prompt.organizationId);
-
+    isProjectMemberOrThrow(user, prompt.projectId);
     const promptVersions = await this.promptsService.getPromptVersions(data.id);
     return promptVersions;
   }
@@ -100,7 +104,9 @@ export class PromptsResolver {
     const prompt = await this.prisma.prompt.findFirst({
       where: {
         name: data.name,
-        organizationId: user.orgMemberships[0].organizationId,
+        projectId: {
+          in: user.projects.map((p) => p.id),
+        },
       },
     });
 
@@ -108,7 +114,7 @@ export class PromptsResolver {
       throw new NotFoundException(`Prompt "${data.name}" not found"`);
     }
 
-    isOrgMemberOrThrow(user, prompt.organizationId);
+    isProjectMemberOrThrow(user, prompt.projectId);
     return prompt;
   }
 
@@ -117,18 +123,19 @@ export class PromptsResolver {
     @Args("data") data: FindPromptByNameInput,
     @ApiKeyOrgId() organizationId: string
   ) {
-    const prompt = await this.prisma.prompt.findFirst({
-      where: {
-        name: data.name,
-        organizationId,
-      },
-    });
+    // const prompt = await this.prisma.prompt.findFirst({
+    //   where: {
+    //     name: data.name,
+    //     organizationId,
+    //   },
+    // });
 
-    if (!prompt) {
-      throw new NotFoundException(`Prompt "${data.name}" not found"`);
-    }
+    // if (!prompt) {
+    //   throw new NotFoundException(`Prompt "${data.name}" not found"`);
+    // }
 
-    return prompt;
+    // return prompt;
+    return {};
   }
 
   @Query(() => PromptVersion)
@@ -151,7 +158,7 @@ export class PromptsResolver {
       throw new NotFoundException();
     }
 
-    isOrgMemberOrThrow(user, promptVersion.prompt.organizationId);
+    isProjectMemberOrThrow(user, promptVersion.prompt.projectId);
     return promptVersion;
   }
 
@@ -165,7 +172,7 @@ export class PromptsResolver {
     if (!prompt) {
       throw new NotFoundException();
     }
-    isOrgMemberOrThrow(user, prompt.organizationId);
+    isProjectMemberOrThrow(user, prompt.projectId);
 
     const promptVersion = await this.promptsService.getLatestPromptVersion(
       data.id
@@ -227,7 +234,7 @@ export class PromptsResolver {
       throw new NotFoundException(`Prompt with id "${promptId}" not found`);
     }
 
-    isOrgMemberOrThrow(user, prompt.organizationId);
+    isProjectMemberOrThrow(user, prompt.projectId);
 
     const environment = await this.environmentsService.getBySlug(
       environmentSlug,
@@ -262,6 +269,8 @@ export class PromptsResolver {
     @Args("data") data: CreatePromptInput,
     @CurrentUser() user: RequestUser
   ) {
+    isProjectMemberOrThrow(user, data.projectId);
+
     const exists = await this.promptsService.getPromptByName(
       data.name,
       user.orgMemberships[0].organizationId
@@ -274,7 +283,7 @@ export class PromptsResolver {
     const prompt = await this.promptsService.createPrompt(
       data.name,
       data.integrationId,
-      user.orgMemberships[0].organizationId
+      data.projectId,
     );
     return prompt;
   }
@@ -290,7 +299,7 @@ export class PromptsResolver {
       throw new NotFoundException();
     }
 
-    isOrgMemberOrThrow(user, exists.organizationId);
+    isProjectMemberOrThrow(user, exists.projectId);
 
     const prompt = await this.prisma.prompt.update({
       where: {
@@ -314,7 +323,7 @@ export class PromptsResolver {
       throw new NotFoundException();
     }
 
-    isOrgMemberOrThrow(user, prompt.organizationId);
+    isProjectMemberOrThrow(user, prompt.projectId);
     return this.promptsService.createPromptVersion(data);
   }
 

@@ -12,6 +12,8 @@ import { RequestUser } from "../identity/users.types";
 import { AuthGuard } from "../auth/auth.guard";
 import { GetEnvironmentBySlugInput } from "./inputs/get-environment-by-slug.input";
 import { EnvironmentsService } from "./environments.service";
+import { GetEnvironmentsInput } from "./inputs/get-environments.input";
+import { isProjectMemberOrThrow } from "../identity/identity.utils";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Environment)
@@ -22,10 +24,13 @@ export class EnvironmentsResolver {
   ) {}
 
   @Query(() => [Environment])
-  async environments(@CurrentUser() user: RequestUser) {
+  async environments(
+    @Args("data") data: GetEnvironmentsInput,
+    @CurrentUser() user: RequestUser
+  ) {
     const environments = await this.prisma.environment.findMany({
       where: {
-        organizationId: user.orgMemberships[0].organizationId,
+        projectId: data.projectId,
       },
     });
     return environments;
@@ -36,9 +41,11 @@ export class EnvironmentsResolver {
     @Args("data") data: GetEnvironmentBySlugInput,
     @CurrentUser() user: RequestUser
   ) {
+    isProjectMemberOrThrow(user, data.projectId);
+
     const environment = await this.environmentsService.getBySlug(
       data.slug,
-      user.orgMemberships[0].organizationId
+      data.projectId,
     );
 
     if (!environment) {
@@ -57,7 +64,7 @@ export class EnvironmentsResolver {
   ) {
     const exists = await this.environmentsService.getBySlug(
       data.slug,
-      user.orgMemberships[0].organizationId
+      data.projectId
     );
 
     if (exists) {
@@ -70,7 +77,7 @@ export class EnvironmentsResolver {
       data: {
         name: data.name,
         slug: data.slug,
-        organizationId: user.orgMemberships[0].organizationId,
+        projectId: data.projectId,
       },
     });
 

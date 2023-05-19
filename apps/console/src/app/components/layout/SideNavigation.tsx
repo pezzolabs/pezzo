@@ -10,9 +10,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
 import { signOut } from "supertokens-auth-react/recipe/thirdpartyemailpassword";
 
-import LogoSquare from "../../../assets/logo-square.svg";
 import { colors } from "../../lib/theme/colors";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
+import { useCurrentProject } from "../../lib/providers/CurrentProjectContext";
 
 const topMenuItems = [
   {
@@ -46,19 +46,13 @@ const bottomMenuItems = [
 ];
 
 const SidebarContainer = styled.div`
-  width: 80px;
   background: #141414;
-  border-inline-end: 1px solid ${colors.neutral["800"]};
+  border-inline-end: 1px solid ${colors.neutral["700"]};
   height: 100%;
 
   display: flex;
   flex-direction: column;
-`;
-
-const Logo = styled.img`
-  width: 36px;
-  margin: 20px auto;
-  display: block;
+  overflow: hidden;
 `;
 
 const BaseMenu = styled(Menu)`
@@ -72,12 +66,13 @@ const TopMenu = styled(BaseMenu)`
 const BottomMenu = styled(BaseMenu)``;
 
 export const SideNavigation = () => {
+  const { project } = useCurrentProject();
   const location = useLocation();
   const navigate = useNavigate();
   const [isCollapsed] = useState(true);
 
   const handleTopMenuClick = (item) => {
-    navigate(`/${item.key}`);
+    navigate(`/projects/${project.id}/${item.key}`);
   };
 
   const handleBottomMenuClick = async (item) => {
@@ -92,9 +87,8 @@ export const SideNavigation = () => {
   };
 
   return (
-    <Layout.Sider collapsed={isCollapsed} style={{ overflow: "hidden" }}>
+    <Layout.Sider style={{ overflow: "hidden" }} collapsed={isCollapsed}>
       <SidebarContainer>
-        <Logo src={LogoSquare} alt="Logo" />
         <TopMenu
           onClick={handleTopMenuClick}
           defaultSelectedKeys={["prompts"]}

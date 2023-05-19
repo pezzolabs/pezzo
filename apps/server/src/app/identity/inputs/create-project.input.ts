@@ -1,13 +1,10 @@
 import { Field, InputType } from "@nestjs/graphql";
 
 @InputType()
-export class CreateProviderApiKeyInput {
+export class CreateProjectInput {
   @Field(() => String, { nullable: false })
-  provider: string;
+  name: string;
 
   @Field(() => String, { nullable: false })
-  value: string;
-
-  @Field(() => String, { nullable: false })
-  projectId: string;
+  organizationId: string;
 }

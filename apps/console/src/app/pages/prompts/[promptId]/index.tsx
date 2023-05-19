@@ -12,6 +12,7 @@ import { css } from "@emotion/css";
 import { DeletePromptConfirmationModal } from "../../../components/prompts/DeletePromptConfirmationModal";
 import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
 import { useNavigate, useParams } from "react-router-dom";
+import { useCurrentProject } from "../../../lib/providers/CurrentProjectContext";
 
 const TabLabel = styled.div`
   display: inline-block;
@@ -26,6 +27,7 @@ const BreadcrumbTitle = styled.span`
 export const PromptPage = () => {
   const navigate = useNavigate();
   const params = useParams();
+  const { project } = useCurrentProject();
   const { setCurrentPromptId, prompt, integration } = useCurrentPrompt();
   const [activeView, setActiveView] = useState("edit");
   const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] =
@@ -63,14 +65,14 @@ export const PromptPage = () => {
           onClose={() => setIsDeleteConfirmationModalOpen(false)}
           onConfirm={() => setIsDeleteConfirmationModalOpen(false)}
         />
-        <Row gutter={[12, 12]} style={{ marginTop: 12 }}>
+        <Row gutter={[12, 12]}>
           <Col span={16}>
             <Breadcrumb
               style={{ marginBottom: 12 }}
               items={[
                 {
                   title: <BreadcrumbTitle>Prompts</BreadcrumbTitle>,
-                  onClick: () => navigate("/prompts"),
+                  onClick: () => navigate(`/projects/${project.id}/prompts`),
                 },
                 {
                   title: (
