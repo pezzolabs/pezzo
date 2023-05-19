@@ -21,7 +21,6 @@ export const CurrentProjectProvider = ({ children }) => {
 
   useEffect(() => {
     if (!projectId) {
-      console.log("navigrating");
       return navigate("/projects");
     }
 
@@ -39,10 +38,6 @@ export const CurrentProjectProvider = ({ children }) => {
     // TODO: loader
     return null;
   }
-
-  console.log("projectId", projectId);
-  console.log("projects", projects);
-  console.log("project", project);
 
   const value = {
     project,
