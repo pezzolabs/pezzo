@@ -17,7 +17,7 @@ import {
   NotFoundException,
   UseGuards,
 } from "@nestjs/common";
-import { ApiKeyOrgId } from "../identity/api-key-org-id";
+import { ApiKeyProjectId } from "../identity/api-key-project-id.decorator";
 import { isProjectMemberOrThrow } from "../identity/identity.utils";
 
 @UseGuards(AuthGuard)
@@ -78,24 +78,24 @@ export class PromptExecutionsResolver {
   @Mutation(() => PromptExecution)
   async reportPromptExecutionWithApiKey(
     @Args("data") data: PromptExecutionCreateInput,
-    @ApiKeyOrgId() orgId: string
+    @ApiKeyProjectId() projectId: string
   ) {
-    // const promptId = data.prompt.connect.id;
-    // const prompt = await this.promptsService.getPrompt(promptId);
+    console.log('report');
+    const promptId = data.prompt.connect.id;
+    const prompt = await this.promptsService.getPrompt(promptId);
 
-    // if (!prompt) {
-    //   throw new NotFoundException();
-    // }
+    if (!prompt) {
+      throw new NotFoundException();
+    }
 
-    // if (prompt.organizationId !== orgId) {
-    //   throw new ForbiddenException();
-    // }
+    if (prompt.projectId !== projectId) {
+      throw new ForbiddenException();
+    }
 
-    // const execution = await this.prisma.promptExecution.create({
-    //   data,
-    // });
-    // return execution;
-    return {};
+    const execution = await this.prisma.promptExecution.create({
+      data,
+    });
+    return execution;
   }
 
   @UseGuards(AuthGuard)

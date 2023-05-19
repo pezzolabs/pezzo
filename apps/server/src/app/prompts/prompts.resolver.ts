@@ -28,10 +28,10 @@ import { AuthGuard } from "../auth/auth.guard";
 import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
 import { isProjectMemberOrThrow } from "../identity/identity.utils";
-import { ApiKeyOrgId } from "../identity/api-key-org-id";
 import { FindPromptByNameInput } from "./inputs/find-prompt-by-name.input";
 import { EnvironmentsService } from "../environments/environments.service";
 import { GetProjectPromptsInput } from "./inputs/get-project-prompts.input";
+import { ApiKeyProjectId } from "../identity/api-key-project-id.decorator";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Prompt)
@@ -121,21 +121,20 @@ export class PromptsResolver {
   @Query(() => Prompt)
   async findPromptWithApiKey(
     @Args("data") data: FindPromptByNameInput,
-    @ApiKeyOrgId() organizationId: string
+    @ApiKeyProjectId() projectId: string
   ) {
-    // const prompt = await this.prisma.prompt.findFirst({
-    //   where: {
-    //     name: data.name,
-    //     organizationId,
-    //   },
-    // });
+    const prompt = await this.prisma.prompt.findFirst({
+      where: {
+        name: data.name,
+        projectId,
+      },
+    });
 
-    // if (!prompt) {
-    //   throw new NotFoundException(`Prompt "${data.name}" not found"`);
-    // }
+    if (!prompt) {
+      throw new NotFoundException(`Prompt "${data.name}" not found"`);
+    }
 
-    // return prompt;
-    return {};
+    return prompt;
   }
 
   @Query(() => PromptVersion)
@@ -183,7 +182,7 @@ export class PromptsResolver {
   @Query(() => PromptVersion)
   async deployedPromptVersionWithApiKey(
     @Args("data") data: GetDeployedPromptVersionInput,
-    @ApiKeyOrgId() organizationId: string
+    @ApiKeyProjectId() projectId: string
   ) {
     const { environmentSlug, promptId } = data;
     const prompt = await this.promptsService.getPrompt(promptId);
@@ -194,7 +193,7 @@ export class PromptsResolver {
 
     const environment = await this.environmentsService.getBySlug(
       environmentSlug,
-      organizationId
+      projectId
     );
 
     if (!environment) {
