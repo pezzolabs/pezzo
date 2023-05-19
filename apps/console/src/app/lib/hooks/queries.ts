@@ -10,15 +10,21 @@ export const useApiKeys = () => {
   const { project } = useCurrentProject();
   return useQuery({
     queryKey: ["apiKeys"],
-    queryFn: () => gqlClient.request(GET_CURRENT_PEZZO_API_KEY, { data: { projectId: project.id }}),
+    queryFn: () =>
+      gqlClient.request(GET_CURRENT_PEZZO_API_KEY, {
+        data: { projectId: project.id },
+      }),
   });
-}
+};
 
 export const useProviderApiKeys = () => {
-const { project } = useCurrentProject();
+  const { project } = useCurrentProject();
 
-return useQuery({
+  return useQuery({
     queryKey: ["providerApiKeys"],
-    queryFn: () => gqlClient.request(GET_ALL_PROVIDER_API_KEYS, { data: { projectId: project.id }}),
+    queryFn: () =>
+      gqlClient.request(GET_ALL_PROVIDER_API_KEYS, {
+        data: { projectId: project.id },
+      }),
   });
-}
+};

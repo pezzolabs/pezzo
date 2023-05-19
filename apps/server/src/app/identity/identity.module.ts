@@ -17,6 +17,11 @@ import { ProjectsService } from "./projects.service";
     APIKeysService,
     ProjectsService,
   ],
-  exports: [UsersService, OrganizationsService, ProjectsService, APIKeysService],
+  exports: [
+    UsersService,
+    OrganizationsService,
+    ProjectsService,
+    APIKeysService,
+  ],
 })
 export class IdentityModule {}

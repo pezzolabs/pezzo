@@ -34,7 +34,7 @@ export class ProviderApiKeysResolver {
     const key = await this.providerAPIKeysService.upsertProviderApiKey(
       data.provider,
       data.value,
-      data.projectId,
+      data.projectId
     );
 
     return {

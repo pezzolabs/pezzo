@@ -6,7 +6,12 @@ import { randomBytes } from "crypto";
 export class ProjectsService {
   constructor(private prisma: PrismaService) {}
 
-  async createProject(name: string, slug: string, organizationId: string, creatorUserId: string) {
+  async createProject(
+    name: string,
+    slug: string,
+    organizationId: string,
+    creatorUserId: string
+  ) {
     const project = await this.prisma.project.create({
       data: {
         name,
@@ -15,8 +20,8 @@ export class ProjectsService {
         members: {
           create: {
             userId: creatorUserId,
-          }
-        }
+          },
+        },
       },
     });
 

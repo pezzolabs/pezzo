@@ -36,7 +36,7 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
         data: {
           name: data.name,
           integrationId: data.integrationId,
-          projectId: project.id
+          projectId: project.id,
         },
       }),
     onSuccess: (data) => {

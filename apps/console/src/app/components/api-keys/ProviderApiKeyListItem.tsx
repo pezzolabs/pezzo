@@ -55,7 +55,11 @@ export const ProviderApiKeyListItem = ({
   };
 
   const handleSave = async () => {
-    await updateKeyMutation.mutateAsync({ provider, value: editValue, projectId: project.id });
+    await updateKeyMutation.mutateAsync({
+      provider,
+      value: editValue,
+      projectId: project.id,
+    });
     setIsEditing(false);
   };
 

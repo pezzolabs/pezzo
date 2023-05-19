@@ -80,7 +80,7 @@ export class PromptExecutionsResolver {
     @Args("data") data: PromptExecutionCreateInput,
     @ApiKeyProjectId() projectId: string
   ) {
-    console.log('report');
+    console.log("report");
     const promptId = data.prompt.connect.id;
     const prompt = await this.promptsService.getPrompt(promptId);
 

@@ -21,7 +21,7 @@ export const CurrentProjectProvider = ({ children }) => {
 
   useEffect(() => {
     if (!projectId) {
-      console.log('navigrating');
+      console.log("navigrating");
       return navigate("/projects");
     }
 

@@ -61,7 +61,7 @@ export class Pezzo {
       },
       deployedVersionData: {
         environmentSlug: this.options.environment,
-      }
+      },
     });
 
     const prompt = result.findPromptWithApiKey;
@@ -71,8 +71,8 @@ export class Pezzo {
       deployedVersion: {
         sha: prompt.deployedVersion.sha,
         content: prompt.deployedVersion.content,
-        settings: prompt.deployedVersion.settings as IntegrationBaseSettings<T>
-      }
+        settings: prompt.deployedVersion.settings as IntegrationBaseSettings<T>,
+      },
     };
   }
 }

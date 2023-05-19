@@ -45,7 +45,7 @@ export class EnvironmentsResolver {
 
     const environment = await this.environmentsService.getBySlug(
       data.slug,
-      data.projectId,
+      data.projectId
     );
 
     if (!environment) {

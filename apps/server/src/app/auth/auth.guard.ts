@@ -23,7 +23,7 @@ export class AuthGuard implements CanActivate {
   constructor(
     private readonly usersService: UsersService,
     private readonly apiKeysService: APIKeysService,
-    private readonly projectsService: ProjectsService,
+    private readonly projectsService: ProjectsService
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -70,7 +70,7 @@ export class AuthGuard implements CanActivate {
     } catch (error) {
       throw new UnauthorizedException();
     }
-    
+
     if (!session) {
       throw new UnauthorizedException();
     }

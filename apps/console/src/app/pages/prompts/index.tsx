@@ -54,7 +54,9 @@ export const PromptsPage = () => {
               <PromptListItem
                 name={prompt.name}
                 integrationId={prompt.integrationId}
-                onClick={() => navigate(`/projects/${project.id}/prompts/${prompt.id}`)}
+                onClick={() =>
+                  navigate(`/projects/${project.id}/prompts/${prompt.id}`)
+                }
               />
             </div>
           ))}
