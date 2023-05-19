@@ -74,18 +74,6 @@ export abstract class BaseExecutor {
       options,
     });
 
-    if (executionResult.error) {
-      const {
-        error: { error, status },
-      } = executionResult;
-
-      throw new PezzoClientError(
-        "Prompt execution failed. Check the Pezzo History to see what went wrong.",
-        error,
-        status
-      );
-    }
-
     const end = performance.now();
     const duration = Math.ceil(end - start);
 
@@ -96,6 +84,17 @@ export abstract class BaseExecutor {
     };
 
     try {
+      if (executionResult.error) {
+        const {
+          error: { error, status },
+        } = executionResult;
+
+        throw new PezzoClientError(
+          "Prompt execution failed. Check the Pezzo History to see what went wrong.",
+          error,
+          status
+        );
+      }
       return this.pezzoClient.reportPromptExecution<T>(
         {
           prompt: promptConnect,
