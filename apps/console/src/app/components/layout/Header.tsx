@@ -38,7 +38,7 @@ export const Header = () => {
           justifyContent: "flex-end",
         }}
       >
-        {/* <ProjectSelector /> */}
+        <ProjectSelector />
       </div>
 
       <Menu theme="dark" mode="horizontal" />

@@ -7,22 +7,18 @@ import { useGetProjects } from "../../lib/hooks/queries";
 
 export const ProjectSelector = () => {
   const { project } = useCurrentProject();
-  const {
-    data: { projects = [] },
-  } = useGetProjects();
+  const { data } = useGetProjects();
   const navigate = useNavigate();
 
-  if (!projects) {
-    return null;
-  }
+  if (!data?.projects) return null;
 
-  const items: MenuProps["items"] = projects.map((project) => ({
+  const items: MenuProps["items"] = data?.projects.map((project) => ({
     key: project.id,
     label: <Typography.Text>{project.name}</Typography.Text>,
     onClick: () => navigate(`/projects/${project.id}/prompts`),
   }));
 
-  const selectedProject = project || projects?.[0];
+  const selectedProject = project || data?.projects?.[0];
 
   return (
     <Dropdown trigger={["click"]} menu={{ items }}>

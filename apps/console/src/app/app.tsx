@@ -20,7 +20,6 @@ import { InfoPage } from "./pages/InfoPage";
 import { ProjectsPage } from "./pages/projects/ProjectsPage";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
 import { LayoutWrapper } from "./components/layout/LayoutWrapper";
-import { CurrentProjectProvider } from "./lib/providers/CurrentProjectContext";
 import { OnboardingPage } from "./pages/onboarding";
 
 initSuperTokens();
@@ -72,15 +71,13 @@ export function App() {
                 <Route
                   path="/projects/:projectId"
                   element={
-                    <CurrentProjectProvider>
-                      <CurrentPromptProvider>
-                        <PromptTesterProvider>
-                          <LayoutWrapper withSideNav={true}>
-                            <Outlet />
-                          </LayoutWrapper>
-                        </PromptTesterProvider>
-                      </CurrentPromptProvider>
-                    </CurrentProjectProvider>
+                    <CurrentPromptProvider>
+                      <PromptTesterProvider>
+                        <LayoutWrapper withSideNav={true}>
+                          <Outlet />
+                        </LayoutWrapper>
+                      </PromptTesterProvider>
+                    </CurrentPromptProvider>
                   }
                 >
                   <Route
