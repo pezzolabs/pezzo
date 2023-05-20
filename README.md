@@ -16,7 +16,7 @@
 <p align="center">
   <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a69f118df70ad7828d4_icon_clyde_blurple_RGB.svg" width="70px" style="margin-bottom: 10px;">
   <br />
-  <a href="https://discord.gg/BbkQAxzs">Join Pezzo on Discord</a>
+  <a href="https://discord.gg/gjGzuph7">Join Pezzo on Discord</a>
 </p>
 
 # Features
