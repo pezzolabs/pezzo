@@ -5,6 +5,8 @@ import {
   GET_CURRENT_PEZZO_API_KEY,
 } from "../../graphql/queries/api-keys";
 import { useCurrentProject } from "../providers/CurrentProjectContext";
+import { GET_ME } from "../../graphql/queries/users";
+import { GET_ALL_PROJECTS } from "../../graphql/queries/projects";
 
 export const useApiKeys = () => {
   const { project } = useCurrentProject();
@@ -28,3 +30,12 @@ export const useProviderApiKeys = () => {
       }),
   });
 };
+
+export const useGetCurrentUser = () =>
+  useQuery({ queryKey: ["me"], queryFn: () => gqlClient.request(GET_ME) });
+
+export const useGetProjects = () =>
+  useQuery({
+    queryKey: ["projects"],
+    queryFn: () => gqlClient.request(GET_ALL_PROJECTS),
+  });

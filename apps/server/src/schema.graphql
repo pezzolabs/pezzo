@@ -1180,12 +1180,14 @@ input PublishPromptInput {
 
 type Query {
   currentApiKey(data: GetApiKeyInput!): ApiKey!
+  currentOrganizationMember: OrganizationMember!
   deployedPromptVersion(data: GetDeployedPromptVersionInput!): PromptVersion!
   environment(data: GetEnvironmentBySlugInput!): Environment!
   environments(data: GetEnvironmentsInput!): [Environment!]!
   findPrompt(data: FindPromptByNameInput!): Prompt!
   findPromptWithApiKey(data: FindPromptByNameInput!): Prompt!
   getLatestPrompt(data: PromptWhereUniqueInput!): PromptVersion!
+  me: User!
   project(data: ProjectWhereUniqueInput!): Project!
   projects: [Project!]!
   prompt(data: GetPromptInput!): Prompt!
@@ -1254,7 +1256,9 @@ type User {
   createdAt: DateTime!
   email: String!
   id: ID!
+  name: String
   orgMemberships: [OrganizationMember!]
+  photoUrl: String
   updatedAt: DateTime!
 }
 

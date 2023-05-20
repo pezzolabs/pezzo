@@ -12,6 +12,7 @@ import { useCurrentProject } from "../../lib/providers/CurrentProjectContext";
 
 export const PromptsPage = () => {
   const { project } = useCurrentProject();
+  console.log(project);
   const navigate = useNavigate();
   const [isCreatePromptModalOpen, setIsCreatePromptModalOpen] = useState(false);
   const { data, isLoading } = useQuery({

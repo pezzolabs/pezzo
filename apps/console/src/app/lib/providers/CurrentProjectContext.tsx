@@ -1,7 +1,7 @@
 import { GetProjectQuery } from "@pezzo/graphql";
 import { createContext, useContext, useEffect, useState } from "react";
-import { useProjects } from "../hooks/useProjects";
 import { useNavigate, useParams } from "react-router-dom";
+import { useGetProjects } from "../hooks/queries";
 
 interface CurrentProjectContextValue {
   project: GetProjectQuery["project"];
@@ -16,7 +16,10 @@ export const useCurrentProject = () => useContext(CurrentProjectContext);
 export const CurrentProjectProvider = ({ children }) => {
   const navigate = useNavigate();
   const { projectId } = useParams();
-  const { projects, isLoading } = useProjects();
+  const {
+    data: { projects = [] },
+    isLoading,
+  } = useGetProjects();
   const [project, setProject] = useState<GetProjectQuery["project"]>(null);
 
   useEffect(() => {
@@ -25,14 +28,14 @@ export const CurrentProjectProvider = ({ children }) => {
     }
 
     if (projects && !project) {
-      const project = projects.find((p) => p.id === projectId);
-      if (project) {
-        setProject(project);
+      const selectedProject = projects.find((p) => p.id === projectId);
+      if (selectedProject) {
+        setProject(selectedProject);
       } else {
         return navigate("/projects");
       }
     }
-  }, [projectId, projects]);
+  }, [projectId, projects, project, navigate]);
 
   if (isLoading || !project) {
     // TODO: loader

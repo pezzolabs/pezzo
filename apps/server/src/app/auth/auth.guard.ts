@@ -78,18 +78,20 @@ export class AuthGuard implements CanActivate {
     const supertokensUser = await ThirdPartyEmailPassword.getUserById(
       session.getUserId()
     );
+
     req["supertokensUser"] = supertokensUser;
 
     try {
-      const user = await this.usersService.getOrCreateUser(supertokensUser);
-      const projects = await this.projectsService.getProjectsByUser(user.id);
+      const projects = await this.projectsService.getProjectsByUser(
+        supertokensUser.id
+      );
       const memberships = await this.usersService.getUserOrgMemberships(
-        user.id
+        supertokensUser.id
       );
 
       const reqUser: RequestUser = {
-        id: user.id,
-        email: user.email,
+        id: supertokensUser.id,
+        email: supertokensUser.email,
         projects: projects.map((p) => ({ id: p.id })),
         orgMemberships: memberships.map((m) => ({
           organizationId: m.organizationId,

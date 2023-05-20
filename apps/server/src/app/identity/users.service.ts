@@ -1,19 +1,20 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { User } from "@prisma/client";
-import { User as SupertokensUser } from "supertokens-node/recipe/thirdpartyemailpassword";
-import { randomBytes } from "crypto";
+import { UserCreateRequest } from "./users.types";
 
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createUser(userInfo: SupertokensUser): Promise<User> {
-    const [user, org] = await this.prisma.$transaction([
+  async createUser(userCreateRequest: UserCreateRequest): Promise<User> {
+    const [user] = await this.prisma.$transaction([
       this.prisma.user.create({
         data: {
-          id: userInfo.id,
-          email: userInfo.email,
+          id: userCreateRequest.id,
+          email: userCreateRequest.email,
+          name: userCreateRequest.name,
+          photoUrl: userCreateRequest.photoUrl,
         },
         include: {
           orgMemberships: true,
@@ -24,26 +25,37 @@ export class UsersService {
           name: "Default Organization",
           members: {
             create: {
-              userId: userInfo.id,
+              userId: userCreateRequest.id,
             },
           },
         },
       }),
     ]);
+
     return user;
   }
 
-  async getOrCreateUser(userInfo: SupertokensUser): Promise<User> {
+  async getUser(email: string): Promise<User | undefined> {
     const user = await this.prisma.user.findUnique({
-      where: { email: userInfo.email },
+      where: { email },
       include: { orgMemberships: true },
     });
 
-    if (user) {
-      return user;
-    }
+    return user;
+  }
 
-    return this.createUser(userInfo);
+  async updateUser(user: UserCreateRequest) {
+    const updatedUser = await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        name: user.name,
+        photoUrl: user.photoUrl,
+      },
+    });
+
+    console.log(updatedUser.name);
+
+    return updatedUser;
   }
 
   async getUserOrgMemberships(userId: string) {
