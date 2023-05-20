@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import supertokens from "supertokens-node";
 import Session from "supertokens-node/recipe/session";
+import UserMetadata from "supertokens-node/recipe/usermetadata";
 import ThirdPartyEmailPassword, {
   TypeProvider,
 } from "supertokens-node/recipe/thirdpartyemailpassword";
@@ -33,6 +34,7 @@ export class SupertokensService {
       recipeList: [
         Dashboard.init(),
         Session.init(),
+        UserMetadata.init(),
         ThirdPartyEmailPassword.init({
           providers: this.getActiveProviders(),
           override: {
@@ -44,8 +46,6 @@ export class SupertokensService {
                     await originalImplementation.emailPasswordSignUpPOST(input);
                   if (res?.status === "OK") {
                     const userCreateRequest: UserCreateRequest = {
-                      name: null,
-                      photoUrl: null,
                       email: res.user.email,
                       id: res.user.id,
                     };
@@ -74,15 +74,24 @@ export class SupertokensService {
                     });
 
                     const userCreateRequest: UserCreateRequest = {
-                      name: `${data.given_name} ${data.family_name}`,
-                      photoUrl: data.picture,
                       email: data.email,
                       id: res.user.id,
+                    };
+
+                    const metadataFields = {
+                      name: `${data.given_name} ${data.family_name}`,
+                      photoUrl: data.picture,
                     };
 
                     if (res.createdNewUser) {
                       this.usersService.createUser(userCreateRequest);
                     }
+
+                    UserMetadata.updateUserMetadata(res.user.id, {
+                      profile: metadataFields,
+                    }).catch((err) => {
+                      console.log("Failed to update user metadata fields", err);
+                    });
                   }
                   return res;
                 },

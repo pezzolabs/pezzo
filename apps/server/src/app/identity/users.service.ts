@@ -13,8 +13,6 @@ export class UsersService {
         data: {
           id: userCreateRequest.id,
           email: userCreateRequest.email,
-          name: userCreateRequest.name,
-          photoUrl: userCreateRequest.photoUrl,
         },
         include: {
           orgMemberships: true,
@@ -42,20 +40,6 @@ export class UsersService {
     });
 
     return user;
-  }
-
-  async updateUser(user: UserCreateRequest) {
-    const updatedUser = await this.prisma.user.update({
-      where: { id: user.id },
-      data: {
-        name: user.name,
-        photoUrl: user.photoUrl,
-      },
-    });
-
-    console.log(updatedUser.name);
-
-    return updatedUser;
   }
 
   async getUserOrgMemberships(userId: string) {

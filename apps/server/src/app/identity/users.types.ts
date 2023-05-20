@@ -1,4 +1,6 @@
 import { OrgRole } from "@prisma/client";
+import { User } from "../../@generated/user/user.model";
+import { Field, ObjectType } from "@nestjs/graphql";
 export interface RequestUser {
   id: string;
   email: string;
@@ -14,7 +16,17 @@ export interface RequestUser {
 
 export interface UserCreateRequest {
   id: string;
-  name: string | null;
-  photoUrl: string | null;
   email: string;
+}
+
+@ObjectType()
+export class ExtendedUser extends User {
+  @Field(() => String, { nullable: true })
+  name: string;
+
+  @Field(() => String, { nullable: true })
+  photoUrl: string;
+
+  @Field(() => [String])
+  organizationIds: string[];
 }

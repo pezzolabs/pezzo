@@ -47,6 +47,15 @@ export function App() {
                   </SessionAuth>
                 }
               >
+                <Route
+                  path="/onboarding"
+                  element={
+                    <LayoutWrapper withSideNav={false}>
+                      <OnboardingPage />
+                    </LayoutWrapper>
+                  }
+                />
+
                 {/* Projects selection */}
                 <Route
                   element={
@@ -59,17 +68,9 @@ export function App() {
                   <Route path="/projects" element={<ProjectsPage />} />
                 </Route>
 
-                <Route
-                  path="/onboarding"
-                  element={
-                    <LayoutWrapper withSideNav={false}>
-                      <OnboardingPage />
-                    </LayoutWrapper>
-                  }
-                />
-
                 {/* In-project routes */}
                 <Route
+                  path="/projects/:projectId"
                   element={
                     <CurrentProjectProvider>
                       <CurrentPromptProvider>
@@ -98,8 +99,8 @@ export function App() {
                     path="/projects/:projectId/api-keys"
                     element={<APIKeysPage />}
                   />
-                  <Route path="/info" element={<InfoPage />} />
                 </Route>
+                <Route path="/info" element={<InfoPage />} />
               </Route>
             </Routes>
           </QueryClientProvider>

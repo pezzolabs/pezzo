@@ -150,6 +150,19 @@ input EnvironmentWhereUniqueInput {
   id: String
 }
 
+type ExtendedUser {
+  ProjectMember: [ProjectMember!]
+  _count: UserCount!
+  createdAt: DateTime!
+  email: String!
+  id: ID!
+  name: String
+  orgMemberships: [OrganizationMember!]
+  organizationIds: [String!]!
+  photoUrl: String
+  updatedAt: DateTime!
+}
+
 input FindPromptByNameInput {
   name: String!
 }
@@ -246,6 +259,7 @@ type Mutation {
   publishPrompt(data: PublishPromptInput!): PromptEnvironment!
   reportPromptExecutionWithApiKey(data: PromptExecutionCreateInput!): PromptExecution!
   testPrompt(data: TestPromptInput!): PromptExecution!
+  updateProfile(data: UpdateProfileInput!): ExtendedUser!
   updatePrompt(data: PromptUpdateInput!): Prompt!
   updateProviderApiKey(data: CreateProviderApiKeyInput!): ProviderApiKey!
 }
@@ -1187,7 +1201,7 @@ type Query {
   findPrompt(data: FindPromptByNameInput!): Prompt!
   findPromptWithApiKey(data: FindPromptByNameInput!): Prompt!
   getLatestPrompt(data: PromptWhereUniqueInput!): PromptVersion!
-  me: User!
+  me: ExtendedUser!
   project(data: ProjectWhereUniqueInput!): Project!
   projects: [Project!]!
   prompt(data: GetPromptInput!): Prompt!
@@ -1250,15 +1264,17 @@ input TestPromptInput {
   variables: JSON
 }
 
+input UpdateProfileInput {
+  name: String!
+}
+
 type User {
   ProjectMember: [ProjectMember!]
   _count: UserCount!
   createdAt: DateTime!
   email: String!
   id: ID!
-  name: String
   orgMemberships: [OrganizationMember!]
-  photoUrl: String
   updatedAt: DateTime!
 }
 
