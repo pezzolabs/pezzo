@@ -2,7 +2,6 @@ import { Layout, Menu, Space } from "antd";
 import styled from "@emotion/styled";
 import LogoSquare from "../../../assets/logo.svg";
 import { colors } from "../../lib/theme/colors";
-import { ProjectSelector } from "../projects/ProjectSelector";
 
 const Logo = styled.img`
   height: 40px;
