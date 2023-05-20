@@ -37,8 +37,7 @@ export const Header = () => {
           alignItems: "center",
           justifyContent: "flex-end",
         }}
-      >
-      </div>
+      ></div>
 
       <Menu theme="dark" mode="horizontal" />
     </Layout.Header>
