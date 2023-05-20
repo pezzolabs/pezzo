@@ -1,12 +1,15 @@
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useGetProjects } from "../../lib/hooks/queries";
+import { useEffect } from "react";
 
 export const ProjectsPage = () => {
   const { data, isLoading } = useGetProjects();
+  const navigate = useNavigate();
 
-  if (data?.projects.length === 0 && !isLoading) {
-    return <Navigate to="/onboarding" />;
-  }
+  useEffect(() => {
+    if (isLoading) return;
+    if (!data.projects.length) navigate("/onboarding");
+  }, [data, isLoading, navigate]);
 
   return <pre>{JSON.stringify(data)}</pre>;
 };
