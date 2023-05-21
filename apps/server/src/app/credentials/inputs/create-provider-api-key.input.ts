@@ -7,4 +7,7 @@ export class CreateProviderApiKeyInput {
 
   @Field(() => String, { nullable: false })
   value: string;
+
+  @Field(() => String, { nullable: false })
+  projectId: string;
 }

@@ -6,57 +6,66 @@ import { PlusOutlined } from "@ant-design/icons";
 import { CreatePromptModal } from "../../components/prompts/CreatePromptModal";
 import { useState } from "react";
 import { css } from "@emotion/css";
-import { Button, Typography } from "antd";
+import { Button, Space, Spin, Typography, theme } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useCurrentProject } from "../../lib/providers/CurrentProjectContext";
 
 export const PromptsPage = () => {
+  const { project, isLoading: isProjectsLoading } = useCurrentProject();
+  const { token } = theme.useToken();
   const navigate = useNavigate();
   const [isCreatePromptModalOpen, setIsCreatePromptModalOpen] = useState(false);
-  const { data, isLoading } = useQuery({
+  const { data, isLoading: isLoadingPrompts } = useQuery({
     queryKey: ["prompts"],
-    queryFn: () => gqlClient.request(GET_ALL_PROMPTS),
+    queryFn: () =>
+      gqlClient.request(GET_ALL_PROMPTS, { data: { projectId: project?.id } }),
+    enabled: !!project?.id,
   });
 
+  const isLoading = isLoadingPrompts || isProjectsLoading;
   return (
     <>
       <CreatePromptModal
         open={isCreatePromptModalOpen}
         onClose={() => setIsCreatePromptModalOpen(false)}
-        onCreated={(id) => navigate(`/prompts/${id}`)}
+        onCreated={(id) => navigate(`/projects/${project.id}/prompts/${id}`)}
       />
 
-      <Typography.Title level={1}>Prompts</Typography.Title>
-      {isLoading && <p>Loading...</p>}
+      <Space direction="vertical" size="large" style={{ width: "100%" }}>
+        <Typography.Title level={2}>Prompts</Typography.Title>
 
-      {data && (
-        <div
-          className={css`
-            max-width: 600px;
-          `}
-        >
+        <Spin size="large" spinning={isLoading}>
           <div
             className={css`
-              margin-bottom: 14px;
+              max-width: 640px;
+              min-height: 500px;
+              padding: ${isLoading ? token.paddingLG : 0};
             `}
           >
             <Button
               icon={<PlusOutlined />}
+              style={{
+                marginBottom: token.marginLG,
+              }}
               onClick={() => setIsCreatePromptModalOpen(true)}
             >
               New Prompt
             </Button>
+
+            {data?.prompts?.map((prompt) => (
+              <div key={prompt.id} style={{ marginBottom: 14 }}>
+                <PromptListItem
+                  name={prompt.name}
+                  integrationId={prompt.integrationId}
+                  onClick={() =>
+                    navigate(`/projects/${project.id}/prompts/${prompt.id}`)
+                  }
+                />
+              </div>
+            ))}
           </div>
-          {data.prompts.map((prompt) => (
-            <div key={prompt.id} style={{ marginBottom: 14 }}>
-              <PromptListItem
-                name={prompt.name}
-                integrationId={prompt.integrationId}
-                onClick={() => navigate(`/prompts/${prompt.id}`)}
-              />
-            </div>
-          ))}
-        </div>
-      )}
+        </Spin>
+      </Space>
     </>
   );
 };

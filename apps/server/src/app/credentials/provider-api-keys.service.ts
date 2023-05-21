@@ -5,16 +5,16 @@ import { PrismaService } from "../prisma.service";
 export class ProviderApiKeysService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getByProvider(provider: string, organizationId: string) {
+  async getByProvider(provider: string, projectId: string) {
     const keys = await this.prisma.providerApiKey.findFirst({
-      where: { provider, organizationId },
+      where: { provider, projectId },
     });
     return keys;
   }
 
-  async getAllProviderApiKeys(organizationId: string) {
+  async getAllProviderApiKeys(projectId: string) {
     const keys = await this.prisma.providerApiKey.findMany({
-      where: { organizationId },
+      where: { projectId },
     });
     return keys;
   }
@@ -22,13 +22,13 @@ export class ProviderApiKeysService {
   async createProviderApiKey(
     provider: string,
     value: string,
-    organizationId: string
+    projectId: string
   ) {
     const key = await this.prisma.providerApiKey.create({
       data: {
         provider,
         value,
-        organizationId,
+        projectId,
       },
     });
 
@@ -38,7 +38,7 @@ export class ProviderApiKeysService {
   async upsertProviderApiKey(
     provider: string,
     value: string,
-    organizationId: string
+    projectId: string
   ) {
     const exists = await this.prisma.providerApiKey.findFirst({
       where: { provider },
@@ -61,7 +61,7 @@ export class ProviderApiKeysService {
       data: {
         provider,
         value,
-        organizationId,
+        projectId,
       },
     });
 

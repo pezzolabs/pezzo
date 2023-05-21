@@ -5,6 +5,7 @@ import { gqlClient } from "../graphql";
 import { GetPromptExecutionQuery, PromptExecution } from "@pezzo/graphql";
 import { TestPromptResult } from "@pezzo/client";
 import { useCurrentPrompt } from "./CurrentPromptContext";
+import { useCurrentProject } from "./CurrentProjectContext";
 
 export interface PromptTestInput {
   content: string;
@@ -39,6 +40,7 @@ export const usePromptTester = () => {
 };
 
 export const PromptTesterProvider = ({ children }) => {
+  const { project } = useCurrentProject();
   const [isTesterOpen, setIsTesterOpen] = useState<boolean>(false);
   const [testResult, setTestResult] =
     useState<Partial<TestPromptResult>>(undefined);
@@ -59,6 +61,7 @@ export const PromptTesterProvider = ({ children }) => {
       setIsTestInProgress(true);
       const result = await gqlClient.request(TEST_PROMPT, {
         data: {
+          projectId: project.id,
           integrationId: integration.id,
           content: input.content,
           settings: input.settings,

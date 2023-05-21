@@ -1,19 +1,17 @@
 import {
   CanActivate,
   ExecutionContext,
-  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { verifySession } from "supertokens-node/recipe/session/framework/express";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
 import { UsersService } from "../identity/users.service";
 import { RequestUser } from "../identity/users.types";
 import { APIKeysService } from "../identity/api-keys.service";
-import { User } from "supertokens-node/recipe/thirdpartyemailpassword";
 import Session, { SessionContainer } from "supertokens-node/recipe/session";
+import { ProjectsService } from "../identity/projects.service";
 
 export enum AuthMethod {
   ApiKey = "ApiKey",
@@ -24,7 +22,8 @@ export enum AuthMethod {
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly usersService: UsersService,
-    private readonly apiKeysService: APIKeysService
+    private readonly apiKeysService: APIKeysService,
+    private readonly projectsService: ProjectsService
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -49,7 +48,7 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException();
     }
 
-    req.organizationId = apiKey.organizationId;
+    req.projectId = apiKey.projectId;
     req.authMethod = AuthMethod.ApiKey;
 
     return true;
@@ -66,6 +65,7 @@ export class AuthGuard implements CanActivate {
     try {
       session = await Session.getSession(req, res, {
         sessionRequired: false,
+        antiCsrfCheck: process.env.NODE_ENV === "development" ? false : true,
       });
     } catch (error) {
       throw new UnauthorizedException();
@@ -78,17 +78,21 @@ export class AuthGuard implements CanActivate {
     const supertokensUser = await ThirdPartyEmailPassword.getUserById(
       session.getUserId()
     );
+
     req["supertokensUser"] = supertokensUser;
 
     try {
-      const user = await this.usersService.getOrCreateUser(supertokensUser);
+      const projects = await this.projectsService.getProjectsByUser(
+        supertokensUser.id
+      );
       const memberships = await this.usersService.getUserOrgMemberships(
-        user.id
+        supertokensUser.id
       );
 
       const reqUser: RequestUser = {
-        id: user.id,
-        email: user.email,
+        id: supertokensUser.id,
+        email: supertokensUser.email,
+        projects: projects.map((p) => ({ id: p.id })),
         orgMemberships: memberships.map((m) => ({
           organizationId: m.organizationId,
           memberSince: m.createdAt,

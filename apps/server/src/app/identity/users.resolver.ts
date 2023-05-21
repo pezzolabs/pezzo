@@ -1,0 +1,84 @@
+import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
+import UserMetadata from "supertokens-node/recipe/usermetadata";
+import { AuthGuard } from "../auth/auth.guard";
+import { NotFoundException, UseGuards } from "@nestjs/common";
+import { CurrentUser } from "./current-user.decorator";
+import { RequestUser, ExtendedUser } from "./users.types";
+
+import { UsersService } from "./users.service";
+import { UpdateProfileInput } from "./inputs/update-profile.input";
+
+type SupertokensMetadata = {
+  metadata:
+    | { profile: { name: string | null; photoUrl: string | null } }
+    | undefined;
+};
+
+@UseGuards(AuthGuard)
+@Resolver(() => ExtendedUser)
+export class UsersResolver {
+  constructor(private usersService: UsersService) {}
+
+  @Query(() => ExtendedUser)
+  async me(@CurrentUser() userInfo: RequestUser) {
+    const user = await this.usersService.getUser(userInfo.email);
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    const organizationIds = userInfo.orgMemberships.map(
+      (m) => m.organizationId
+    );
+    const { metadata } = (await UserMetadata.getUserMetadata(
+      user.id
+    )) as SupertokensMetadata;
+
+    if (metadata) {
+      return {
+        ...user,
+        ...metadata.profile,
+        organizationIds,
+      };
+    }
+
+    return {
+      ...user,
+      organizationIds,
+    };
+  }
+
+  @Mutation(() => ExtendedUser)
+  async updateProfile(
+    @CurrentUser() userInfo: RequestUser,
+    @Args("data") { name }: UpdateProfileInput
+  ) {
+    const user = await this.usersService.getUser(userInfo.email);
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    const { metadata } = (await UserMetadata.getUserMetadata(
+      user.id
+    )) as SupertokensMetadata;
+
+    const profileMetadata = metadata?.profile ?? {
+      name,
+      photoUrl: null,
+    };
+
+    await UserMetadata.updateUserMetadata(user.id, {
+      ...metadata,
+      profile: {
+        ...profileMetadata,
+        name,
+      },
+    });
+
+    return {
+      ...user,
+      name,
+    };
+  }
+}

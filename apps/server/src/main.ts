@@ -1,4 +1,4 @@
-import { Logger } from "@nestjs/common";
+import { Logger, ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import supertokens from "supertokens-node";
 
@@ -17,6 +17,7 @@ async function bootstrap() {
 
   app.setGlobalPrefix(globalPrefix);
   app.useGlobalFilters(new SupertokensExceptionFilter());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
