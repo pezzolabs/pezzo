@@ -14,7 +14,10 @@ export const DashboardView = () => {
             field={PromptExecutionMetricField.TotalCost}
             fillEmpty="0.0"
           >
-            <SimpleChart lineLabel="Cost" tooltipFormatter={(v) => `$${Number(v).toFixed(3)}`} />
+            <SimpleChart
+              lineLabel="Cost"
+              tooltipFormatter={(v) => `$${Number(v).toFixed(3)}`}
+            />
           </MetricProvider>
         </Col>
         <Col span={12}>

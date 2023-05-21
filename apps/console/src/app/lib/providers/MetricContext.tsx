@@ -113,9 +113,7 @@ export const MetricProvider = ({
             </Col>
           </Row>
         </div>
-        <div>
-          {children}
-        </div>
+        <div>{children}</div>
       </Card>
     </MetricContext.Provider>
   );

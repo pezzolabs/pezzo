@@ -29,7 +29,7 @@ export class PromptExecutionsResolver {
     private prisma: PrismaService,
     private promptsService: PromptsService,
     private promptTesterService: PromptTesterService,
-    private influxService: InfluxDbService, 
+    private influxService: InfluxDbService
   ) {}
 
   @Query(() => PromptExecution)
@@ -99,20 +99,20 @@ export class PromptExecutionsResolver {
     });
 
     const writeClient = this.influxService.getWriteApi("primary", "primary");
-    const point = new Point('prompt_execution')
-      .tag('prompt_id', execution.promptId)
-      .tag('prompt_version_sha', execution.promptVersionSha)
-      .tag('project_id', prompt.projectId)
-      .tag('prompt_name', prompt.name)
-      .tag('prompt_integration_id',  prompt.integrationId)
-      .stringField('status', execution.status)
-      .floatField('duration', execution.duration / 1000)
-      .floatField('prompt_cost', execution.promptCost)
-      .floatField('completion_cost', execution.completionCost)
-      .floatField('total_cost', execution.totalCost)
-      .intField('prompt_tokens', execution.promptTokens)
-      .intField('completion_tokens', execution.completionTokens)
-      .intField('total_tokens', execution.totalTokens);
+    const point = new Point("prompt_execution")
+      .tag("prompt_id", execution.promptId)
+      .tag("prompt_version_sha", execution.promptVersionSha)
+      .tag("project_id", prompt.projectId)
+      .tag("prompt_name", prompt.name)
+      .tag("prompt_integration_id", prompt.integrationId)
+      .stringField("status", execution.status)
+      .floatField("duration", execution.duration / 1000)
+      .floatField("prompt_cost", execution.promptCost)
+      .floatField("completion_cost", execution.completionCost)
+      .floatField("total_cost", execution.totalCost)
+      .intField("prompt_tokens", execution.promptTokens)
+      .intField("completion_tokens", execution.completionTokens)
+      .intField("total_tokens", execution.totalTokens);
 
     writeClient.writePoint(point);
     writeClient.flush();

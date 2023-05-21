@@ -46,7 +46,7 @@ export class MetricsResolver {
     query += `|> aggregateWindow(every: ${
       granularityMapping[granularity]
     }, fn: ${aggregation}, createEmpty: ${fillEmpty ? "true" : "false"})`;
-    
+
     if (fillEmpty) {
       query += `|> fill(value: ${fillEmpty})`;
     }

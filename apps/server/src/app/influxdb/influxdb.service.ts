@@ -6,7 +6,9 @@ import { ClientOptions } from "@influxdata/influxdb-client";
 export class InfluxDbService {
   connection: InfluxDB | null;
 
-  constructor(@Inject("INFLUX_DB_OPTIONS") private readonly config: ClientOptions) {
+  constructor(
+    @Inject("INFLUX_DB_OPTIONS") private readonly config: ClientOptions
+  ) {
     this.connection = new InfluxDB(this.config);
   }
 
