@@ -15,4 +15,14 @@ export class EnvironmentsService {
 
     return environment;
   }
+
+  async getAll(projectId: string) {
+    const environments = await this.prisma.environment.findMany({
+      where: {
+        projectId,
+      },
+    });
+
+    return environments;
+  }
 }

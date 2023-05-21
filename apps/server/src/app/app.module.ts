@@ -4,6 +4,7 @@ import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import Joi from "joi";
+import { randomUUID } from "crypto";
 
 import { ApolloServerPluginLandingPageLocalDefault } from "@apollo/server/plugin/landingPage/default";
 import { PromptsModule } from "./prompts/prompts.module";
@@ -17,15 +18,19 @@ import { IdentityModule } from "./identity/identity.module";
 import { InfluxDbModule } from "./influxdb/influxdb.module";
 import { InfluxModuleOptions } from "./influxdb/types";
 import { MetricsModule } from "./metrics/metrics.module";
+import { LoggerModule } from "./logger/logger.module";
+import { PinoLogger } from "./logger/pino-logger";
 
 const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
 
 @Module({
   imports: [
+    LoggerModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ".env",
       validationSchema: Joi.object({
+        PINO_PRETTIFY: Joi.boolean().default(false),
         DATABASE_URL: Joi.string().required(),
         PORT: Joi.number().default(3000),
         SUPERTOKENS_CONNECTION_URI: Joi.string().required(),
@@ -50,7 +55,11 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
       autoSchemaFile: GQL_SCHEMA_PATH,
       sortSchema: true,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
-      context: ({ req, res, next }) => ({ req, res, next }),
+      context: (ctx) => {
+        ctx.requestId = ctx.req.headers["x-request-id"] || randomUUID();
+        const logger = new PinoLogger(ctx);
+        return ctx;
+      },
       include: [
         PromptsModule,
         EnvironmentsModule,
