@@ -3,6 +3,7 @@ import {
   ExecutionContext,
   Injectable,
   InternalServerErrorException,
+  Scope,
   UnauthorizedException,
 } from "@nestjs/common";
 import { GqlExecutionContext } from "@nestjs/graphql";
@@ -19,13 +20,13 @@ export enum AuthMethod {
   BearerToken = "BearerToken",
 }
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly usersService: UsersService,
     private readonly apiKeysService: APIKeysService,
     private readonly projectsService: ProjectsService,
-    private readonly logger: PinoLogger
+    private readonly logger: PinoLogger,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -108,7 +109,6 @@ export class AuthGuard implements CanActivate {
       req["user"] = reqUser;
       this.logger.assign({ userId: reqUser.id });
     } catch (error) {
-      this.logger.error({ error }, "Could not fetch or create user");
       throw new InternalServerErrorException();
     }
 
