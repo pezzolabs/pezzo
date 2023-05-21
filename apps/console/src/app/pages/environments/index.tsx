@@ -20,7 +20,7 @@ export const EnvironmentsPage = () => {
       />
 
       <Spin size="large" spinning={isLoading}>
-        <Typography.Title level={1}>Environments</Typography.Title>
+        <Typography.Title level={2}>Environments</Typography.Title>
         <div style={{ marginBottom: token.marginLG }}>
           <Button
             icon={<PlusOutlined />}

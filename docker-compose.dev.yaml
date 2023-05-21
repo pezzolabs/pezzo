@@ -20,5 +20,19 @@ services:
     environment:
       POSTGRES_CONNECTION_URI: postgres://postgres:postgres@postgres:5432/supertokens
 
+  influxdb:
+    image: bitnami/influxdb:2.7.1
+    restart: always
+    environment:
+      INFLUXDB_ADMIN_USER_TOKEN: "token123"
+      INFLUXDB_ADMIN_USER_PASSWORD: "admin"
+      INFLUXDB_USER: "admin"
+      INFLUXDB_USER_PASSWORD: "admin"
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_data:/bitnami/influxdb
+
 volumes:
   postgres_data: ~
+  influxdb_data: ~

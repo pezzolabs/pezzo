@@ -4,7 +4,7 @@ import { Button, Space, Table, Tag, Tooltip } from "antd";
 import { PromptExecutionStatus } from "@pezzo/graphql";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { InlineCodeSnippet } from "../../common/InlineCodeSnippet";
-import { PromptTester } from "../PromptTester/PromptTester";
+import { PromptTester } from "../PromptTester";
 import { usePromptTester } from "../../../lib/providers/PromptTesterContext";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { css } from "@emotion/css";
