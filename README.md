@@ -37,20 +37,20 @@
 
 Below you can find the roadmap with all upcoming features:
 
-| **Feature**                | **Status**     |
-| -------------------------- | -------------- |
-| Documentation Site         | ✅ Done        |
-| Auth                       | ✅ Done        |
-| Official Helm Chart        | ✅ Done        |
-| API Keys Support           | ✅ Done        |
-| Pezzo OpenAI Integration   | ✅ Done        |
-| Pezzo Client for Node.js   | ✅ Done        |
-| Error Handling             | ✅ Done   |
-| Logger                     | ✅ Done |
-| Demo app                   | 🚧 In Progress |
-| Test Coverage              | 🔜 Coming Soon |
-| Pezzo Client for Python    | 🔜 Coming Soon |
-| Pezzo Client for Golang    | 🔜 Coming Soon |
+| **Feature**              | **Status**     |
+| ------------------------ | -------------- |
+| Documentation Site       | ✅ Done        |
+| Auth                     | ✅ Done        |
+| Official Helm Chart      | ✅ Done        |
+| API Keys Support         | ✅ Done        |
+| Pezzo OpenAI Integration | ✅ Done        |
+| Pezzo Client for Node.js | ✅ Done        |
+| Error Handling           | ✅ Done        |
+| Logger                   | ✅ Done        |
+| Demo app                 | 🚧 In Progress |
+| Test Coverage            | 🔜 Coming Soon |
+| Pezzo Client for Python  | 🔜 Coming Soon |
+| Pezzo Client for Golang  | 🔜 Coming Soon |
 
 If you are missing features, please create an issue and we'll consider adding them to the roadmap.
 
