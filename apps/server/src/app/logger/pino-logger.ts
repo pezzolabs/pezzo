@@ -1,8 +1,7 @@
 import { Inject, Injectable, Scope } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { CONTEXT } from "@nestjs/graphql";
 import { pino } from "pino";
-import pinoHttp from "pino-http";
+import pretty from "pino-pretty";
 
 @Injectable({ scope: Scope.REQUEST })
 export class PinoLogger {
@@ -11,29 +10,23 @@ export class PinoLogger {
   constructor(
     @Inject(CONTEXT) private readonly context,
   ) {
-    const pino = pinoHttp({
-      genReqId: () => this.context.requestId,
-      transport:
-        process.env.PINO_PRETTIFY === "true"
-          ? {
-              target: "pino-pretty",
-              options: {
-                levelFirst: true,
-                colorize: true,
-              },
-            }
-          : undefined,
-      quietReqLogger: true,
-      redact: {
-        paths: ["pid", "hostname", "res"],
-      },
+    const prettyStream = pretty({
+      levelFirst: true,
+      colorize: true,
     });
-    const logger = pino.logger;
-    this.logger = logger.child({ requestId: this.context.requestId });
+    const logger = pino({ redact: ["pid", "hostname", "res"] }, prettyStream);
+    const child = logger.child({ requestId: this.context.requestId });
+    this.setLogger(child);
+  }
+
+  private setLogger(logger: pino.Logger) {
+    this.logger = logger;
+    this.context.logger = logger;
   }
 
   assign(obj: object) {
-    this.logger = this.logger.child(obj);
+    const child = this.logger.child(obj);
+    this.setLogger(child);
   }
 
   info<T extends object>(obj: T, msg?: string): void;
