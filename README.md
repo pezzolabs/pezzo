@@ -8,8 +8,6 @@
 </a>
   <img src="https://img.shields.io/discord/1105803596475404358?label=Discord"/>
 
-
-
 <p align="center">
   <img src=".github/assets/logo-dark.svg" width="300px">
   <br />
