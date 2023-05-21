@@ -86,10 +86,10 @@ export class SupertokensService {
                     const user = await this.usersService.getUser(data.email);
 
                     if (!user) {
-                      this.usersService.createUser(userCreateRequest);
+                      await this.usersService.createUser(userCreateRequest);
                     }
 
-                    UserMetadata.updateUserMetadata(res.user.id, {
+                    await UserMetadata.updateUserMetadata(res.user.id, {
                       profile: metadataFields,
                     }).catch((err) => {
                       console.log("Failed to update user metadata fields", err);
