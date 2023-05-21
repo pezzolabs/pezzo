@@ -154,7 +154,6 @@ export class PromptExecutionsResolver {
     execution.totalCost = result.totalCost;
     execution.error = result.error;
     execution.variables = result.variables;
-    execution.environmentSlug = "none";
 
     return execution;
   }
