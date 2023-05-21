@@ -11,16 +11,20 @@ import { PrismaService } from "../prisma.service";
 import { PromptWhereUniqueInput } from "../../@generated/prompt/prompt-where-unique.input";
 import { PromptUpdateInput } from "../../@generated/prompt/prompt-update.input";
 import { PromptExecution } from "../../@generated/prompt-execution/prompt-execution.model";
-import { Prompt as PrismaPrompt } from "@prisma/client";
+import {
+  Environment,
+  Prompt as PrismaPrompt,
+  PromptEnvironment,
+} from "@prisma/client";
 import { CreatePromptInput } from "./inputs/create-prompt.input";
 import { PromptsService } from "./prompts.service";
 import { PromptVersion } from "../../@generated/prompt-version/prompt-version.model";
 import { CreatePromptVersionInput } from "./inputs/create-prompt-version.input";
 import { GetPromptVersionInput } from "./inputs/get-prompt-version.input";
 import { GetPromptInput } from "./inputs/get-prompt.input";
-import { GetDeployedPromptVersionInput } from "./inputs/get-deployed-prompt-version.input";
 import {
   ConflictException,
+  InternalServerErrorException,
   NotFoundException,
   UseGuards,
 } from "@nestjs/common";
@@ -33,6 +37,7 @@ import { EnvironmentsService } from "../environments/environments.service";
 import { GetProjectPromptsInput } from "./inputs/get-project-prompts.input";
 import { ApiKeyProjectId } from "../identity/api-key-project-id.decorator";
 import { ResolveDeployedVersionInput } from "./inputs/resolve-deployed-version.input";
+import { PinoLogger } from "../logger/pino-logger";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Prompt)
@@ -40,7 +45,8 @@ export class PromptsResolver {
   constructor(
     private prisma: PrismaService,
     private promptsService: PromptsService,
-    private environmentsService: EnvironmentsService
+    private environmentsService: EnvironmentsService,
+    private logger: PinoLogger
   ) {}
 
   @Query(() => [Prompt])
@@ -48,18 +54,24 @@ export class PromptsResolver {
     @Args("data") data: GetProjectPromptsInput,
     @CurrentUser() user: RequestUser
   ) {
+    const { projectId } = data;
     isProjectMemberOrThrow(user, data.projectId);
+    this.logger.assign({ projectId }).info("Getting prompts");
 
-    const prompts = await this.prisma.prompt.findMany({
-      where: {
-        projectId: data.projectId,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-
-    return prompts;
+    try {
+      const prompts = await this.prisma.prompt.findMany({
+        where: {
+          projectId: data.projectId,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+      return prompts;
+    } catch (error) {
+      this.logger.error({ error }, "Error getting prompts");
+      throw new InternalServerErrorException();
+    }
   }
 
   @Query(() => Prompt)
@@ -67,11 +79,21 @@ export class PromptsResolver {
     @Args("data") data: GetPromptInput,
     @CurrentUser() user: RequestUser
   ) {
-    const prompt = await this.prisma.prompt.findUnique({
-      where: {
-        id: data.promptId,
-      },
-    });
+    const { promptId, version } = data;
+    this.logger.assign({ promptId, version }).info("Getting prompt");
+
+    let prompt: Prompt;
+
+    try {
+      prompt = await this.prisma.prompt.findUnique({
+        where: {
+          id: promptId,
+        },
+      });
+    } catch (error) {
+      this.logger.error({ error }, "Error getting prompt");
+      throw new InternalServerErrorException();
+    }
 
     if (!prompt) {
       throw new NotFoundException();
@@ -86,37 +108,34 @@ export class PromptsResolver {
     @Args("data") data: PromptWhereUniqueInput,
     @CurrentUser() user: RequestUser
   ) {
-    const prompt = await this.promptsService.getPrompt(data.id);
+    const { id: promptId } = data;
+    this.logger.assign({ promptId }).info("Getting prompt versions");
+
+    let prompt: Prompt;
+
+    try {
+      prompt = await this.promptsService.getPrompt(data.id);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting prompt");
+      throw new InternalServerErrorException();
+    }
 
     if (!prompt) {
       throw new NotFoundException();
     }
 
     isProjectMemberOrThrow(user, prompt.projectId);
-    const promptVersions = await this.promptsService.getPromptVersions(data.id);
-    return promptVersions;
-  }
 
-  @Query(() => Prompt)
-  async findPrompt(
-    @Args("data") data: FindPromptByNameInput,
-    @CurrentUser() user: RequestUser
-  ) {
-    const prompt = await this.prisma.prompt.findFirst({
-      where: {
-        name: data.name,
-        projectId: {
-          in: user.projects.map((p) => p.id),
-        },
-      },
-    });
+    let promptVersions: PromptVersion[];
 
-    if (!prompt) {
-      throw new NotFoundException(`Prompt "${data.name}" not found"`);
+    try {
+      promptVersions = await this.promptsService.getPromptVersions(data.id);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting prompt versions");
+      throw new InternalServerErrorException();
     }
 
-    isProjectMemberOrThrow(user, prompt.projectId);
-    return prompt;
+    return promptVersions;
   }
 
   @Query(() => Prompt)
@@ -124,12 +143,21 @@ export class PromptsResolver {
     @Args("data") data: FindPromptByNameInput,
     @ApiKeyProjectId() projectId: string
   ) {
-    const prompt = await this.prisma.prompt.findFirst({
-      where: {
-        name: data.name,
-        projectId,
-      },
-    });
+    const { name } = data;
+    this.logger.assign({ name, projectId }).info("Finding prompt with API key");
+    let prompt: Prompt;
+
+    try {
+      prompt = await this.prisma.prompt.findFirst({
+        where: {
+          name: data.name,
+          projectId,
+        },
+      });
+    } catch (error) {
+      this.logger.error({ error }, "Error finding prompt with API key");
+      throw new InternalServerErrorException();
+    }
 
     if (!prompt) {
       throw new NotFoundException(`Prompt "${data.name}" not found"`);
@@ -143,16 +171,21 @@ export class PromptsResolver {
     @Args("data") data: GetPromptVersionInput,
     @CurrentUser() user: RequestUser
   ) {
-    const sha = data.sha;
+    const { promptId, sha } = data;
     let promptVersion: PromptVersion;
 
-    if (sha === "latest") {
-      promptVersion = await this.promptsService.getLatestPromptVersion(
-        data.sha
-      );
-    }
+    try {
+      if (sha === "latest") {
+        promptVersion = await this.promptsService.getLatestPromptVersion(
+          promptId
+        );
+      }
 
-    promptVersion = await this.promptsService.getPromptVersion(data.sha);
+      promptVersion = await this.promptsService.getPromptVersion(sha);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting prompt version");
+      throw new InternalServerErrorException();
+    }
 
     if (!promptVersion) {
       throw new NotFoundException();
@@ -162,46 +195,44 @@ export class PromptsResolver {
     return promptVersion;
   }
 
-  @Query(() => PromptVersion)
-  async getLatestPrompt(
-    @Args("data") data: PromptWhereUniqueInput,
-    @CurrentUser() user: RequestUser
-  ) {
-    const prompt = await this.promptsService.getPrompt(data.id);
-
-    if (!prompt) {
-      throw new NotFoundException();
-    }
-    isProjectMemberOrThrow(user, prompt.projectId);
-
-    const promptVersion = await this.promptsService.getLatestPromptVersion(
-      data.id
-    );
-    return promptVersion;
-  }
-
   @Mutation(() => Prompt)
   async createPrompt(
     @Args("data") data: CreatePromptInput,
     @CurrentUser() user: RequestUser
   ) {
     isProjectMemberOrThrow(user, data.projectId);
+    const { name, integrationId, projectId } = data;
+    this.logger
+      .assign({ name, integrationId, projectId })
+      .info("Creating prompt");
+    let exists: Prompt;
 
-    const exists = await this.promptsService.getPromptByName(
-      data.name,
-      data.projectId
-    );
+    try {
+      exists = await this.promptsService.getPromptByName(
+        data.name,
+        data.projectId
+      );
+    } catch (error) {
+      this.logger.error({ error }, "Error getting existing prompt by name");
+      throw new InternalServerErrorException();
+    }
 
     if (exists) {
       throw new ConflictException("Prompt with this name already exists");
     }
 
-    const prompt = await this.promptsService.createPrompt(
-      data.name,
-      data.integrationId,
-      data.projectId
-    );
-    return prompt;
+    let prompt: Prompt;
+    try {
+      prompt = await this.promptsService.createPrompt(
+        name,
+        integrationId,
+        projectId
+      );
+      return prompt;
+    } catch (error) {
+      this.logger.error({ error }, "Error creating prompt");
+      throw new InternalServerErrorException();
+    }
   }
 
   @Mutation(() => Prompt)
@@ -209,7 +240,15 @@ export class PromptsResolver {
     @Args("data") data: PromptUpdateInput,
     @CurrentUser() user: RequestUser
   ) {
-    const exists = await this.promptsService.getPrompt(data.id.set);
+    this.logger.assign({ ...data }).info("Updating prompt");
+    let exists: Prompt;
+
+    try {
+      exists = await this.promptsService.getPrompt(data.id.set);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting existing prompt");
+      throw new InternalServerErrorException();
+    }
 
     if (!exists) {
       throw new NotFoundException();
@@ -217,15 +256,20 @@ export class PromptsResolver {
 
     isProjectMemberOrThrow(user, exists.projectId);
 
-    const prompt = await this.prisma.prompt.update({
-      where: {
-        id: data.id.set,
-      },
-      data: {
-        ...data,
-      },
-    });
-    return prompt;
+    try {
+      const prompt = await this.prisma.prompt.update({
+        where: {
+          id: data.id.set,
+        },
+        data: {
+          ...data,
+        },
+      });
+      return prompt;
+    } catch (error) {
+      this.logger.error({ error }, "Error updating prompt");
+      throw new InternalServerErrorException();
+    }
   }
 
   @Mutation(() => PromptVersion)
@@ -233,24 +277,48 @@ export class PromptsResolver {
     @Args("data") data: CreatePromptVersionInput,
     @CurrentUser() user: RequestUser
   ) {
-    const prompt = await this.promptsService.getPrompt(data.promptId);
+    this.logger.assign({ ...data }).info("Creating prompt version");
+    let prompt: Prompt;
+
+    try {
+      prompt = await this.promptsService.getPrompt(data.promptId);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting existing prompt");
+      throw new InternalServerErrorException();
+    }
 
     if (!prompt) {
       throw new NotFoundException();
     }
 
     isProjectMemberOrThrow(user, prompt.projectId);
-    return this.promptsService.createPromptVersion(data);
+
+    try {
+      const promptVersion = await this.promptsService.createPromptVersion(data);
+      return promptVersion;
+    } catch (error) {
+      this.logger.error({ error }, "Error creating prompt version");
+      throw new InternalServerErrorException();
+    }
   }
 
   @ResolveField(() => [PromptExecution])
   async executions(@Parent() prompt: PrismaPrompt) {
-    const executions = await this.prisma.promptExecution.findMany({
-      where: {
-        promptId: prompt.id,
-      },
-    });
-    return executions;
+    this.logger
+      .assign({ promptId: prompt.id })
+      .info("Resolving prompt executions");
+
+    try {
+      const executions = await this.prisma.promptExecution.findMany({
+        where: {
+          promptId: prompt.id,
+        },
+      });
+      return executions;
+    } catch (error) {
+      this.logger.error({ error }, "Error getting prompt executions");
+      throw new InternalServerErrorException();
+    }
   }
 
   @ResolveField(() => PromptVersion)
@@ -258,13 +326,21 @@ export class PromptsResolver {
     @Parent() prompt: PrismaPrompt,
     @Args("data") data: ResolveDeployedVersionInput
   ) {
+    this.logger.assign({ ...data }).info("Resolving deployed version");
+
     const { projectId } = prompt;
     const { environmentSlug } = data;
+    let environment: Environment;
 
-    const environment = await this.environmentsService.getBySlug(
-      environmentSlug,
-      projectId
-    );
+    try {
+      environment = await this.environmentsService.getBySlug(
+        environmentSlug,
+        projectId
+      );
+    } catch (error) {
+      this.logger.error({ error }, "Error getting environment");
+      throw new InternalServerErrorException();
+    }
 
     if (!environment) {
       throw new NotFoundException(
@@ -272,9 +348,16 @@ export class PromptsResolver {
       );
     }
 
-    const deployedPrompt = await this.prisma.promptEnvironment.findFirst({
-      where: { promptId: prompt.id, environmentId: environment.id },
-    });
+    let deployedPrompt: PromptEnvironment;
+
+    try {
+      deployedPrompt = await this.prisma.promptEnvironment.findFirst({
+        where: { promptId: prompt.id, environmentId: environment.id },
+      });
+    } catch (error) {
+      this.logger.error({ error }, "Error getting deployed prompt environment");
+      throw new InternalServerErrorException();
+    }
 
     if (!deployedPrompt) {
       throw new NotFoundException(
@@ -282,16 +365,28 @@ export class PromptsResolver {
       );
     }
 
-    const promptVersion = await this.promptsService.getPromptVersion(
-      deployedPrompt.promptVersionSha
-    );
+    try {
+      const promptVersion = await this.promptsService.getPromptVersion(
+        deployedPrompt.promptVersionSha
+      );
 
-    return promptVersion;
+      return promptVersion;
+    } catch (error) {
+      this.logger.error({ error }, "Error getting prompt version");
+      throw new InternalServerErrorException();
+    }
   }
 
   @ResolveField(() => [PromptVersion])
   async versions(@Parent() prompt: PrismaPrompt) {
-    return this.promptsService.getPromptVersions(prompt.id);
+    this.logger.info("Resolving prompt versions");
+
+    try {
+      return this.promptsService.getPromptVersions(prompt.id);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting prompt versions");
+      throw new InternalServerErrorException();
+    }
   }
 
   @ResolveField(() => PromptVersion, { nullable: true })
@@ -299,17 +394,30 @@ export class PromptsResolver {
     @Parent() prompt: PrismaPrompt,
     @Args("data") data: GetPromptInput
   ) {
+    this.logger.assign({ ...data }).info("Resolving prompt version");
     const { version } = data;
 
-    if (version === "latest") {
-      return this.promptsService.getLatestPromptVersion(prompt.id);
-    }
+    try {
+      if (version === "latest") {
+        return this.promptsService.getLatestPromptVersion(prompt.id);
+      }
 
-    return this.promptsService.getPromptVersion(data.version);
+      return this.promptsService.getPromptVersion(data.version);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting prompt version");
+      throw new InternalServerErrorException();
+    }
   }
 
   @ResolveField(() => PromptVersion, { nullable: true })
   async latestVersion(@Parent() prompt: PrismaPrompt) {
-    return this.promptsService.getLatestPromptVersion(prompt.id);
+    this.logger.info("Resolving prompt latest version");
+
+    try {
+      return this.promptsService.getLatestPromptVersion(prompt.id);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting prompt latest version");
+      throw new InternalServerErrorException();
+    }
   }
 }
