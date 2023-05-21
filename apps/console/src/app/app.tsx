@@ -61,7 +61,7 @@ export function App() {
                 {/* Projects selection */}
                 <Route
                   element={
-                    <LayoutWrapper withSideNav={true}>
+                    <LayoutWrapper withSideNav={false}>
                       <Outlet />
                     </LayoutWrapper>
                   }
@@ -84,6 +84,7 @@ export function App() {
                   }
                 >
                   <Route
+                    index
                     path="/projects/:projectId/prompts"
                     element={<PromptsPage />}
                   />
@@ -99,8 +100,11 @@ export function App() {
                     path="/projects/:projectId/api-keys"
                     element={<APIKeysPage />}
                   />
+                  <Route
+                    path="/projects/:projectId/info"
+                    element={<InfoPage />}
+                  />
                 </Route>
-                <Route path="/info" element={<InfoPage />} />
               </Route>
             </Routes>
           </QueryClientProvider>

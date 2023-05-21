@@ -1,4 +1,13 @@
-import { Breadcrumb, Button, Col, Row, Space, Tabs, Typography } from "antd";
+import {
+  Breadcrumb,
+  Button,
+  Col,
+  Row,
+  Space,
+  Spin,
+  Tabs,
+  Typography,
+} from "antd";
 import {
   EditOutlined,
   HistoryOutlined,
@@ -25,10 +34,9 @@ const BreadcrumbTitle = styled.span`
 `;
 
 export const PromptPage = () => {
-  const navigate = useNavigate();
   const params = useParams();
-  const { project } = useCurrentProject();
-  const { setCurrentPromptId, prompt, integration } = useCurrentPrompt();
+  const { setCurrentPromptId, prompt, integration, isLoading } =
+    useCurrentPrompt();
   const [activeView, setActiveView] = useState("edit");
   const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] =
     useState(false);
@@ -38,6 +46,7 @@ export const PromptPage = () => {
       setCurrentPromptId(params.promptId as string, "latest");
     }
   }, [params.promptId]);
+
   const tabs = [
     {
       label: (
@@ -58,67 +67,24 @@ export const PromptPage = () => {
   ];
 
   return (
-    prompt && (
-      <>
-        <DeletePromptConfirmationModal
-          open={isDeleteConfirmationModalOpen}
-          onClose={() => setIsDeleteConfirmationModalOpen(false)}
-          onConfirm={() => setIsDeleteConfirmationModalOpen(false)}
-        />
-        <Row gutter={[12, 12]}>
-          <Col span={16}>
-            <Breadcrumb
-              style={{ marginBottom: 12 }}
-              items={[
-                {
-                  title: <BreadcrumbTitle>Prompts</BreadcrumbTitle>,
-                  onClick: () => navigate(`/projects/${project.id}/prompts`),
-                },
-                {
-                  title: (
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      <img
-                        src={integration.iconBase64}
-                        style={{ borderRadius: 2, height: 18 }}
-                      />
-                      <Typography.Text
-                        style={{ display: "inline-block", marginLeft: 6 }}
-                      >
-                        {prompt.name}
-                      </Typography.Text>
-                    </div>
-                  ),
-                  key: "prompt",
-                },
-              ]}
-            />
-          </Col>
-          <Col
-            span={8}
-            className={css`
-              display: flex;
-              justify-content: flex-end;
-            `}
-          >
-            <Space wrap>
-              {/* <Button
-                danger
-                icon={<DeleteOutlined />}
-                onClick={() => setIsDeleteConfirmationModalOpen(true)}
-              >
-                Delete
-              </Button> */}
-            </Space>
-          </Col>
-        </Row>
-        <Tabs
-          items={tabs}
-          onChange={(selectedView) => setActiveView(selectedView)}
-        ></Tabs>
+    <Spin size="large" spinning={isLoading}>
+      <DeletePromptConfirmationModal
+        open={isDeleteConfirmationModalOpen}
+        onClose={() => setIsDeleteConfirmationModalOpen(false)}
+        onConfirm={() => setIsDeleteConfirmationModalOpen(false)}
+      />
 
-        {activeView === "history" && <PromptHistoryView />}
-        {activeView === "edit" && <PromptEditView />}
-      </>
-    )
+      <Tabs
+        items={tabs}
+        onChange={(selectedView) => setActiveView(selectedView)}
+      ></Tabs>
+
+      {prompt && (
+        <>
+          {activeView === "history" && <PromptHistoryView />}
+          {activeView === "edit" && <PromptEditView />}
+        </>
+      )}
+    </Spin>
   );
 };
