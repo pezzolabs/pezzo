@@ -7,4 +7,7 @@ export class CreateEnvironmentInput {
 
   @Field(() => String, { nullable: false })
   slug: string;
+
+  @Field(() => String, { nullable: false })
+  projectId: string;
 }

@@ -14,7 +14,7 @@ import {
 } from "../../../lib/hooks/usePromptEdit";
 import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
 import { useEffect, useState } from "react";
-import { PromptTester } from "../PromptTester/PromptTester";
+import { PromptTester } from "../PromptTester";
 import { PromptVariables } from "../PromptVariables";
 import { usePromptTester } from "../../../lib/providers/PromptTesterContext";
 import { PromptVersionSelector } from "../PromptVersionSelector";

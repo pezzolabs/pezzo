@@ -16,11 +16,11 @@ import {
   CloseCircleOutlined,
   RedoOutlined,
 } from "@ant-design/icons";
-import { PromptVariables } from "../PromptVariables";
-import { PromptEditor } from "../PromptEditor";
+import { PromptVariables } from "./PromptVariables";
+import { PromptEditor } from "./PromptEditor";
 import { useEffect, useState } from "react";
-import { usePromptTester } from "../../../lib/providers/PromptTesterContext";
-import { isJson } from "../../../lib/utils/is-json";
+import { usePromptTester } from "../../lib/providers/PromptTesterContext";
+import { isJson } from "../../lib/utils/is-json";
 
 const StyledPre = styled.pre`
   white-space: pre-wrap;

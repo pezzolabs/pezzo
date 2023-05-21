@@ -25,6 +25,19 @@ services:
     environment:
       POSTGRES_CONNECTION_URI: postgres://postgres:postgres@postgres:5432/supertokens
 
+  influxdb:
+    image: bitnami/influxdb:2.7.1
+    restart: always
+    environment:
+      INFLUXDB_ADMIN_USER_TOKEN: "token123"
+      INFLUXDB_ADMIN_USER_PASSWORD: "influxdb-admin"
+      INFLUXDB_USER: "admin"
+      INFLUXDB_USER_PASSWORD: "influxdb-admin"
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_data:/bitnami/influxdb
+
   pezzo-server:
     image: ghcr.io/pezzolabs/pezzo/server:latest
     restart: always
@@ -34,6 +47,8 @@ services:
     environment:
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/pezzo
       - SUPERTOKENS_CONNECTION_URI=http://supertokens:3567
+      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_TOKEN=token123
     ports:
       - "3000:3000"
     depends_on:
@@ -59,3 +74,4 @@ services:
 
 volumes:
   postgres_data: ~
+  influxdb_data: ~

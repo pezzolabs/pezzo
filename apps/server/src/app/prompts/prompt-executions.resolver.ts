@@ -17,16 +17,19 @@ import {
   NotFoundException,
   UseGuards,
 } from "@nestjs/common";
-import { ApiKeyOrgId } from "../identity/api-key-org-id";
-import { isOrgMemberOrThrow } from "../identity/identity.utils";
+import { ApiKeyProjectId } from "../identity/api-key-project-id.decorator";
+import { isProjectMemberOrThrow } from "../identity/identity.utils";
+import { InfluxDbService } from "../influxdb/influxdb.service";
+import { Point } from "@influxdata/influxdb-client";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Prompt)
 export class PromptExecutionsResolver {
   constructor(
     private prisma: PrismaService,
-    private readonly promptsService: PromptsService,
-    private readonly promptTesterService: PromptTesterService
+    private promptsService: PromptsService,
+    private promptTesterService: PromptTesterService,
+    private influxService: InfluxDbService
   ) {}
 
   @Query(() => PromptExecution)
@@ -46,7 +49,7 @@ export class PromptExecutionsResolver {
       promptExecution.promptId
     );
 
-    isOrgMemberOrThrow(user, prompt.organizationId);
+    isProjectMemberOrThrow(user, prompt.projectId);
 
     return promptExecution;
   }
@@ -63,7 +66,7 @@ export class PromptExecutionsResolver {
       throw new NotFoundException();
     }
 
-    isOrgMemberOrThrow(user, prompt.organizationId);
+    isProjectMemberOrThrow(user, prompt.projectId);
 
     const executions = await this.prisma.promptExecution.findMany({
       where: data,
@@ -78,7 +81,7 @@ export class PromptExecutionsResolver {
   @Mutation(() => PromptExecution)
   async reportPromptExecutionWithApiKey(
     @Args("data") data: PromptExecutionCreateInput,
-    @ApiKeyOrgId() orgId: string
+    @ApiKeyProjectId() projectId: string
   ) {
     const promptId = data.prompt.connect.id;
     const prompt = await this.promptsService.getPrompt(promptId);
@@ -87,13 +90,33 @@ export class PromptExecutionsResolver {
       throw new NotFoundException();
     }
 
-    if (prompt.organizationId !== orgId) {
+    if (prompt.projectId !== projectId) {
       throw new ForbiddenException();
     }
 
     const execution = await this.prisma.promptExecution.create({
       data,
     });
+
+    const writeClient = this.influxService.getWriteApi("primary", "primary");
+    const point = new Point("prompt_execution")
+      .tag("prompt_id", execution.promptId)
+      .tag("prompt_version_sha", execution.promptVersionSha)
+      .tag("project_id", prompt.projectId)
+      .tag("prompt_name", prompt.name)
+      .tag("prompt_integration_id", prompt.integrationId)
+      .stringField("status", execution.status)
+      .floatField("duration", execution.duration / 1000)
+      .floatField("prompt_cost", execution.promptCost)
+      .floatField("completion_cost", execution.completionCost)
+      .floatField("total_cost", execution.totalCost)
+      .intField("prompt_tokens", execution.promptTokens)
+      .intField("completion_tokens", execution.completionTokens)
+      .intField("total_tokens", execution.totalTokens);
+
+    writeClient.writePoint(point);
+    writeClient.flush();
+
     return execution;
   }
 
@@ -103,9 +126,11 @@ export class PromptExecutionsResolver {
     @Args("data") data: TestPromptInput,
     @CurrentUser() user: RequestUser
   ) {
+    isProjectMemberOrThrow(user, data.projectId);
+
     const result = await this.promptTesterService.testPrompt(
       data,
-      user.orgMemberships[0].organizationId
+      data.projectId
     );
 
     const execution = new PromptExecution();

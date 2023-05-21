@@ -1,14 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
 import { gqlClient } from "../graphql";
 import { GET_ALL_ENVIRONMENTS } from "../../graphql/queries/environments";
+import { useCurrentProject } from "../providers/CurrentProjectContext";
 
 export const useEnvironments = () => {
-  const { data } = useQuery({
+  const { project } = useCurrentProject();
+
+  const { data, isLoading } = useQuery({
     queryKey: ["environments"],
-    queryFn: () => gqlClient.request(GET_ALL_ENVIRONMENTS),
+    queryFn: () =>
+      gqlClient.request(GET_ALL_ENVIRONMENTS, {
+        data: { projectId: project.id },
+      }),
   });
 
   return {
     environments: data?.environments,
+    isLoading,
   };
 };
