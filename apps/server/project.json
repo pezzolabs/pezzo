@@ -33,9 +33,7 @@
             "input": "apps/server",
             "output": "prisma"
           }
-        ],
-        "isolatedConfig": true,
-        "webpackConfig": "apps/server/webpack.config.js"
+        ]
       },
       "configurations": {
         "development": {},
