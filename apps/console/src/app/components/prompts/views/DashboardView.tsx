@@ -1,11 +1,13 @@
 import { Aggregation, PromptExecutionMetricField } from "@pezzo/graphql";
-import { Col, Row } from "antd";
+import { Col, Row, theme } from "antd";
 import { MetricProvider } from "../../../lib/providers/MetricContext";
 import { SimpleChart } from "../metrics/SimpleChart";
 
 export const DashboardView = () => {
+  const { token } = theme.useToken();
+
   return (
-    <div style={{ marginTop: 20 }}>
+    <div style={{ marginTop: token.marginMD }}>
       <Row gutter={[12, 12]}>
         <Col span={12}>
           <MetricProvider

@@ -8,7 +8,8 @@ import {
 } from "@pezzo/graphql";
 import { usePromptExecutionMetric } from "../hooks/usePromptExecutionMetric";
 import { format } from "date-fns";
-import { Card, Col, Radio, Row, Select, Typography } from "antd";
+import { Card, Col, Empty, Radio, Row, Select, Typography, theme } from "antd";
+import { Loading3QuartersOutlined } from "@ant-design/icons";
 
 interface MetricContextValue {
   data: GetMetricsQuery["metrics"];
@@ -37,6 +38,7 @@ export const MetricProvider = ({
   fillEmpty,
   aggregation,
 }: Props) => {
+  const { token } = theme.useToken();
   const { prompt } = useCurrentPrompt();
   const [granularity, setGranularity] = useState<Granularity>(Granularity.Day);
   const [start, setStart] = useState<string>("-7d");
@@ -55,7 +57,7 @@ export const MetricProvider = ({
   );
 
   if (isLoading || !metricsData) {
-    return <div>Loading...</div>;
+    return <Loading3QuartersOutlined spin />;
   }
 
   const formatTimestamp = (timestamp) => {
@@ -81,39 +83,45 @@ export const MetricProvider = ({
       }}
     >
       <Card style={{ width: "100%" }}>
-        <div style={{ marginBottom: 20 }}>
+        <div style={{ marginBottom: token.marginMD }}>
           <Typography.Title level={4}>{title}</Typography.Title>
-          <Row>
-            <Col span={12}>
-              <Select
-                defaultValue={start}
-                style={{ width: 140 }}
-                onSelect={setStart}
-              >
-                <Select.Option value="-1h">Past Hour</Select.Option>
-                <Select.Option value="-1d">Past Day</Select.Option>
-                <Select.Option value="-7d">Past 7 days</Select.Option>
-                <Select.Option value="-30d">Past 30 days</Select.Option>
-                <Select.Option value="-1y">Past year</Select.Option>
-              </Select>
-            </Col>
-            <Col
-              span={12}
-              style={{ display: "flex", justifyContent: "flex-end" }}
-            >
-              <Radio.Group
-                value={granularity}
-                onChange={(e) => setGranularity(e.target.value)}
-              >
-                <Radio.Button value={Granularity.Hour}>Hour</Radio.Button>
-                <Radio.Button value={Granularity.Day}>Day</Radio.Button>
-                <Radio.Button value={Granularity.Week}>Week</Radio.Button>
-                <Radio.Button value={Granularity.Month}>Month</Radio.Button>
-              </Radio.Group>
-            </Col>
-          </Row>
+          {metricsData.metrics.length === 0 ? (
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Insufficient data" />
+          ) : (
+            <>
+              <Row>
+                <Col span={12}>
+                  <Select
+                    defaultValue={start}
+                    style={{ width: 140 }}
+                    onSelect={setStart}
+                  >
+                    <Select.Option value="-1h">Past Hour</Select.Option>
+                    <Select.Option value="-1d">Past Day</Select.Option>
+                    <Select.Option value="-7d">Past 7 days</Select.Option>
+                    <Select.Option value="-30d">Past 30 days</Select.Option>
+                    <Select.Option value="-1y">Past year</Select.Option>
+                  </Select>
+                </Col>
+                <Col
+                  span={12}
+                  style={{ display: "flex", justifyContent: "flex-end" }}
+                >
+                  <Radio.Group
+                    value={granularity}
+                    onChange={(e) => setGranularity(e.target.value)}
+                  >
+                    <Radio.Button value={Granularity.Hour}>Hour</Radio.Button>
+                    <Radio.Button value={Granularity.Day}>Day</Radio.Button>
+                    <Radio.Button value={Granularity.Week}>Week</Radio.Button>
+                    <Radio.Button value={Granularity.Month}>Month</Radio.Button>
+                  </Radio.Group>
+                </Col>
+              </Row>
+              <div>{children}</div>
+            </>
+          )}
         </div>
-        <div>{children}</div>
       </Card>
     </MetricContext.Provider>
   );
