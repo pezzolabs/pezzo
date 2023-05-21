@@ -12,12 +12,14 @@ export const ProjectCard = ({ name, slug, id }: ProjectCardProps) => {
 
   return (
     <Card
-      size="small"
       hoverable
       onClick={() => navigate(`/projects/${id}/prompts`)}
+      style={{ marginBottom: 16, height: 122 }}
     >
       <Row justify="space-between" align="middle">
-        <Typography.Title level={4}>{name}</Typography.Title>
+        <Typography.Title level={4} style={{ margin: 0 }}>
+          {name}
+        </Typography.Title>
 
         <ArrowRightCircleIcon opacity={0.5} height={24} />
       </Row>

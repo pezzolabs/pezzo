@@ -83,7 +83,9 @@ export class SupertokensService {
                       photoUrl: data.picture,
                     };
 
-                    if (res.createdNewUser) {
+                    const user = await this.usersService.getUser(data.email);
+
+                    if (!user) {
                       this.usersService.createUser(userCreateRequest);
                     }
 

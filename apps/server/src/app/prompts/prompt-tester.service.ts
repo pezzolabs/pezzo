@@ -51,7 +51,7 @@ export class PromptTesterService {
 
     return {
       ...result,
-      error: result?.error ? (result?.error.error as Error).message : null,
+      error: result?.error ? result.error.printableError : null,
       success: !result?.error,
       content,
       interpolatedContent,

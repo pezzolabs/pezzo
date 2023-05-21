@@ -49,7 +49,7 @@ export const PromptHistoryView = () => {
       title: "Cost",
       dataIndex: "totalCost",
       key: "totalCost",
-      render: (value) => <span>${value}</span>,
+      render: (value) => <span>${Number(value).toFixed(4)}</span>,
     },
     {
       title: "Duration",

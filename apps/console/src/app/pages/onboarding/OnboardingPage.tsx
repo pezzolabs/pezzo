@@ -3,28 +3,25 @@ import {
   Button,
   Col,
   Input,
-  Modal,
   Row,
   Space,
   Tooltip,
   Typography,
+  Card,
   theme,
 } from "antd";
 import { ArrowRightOutlined } from "@ant-design/icons";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
-import { useGetCurrentUser, useGetProjects } from "../../lib/hooks/queries";
+import { useGetProjects } from "../../lib/hooks/queries";
 import {
   useCreateProjectMutation,
   useUpdateCurrentUserMutation,
 } from "../../lib/hooks/mutations";
 import { useCallback, useEffect } from "react";
 import { Form } from "antd";
-import {
-  CreateProjectMutation,
-  Project,
-  UpdateProfileMutation,
-} from "@pezzo/graphql";
+import { CreateProjectMutation, UpdateProfileMutation } from "@pezzo/graphql";
+import { useAuthContext } from "../../lib/providers/AuthProvider";
 
 const StyledButton = styled(Button)<{ spacing: number }>`
   margin-top: ${(props) => props.spacing}px;
@@ -47,25 +44,16 @@ export const OnboardingPage = () => {
     useUpdateCurrentUserMutation();
   const { mutateAsync: createProject, isLoading: isProjectCreationLoading } =
     useCreateProjectMutation();
-  const {
-    data: projectsData,
-    isLoading: isProjectsLoading,
-    isError: isProjectsError,
-  } = useGetProjects();
 
-  const {
-    data: currentUserData,
-    isLoading: isCurrentUserLoading,
-    isError: isCurrentUserError,
-  } = useGetCurrentUser();
+  const { data: projectsData, isLoading: isProjectsLoading } = useGetProjects();
+
+  const { currentUser } = useAuthContext();
 
   const { token } = theme.useToken();
   const navigate = useNavigate();
 
   const isCreatingProject = isProjectCreationLoading || isUpdatingUserLoading;
-  const hasProjects = projectsData?.projects.length > 0;
-  const currentUser = currentUserData?.me;
-  const hasName = !!currentUser?.name;
+  const hasName = currentUser.name !== null;
 
   const handleCreateProject = useCallback(
     async (values: FormValues) => {
@@ -89,7 +77,9 @@ export const OnboardingPage = () => {
       }
 
       await Promise.all(actions.filter(Boolean));
-      return navigate("/projects?finished=true");
+      setTimeout(() => {
+        return navigate("/projects");
+      }, 1500);
     },
     [updateCurrentUser, createProject, currentUser, hasName, navigate]
   );
@@ -100,75 +90,78 @@ export const OnboardingPage = () => {
     }
   }, [projectsData, navigate]);
 
-  if (isProjectsLoading || isCurrentUserLoading) {
+  if (isProjectsLoading) {
     return <LoadingOutlined />;
   }
 
   return (
-    <Modal
-      open
-      closable={false}
-      title={
-        <Typography.Title level={3}>
-          Let's create your first project{" "}
-          <span role="img" aria-label="emoji">
-            🎉
-          </span>
-        </Typography.Title>
-      }
-      footer={null}
-    >
-      <Form form={form} name="onboarding-form" onFinish={handleCreateProject}>
-        <VerticalSpace
-          style={{ width: "100%", marginTop: token.marginLG }}
-          size="large"
+    <Row justify="center">
+      <Col span={10}>
+        <Card
+          title={
+            <Typography.Title level={3} style={{ margin: 0 }}>
+              Let's create your first project{" "}
+              <span role="img" aria-label="emoji">
+                🎉
+              </span>
+            </Typography.Title>
+          }
         >
-          {!hasName && (
-            <VerticalSpace>
-              <Typography.Text>What's your name?</Typography.Text>
-              <Form.Item name="name">
-                <Input placeholder="John Doe" />
+          <Form
+            form={form}
+            name="onboarding-form"
+            onFinish={handleCreateProject}
+          >
+            <VerticalSpace style={{ width: "100%" }}>
+              {!hasName && (
+                <>
+                  <Typography.Text style={{ padding: 0 }}>
+                    What's your name?
+                  </Typography.Text>
+                  <Form.Item name="name">
+                    <Input placeholder="John Doe" />
+                  </Form.Item>
+                </>
+              )}
+
+              <Row gutter={4} align="middle">
+                <Col>
+                  <Typography.Text>
+                    How do you wanna call your first project?
+                  </Typography.Text>
+                </Col>
+                <Tooltip title="A project is a collection of prompts">
+                  <Col flex="grow">
+                    <Button type="text" icon={<InfoCircleFilled />} />
+                  </Col>
+                </Tooltip>
+              </Row>
+
+              <Form.Item
+                name="projectName"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please set a name to your project",
+                  },
+                ]}
+              >
+                <Input placeholder="Content Creation" />
               </Form.Item>
             </VerticalSpace>
-          )}
 
-          <VerticalSpace>
-            <Row gutter={4} align="middle">
-              <Col>
-                <Typography.Text>
-                  How do you wanna call your first project?
-                </Typography.Text>
-              </Col>
-              <Tooltip title="A project is a collection of prompts">
-                <Col flex="grow">
-                  <Button
-                    type="text"
-                    icon={<InfoCircleFilled />}
-                    loading={isCreatingProject}
-                  />
-                </Col>
-              </Tooltip>
+            <Row justify="end">
+              <StyledButton
+                spacing={token.marginLG}
+                htmlType="submit"
+                loading={isCreatingProject}
+              >
+                Create a project <ArrowRightOutlined />
+              </StyledButton>
             </Row>
-
-            <Form.Item
-              name="projectName"
-              rules={[
-                {
-                  required: true,
-                  message: "Please set a name to your project",
-                },
-              ]}
-            >
-              <Input placeholder="Content Creation" />
-            </Form.Item>
-          </VerticalSpace>
-        </VerticalSpace>
-        <Row justify="end">
-          <StyledButton spacing={token.marginLG} htmlType="submit">
-            Create a project <ArrowRightOutlined />
-          </StyledButton>
-        </Row>
-      </Form>
-    </Modal>
+          </Form>
+        </Card>
+      </Col>
+    </Row>
   );
 };

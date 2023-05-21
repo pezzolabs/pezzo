@@ -81,9 +81,7 @@ export const SideNavigation = () => {
       window.location.href = "/login";
     }
 
-    if (item.key === "info") {
-      navigate("/info");
-    }
+    if (item.key === "info") navigate(`/projects/${project.id}/info`);
   };
 
   return (

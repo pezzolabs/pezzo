@@ -6,7 +6,7 @@ import { useCurrentProject } from "../providers/CurrentProjectContext";
 export const useEnvironments = () => {
   const { project } = useCurrentProject();
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["environments"],
     queryFn: () =>
       gqlClient.request(GET_ALL_ENVIRONMENTS, {
@@ -16,5 +16,6 @@ export const useEnvironments = () => {
 
   return {
     environments: data?.environments,
+    isLoading,
   };
 };

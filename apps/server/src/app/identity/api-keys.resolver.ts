@@ -22,9 +22,4 @@ export class ApiKeysResolver {
     isProjectMemberOrThrow(user, data.projectId);
     return this.apiKeysService.getApiKeyByProjectId(data.projectId);
   }
-
-  @Query(() => OrganizationMember)
-  currentOrganizationMember(@CurrentUser() user: RequestUser) {
-    return user.orgMemberships[0];
-  }
 }
