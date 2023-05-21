@@ -77,9 +77,7 @@ export const OnboardingPage = () => {
       }
 
       await Promise.all(actions.filter(Boolean));
-      setTimeout(() => {
-        return navigate("/projects");
-      }, 1500);
+      return navigate("/projects");
     },
     [updateCurrentUser, createProject, currentUser, hasName, navigate]
   );
