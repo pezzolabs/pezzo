@@ -6,7 +6,7 @@ import {
   Granularity,
   PromptExecutionMetricField,
 } from "@pezzo/graphql";
-import { usePromptExecutionMetric } from "../hooks/usePromptExecutionMetric";
+import { useGetPromptExecutionMetric } from "../hooks/useGetPromptExecutionMetric";
 import { format } from "date-fns";
 import { Card, Col, Empty, Radio, Row, Select, Typography, theme } from "antd";
 import { Loading3QuartersOutlined } from "@ant-design/icons";
@@ -43,7 +43,7 @@ export const MetricProvider = ({
   const [granularity, setGranularity] = useState<Granularity>(Granularity.Day);
   const [start, setStart] = useState<string>("-7d");
 
-  const { data: metricsData, isLoading } = usePromptExecutionMetric(
+  const { data: metricsData, isLoading } = useGetPromptExecutionMetric(
     [prompt.id, "metrics", title, granularity, start],
     {
       promptId: prompt.id,

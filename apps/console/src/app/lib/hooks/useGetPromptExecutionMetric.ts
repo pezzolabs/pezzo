@@ -3,7 +3,7 @@ import { GET_PROMPT_EXECUTION_METRICS } from "../../graphql/queries/metrics";
 import { gqlClient } from "../graphql";
 import { GetMetricsInput } from "@pezzo/graphql";
 
-export const usePromptExecutionMetric = (
+export const useGetPromptExecutionMetric = (
   queryKey: string[],
   data: GetMetricsInput
 ) =>
