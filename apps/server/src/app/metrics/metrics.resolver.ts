@@ -4,7 +4,11 @@ import { InfluxDbService } from "../influxdb/influxdb.service";
 import { InfluxQueryResult } from "./types";
 import { GetMetricsInput, Granularity } from "./inputs/get-metrics.input";
 import { AuthGuard } from "../auth/auth.guard";
-import { InternalServerErrorException, NotFoundException, UseGuards } from "@nestjs/common";
+import {
+  InternalServerErrorException,
+  NotFoundException,
+  UseGuards,
+} from "@nestjs/common";
 import { PinoLogger } from "../logger/pino-logger";
 import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
@@ -32,16 +36,16 @@ export class MetricsResolver {
   constructor(
     private influxService: InfluxDbService,
     private promptService: PromptsService,
-    private readonly logger: PinoLogger,
+    private readonly logger: PinoLogger
   ) {}
 
   @Query(() => [Metric])
   async metrics(
     @Args("data") data: GetMetricsInput,
-    @CurrentUser() user: RequestUser,
+    @CurrentUser() user: RequestUser
   ) {
-    this.logger.assign({ data })
-    this.logger.info('Getting metrics');
+    this.logger.assign({ data });
+    this.logger.info("Getting metrics");
 
     let prompt: Prompt;
 

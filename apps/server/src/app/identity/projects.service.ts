@@ -27,7 +27,9 @@ export class ProjectsService {
       },
     });
 
-    this.logger.assign({ projectId: project.id }).info("Creating API key for project");
+    this.logger
+      .assign({ projectId: project.id })
+      .info("Creating API key for project");
     const projectApiKeyValue = `pez_${randomBytes(32).toString("hex")}`;
     await this.prisma.apiKey.create({
       data: {

@@ -22,7 +22,7 @@ export class EnvironmentsService {
         projectId,
       },
     });
-    
+
     return environments;
   }
 }

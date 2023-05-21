@@ -13,7 +13,10 @@ import { PinoLogger } from "../logger/pino-logger";
 @UseGuards(AuthGuard)
 @Resolver(() => ApiKey)
 export class ApiKeysResolver {
-  constructor(private apiKeysService: APIKeysService, private logger: PinoLogger) {}
+  constructor(
+    private apiKeysService: APIKeysService,
+    private logger: PinoLogger
+  ) {}
 
   @Query(() => ApiKey)
   currentApiKey(
@@ -28,7 +31,7 @@ export class ApiKeysResolver {
       return this.apiKeysService.getApiKeyByProjectId(projectId);
     } catch (error) {
       this.logger.error({ error }, "Error getting current API key");
-      throw new InternalServerErrorException();      
+      throw new InternalServerErrorException();
     }
   }
 }

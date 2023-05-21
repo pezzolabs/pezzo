@@ -33,7 +33,7 @@ export class EnvironmentsResolver {
   ) {
     const { projectId } = data;
     isProjectMemberOrThrow(user, projectId);
-  
+
     try {
       this.logger.assign({ projectId }).info("Getting environments");
       return this.environmentsService.getAll(projectId);
@@ -54,19 +54,14 @@ export class EnvironmentsResolver {
 
     try {
       this.logger.assign({ slug, projectId }).info("Getting environment");
-      environment = await this.environmentsService.getBySlug(
-        slug,
-        projectId
-      );
+      environment = await this.environmentsService.getBySlug(slug, projectId);
     } catch (error) {
       this.logger.error({ error }, "Error getting environment");
       throw new InternalServerErrorException();
     }
 
     if (!environment) {
-      throw new NotFoundException(
-        `Environment with slug "${slug}" not found`
-      );
+      throw new NotFoundException(`Environment with slug "${slug}" not found`);
     }
 
     return environment;
@@ -83,10 +78,7 @@ export class EnvironmentsResolver {
     let exists: Environment;
 
     try {
-      exists = await this.environmentsService.getBySlug(
-        slug,
-        projectId
-      );
+      exists = await this.environmentsService.getBySlug(slug, projectId);
     } catch (error) {
       this.logger.error({ error }, "Error checking for existing environment");
       throw new InternalServerErrorException();

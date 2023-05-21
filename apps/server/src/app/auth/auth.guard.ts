@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
     private readonly usersService: UsersService,
     private readonly apiKeysService: APIKeysService,
     private readonly projectsService: ProjectsService,
-    private readonly logger: PinoLogger,
+    private readonly logger: PinoLogger
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
