@@ -22,11 +22,12 @@ export class PinoLogger {
   private setLogger(logger: pino.Logger) {
     this.logger = logger;
     this.context.logger = logger;
+    return logger;
   }
 
   assign(obj: object) {
     const child = this.logger.child(obj);
-    this.setLogger(child);
+    return this.setLogger(child);
   }
 
   info<T extends object>(obj: T, msg?: string): void;
