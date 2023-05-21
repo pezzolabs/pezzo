@@ -20,13 +20,18 @@ const StyledContent = styled(Layout.Content)`
 interface Props {
   children: React.ReactNode;
   withSideNav: boolean;
+  withHeader?: boolean;
 }
 
-export const LayoutWrapper = ({ children, withSideNav }: Props) => (
+export const LayoutWrapper = ({
+  children,
+  withSideNav,
+  withHeader = true,
+}: Props) => (
   <Layout
     style={{ height: "100vh", maxHeight: "100vh", flexDirection: "column" }}
   >
-    <Header />
+    {withHeader && <Header />}
     <div style={{ display: "flex", flexDirection: "row", height: "100%" }}>
       {withSideNav && <SideNavigation />}
       <StyledContent>{children}</StyledContent>

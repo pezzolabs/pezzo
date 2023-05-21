@@ -21,6 +21,7 @@ import { ProjectsPage } from "./pages/projects/ProjectsPage";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
 import { LayoutWrapper } from "./components/layout/LayoutWrapper";
 import { OnboardingPage } from "./pages/onboarding";
+import { AuthProvider } from "./lib/providers/AuthProvider";
 
 initSuperTokens();
 
@@ -42,7 +43,9 @@ export function App() {
               <Route
                 element={
                   <SessionAuth>
-                    <Outlet />
+                    <AuthProvider>
+                      <Outlet />
+                    </AuthProvider>
                   </SessionAuth>
                 }
               >

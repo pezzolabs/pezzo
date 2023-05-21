@@ -25,6 +25,7 @@ import {
   Project,
   UpdateProfileMutation,
 } from "@pezzo/graphql";
+import { useAuthContext } from "../../lib/providers/AuthProvider";
 
 const StyledButton = styled(Button)<{ spacing: number }>`
   margin-top: ${(props) => props.spacing}px;
@@ -47,25 +48,15 @@ export const OnboardingPage = () => {
     useUpdateCurrentUserMutation();
   const { mutateAsync: createProject, isLoading: isProjectCreationLoading } =
     useCreateProjectMutation();
-  const {
-    data: projectsData,
-    isLoading: isProjectsLoading,
-    isError: isProjectsError,
-  } = useGetProjects();
+  const { data: projectsData, isLoading: isProjectsLoading } = useGetProjects();
 
-  const {
-    data: currentUserData,
-    isLoading: isCurrentUserLoading,
-    isError: isCurrentUserError,
-  } = useGetCurrentUser();
+  const { currentUser } = useAuthContext();
 
   const { token } = theme.useToken();
   const navigate = useNavigate();
 
   const isCreatingProject = isProjectCreationLoading || isUpdatingUserLoading;
-  const hasProjects = projectsData?.projects.length > 0;
-  const currentUser = currentUserData?.me;
-  const hasName = !!currentUser?.name;
+  const hasName = currentUser.name !== null;
 
   const handleCreateProject = useCallback(
     async (values: FormValues) => {
@@ -89,7 +80,7 @@ export const OnboardingPage = () => {
       }
 
       await Promise.all(actions.filter(Boolean));
-      return navigate("/projects?finished=true");
+      return navigate("/projects");
     },
     [updateCurrentUser, createProject, currentUser, hasName, navigate]
   );
@@ -100,7 +91,7 @@ export const OnboardingPage = () => {
     }
   }, [projectsData, navigate]);
 
-  if (isProjectsLoading || isCurrentUserLoading) {
+  if (isProjectsLoading) {
     return <LoadingOutlined />;
   }
 
