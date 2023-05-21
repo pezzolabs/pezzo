@@ -180,50 +180,6 @@ export class PromptsResolver {
     return promptVersion;
   }
 
-  @Query(() => PromptVersion)
-  async deployedPromptVersion(
-    @Args("data") data: GetDeployedPromptVersionInput,
-    @CurrentUser() user: RequestUser
-  ) {
-    const { environmentSlug, promptId } = data;
-    const organizationId = user.orgMemberships[0].organizationId;
-
-    const prompt = await this.promptsService.getPrompt(promptId);
-
-    if (!prompt) {
-      throw new NotFoundException(`Prompt with id "${promptId}" not found`);
-    }
-
-    isProjectMemberOrThrow(user, prompt.projectId);
-
-    const environment = await this.environmentsService.getBySlug(
-      environmentSlug,
-      organizationId
-    );
-
-    if (!environment) {
-      throw new NotFoundException(
-        `Environment with slug "${environmentSlug}" not found`
-      );
-    }
-
-    const deployedPrompt = await this.prisma.promptEnvironment.findFirst({
-      where: { promptId, environmentId: environment.id },
-    });
-
-    if (!deployedPrompt) {
-      throw new NotFoundException(
-        `Prompt was not deployed to the "${environmentSlug}" environment`
-      );
-    }
-
-    const promptVersion = await this.promptsService.getPromptVersion(
-      deployedPrompt.promptVersionSha
-    );
-
-    return promptVersion;
-  }
-
   @Mutation(() => Prompt)
   async createPrompt(
     @Args("data") data: CreatePromptInput,
@@ -233,7 +189,7 @@ export class PromptsResolver {
 
     const exists = await this.promptsService.getPromptByName(
       data.name,
-      user.orgMemberships[0].organizationId
+      data.projectId,
     );
 
     if (exists) {
