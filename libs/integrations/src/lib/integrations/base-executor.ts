@@ -125,7 +125,6 @@ export abstract class BaseExecutor {
         completionCost: executionResult.completionCost,
         totalCost: executionResult.promptCost + executionResult.completionCost,
         duration,
-        environmentSlug: this.pezzoClient.options.environment,
       });
       throw e;
     }

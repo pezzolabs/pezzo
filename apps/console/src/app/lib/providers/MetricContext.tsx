@@ -92,7 +92,7 @@ export const MetricProvider = ({
             />
           ) : (
             <>
-              <Row>
+              <Row style={{ marginBottom: token.marginLG}}>
                 <Col span={12}>
                   <Select
                     defaultValue={start}
