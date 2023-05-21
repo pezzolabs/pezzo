@@ -35,7 +35,7 @@ export class EnvironmentsResolver {
     isProjectMemberOrThrow(user, projectId);
   
     try {
-      this.logger.info({ projectId }, "Getting environments");
+      this.logger.assign({ projectId }).info("Getting environments");
       return this.environmentsService.getAll(projectId);
     } catch (error) {
       this.logger.error({ error }, "Error getting environments");
@@ -53,7 +53,7 @@ export class EnvironmentsResolver {
     let environment: Environment;
 
     try {
-      this.logger.info({ slug, projectId }, "Getting environment");
+      this.logger.assign({ slug, projectId }).info("Getting environment");
       environment = await this.environmentsService.getBySlug(
         slug,
         projectId
@@ -78,12 +78,19 @@ export class EnvironmentsResolver {
     @CurrentUser() user: RequestUser
   ) {
     const { projectId, slug } = data;
+    this.logger.assign({ projectId, slug });
     isProjectMemberOrThrow(user, projectId);
+    let exists: Environment;
 
-    const exists = await this.environmentsService.getBySlug(
-      slug,
-      projectId
-    );
+    try {
+      exists = await this.environmentsService.getBySlug(
+        slug,
+        projectId
+      );
+    } catch (error) {
+      this.logger.error({ error }, "Error checking for existing environment");
+      throw new InternalServerErrorException();
+    }
 
     if (exists) {
       throw new ConflictException(
@@ -92,7 +99,7 @@ export class EnvironmentsResolver {
     }
 
     try {
-      this.logger.info({ slug, projectId }, "Creating environment");
+      this.logger.info("Creating environment");
       return this.prisma.environment.create({
         data: {
           name: data.name,

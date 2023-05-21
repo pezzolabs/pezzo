@@ -26,7 +26,7 @@ export class ProviderApiKeysResolver {
     const { projectId } = data;
     isProjectMemberOrThrow(user, projectId);
     try {
-      this.logger.info({ projectId }, "Getting provider API keys");
+      this.logger.assign({ projectId }).info("Getting provider API keys");
       const keys = await this.providerAPIKeysService.getAllProviderApiKeys(
         projectId
       );
@@ -48,7 +48,7 @@ export class ProviderApiKeysResolver {
     isProjectMemberOrThrow(user, projectId);
 
     try {
-      this.logger.info({ provider, projectId }, "Updating provider API key");
+      this.logger.assign({ provider, projectId }).info("Updating provider API key");
       const key = await this.providerAPIKeysService.upsertProviderApiKey(
         provider,
         value,
