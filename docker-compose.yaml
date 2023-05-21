@@ -30,9 +30,9 @@ services:
     restart: always
     environment:
       INFLUXDB_ADMIN_USER_TOKEN: "token123"
-      INFLUXDB_ADMIN_USER_PASSWORD: "admin"
+      INFLUXDB_ADMIN_USER_PASSWORD: "influxdb-admin"
       INFLUXDB_USER: "admin"
-      INFLUXDB_USER_PASSWORD: "admin"
+      INFLUXDB_USER_PASSWORD: "influxdb-admin"
     ports:
       - "8086:8086"
     volumes:
