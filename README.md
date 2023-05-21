@@ -45,10 +45,9 @@ Below you can find the roadmap with all upcoming features:
 | API Keys Support           | ✅ Done        |
 | Pezzo OpenAI Integration   | ✅ Done        |
 | Pezzo Client for Node.js   | ✅ Done        |
+| Error Handling             | ✅ Done   |
 | Demo app                   | 🚧 In Progress |
 | Logger                     | 🚧 In Progress |
-| Error Handling             | 🚧 In Progress |
-| Public Sandbox Environment | 🚧 In Progress |
 | Test Coverage              | 🔜 Coming Soon |
 | Pezzo Client for Python    | 🔜 Coming Soon |
 | Pezzo Client for Golang    | 🔜 Coming Soon |
