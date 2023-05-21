@@ -1,7 +1,4 @@
-import {
-  Spin,
-  Tabs,
-} from "antd";
+import { Spin, Tabs } from "antd";
 import {
   EditOutlined,
   HistoryOutlined,
