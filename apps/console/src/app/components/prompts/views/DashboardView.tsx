@@ -8,7 +8,7 @@ export const DashboardView = () => {
 
   return (
     <div style={{ marginTop: token.marginMD }}>
-      <Row gutter={[12, 12]}>
+      <Row gutter={[24, 24]}>
         <Col span={12}>
           <MetricProvider
             aggregation={Aggregation.Sum}

@@ -86,7 +86,7 @@ export const MetricProvider = ({
         <div style={{ marginBottom: token.marginMD }}>
           <Typography.Title level={4}>{title}</Typography.Title>
           {metricsData.metrics.length === 0 ? (
-            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Insufficient data" />
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No executions" />
           ) : (
             <>
               <Row>
