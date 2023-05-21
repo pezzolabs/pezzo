@@ -6,6 +6,8 @@
   "targets": {
     "prebuild": {
       "executor": "nx:run-commands",
+      "inputs": ["{workspaceRoot}/package.json"],
+      "outputs": ["{projectRoot}/src/version.json"],
       "options": {
         "command": "npx tsx libs/common/scripts/sync-version.ts"
       }
