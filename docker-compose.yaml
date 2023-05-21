@@ -74,3 +74,4 @@ services:
 
 volumes:
   postgres_data: ~
+  influxdb_data: ~
