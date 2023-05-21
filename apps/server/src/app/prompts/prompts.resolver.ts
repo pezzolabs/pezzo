@@ -189,7 +189,7 @@ export class PromptsResolver {
 
     const exists = await this.promptsService.getPromptByName(
       data.name,
-      data.projectId,
+      data.projectId
     );
 
     if (exists) {
