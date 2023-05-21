@@ -3,6 +3,7 @@ import {
   ExecutionContext,
   Injectable,
   InternalServerErrorException,
+  Scope,
   UnauthorizedException,
 } from "@nestjs/common";
 import { GqlExecutionContext } from "@nestjs/graphql";
@@ -12,18 +13,20 @@ import { RequestUser } from "../identity/users.types";
 import { APIKeysService } from "../identity/api-keys.service";
 import Session, { SessionContainer } from "supertokens-node/recipe/session";
 import { ProjectsService } from "../identity/projects.service";
+import { PinoLogger } from "../logger/pino-logger";
 
 export enum AuthMethod {
   ApiKey = "ApiKey",
   BearerToken = "BearerToken",
 }
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly usersService: UsersService,
     private readonly apiKeysService: APIKeysService,
-    private readonly projectsService: ProjectsService
+    private readonly projectsService: ProjectsService,
+    private readonly logger: PinoLogger
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -50,6 +53,9 @@ export class AuthGuard implements CanActivate {
 
     req.projectId = apiKey.projectId;
     req.authMethod = AuthMethod.ApiKey;
+    this.logger.assign({
+      projectIdByApiKey: apiKey.projectId,
+    });
 
     return true;
   }
@@ -101,8 +107,8 @@ export class AuthGuard implements CanActivate {
       };
 
       req["user"] = reqUser;
+      this.logger.assign({ userId: reqUser.id });
     } catch (error) {
-      console.error("Could not fetch or create user", error);
       throw new InternalServerErrorException();
     }
 

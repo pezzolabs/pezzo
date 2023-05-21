@@ -3,6 +3,18 @@ import { Metric } from "./models/metric.model";
 import { InfluxDbService } from "../influxdb/influxdb.service";
 import { InfluxQueryResult } from "./types";
 import { GetMetricsInput, Granularity } from "./inputs/get-metrics.input";
+import { AuthGuard } from "../auth/auth.guard";
+import {
+  InternalServerErrorException,
+  NotFoundException,
+  UseGuards,
+} from "@nestjs/common";
+import { PinoLogger } from "../logger/pino-logger";
+import { CurrentUser } from "../identity/current-user.decorator";
+import { RequestUser } from "../identity/users.types";
+import { isProjectMemberOrThrow } from "../identity/identity.utils";
+import { PromptsService } from "../prompts/prompts.service";
+import { Prompt } from "@prisma/client";
 
 interface PromptExecutionQueryResult extends InfluxQueryResult {
   prompt_id: string;
@@ -18,12 +30,37 @@ const granularityMapping = {
   [Granularity.month]: "1mo",
 };
 
+@UseGuards(AuthGuard)
 @Resolver(() => Metric)
 export class MetricsResolver {
-  constructor(private influxService: InfluxDbService) {}
+  constructor(
+    private influxService: InfluxDbService,
+    private promptService: PromptsService,
+    private readonly logger: PinoLogger
+  ) {}
 
   @Query(() => [Metric])
-  async metrics(@Args("data") data: GetMetricsInput) {
+  async metrics(
+    @Args("data") data: GetMetricsInput,
+    @CurrentUser() user: RequestUser
+  ) {
+    this.logger.assign({ data });
+    this.logger.info("Getting metrics");
+
+    let prompt: Prompt;
+
+    try {
+      prompt = await this.promptService.getPrompt(data.promptId);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting prompt");
+      throw new InternalServerErrorException();
+    }
+
+    if (!prompt) {
+      throw new NotFoundException();
+    }
+
+    isProjectMemberOrThrow(user, prompt.projectId);
     const queryClient = this.influxService.getQueryApi("primary");
 
     const {

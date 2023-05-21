@@ -4,6 +4,7 @@ import { PrismaService } from "../prisma.service";
 import { PublishPromptInput } from "./inputs/create-prompt-environment.input";
 import {
   ConflictException,
+  InternalServerErrorException,
   NotFoundException,
   UseGuards,
 } from "@nestjs/common";
@@ -13,6 +14,8 @@ import { AuthGuard } from "../auth/auth.guard";
 import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
 import { isProjectMemberOrThrow } from "../identity/identity.utils";
+import { PinoLogger } from "../logger/pino-logger";
+import { Environment } from "@prisma/client";
 
 @UseGuards(AuthGuard)
 @Resolver()
@@ -20,7 +23,8 @@ export class PromptEnvironmentsResolver {
   constructor(
     private promptEnvironmentsService: PromptEnvironmentsService,
     private environmentsService: EnvironmentsService,
-    private prisma: PrismaService
+    private prisma: PrismaService,
+    private logger: PinoLogger
   ) {}
 
   @Mutation(() => PromptEnvironment)
@@ -29,11 +33,20 @@ export class PromptEnvironmentsResolver {
     @CurrentUser() user: RequestUser
   ) {
     isProjectMemberOrThrow(user, data.projectId);
+    this.logger.assign({ ...data });
+    this.logger.info("Publishing prompt to environment");
 
-    const environment = await this.environmentsService.getBySlug(
-      data.environmentSlug,
-      data.projectId
-    );
+    let environment: Environment;
+
+    try {
+      environment = await this.environmentsService.getBySlug(
+        data.environmentSlug,
+        data.projectId
+      );
+    } catch (error) {
+      this.logger.error({ error }, "Error getting environment");
+      throw new InternalServerErrorException();
+    }
 
     if (!environment) {
       throw new NotFoundException(
@@ -41,14 +54,20 @@ export class PromptEnvironmentsResolver {
       );
     }
 
-    const versionAlreadyPublished =
-      await this.prisma.promptEnvironment.findFirst({
+    let versionAlreadyPublished: PromptEnvironment;
+
+    try {
+      versionAlreadyPublished = await this.prisma.promptEnvironment.findFirst({
         where: {
           promptId: data.promptId,
           environmentId: environment.id,
           promptVersionSha: data.promptVersionSha,
         },
       });
+    } catch (error) {
+      this.logger.error({ error }, "Error checking prompt already published");
+      throw new InternalServerErrorException();
+    }
 
     if (versionAlreadyPublished) {
       throw new ConflictException(
@@ -56,13 +75,22 @@ export class PromptEnvironmentsResolver {
       );
     }
 
-    const promptEnvironment =
-      await this.promptEnvironmentsService.createPromptEnvironment(
-        data.promptId,
-        environment.id,
-        environment.slug,
-        data.promptVersionSha
-      );
+    let promptEnvironment: PromptEnvironment;
+
+    try {
+      promptEnvironment =
+        await this.promptEnvironmentsService.createPromptEnvironment(
+          data.promptId,
+          environment.id,
+          environment.slug,
+          data.promptVersionSha
+        );
+      this.logger.info("Prompt published to environment");
+    } catch (error) {
+      this.logger.error({ error }, "Error creating prompt environment");
+      throw new InternalServerErrorException();
+    }
+
     return promptEnvironment;
   }
 }

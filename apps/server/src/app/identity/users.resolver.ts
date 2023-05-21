@@ -7,6 +7,7 @@ import { RequestUser, ExtendedUser } from "./users.types";
 
 import { UsersService } from "./users.service";
 import { UpdateProfileInput } from "./inputs/update-profile.input";
+import { PinoLogger } from "../logger/pino-logger";
 
 type SupertokensMetadata = {
   metadata:
@@ -17,10 +18,15 @@ type SupertokensMetadata = {
 @UseGuards(AuthGuard)
 @Resolver(() => ExtendedUser)
 export class UsersResolver {
-  constructor(private usersService: UsersService) {}
+  constructor(private usersService: UsersService, private logger: PinoLogger) {}
 
   @Query(() => ExtendedUser)
   async me(@CurrentUser() userInfo: RequestUser) {
+    this.logger.info(
+      { userId: userInfo.id, email: userInfo.email },
+      "Getting user"
+    );
+
     const user = await this.usersService.getUser(userInfo.email);
 
     if (!user) {
@@ -53,6 +59,7 @@ export class UsersResolver {
     @CurrentUser() userInfo: RequestUser,
     @Args("data") { name }: UpdateProfileInput
   ) {
+    this.logger.info({ name }, "Updating profile");
     const user = await this.usersService.getUser(userInfo.email);
 
     if (!user) {
