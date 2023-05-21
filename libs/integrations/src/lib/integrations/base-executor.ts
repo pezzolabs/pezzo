@@ -43,8 +43,6 @@ export abstract class BaseExecutor {
     variables: Record<string, string> = {},
     options: ExecuteOptions = {}
   ) {
-    // const prompt = await this.getPrompt(promptName);
-    // const promptVersion = await this.getPromptVersion<T>(prompt.id);
     const prompt = await this.pezzoClient.getDeployedPromptVersion(promptName);
     const promptVersion = prompt.deployedVersion;
     const { settings, content } = promptVersion;
@@ -104,6 +102,7 @@ export abstract class BaseExecutor {
           totalCost:
             executionResult.promptCost + executionResult.completionCost,
           duration,
+          environmentSlug: this.pezzoClient.options.environment,
         },
         options.autoParseJSON
       );
@@ -127,6 +126,7 @@ export abstract class BaseExecutor {
         completionCost: executionResult.completionCost,
         totalCost: executionResult.promptCost + executionResult.completionCost,
         duration,
+        environmentSlug: this.pezzoClient.options.environment,
       });
       throw e;
     }

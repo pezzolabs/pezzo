@@ -1,8 +1,8 @@
-import { Breadcrumb, Button, Col, Row, Space, Tabs, Typography } from "antd";
+import { Breadcrumb, Col, Row, Space, Tabs, Typography } from "antd";
 import {
   EditOutlined,
   HistoryOutlined,
-  DeleteOutlined,
+  DashboardOutlined,
 } from "@ant-design/icons";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
@@ -13,6 +13,7 @@ import { DeletePromptConfirmationModal } from "../../../components/prompts/Delet
 import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCurrentProject } from "../../../lib/providers/CurrentProjectContext";
+import { DashboardView } from "../../../components/prompts/views/DashboardView";
 
 const TabLabel = styled.div`
   display: inline-block;
@@ -29,7 +30,7 @@ export const PromptPage = () => {
   const params = useParams();
   const { project } = useCurrentProject();
   const { setCurrentPromptId, prompt, integration } = useCurrentPrompt();
-  const [activeView, setActiveView] = useState("edit");
+  const [activeView, setActiveView] = useState("dashboard");
   const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] =
     useState(false);
 
@@ -39,6 +40,14 @@ export const PromptPage = () => {
     }
   }, [params.promptId]);
   const tabs = [
+    {
+      label: (
+        <TabLabel>
+          <DashboardOutlined /> Dashboard
+        </TabLabel>
+      ),
+      key: "dashboard",
+    },
     {
       label: (
         <TabLabel>
@@ -116,8 +125,9 @@ export const PromptPage = () => {
           onChange={(selectedView) => setActiveView(selectedView)}
         ></Tabs>
 
-        {activeView === "history" && <PromptHistoryView />}
+        {activeView === "dashboard" && <DashboardView />}
         {activeView === "edit" && <PromptEditView />}
+        {activeView === "history" && <PromptHistoryView />}
       </>
     )
   );

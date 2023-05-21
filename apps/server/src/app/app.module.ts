@@ -2,7 +2,7 @@ import { join } from "path";
 import { Module } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import Joi from "joi";
 
 import { ApolloServerPluginLandingPageLocalDefault } from "@apollo/server/plugin/landingPage/default";
@@ -14,6 +14,9 @@ import { PromptEnvironmentsModule } from "./prompt-environments/prompt-environme
 import { CredentialsModule } from "./credentials/credentials.module";
 import { AuthModule } from "./auth/auth.module";
 import { IdentityModule } from "./identity/identity.module";
+import { InfluxDbModule } from "./influxdb/influxdb.module";
+import { InfluxModuleOptions } from "./influxdb/types";
+import { MetricsModule } from "./metrics/metrics.module";
 
 const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
 
@@ -52,8 +55,20 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
         PromptEnvironmentsModule,
         CredentialsModule,
         IdentityModule,
+        MetricsModule,
       ],
       formatError,
+    }),
+    InfluxDbModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: async (
+        config: ConfigService
+      ): Promise<InfluxModuleOptions> => {
+        return {
+          url: "http://localhost:8086",
+          token: "token123"
+        };
+      },
     }),
     AuthModule.forRoot(),
     PromptsModule,
@@ -61,6 +76,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
     PromptEnvironmentsModule,
     CredentialsModule,
     IdentityModule,
+    MetricsModule,
   ],
   controllers: [HealthController],
 })

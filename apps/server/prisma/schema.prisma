@@ -120,6 +120,7 @@ model PromptEnvironment {
 
 model PromptExecution {
   id                  String                @id @default(cuid())
+  environmentSlug     String
   prompt              Prompt                @relation(fields: [promptId], references: [id])
   promptId            String
   promptVersionSha    String

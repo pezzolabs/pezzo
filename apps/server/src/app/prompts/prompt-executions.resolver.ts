@@ -19,14 +19,17 @@ import {
 } from "@nestjs/common";
 import { ApiKeyProjectId } from "../identity/api-key-project-id.decorator";
 import { isProjectMemberOrThrow } from "../identity/identity.utils";
+import { InfluxDbService } from "../influxdb/influxdb.service";
+import { Point } from "@influxdata/influxdb-client";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Prompt)
 export class PromptExecutionsResolver {
   constructor(
     private prisma: PrismaService,
-    private readonly promptsService: PromptsService,
-    private readonly promptTesterService: PromptTesterService
+    private promptsService: PromptsService,
+    private promptTesterService: PromptTesterService,
+    private influxService: InfluxDbService, 
   ) {}
 
   @Query(() => PromptExecution)
@@ -80,7 +83,6 @@ export class PromptExecutionsResolver {
     @Args("data") data: PromptExecutionCreateInput,
     @ApiKeyProjectId() projectId: string
   ) {
-    console.log("report");
     const promptId = data.prompt.connect.id;
     const prompt = await this.promptsService.getPrompt(promptId);
 
@@ -95,6 +97,26 @@ export class PromptExecutionsResolver {
     const execution = await this.prisma.promptExecution.create({
       data,
     });
+
+    const writeClient = this.influxService.getWriteApi("primary", "primary");
+    const point = new Point('prompt_execution')
+      .tag('prompt_id', execution.promptId)
+      .tag('prompt_version_sha', execution.promptVersionSha)
+      .tag('project_id', prompt.projectId)
+      .tag('prompt_name', prompt.name)
+      .tag('prompt_integration_id',  prompt.integrationId)
+      .stringField('status', execution.status)
+      .floatField('duration', execution.duration / 1000)
+      .floatField('prompt_cost', execution.promptCost)
+      .floatField('completion_cost', execution.completionCost)
+      .floatField('total_cost', execution.totalCost)
+      .intField('prompt_tokens', execution.promptTokens)
+      .intField('completion_tokens', execution.completionTokens)
+      .intField('total_tokens', execution.totalTokens);
+
+    writeClient.writePoint(point);
+    writeClient.flush();
+
     return execution;
   }
 
@@ -132,6 +154,7 @@ export class PromptExecutionsResolver {
     execution.totalCost = result.totalCost;
     execution.error = result.error;
     execution.variables = result.variables;
+    execution.environmentSlug = "none";
 
     return execution;
   }
