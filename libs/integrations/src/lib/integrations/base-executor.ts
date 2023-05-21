@@ -102,7 +102,6 @@ export abstract class BaseExecutor {
           totalCost:
             executionResult.promptCost + executionResult.completionCost,
           duration,
-          environmentSlug: this.pezzoClient.options.environment,
         },
         options.autoParseJSON
       );
