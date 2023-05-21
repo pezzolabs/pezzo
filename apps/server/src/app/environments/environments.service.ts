@@ -5,11 +5,11 @@ import { PrismaService } from "../prisma.service";
 export class EnvironmentsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getBySlug(slug: string, organizationId: string) {
+  async getBySlug(slug: string, projectId: string) {
     const environment = await this.prisma.environment.findFirst({
       where: {
         slug,
-        organizationId,
+        projectId,
       },
     });
 

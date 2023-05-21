@@ -12,6 +12,7 @@ import { EnvironmentsService } from "../environments/environments.service";
 import { AuthGuard } from "../auth/auth.guard";
 import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
+import { isProjectMemberOrThrow } from "../identity/identity.utils";
 
 @UseGuards(AuthGuard)
 @Resolver()
@@ -27,11 +28,11 @@ export class PromptEnvironmentsResolver {
     @Args("data") data: PublishPromptInput,
     @CurrentUser() user: RequestUser
   ) {
-    const organizationId = user.orgMemberships[0].organizationId;
+    isProjectMemberOrThrow(user, data.projectId);
 
     const environment = await this.environmentsService.getBySlug(
       data.environmentSlug,
-      organizationId
+      data.projectId
     );
 
     if (!environment) {

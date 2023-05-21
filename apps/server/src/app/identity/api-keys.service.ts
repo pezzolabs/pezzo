@@ -5,20 +5,20 @@ import { PrismaService } from "../prisma.service";
 export class APIKeysService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getApiKeyByOrganizationId(organizationId: string) {
+  async getApiKeyByProjectId(projectId: string) {
     const apiKey = await this.prisma.apiKey.findFirst({
       where: {
-        organizationId: organizationId,
+        projectId,
       },
     });
 
     return apiKey;
   }
 
-  async getApiKey(id: string) {
-    const apiKey = await this.prisma.apiKey.findUnique({
+  async getApiKey(value: string) {
+    const apiKey = await this.prisma.apiKey.findFirst({
       where: {
-        id: id,
+        id: value,
       },
     });
 

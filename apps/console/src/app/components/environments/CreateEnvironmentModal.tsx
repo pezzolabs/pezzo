@@ -6,6 +6,7 @@ import { slugify } from "../../lib/utils/string-utils";
 import { CREATE_ENVIRONMENT } from "../../graphql/mutations/environments";
 import { CreateEnvironmentMutation } from "@pezzo/graphql";
 import { GraphQLErrorResponse } from "../../graphql/types";
+import { useCurrentProject } from "../../lib/providers/CurrentProjectContext";
 
 interface Props {
   open: boolean;
@@ -19,6 +20,7 @@ type Inputs = {
 };
 
 export const CreateEnvironmentModal = ({ open, onClose, onCreated }: Props) => {
+  const { project } = useCurrentProject();
   const [form] = Form.useForm<Inputs>();
 
   const { mutate, error } = useMutation<
@@ -31,6 +33,7 @@ export const CreateEnvironmentModal = ({ open, onClose, onCreated }: Props) => {
         data: {
           slug: data.slug,
           name: data.name,
+          projectId: project.id,
         },
       }),
     onSuccess: (data) => {

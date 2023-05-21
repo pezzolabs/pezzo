@@ -7,6 +7,7 @@ import { PromptIntegrationSelector } from "./PromptIntegrationSelector";
 import { integrations } from "@pezzo/integrations";
 import { CreatePromptMutation } from "@pezzo/graphql";
 import { GraphQLErrorResponse } from "../../graphql/types";
+import { useCurrentProject } from "../../lib/providers/CurrentProjectContext";
 
 const integrationsArray = Object.values(integrations);
 
@@ -22,6 +23,7 @@ type Inputs = {
 };
 
 export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
+  const { project } = useCurrentProject();
   const [form] = Form.useForm<Inputs>();
 
   const { mutate, error } = useMutation<
@@ -34,6 +36,7 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
         data: {
           name: data.name,
           integrationId: data.integrationId,
+          projectId: project.id,
         },
       }),
     onSuccess: (data) => {

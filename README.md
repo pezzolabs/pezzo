@@ -45,10 +45,9 @@ Below you can find the roadmap with all upcoming features:
 | API Keys Support           | ✅ Done        |
 | Pezzo OpenAI Integration   | ✅ Done        |
 | Pezzo Client for Node.js   | ✅ Done        |
+| Error Handling             | ✅ Done   |
 | Demo app                   | 🚧 In Progress |
 | Logger                     | 🚧 In Progress |
-| Error Handling             | 🚧 In Progress |
-| Public Sandbox Environment | 🚧 In Progress |
 | Test Coverage              | 🔜 Coming Soon |
 | Pezzo Client for Python    | 🔜 Coming Soon |
 | Pezzo Client for Golang    | 🔜 Coming Soon |
@@ -95,7 +94,7 @@ npm install
 
 ### Spin up development dependencies via Docker Compose
 
-Pezzo relies on Postgres and [Supertokens](https://supertokens.com/). You can spin it up using Docker Compose:
+Pezzo relies on Postgres, [InfluxDB](https://github.com/influxdata/influxdb) and [Supertokens](https://supertokens.com/). You can spin it up using Docker Compose:
 
 ```
 docker-compose -f docker-compose.dev.yaml up

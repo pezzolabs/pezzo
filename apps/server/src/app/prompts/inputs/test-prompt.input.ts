@@ -4,6 +4,9 @@ import GraphQLJSON from "graphql-type-json";
 @InputType()
 export class TestPromptInput {
   @Field(() => String, { nullable: false })
+  projectId: string;
+
+  @Field(() => String, { nullable: false })
   integrationId: string;
 
   @Field(() => String, { nullable: false })

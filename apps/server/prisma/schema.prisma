@@ -24,16 +24,39 @@ model User {
   createdAt      DateTime             @default(now())
   updatedAt      DateTime             @updatedAt
   orgMemberships OrganizationMember[]
+  ProjectMember  ProjectMember[]
+}
+
+model Project {
+  id              String           @id @default(cuid())
+  slug            String
+  name            String
+  organization    Organization     @relation(fields: [organizationId], references: [id])
+  organizationId  String
+  apiKeys         ApiKey[]
+  providerApiKeys ProviderApiKey[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  members         ProjectMember[]
+}
+
+model ProjectMember {
+  id        String   @id @default(cuid())
+  projectId String
+  userId    String
+  project   Project  @relation(fields: [projectId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Organization {
-  id              String               @id @default(cuid())
-  name            String
-  createdAt       DateTime             @default(now())
-  updatedAt       DateTime             @updatedAt
-  members         OrganizationMember[]
-  apiKeys         ApiKey[]
-  providerApiKeys ProviderApiKey[]
+  id        String               @id @default(cuid())
+  name      String
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+  members   OrganizationMember[]
+  projects  Project[]
 }
 
 model OrganizationMember {
@@ -55,7 +78,7 @@ model Environment {
   id                 String              @id @default(cuid())
   slug               String
   name               String
-  organizationId     String
+  projectId          String
   promptEnvironments PromptEnvironment[]
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
@@ -64,7 +87,7 @@ model Environment {
 model Prompt {
   id                 String              @id @default(cuid())
   integrationId      String
-  organizationId     String
+  projectId          String
   name               String
   executions         PromptExecution[]
   promptEnvironments PromptEnvironment[]
@@ -123,19 +146,19 @@ enum PromptExecutionStatus {
 }
 
 model ApiKey {
-  id             String       @id
-  name           String       @default("Default")
-  organizationId String
-  Organization   Organization @relation(fields: [organizationId], references: [id])
-  createdAt      DateTime     @default(now())
+  id        String   @id
+  name      String   @default("Default")
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id])
+  createdAt DateTime @default(now())
 }
 
 model ProviderApiKey {
-  id             String       @id @default(cuid())
-  provider       String
-  value          String
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  id        String   @id @default(cuid())
+  provider  String
+  value     String
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
