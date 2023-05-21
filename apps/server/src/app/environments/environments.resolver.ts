@@ -3,6 +3,7 @@ import { Environment } from "../../@generated/environment/environment.model";
 import { PrismaService } from "../prisma.service";
 import {
   ConflictException,
+  InternalServerErrorException,
   NotFoundException,
   UseGuards,
 } from "@nestjs/common";
@@ -14,13 +15,15 @@ import { GetEnvironmentBySlugInput } from "./inputs/get-environment-by-slug.inpu
 import { EnvironmentsService } from "./environments.service";
 import { GetEnvironmentsInput } from "./inputs/get-environments.input";
 import { isProjectMemberOrThrow } from "../identity/identity.utils";
+import { PinoLogger } from "../logger/pino-logger";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Environment)
 export class EnvironmentsResolver {
   constructor(
     private prisma: PrismaService,
-    private environmentsService: EnvironmentsService
+    private environmentsService: EnvironmentsService,
+    private logger: PinoLogger
   ) {}
 
   @Query(() => [Environment])
@@ -28,12 +31,16 @@ export class EnvironmentsResolver {
     @Args("data") data: GetEnvironmentsInput,
     @CurrentUser() user: RequestUser
   ) {
-    const environments = await this.prisma.environment.findMany({
-      where: {
-        projectId: data.projectId,
-      },
-    });
-    return environments;
+    const { projectId } = data;
+    isProjectMemberOrThrow(user, projectId);
+  
+    try {
+      this.logger.info({ projectId }, "Getting environments");
+      return this.environmentsService.getAll(projectId);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting environments");
+      throw new InternalServerErrorException();
+    }
   }
 
   @Query(() => Environment)
@@ -41,16 +48,24 @@ export class EnvironmentsResolver {
     @Args("data") data: GetEnvironmentBySlugInput,
     @CurrentUser() user: RequestUser
   ) {
-    isProjectMemberOrThrow(user, data.projectId);
+    const { slug, projectId } = data;
+    isProjectMemberOrThrow(user, projectId);
+    let environment: Environment;
 
-    const environment = await this.environmentsService.getBySlug(
-      data.slug,
-      data.projectId
-    );
+    try {
+      this.logger.info({ slug, projectId }, "Getting environment");
+      environment = await this.environmentsService.getBySlug(
+        slug,
+        projectId
+      );
+    } catch (error) {
+      this.logger.error({ error }, "Error getting environment");
+      throw new InternalServerErrorException();
+    }
 
     if (!environment) {
       throw new NotFoundException(
-        `Environment with slug "${data.slug}" not found`
+        `Environment with slug "${slug}" not found`
       );
     }
 
@@ -62,25 +77,32 @@ export class EnvironmentsResolver {
     @Args("data") data: CreateEnvironmentInput,
     @CurrentUser() user: RequestUser
   ) {
+    const { projectId, slug } = data;
+    isProjectMemberOrThrow(user, projectId);
+
     const exists = await this.environmentsService.getBySlug(
-      data.slug,
-      data.projectId
+      slug,
+      projectId
     );
 
     if (exists) {
       throw new ConflictException(
-        `Environment with slug "${data.slug}" already exists`
+        `Environment with slug "${slug}" already exists`
       );
     }
 
-    const environment = await this.prisma.environment.create({
-      data: {
-        name: data.name,
-        slug: data.slug,
-        projectId: data.projectId,
-      },
-    });
-
-    return environment;
+    try {
+      this.logger.info({ slug, projectId }, "Creating environment");
+      return this.prisma.environment.create({
+        data: {
+          name: data.name,
+          slug,
+          projectId,
+        },
+      });
+    } catch (error) {
+      this.logger.error({ error }, "Error creating environment");
+      throw new InternalServerErrorException();
+    }
   }
 }
