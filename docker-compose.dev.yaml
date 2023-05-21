@@ -28,7 +28,6 @@ services:
       INFLUXDB_ADMIN_USER_PASSWORD: "admin"
       INFLUXDB_USER: "admin"
       INFLUXDB_USER_PASSWORD: "admin"
-      INFLUXDB_DB: "pezzo"
     ports:
       - "8086:8086"
     volumes:
