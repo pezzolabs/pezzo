@@ -43,8 +43,6 @@ export abstract class BaseExecutor {
     variables: Record<string, string> = {},
     options: ExecuteOptions = {}
   ) {
-    // const prompt = await this.getPrompt(promptName);
-    // const promptVersion = await this.getPromptVersion<T>(prompt.id);
     const prompt = await this.pezzoClient.getDeployedPromptVersion(promptName);
     const promptVersion = prompt.deployedVersion;
     const { settings, content } = promptVersion;
@@ -81,6 +79,7 @@ export abstract class BaseExecutor {
           status
         );
       }
+
       return this.pezzoClient.reportPromptExecution<T>(
         {
           prompt: promptConnect,
@@ -107,7 +106,7 @@ export abstract class BaseExecutor {
         options.autoParseJSON
       );
     } catch (e) {
-      this.pezzoClient.reportPromptExecution<T>({
+      await this.pezzoClient.reportPromptExecution<T>({
         prompt: promptConnect,
         promptVersionSha: promptVersion.sha,
         status: "Error",
