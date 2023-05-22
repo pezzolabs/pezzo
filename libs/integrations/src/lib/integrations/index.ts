@@ -2,6 +2,9 @@ export * from "./types";
 
 import { IntegrationDefinition } from "./types";
 
+export { OpenAIExecutor } from "./openai/executor";
+export { AI21Executor } from "./ai21/executor";
+
 import ai21Integration from "./ai21";
 import openaiIntegration from "./openai";
 

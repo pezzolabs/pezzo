@@ -1,6 +1,7 @@
 import { IntegrationDefinition } from "../types";
 import { defaultSettings, settingsSchema } from "./settings";
 export * from "./types";
+export { AI21Executor } from "./executor";
 
 const integration: IntegrationDefinition = {
   id: "ai21",
