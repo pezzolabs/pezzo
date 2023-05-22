@@ -37,7 +37,7 @@ export abstract class BaseExecutor {
 
   abstract execute(props: ExecuteProps): Promise<ExecuteResult<string>>;
 
-  async run<T>(
+  async run<T = string>(
     promptName: string,
     variables: Record<string, any> = {},
     options: ExecuteOptions = {}
