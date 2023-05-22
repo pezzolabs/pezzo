@@ -48,7 +48,6 @@ function generatePackageJson() {
     "reflect-metadata",
     "prisma",
     "prisma-nestjs-graphql",
-    "pino",
     "pino-pretty",
   ];
   const dependencies = implicitDeps.reduce((acc, dep) => {

@@ -6,8 +6,8 @@
   "implicitDependencies": ["server"],
   "targets": {
     "build": {
-      "dependsOn": ["graphql:graphql:codegen:offline"],
-      "executor": "@nx/js:tsc",
+      "dependsOn": ["graphql:codegen:offline"],
+      "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/graphql",
@@ -24,14 +24,14 @@
       "dependsOn": ["build"]
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["libs/graphql/**/*.ts"]
       }
     },
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "@nrwl/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "libs/graphql/jest.config.ts",
