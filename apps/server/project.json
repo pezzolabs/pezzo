@@ -12,7 +12,7 @@
         "^prebuild",
         "prebuild"
       ],
-      "executor": "@nrwl/webpack:webpack",
+      "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
@@ -21,6 +21,7 @@
         "outputPath": "dist/apps/server",
         "main": "apps/server/src/main.ts",
         "tsConfig": "apps/server/tsconfig.app.json",
+        "webpackConfig": "apps/server/webpack.config.js",
         "assets": [
           "apps/server/src/assets",
           {
@@ -33,9 +34,7 @@
             "input": "apps/server",
             "output": "prisma"
           }
-        ],
-        "isolatedConfig": true,
-        "webpackConfig": "apps/server/webpack.config.js"
+        ]
       },
       "configurations": {
         "development": {},
@@ -43,7 +42,7 @@
       }
     },
     "serve": {
-      "executor": "@nrwl/js:node",
+      "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "dependsOn": ["prisma:generate", "^prebuild", "prebuild"],
       "options": {
@@ -59,14 +58,14 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["apps/server/**/*.ts"]
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "apps/server/jest.config.ts",
@@ -81,13 +80,16 @@
     },
     "prisma:generate": {
       "executor": "nx:run-commands",
-      "outputs": ["apps/server/prisma/schema.prisma"],
+      "inputs": ["{projectRoot}/prisma/schema.prisma"],
+      "outputs": ["{projectRoot}/src/@generated"],
       "options": {
         "command": "npx prisma generate --schema apps/server/prisma/schema.prisma"
       }
     },
     "graphql:schema-generate": {
       "dependsOn": ["prisma:generate"],
+      "inputs": ["{projectRoot}/prisma/schema.prisma"],
+      "outputs": ["{projectRoot}/src/schema.graphql"],
       "executor": "nx:run-commands",
       "options": {
         "command": "GITHUB_ACTIONS=true npx ts-node -P apps/server/tsconfig.app.json -r tsconfig-paths/register apps/server/scripts/generate-graphql-schema.ts"
