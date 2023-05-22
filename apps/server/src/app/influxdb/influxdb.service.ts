@@ -7,7 +7,7 @@ export class InfluxDbService {
   connection: InfluxDB | null;
 
   constructor(
-    @Inject("INFLUX_DB_OPTIONS") private readonly clientOptions: ClientOptions,
+    @Inject("INFLUX_DB_OPTIONS") private readonly clientOptions: ClientOptions
   ) {
     // This must be here for offline GraphQL schema generation to work, until we find
     // a neater solution to mock dependencies.
