@@ -1,6 +1,5 @@
 import { Pezzo } from "@pezzo/client";
 
-import { GraphQLFormattedError } from "graphql";
 import { interpolateVariables } from "../utils/interpolate-variables";
 import { PezzoClientError } from "./types";
 
@@ -40,7 +39,7 @@ export abstract class BaseExecutor {
 
   async run<T>(
     promptName: string,
-    variables: Record<string, string> = {},
+    variables: Record<string, any> = {},
     options: ExecuteOptions = {}
   ) {
     const prompt = await this.pezzoClient.getDeployedPromptVersion(promptName);
