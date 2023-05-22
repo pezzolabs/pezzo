@@ -41,7 +41,7 @@ export class ProviderApiKeysService {
     projectId: string
   ) {
     const exists = await this.prisma.providerApiKey.findFirst({
-      where: { provider },
+      where: { provider, projectId },
     });
 
     if (exists) {

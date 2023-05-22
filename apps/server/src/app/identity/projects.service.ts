@@ -1,10 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { randomBytes } from "crypto";
+import { PinoLogger } from "../logger/pino-logger";
 
 @Injectable()
 export class ProjectsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private logger: PinoLogger) {}
 
   async createProject(
     name: string,
@@ -12,6 +13,7 @@ export class ProjectsService {
     organizationId: string,
     creatorUserId: string
   ) {
+    this.logger.info("Creating project in database");
     const project = await this.prisma.project.create({
       data: {
         name,
@@ -25,6 +27,9 @@ export class ProjectsService {
       },
     });
 
+    this.logger
+      .assign({ projectId: project.id })
+      .info("Creating API key for project");
     const projectApiKeyValue = `pez_${randomBytes(32).toString("hex")}`;
     await this.prisma.apiKey.create({
       data: {

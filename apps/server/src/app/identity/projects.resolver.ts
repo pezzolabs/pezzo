@@ -5,6 +5,7 @@ import { ProjectsService } from "./projects.service";
 import { AuthGuard } from "../auth/auth.guard";
 import {
   ConflictException,
+  InternalServerErrorException,
   NotFoundException,
   UseGuards,
 } from "@nestjs/common";
@@ -13,18 +14,31 @@ import { CurrentUser } from "./current-user.decorator";
 import { RequestUser } from "./users.types";
 import { slugify } from "@pezzo/common";
 import { ProjectWhereUniqueInput } from "../../@generated/project/project-where-unique.input";
+import { PinoLogger } from "../logger/pino-logger";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Project)
 export class ProjectsResolver {
-  constructor(private projectsService: ProjectsService) {}
+  constructor(
+    private projectsService: ProjectsService,
+    private logger: PinoLogger
+  ) {}
 
   @Query(() => Project)
   async project(
     @Args("data") data: ProjectWhereUniqueInput,
     @CurrentUser() user: RequestUser
   ) {
-    const project = await this.projectsService.getProjectById(data.id);
+    const { id: projectId } = data;
+    let project: Project;
+    this.logger.assign({ projectId }).info("Getting project");
+
+    try {
+      project = await this.projectsService.getProjectById(projectId);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting project");
+      throw new InternalServerErrorException();
+    }
 
     if (!project) {
       throw new NotFoundException();
@@ -37,7 +51,14 @@ export class ProjectsResolver {
   @Query(() => [Project])
   async projects(@CurrentUser() user: RequestUser) {
     const orgId = user.orgMemberships[0].organizationId;
-    return this.projectsService.getProjectsByOrgId(orgId);
+    this.logger.assign({ orgId }).info("Getting projects");
+
+    try {
+      return this.projectsService.getProjectsByOrgId(orgId);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting projects");
+      throw new InternalServerErrorException();
+    }
   }
 
   @Mutation(() => Project)
@@ -45,22 +66,37 @@ export class ProjectsResolver {
     @Args("data") data: CreateProjectInput,
     @CurrentUser() user: RequestUser
   ) {
-    isOrgAdminOrThrow(user, data.organizationId);
+    const { organizationId, name } = data;
+    isOrgAdminOrThrow(user, organizationId);
+    this.logger.assign({ organizationId, name }).info("Creating project");
+
     const slug = slugify(data.name);
-    const exists = await this.projectsService.getProjectBySlug(
-      slug,
-      data.organizationId
-    );
+    let exists: Project;
+
+    try {
+      exists = await this.projectsService.getProjectBySlug(
+        slug,
+        data.organizationId
+      );
+    } catch (error) {
+      this.logger.error({ error }, "Error checking for existing project");
+      throw new InternalServerErrorException();
+    }
 
     if (exists) {
       throw new ConflictException(`Project with slug "${slug}" already exists`);
     }
 
-    return this.projectsService.createProject(
-      data.name,
-      slug,
-      data.organizationId,
-      user.id
-    );
+    try {
+      return this.projectsService.createProject(
+        data.name,
+        slug,
+        data.organizationId,
+        user.id
+      );
+    } catch (error) {
+      this.logger.error({ error }, "Error creating project");
+      throw new InternalServerErrorException();
+    }
   }
 }

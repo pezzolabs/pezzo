@@ -10,6 +10,7 @@ import { EnvironmentsModule } from "../environments/environments.module";
 
 @Module({
   imports: [CredentialsModule, IdentityModule, EnvironmentsModule],
+  exports: [PromptsService],
   providers: [
     PrismaService,
     PromptsResolver,

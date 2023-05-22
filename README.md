@@ -1,4 +1,14 @@
 <p align="center">
+<img src="https://github.com/pezzolabs/pezzo/actions/workflows/ci.yaml/badge.svg" />
+<a href="CODE_OF_CONDUCT.md">
+  <img src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg" alt="Contributor Covenant">
+</a>
+<a href="https://opensource.org/licenses/Apache-2.0">
+  <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License">
+</a>
+  <img src="https://img.shields.io/discord/1105803596475404358?label=Discord"/>
+
+<p align="center">
   <img src=".github/assets/logo-dark.svg" width="300px">
   <br />
   <strong>
@@ -14,9 +24,13 @@
 </p>
 
 <p align="center">
-  <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a69f118df70ad7828d4_icon_clyde_blurple_RGB.svg" width="70px" style="margin-bottom: 10px;">
+  <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a69f118df70ad7828d4_icon_clyde_blurple_RGB.svg" width="40px" style="margin-bottom: 10px;">
   <br />
   <a href="https://discord.gg/gjGzuph7">Join Pezzo on Discord</a>
+</p>
+
+<p align="center">
+  <a href="https://forms.gle/dg7fXnG5WKkeAUb59"><strong>Click here to sign up for early access to Pezzo Cloud! 🌩️</strong></a>
 </p>
 
 # Features
@@ -37,20 +51,20 @@
 
 Below you can find the roadmap with all upcoming features:
 
-| **Feature**                | **Status**     |
-| -------------------------- | -------------- |
-| Documentation Site         | ✅ Done        |
-| Auth                       | ✅ Done        |
-| Official Helm Chart        | ✅ Done        |
-| API Keys Support           | ✅ Done        |
-| Pezzo OpenAI Integration   | ✅ Done        |
-| Pezzo Client for Node.js   | ✅ Done        |
-| Error Handling             | ✅ Done   |
-| Demo app                   | 🚧 In Progress |
-| Logger                     | 🚧 In Progress |
-| Test Coverage              | 🔜 Coming Soon |
-| Pezzo Client for Python    | 🔜 Coming Soon |
-| Pezzo Client for Golang    | 🔜 Coming Soon |
+| **Feature**              | **Status**     |
+| ------------------------ | -------------- |
+| Documentation Site       | ✅ Done        |
+| Auth                     | ✅ Done        |
+| Official Helm Chart      | ✅ Done        |
+| API Keys Support         | ✅ Done        |
+| Pezzo OpenAI Integration | ✅ Done        |
+| Pezzo Client for Node.js | ✅ Done        |
+| Error Handling           | ✅ Done        |
+| Logger                   | ✅ Done        |
+| Demo app                 | 🚧 In Progress |
+| Test Coverage            | 🔜 Coming Soon |
+| Pezzo Client for Python  | 🔜 Coming Soon |
+| Pezzo Client for Golang  | 🔜 Coming Soon |
 
 If you are missing features, please create an issue and we'll consider adding them to the roadmap.
 
