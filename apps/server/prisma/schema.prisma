@@ -101,7 +101,7 @@ model PromptVersion {
   content            String
   settings           Json
   promptId           String
-  prompt             Prompt              @relation(fields: [promptId], references: [id])
+  prompt             Prompt              @relation(fields: [promptId], references: [id], onDelete: Cascade)
   createdAt          DateTime            @default(now())
   promptEnvironments PromptEnvironment[]
   message            String?
@@ -112,7 +112,7 @@ model PromptEnvironment {
   promptId         String
   environmentId    String
   createdAt        DateTime       @default(now())
-  prompt           Prompt         @relation(fields: [promptId], references: [id])
+  prompt           Prompt         @relation(fields: [promptId], references: [id], onDelete: Cascade)
   promptVersionSha String
   promptVersion    PromptVersion? @relation(fields: [promptVersionSha], references: [sha])
   environment      Environment    @relation(fields: [environmentId], references: [id])
@@ -120,7 +120,7 @@ model PromptEnvironment {
 
 model PromptExecution {
   id                  String                @id @default(cuid())
-  prompt              Prompt                @relation(fields: [promptId], references: [id])
+  prompt              Prompt                @relation(fields: [promptId], references: [id], onDelete: Cascade)
   promptId            String
   promptVersionSha    String
   timestamp           DateTime              @default(now())

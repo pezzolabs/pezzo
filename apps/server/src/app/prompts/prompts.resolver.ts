@@ -235,6 +235,18 @@ export class PromptsResolver {
     }
   }
 
+  @Mutation(() => Boolean)
+  async deletePrompt(@Args("promptId") promptId: string, @CurrentUser() user: RequestUser) {
+    isProjectMemberOrThrow(user, promptId);
+    try {
+      await this.promptsService.deletePrompt(promptId);
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  }
+
   @Mutation(() => Prompt)
   async updatePrompt(
     @Args("data") data: PromptUpdateInput,

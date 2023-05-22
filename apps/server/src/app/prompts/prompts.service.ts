@@ -16,6 +16,24 @@ export class PromptsService {
     return prompt;
   }
 
+  async deletePrompt(promptId: string) {
+    // Delete prompt versions first
+    await this.prisma.promptVersion.deleteMany({
+      where: {
+        promptId,
+      },
+    });
+
+    // Delete prompt
+    const deletedPrompt = await this.prisma.prompt.delete({
+      where: {
+        id: promptId,
+      },
+    });
+
+    return deletedPrompt;
+  }
+
   async getPromptByName(name: string, projectId: string) {
     const prompt = await this.prisma.prompt.findFirst({
       where: {
