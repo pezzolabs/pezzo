@@ -40,13 +40,7 @@
     "sharedGlobals": ["{workspaceRoot}/babel.config.json"]
   },
   "generators": {
-    "@nrwl/next": {
-      "application": {
-        "style": "css",
-        "linter": "eslint"
-      }
-    },
-    "@nx/react": {
+    "@nrwl/react": {
       "application": {
         "style": "@emotion/styled",
         "linter": "eslint",
@@ -58,6 +52,12 @@
       },
       "library": {
         "style": "@emotion/styled",
+        "linter": "eslint"
+      }
+    },
+    "@nrwl/next": {
+      "application": {
+        "style": "css",
         "linter": "eslint"
       }
     }

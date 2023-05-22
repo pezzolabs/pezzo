@@ -1,4 +1,1 @@
 .github
-**/schema.graphql
-**/@generated
-libs/common/src/version.json
