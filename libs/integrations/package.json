@@ -1,7 +1,7 @@
 {
   "name": "@pezzo/integrations",
   "description": "Pezzo integrations for various platforms",
-  "version": "0.0.17-alpha",
+  "version": "0.0.19-alpha",
   "type": "commonjs",
   "author": "Ariel Weinberger",
   "keywords": [
@@ -30,6 +30,11 @@
     "tslib": "^2.3.0"
   },
   "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "require": "./src/index.js",
+      "types": "./src/index.d.ts"
+    },
     "./ai21": {
       "import": "./src/lib/integrations/ai21/index.js",
       "require": "./src/lib/integrations/ai21/index.js",

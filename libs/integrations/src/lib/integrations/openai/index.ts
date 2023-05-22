@@ -1,6 +1,7 @@
 import { IntegrationDefinition } from "../types";
 import { defaultSettings, settingsSchema } from "./settings";
 export * from "./types";
+export { OpenAIExecutor } from "./executor";
 
 const integration: IntegrationDefinition = {
   id: "openai",
