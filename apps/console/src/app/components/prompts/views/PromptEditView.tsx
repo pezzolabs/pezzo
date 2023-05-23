@@ -9,6 +9,7 @@ import {
 } from "@ant-design/icons";
 import { css } from "@emotion/css";
 import {
+  PromptEditFormInputs,
   getDraftPromptData,
   usePromptEdit,
 } from "../../../lib/hooks/usePromptEdit";
@@ -50,8 +51,7 @@ export const PromptEditView = () => {
     form.resetFields();
   }, [prompt.id, currentPromptVersion]);
 
-  const handleTest = async (values) => {
-    console.log(values);
+  const handleTest = async (values: PromptEditFormInputs) => {
     await runTest({
       content: values.content,
       settings: values.settings,
