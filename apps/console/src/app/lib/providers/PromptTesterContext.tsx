@@ -68,7 +68,6 @@ export const PromptTesterProvider = ({ children }) => {
           variables: input.variables,
         },
       });
-      console.log(result.testPrompt);
       setTestResult(result.testPrompt);
       setIsTestInProgress(false);
     },
