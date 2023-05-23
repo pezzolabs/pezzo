@@ -33,7 +33,7 @@ export class ProjectsService {
         name: "Development",
         slug: "development",
         projectId: project.id,
-      }
+      },
     });
 
     this.logger
