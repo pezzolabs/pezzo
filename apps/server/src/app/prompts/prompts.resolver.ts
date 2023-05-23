@@ -228,6 +228,7 @@ export class PromptsResolver {
     }
 
     let prompt: Prompt;
+
     try {
       prompt = await this.promptsService.createPrompt(
         name,
@@ -307,6 +308,10 @@ export class PromptsResolver {
 
     try {
       const promptVersion = await this.promptsService.createPromptVersion(data);
+      this.analytics.track("PROMPT_VERSION:CREATED", user.id, {
+        projectId: prompt.projectId,
+        promptId: prompt.id,
+      });
       return promptVersion;
     } catch (error) {
       this.logger.error({ error }, "Error creating prompt version");
