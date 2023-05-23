@@ -7,7 +7,7 @@ import { PromptIntegrationSelector } from "./PromptIntegrationSelector";
 import { integrations } from "@pezzo/integrations";
 import { CreatePromptMutation } from "@pezzo/graphql";
 import { GraphQLErrorResponse } from "../../graphql/types";
-import { useCurrentProject } from "../../lib/providers/CurrentProjectContext";
+import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 
 const integrationsArray = Object.values(integrations);
 

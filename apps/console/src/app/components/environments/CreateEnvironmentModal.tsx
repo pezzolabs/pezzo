@@ -6,7 +6,7 @@ import { slugify } from "../../lib/utils/string-utils";
 import { CREATE_ENVIRONMENT } from "../../graphql/mutations/environments";
 import { CreateEnvironmentMutation } from "@pezzo/graphql";
 import { GraphQLErrorResponse } from "../../graphql/types";
-import { useCurrentProject } from "../../lib/providers/CurrentProjectContext";
+import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 
 interface Props {
   open: boolean;

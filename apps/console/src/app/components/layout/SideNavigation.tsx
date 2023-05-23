@@ -12,7 +12,7 @@ import { signOut } from "supertokens-auth-react/recipe/thirdpartyemailpassword";
 
 import { colors } from "../../lib/theme/colors";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
-import { useCurrentProject } from "../../lib/providers/CurrentProjectContext";
+import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 
 const topMenuItems = [
   {

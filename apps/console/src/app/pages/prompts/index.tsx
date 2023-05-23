@@ -8,7 +8,7 @@ import { useState } from "react";
 import { css } from "@emotion/css";
 import { Button, Space, Spin, Typography, theme } from "antd";
 import { useNavigate } from "react-router-dom";
-import { useCurrentProject } from "../../lib/providers/CurrentProjectContext";
+import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 
 export const PromptsPage = () => {
   const { project, isLoading: isProjectsLoading } = useCurrentProject();
@@ -16,13 +16,14 @@ export const PromptsPage = () => {
   const navigate = useNavigate();
   const [isCreatePromptModalOpen, setIsCreatePromptModalOpen] = useState(false);
   const { data, isLoading: isLoadingPrompts } = useQuery({
-    queryKey: ["prompts"],
+    queryKey: ["prompts", project?.id],
     queryFn: () =>
       gqlClient.request(GET_ALL_PROMPTS, { data: { projectId: project?.id } }),
     enabled: !!project?.id,
   });
 
   const isLoading = isLoadingPrompts || isProjectsLoading;
+
   return (
     <>
       <CreatePromptModal
