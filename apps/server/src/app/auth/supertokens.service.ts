@@ -55,25 +55,27 @@ export class SupertokensService {
 
                     const userCreatePromise =
                       this.usersService.createUser(userCreateRequest);
+
                     const fullName = input.formFields.find(
                       (field) => field.id === "name"
                     )?.value;
-                    if (!fullName) {
+                    if (fullName) {
+                      await Promise.all([
+                        userCreatePromise,
+                        UserMetadata.updateUserMetadata(res.user.id, {
+                          profile: {
+                            name: fullName,
+                          },
+                        }),
+                      ]).catch((err) => {
+                        console.error(
+                          { err },
+                          "Failed to update user metadata fields"
+                        );
+                      });
+                    } else {
                       await userCreatePromise;
                     }
-                    await Promise.all([
-                      userCreatePromise,
-                      UserMetadata.updateUserMetadata(res.user.id, {
-                        profile: {
-                          name: fullName,
-                        },
-                      }),
-                    ]).catch((err) => {
-                      console.error(
-                        { err },
-                        "Failed to update user metadata fields"
-                      );
-                    });
                   }
                   return res;
                 },
