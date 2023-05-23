@@ -1,5 +1,4 @@
 import { Field, InputType } from "@nestjs/graphql";
-import { OpenAIChatSettings } from "@pezzo/common";
 import GraphQLJSON from "graphql-type-json";
 
 @InputType()
@@ -14,5 +13,5 @@ export class CreatePromptVersionInput {
   promptId: string;
 
   @Field(() => GraphQLJSON, { nullable: false })
-  settings: OpenAIChatSettings;
+  settings: any;
 }
