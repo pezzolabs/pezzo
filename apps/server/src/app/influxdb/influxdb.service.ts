@@ -7,9 +7,14 @@ export class InfluxDbService {
   connection: InfluxDB | null;
 
   constructor(
-    @Inject("INFLUX_DB_OPTIONS") private readonly config: ClientOptions
+    @Inject("INFLUX_DB_OPTIONS") private readonly clientOptions: ClientOptions
   ) {
-    this.connection = new InfluxDB(this.config);
+    // This must be here for offline GraphQL schema generation to work, until we find
+    // a neater solution to mock dependencies.
+    const skipInstantiation = process.env.GITHUB_ACTIONS === "true";
+    if (!skipInstantiation) {
+      this.connection = new InfluxDB(this.clientOptions);
+    }
   }
 
   getWriteApi(org: string, bucket: string) {

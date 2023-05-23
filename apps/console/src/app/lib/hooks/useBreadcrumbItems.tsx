@@ -93,6 +93,5 @@ export const useBreadcrumbItems = () => {
 
   if (breadcrumbItems.length === 1) return [];
 
-  console.log(extraBreadcrumbItems);
   return breadcrumbItems;
 };

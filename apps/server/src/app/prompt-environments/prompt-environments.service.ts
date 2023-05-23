@@ -19,7 +19,6 @@ export class PromptEnvironmentsService {
         promptVersionSha,
       },
       update: {
-        id: `${environmentId}_${promptId}`,
         promptId,
         environmentId,
         promptVersionSha,
