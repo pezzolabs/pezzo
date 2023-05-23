@@ -72,7 +72,7 @@ export class EnvironmentsResolver {
     @Args("data") data: CreateEnvironmentInput,
     @CurrentUser() user: RequestUser
   ) {
-    const { projectId, slug } = data;
+    const { projectId, slug, name } = data;
     this.logger.assign({ projectId, slug });
     isProjectMemberOrThrow(user, projectId);
     let exists: Environment;
@@ -92,13 +92,7 @@ export class EnvironmentsResolver {
 
     try {
       this.logger.info("Creating environment");
-      return this.prisma.environment.create({
-        data: {
-          name: data.name,
-          slug,
-          projectId,
-        },
-      });
+      return this.environmentsService.createEnvironment(name, slug, projectId);
     } catch (error) {
       this.logger.error({ error }, "Error creating environment");
       throw new InternalServerErrorException();
