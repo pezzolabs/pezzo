@@ -38,6 +38,7 @@ import { GetProjectPromptsInput } from "./inputs/get-project-prompts.input";
 import { ApiKeyProjectId } from "../identity/api-key-project-id.decorator";
 import { ResolveDeployedVersionInput } from "./inputs/resolve-deployed-version.input";
 import { PinoLogger } from "../logger/pino-logger";
+import { AnalyticsService } from "../analytics/analytics.service";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Prompt)
@@ -46,7 +47,8 @@ export class PromptsResolver {
     private prisma: PrismaService,
     private promptsService: PromptsService,
     private environmentsService: EnvironmentsService,
-    private logger: PinoLogger
+    private logger: PinoLogger,
+    private analytics: AnalyticsService
   ) {}
 
   @Query(() => [Prompt])
@@ -163,6 +165,10 @@ export class PromptsResolver {
       throw new NotFoundException(`Prompt "${data.name}" not found"`);
     }
 
+    this.analytics.track("PROMPT:FIND_WITH_API_KEY", null, {
+      projectId,
+      promptId: prompt.id,
+    });
     return prompt;
   }
 
@@ -228,11 +234,17 @@ export class PromptsResolver {
         integrationId,
         projectId
       );
-      return prompt;
     } catch (error) {
       this.logger.error({ error }, "Error creating prompt");
       throw new InternalServerErrorException();
     }
+
+    this.analytics.track("PROMPT:CREATED", user.id, {
+      projectId,
+      promptId: prompt.id,
+    });
+
+    return prompt;
   }
 
   @Mutation(() => Prompt)

@@ -1,8 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Analytics } from '@segment/analytics-node';
-import { AnalyticsEvents, AnalyticsPayloads } from './events.types';
-import { PinoLogger } from '../logger/pino-logger';
+import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { Analytics } from "@segment/analytics-node";
+import { AnalyticsPayloads } from "./events.types";
 
 @Injectable()
 export class AnalyticsService {
@@ -11,32 +10,31 @@ export class AnalyticsService {
 
   constructor(
     private configService: ConfigService,
-    private logger: PinoLogger,
     private config: ConfigService
   ) {
-    const segmentApiKey = this.config.get('SEGMENT_KEY');
-    
+    const segmentApiKey = this.config.get("SEGMENT_KEY");
+
     if (segmentApiKey) {
-      const writeKey: string = this.configService.get('SEGMENT_KEY');
-  
+      const writeKey: string = this.configService.get("SEGMENT_KEY");
+
       if (!writeKey) {
-        throw new Error('Segment write key not found (SEGMENT_KEY)');
+        throw new Error("Segment write key not found (SEGMENT_KEY)");
       }
-  
-      this.logger.info('Initializing Segment Analytics');
+
+      console.log("Initializing Segment Analytics");
       this.analytics = new Analytics({
-        writeKey
+        writeKey,
       });
-
-      this.logger.info('Segment analytics enabled');
     } else {
-      this.logger.info('Segment analytics disabled');
+      console.log("Segment analytics disabled");
     }
-
   }
 
-
-  track<K extends AnalyticsEvents>(event: K, userId: string, properties: AnalyticsPayloads[K]) {
+  track<K extends keyof AnalyticsPayloads>(
+    event: K,
+    userId: string,
+    properties: AnalyticsPayloads[K]
+  ) {
     if (!this.analytics) {
       return;
     }

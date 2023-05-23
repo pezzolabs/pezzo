@@ -7,7 +7,6 @@ import { CurrentUser } from "./current-user.decorator";
 import { RequestUser } from "./users.types";
 import { GetApiKeyInput } from "./inputs/get-api-key.input";
 import { isProjectMemberOrThrow } from "./identity.utils";
-import { OrganizationMember } from "../../@generated/organization-member/organization-member.model";
 import { PinoLogger } from "../logger/pino-logger";
 
 @UseGuards(AuthGuard)
