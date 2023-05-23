@@ -5,7 +5,7 @@ import { gqlClient } from "../graphql";
 import { GetPromptExecutionQuery, PromptExecution } from "@pezzo/graphql";
 import { TestPromptResult } from "@pezzo/client";
 import { useCurrentPrompt } from "./CurrentPromptContext";
-import { useCurrentProject } from "./CurrentProjectContext";
+import { useCurrentProject } from "../hooks/useCurrentProject";
 
 export interface PromptTestInput {
   content: string;

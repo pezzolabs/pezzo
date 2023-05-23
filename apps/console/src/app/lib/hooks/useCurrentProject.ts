@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { useGetProjects } from "../hooks/queries";
+import { useGetProjects } from "./queries";
 
 export const useCurrentProject = () => {
   const { projectId } = useParams();

@@ -7,7 +7,7 @@ import { UPDATE_PROVIDER_API_KEY } from "../../graphql/mutations/api-keys";
 import { gqlClient, queryClient } from "../../lib/graphql";
 import { CreateProviderApiKeyInput } from "@pezzo/graphql";
 import { useEffect } from "react";
-import { useCurrentProject } from "../../lib/providers/CurrentProjectContext";
+import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 
 const APIKeyContainer = styled.div`
   display: flex;
