@@ -22,6 +22,8 @@ import { SessionAuth } from "supertokens-auth-react/recipe/session";
 import { LayoutWrapper } from "./components/layout/LayoutWrapper";
 import { OnboardingPage } from "./pages/onboarding";
 import { AuthProvider } from "./lib/providers/AuthProvider";
+import { ThirdpartyEmailPasswordComponentsOverrideProvider } from "supertokens-auth-react/recipe/thirdpartyemailpassword";
+import LogoSquare from "../assets/logo.svg";
 
 initSuperTokens();
 
@@ -30,84 +32,107 @@ export function App() {
     <ThemeProvider>
       <main className="app">
         <SuperTokensWrapper>
-          <QueryClientProvider client={queryClient}>
-            {/* Non-authorized routes */}
-            <Routes>
-              {/* We don't render the LayoutWrapper for non-authorized routes */}
-              {getSuperTokensRoutesForReactRouterDom(reactRouterDom, [
-                ThirdPartyEmailPasswordPreBuiltUI,
-              ])}
-            </Routes>
-            {/* Authorized routes */}
-            <Routes>
-              <Route
-                element={
-                  <SessionAuth>
-                    <AuthProvider>
-                      <Outlet />
-                    </AuthProvider>
-                  </SessionAuth>
-                }
-              >
+          <ThirdpartyEmailPasswordComponentsOverrideProvider
+            components={{
+              ThirdPartyEmailPasswordHeader_Override: ({
+                DefaultComponent,
+                ...props
+              }) => {
+                return (
+                  <div>
+                    <img
+                      src={LogoSquare}
+                      alt="Logo"
+                      style={{
+                        height: 60,
+                        marginBottom: 24,
+                      }}
+                    />
+                    <DefaultComponent {...props} />
+                  </div>
+                );
+              },
+            }}
+          >
+            <QueryClientProvider client={queryClient}>
+              {/* Non-authorized routes */}
+              <Routes>
+                {/* We don't render the LayoutWrapper for non-authorized routes */}
+                {getSuperTokensRoutesForReactRouterDom(reactRouterDom, [
+                  ThirdPartyEmailPasswordPreBuiltUI,
+                ])}
+              </Routes>
+              {/* Authorized routes */}
+              <Routes>
                 <Route
-                  path="/onboarding"
                   element={
-                    <LayoutWrapper withSideNav={false}>
-                      <OnboardingPage />
-                    </LayoutWrapper>
-                  }
-                />
-
-                {/* Projects selection */}
-                <Route
-                  element={
-                    <LayoutWrapper withSideNav={false}>
-                      <Outlet />
-                    </LayoutWrapper>
-                  }
-                >
-                  <Route index element={<Navigate to="/projects" />} />
-                  <Route path="/projects" element={<ProjectsPage />} />
-                </Route>
-
-                {/* In-project routes */}
-                <Route
-                  path="/projects/:projectId"
-                  element={
-                    <CurrentPromptProvider>
-                      <PromptTesterProvider>
-                        <LayoutWrapper withSideNav={true}>
-                          <Outlet />
-                        </LayoutWrapper>
-                      </PromptTesterProvider>
-                    </CurrentPromptProvider>
+                    <SessionAuth>
+                      <AuthProvider>
+                        <Outlet />
+                      </AuthProvider>
+                    </SessionAuth>
                   }
                 >
                   <Route
-                    index
-                    path="/projects/:projectId/prompts"
-                    element={<PromptsPage />}
+                    path="/onboarding"
+                    element={
+                      <LayoutWrapper withSideNav={false}>
+                        <OnboardingPage />
+                      </LayoutWrapper>
+                    }
                   />
+
+                  {/* Projects selection */}
                   <Route
-                    path="/projects/:projectId/prompts/:promptId"
-                    element={<PromptPage />}
-                  />
+                    element={
+                      <LayoutWrapper withSideNav={false}>
+                        <Outlet />
+                      </LayoutWrapper>
+                    }
+                  >
+                    <Route index element={<Navigate to="/projects" />} />
+                    <Route path="/projects" element={<ProjectsPage />} />
+                  </Route>
+
+                  {/* In-project routes */}
                   <Route
-                    path="/projects/:projectId/environments"
-                    element={<EnvironmentsPage />}
-                  />
-                  <Route
-                    path="/projects/:projectId/api-keys"
-                    element={<APIKeysPage />}
-                  />
-                  <Route
-                    path="/projects/:projectId/info"
-                    element={<InfoPage />}
-                  />
+                    path="/projects/:projectId"
+                    element={
+                      <CurrentPromptProvider>
+                        <PromptTesterProvider>
+                          <LayoutWrapper withSideNav={true}>
+                            <Outlet />
+                          </LayoutWrapper>
+                        </PromptTesterProvider>
+                      </CurrentPromptProvider>
+                    }
+                  >
+                    <Route
+                      index
+                      path="/projects/:projectId/prompts"
+                      element={<PromptsPage />}
+                    />
+                    <Route
+                      path="/projects/:projectId/prompts/:promptId"
+                      element={<PromptPage />}
+                    />
+                    <Route
+                      path="/projects/:projectId/environments"
+                      element={<EnvironmentsPage />}
+                    />
+                    <Route
+                      path="/projects/:projectId/api-keys"
+                      element={<APIKeysPage />}
+                    />
+                    <Route
+                      path="/projects/:projectId/info"
+                      element={<InfoPage />}
+                    />
+                  </Route>
                 </Route>
-              </Route>
-            </Routes>
-          </QueryClientProvider>
+              </Routes>
+            </QueryClientProvider>
+          </ThirdpartyEmailPasswordComponentsOverrideProvider>
         </SuperTokensWrapper>
       </main>
     </ThemeProvider>
