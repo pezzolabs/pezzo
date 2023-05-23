@@ -8,7 +8,7 @@ import { useState } from "react";
 import { css } from "@emotion/css";
 import { Button, Space, Spin, Typography, theme } from "antd";
 import { useNavigate } from "react-router-dom";
-import { useCurrentProject } from "../../lib/providers/CurrentProjectContext";
+import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 
 export const PromptsPage = () => {
   const { project, isLoading: isProjectsLoading } = useCurrentProject();
@@ -23,6 +23,7 @@ export const PromptsPage = () => {
   });
 
   const isLoading = isLoadingPrompts || isProjectsLoading;
+
   return (
     <>
       <CreatePromptModal
