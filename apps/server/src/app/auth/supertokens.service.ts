@@ -37,6 +37,9 @@ export class SupertokensService {
         UserMetadata.init(),
         ThirdPartyEmailPassword.init({
           providers: this.getActiveProviders(),
+          signUpFeature: {
+            formFields: [{ id: "name" }],
+          },
           override: {
             apis: (originalImplementation) => {
               return {
@@ -50,7 +53,27 @@ export class SupertokensService {
                       id: res.user.id,
                     };
 
-                    this.usersService.createUser(userCreateRequest);
+                    const userCreatePromise =
+                      this.usersService.createUser(userCreateRequest);
+                    const fullName = input.formFields.find(
+                      (field) => field.id === "name"
+                    )?.value;
+                    if (!fullName) {
+                      await userCreatePromise;
+                    }
+                    await Promise.all([
+                      userCreatePromise,
+                      UserMetadata.updateUserMetadata(res.user.id, {
+                        profile: {
+                          name: fullName,
+                        },
+                      }),
+                    ]).catch((err) => {
+                      console.error(
+                        { err },
+                        "Failed to update user metadata fields"
+                      );
+                    });
                   }
                   return res;
                 },
@@ -92,7 +115,10 @@ export class SupertokensService {
                     await UserMetadata.updateUserMetadata(res.user.id, {
                       profile: metadataFields,
                     }).catch((err) => {
-                      console.log("Failed to update user metadata fields", err);
+                      console.error(
+                        { err },
+                        "Failed to update user metadata fields"
+                      );
                     });
                   }
                   return res;
