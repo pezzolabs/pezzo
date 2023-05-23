@@ -13,6 +13,7 @@ RUN npm i --omit=dev
 COPY ./dist/apps/server .
 RUN chmod +x ./entrypoint.sh
 
+RUN npm i -D prisma-nestjs-graphql
 RUN npx prisma generate
 
 ENV PORT=3000
