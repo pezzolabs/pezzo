@@ -236,7 +236,10 @@ export class PromptsResolver {
   }
 
   @Mutation(() => Boolean)
-  async deletePrompt(@Args("promptId") promptId: string, @CurrentUser() user: RequestUser) {
+  async deletePrompt(
+    @Args("promptId") promptId: string,
+    @CurrentUser() user: RequestUser
+  ) {
     isProjectMemberOrThrow(user, promptId);
     try {
       await this.promptsService.deletePrompt(promptId);
