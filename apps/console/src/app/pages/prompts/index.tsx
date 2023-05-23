@@ -16,7 +16,7 @@ export const PromptsPage = () => {
   const navigate = useNavigate();
   const [isCreatePromptModalOpen, setIsCreatePromptModalOpen] = useState(false);
   const { data, isLoading: isLoadingPrompts } = useQuery({
-    queryKey: ["prompts"],
+    queryKey: ["prompts", project?.id],
     queryFn: () =>
       gqlClient.request(GET_ALL_PROMPTS, { data: { projectId: project?.id } }),
     enabled: !!project?.id,
