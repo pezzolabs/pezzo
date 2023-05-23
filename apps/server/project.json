@@ -7,8 +7,8 @@
   "targets": {
     "build": {
       "dependsOn": [
-        "prisma:generate",
-        "^graphql:codegen:offline",
+        "prisma-generate",
+        "^graphql-codegen-offline",
         "^prebuild",
         "prebuild"
       ],
@@ -78,7 +78,7 @@
         }
       }
     },
-    "prisma:generate": {
+    "prisma-generate": {
       "executor": "nx:run-commands",
       "inputs": ["{projectRoot}/prisma/schema.prisma"],
       "outputs": ["{projectRoot}/src/@generated"],
@@ -86,8 +86,8 @@
         "command": "npx prisma generate --schema apps/server/prisma/schema.prisma"
       }
     },
-    "graphql:schema-generate": {
-      "dependsOn": ["prisma:generate"],
+    "graphql-schema-generate": {
+      "dependsOn": ["prisma-generate"],
       "inputs": ["{projectRoot}/prisma/schema.prisma"],
       "outputs": ["{projectRoot}/src/schema.graphql"],
       "executor": "nx:run-commands",
@@ -95,7 +95,7 @@
         "command": "GITHUB_ACTIONS=true npx ts-node -P apps/server/tsconfig.app.json -r tsconfig-paths/register apps/server/scripts/generate-graphql-schema.ts"
       }
     },
-    "docker:build": {
+    "container-build": {
       "executor": "@nx-tools/nx-container:build",
       "dependsOn": ["build"],
       "defaultConfiguration": "local",

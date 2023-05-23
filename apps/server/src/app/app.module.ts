@@ -46,7 +46,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
         INFLUXDB_TOKEN: Joi.string().required(),
       }),
       // In CI, we need to skip validation because we don't have a .env file
-      // This is consumed by the graphql:schema-generate Nx target
+      // This is consumed by the graphql-schema-generate Nx target
       validate:
         process.env.SKIP_CONFIG_VALIDATION === "true" ? () => ({}) : undefined,
     }),

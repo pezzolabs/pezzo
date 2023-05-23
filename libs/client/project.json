@@ -7,9 +7,9 @@
   "targets": {
     "build": {
       "dependsOn": [
-        "^prisma:generate",
-        "^graphql:schema-generate",
-        "^graphql:codegen:offline"
+        "^prisma-generate",
+        "^graphql-schema-generate",
+        "^graphql-codegen-offline"
       ],
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
