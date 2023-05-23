@@ -4,7 +4,7 @@ import {
   GET_ALL_PROVIDER_API_KEYS,
   GET_CURRENT_PEZZO_API_KEY,
 } from "../../graphql/queries/api-keys";
-import { useCurrentProject } from "../providers/CurrentProjectContext";
+import { useCurrentProject } from "../hooks/useCurrentProject";
 import { GET_ME } from "../../graphql/queries/users";
 import { GET_ALL_PROJECTS } from "../../graphql/queries/projects";
 
