@@ -12,7 +12,7 @@ import { css } from "@emotion/css";
 export const PromptHistoryView = () => {
   const { prompt } = useCurrentPrompt();
   const { promptExecutions } = usePromptExecutions(prompt.id);
-  const { openTester, loadTestResult } = usePromptTester();
+  const { openTester, loadTestResult, isTesterOpen } = usePromptTester();
 
   const handleInspect = async (promptExecution) => {
     loadTestResult(promptExecution);
@@ -91,7 +91,7 @@ export const PromptHistoryView = () => {
 
   return (
     <>
-      <PromptTester />
+      {isTesterOpen && <PromptTester />}
       <Table columns={columns} dataSource={data} />
     </>
   );

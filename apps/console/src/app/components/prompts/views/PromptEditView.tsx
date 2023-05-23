@@ -33,7 +33,8 @@ export const PromptEditView = () => {
   } = usePromptEdit();
   const { prompt, currentPromptVersion, integration, isDraft } =
     useCurrentPrompt();
-  const { openTester, runTest, isTestInProgress } = usePromptTester();
+  const { openTester, runTest, isTestInProgress, isTesterOpen } =
+    usePromptTester();
   const [isCommitModalOpen, setIsCommitModalOpen] = useState(false);
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
   const [isConsumePromptModalOpen, setIsConsumePromptModalOpen] =
@@ -49,10 +50,11 @@ export const PromptEditView = () => {
     form.resetFields();
   }, [prompt.id, currentPromptVersion]);
 
-  const handleTest = async () => {
+  const handleTest = async (values) => {
+    console.log(values);
     await runTest({
-      content: form.getFieldValue("content"),
-      settings: form.getFieldValue("settings"),
+      content: values.content,
+      settings: values.settings,
       variables,
     });
     openTester();
@@ -84,7 +86,7 @@ export const PromptEditView = () => {
           open={isPublishModalOpen}
         />
       )}
-      <PromptTester />
+      {isTesterOpen && <PromptTester />}
 
       <ConsumePromptModal
         open={isConsumePromptModalOpen}
@@ -133,11 +135,11 @@ export const PromptEditView = () => {
               }
             >
               <Button
-                onClick={handleTest}
                 loading={isTestInProgress}
                 icon={<ExperimentOutlined />}
                 disabled={!isTestEnabled}
-                type="default"
+                htmlType="submit"
+                form="prompt-form"
               >
                 Test
               </Button>
@@ -148,10 +150,11 @@ export const PromptEditView = () => {
 
       <Form
         onValuesChange={handleFormValuesChange}
+        onFinish={handleTest}
         initialValues={initialValues}
         form={form}
         layout="vertical"
-        name="basic"
+        name="prompt-form"
         autoComplete="off"
       >
         <Row>
