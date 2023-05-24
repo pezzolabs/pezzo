@@ -1,6 +1,6 @@
 {
   "name": "pezzo",
-  "version": "0.0.22-alpha",
+  "version": "0.1.0",
   "license": "MIT",
   "scripts": {},
   "private": true,
@@ -22,6 +22,7 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nrwl/nest": "^15.9.2",
     "@prisma/client": "^3.14.0",
+    "@segment/analytics-node": "^1.0.0-beta.26",
     "@swc/helpers": "^0.5.0",
     "@tanstack/react-query": "^4.29.3",
     "@uiw/codemirror-theme-material": "^4.19.16",

@@ -40,7 +40,10 @@ export class PromptsService {
     return prompt;
   }
 
-  async createPromptVersion(data: CreatePromptVersionInput) {
+  async createPromptVersion(
+    data: CreatePromptVersionInput,
+    createdByUserId: string
+  ) {
     const { content, settings, promptId } = data;
 
     const sha = sha256(
@@ -53,6 +56,7 @@ export class PromptsService {
         content,
         settings: settings as any, // eslint-disable-line @typescript-eslint/no-explicit-any
         promptId,
+        createdById: createdByUserId,
       },
     });
 

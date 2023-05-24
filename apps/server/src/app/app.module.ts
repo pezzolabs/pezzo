@@ -20,6 +20,7 @@ import { InfluxModuleOptions } from "./influxdb/types";
 import { MetricsModule } from "./metrics/metrics.module";
 import { LoggerModule } from "./logger/logger.module";
 import { PinoLogger } from "./logger/pino-logger";
+import { AnalyticsModule } from "./analytics/analytics.module";
 
 const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
 
@@ -31,6 +32,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
       envFilePath: ".env",
       validationSchema: Joi.object({
         PINO_PRETTIFY: Joi.boolean().default(false),
+        SEGMENT_KEY: Joi.string().optional().default(null),
         DATABASE_URL: Joi.string().required(),
         PORT: Joi.number().default(3000),
         SUPERTOKENS_CONNECTION_URI: Joi.string().required(),
@@ -82,6 +84,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
       },
     }),
     AuthModule.forRoot(),
+    AnalyticsModule,
     PromptsModule,
     EnvironmentsModule,
     PromptEnvironmentsModule,

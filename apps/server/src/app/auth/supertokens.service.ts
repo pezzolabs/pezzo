@@ -11,13 +11,14 @@ import { ConfigService } from "@nestjs/config";
 import { google } from "googleapis";
 import { UsersService } from "../identity/users.service";
 import { UserCreateRequest } from "../identity/users.types";
+import { AnalyticsService } from "../analytics/analytics.service";
 
-console.log(process.env.SUPERTOKENS_API_KEY);
 @Injectable()
 export class SupertokensService {
   constructor(
     private readonly config: ConfigService,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
+    private readonly analytics: AnalyticsService
   ) {
     supertokens.init({
       appInfo: {
@@ -113,6 +114,10 @@ export class SupertokensService {
 
                     if (!user) {
                       await this.usersService.createUser(userCreateRequest);
+                      this.analytics.track("USER:SIGNUP", res.user.id, {
+                        email: res.user.email,
+                        method: "GOOGLE",
+                      });
                     }
 
                     await UserMetadata.updateUserMetadata(res.user.id, {

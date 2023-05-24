@@ -19,12 +19,14 @@ datasource db {
 }
 
 model User {
-  id             String               @id
-  email          String               @unique
-  createdAt      DateTime             @default(now())
-  updatedAt      DateTime             @updatedAt
-  orgMemberships OrganizationMember[]
-  ProjectMember  ProjectMember[]
+  id                    String               @id
+  email                 String               @unique
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+  orgMemberships        OrganizationMember[]
+  projectMemberships    ProjectMember[]
+  publishedPrompts      PromptEnvironment[]
+  createdPromptVersions PromptVersion[]
 }
 
 model Project {
@@ -105,6 +107,8 @@ model PromptVersion {
   createdAt          DateTime            @default(now())
   promptEnvironments PromptEnvironment[]
   message            String?
+  createdById        String
+  createdBy          User                @relation(fields: [createdById], references: [id])
 }
 
 model PromptEnvironment {
@@ -116,6 +120,8 @@ model PromptEnvironment {
   promptVersionSha String
   promptVersion    PromptVersion? @relation(fields: [promptVersionSha], references: [sha])
   environment      Environment    @relation(fields: [environmentId], references: [id])
+  publishedById    String
+  publishedBy      User           @relation(fields: [publishedById], references: [id])
 }
 
 model PromptExecution {
