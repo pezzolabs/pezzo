@@ -59,6 +59,7 @@ export class SupertokensService {
                     const fullName = input.formFields.find(
                       (field) => field.id === "name"
                     )?.value;
+
                     if (fullName) {
                       await Promise.all([
                         userCreatePromise,

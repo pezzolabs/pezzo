@@ -62,7 +62,7 @@ export const initSuperTokens = () => {
 
                 [data-supertokens~=container] {
                     --palette-background: 51, 51, 51;
-                    --palette-inputBackground: 41, 41, 41;
+                    --palette-inputBackground: ${toRgba(colors.neutral[900])};
                     --palette-inputBorder: 41, 41, 41;
                     --palette-textTitle: 255, 255, 255;
                     --palette-textLabel: 255, 255, 255;
@@ -84,7 +84,8 @@ export const initSuperTokens = () => {
                 }
                 [data-supertokens~=row] {
                     box-shadow: 3px 3px 10px 0 rgba(0, 0, 0, 0.1);
-                    border: 1px solid rgb(var(--palette-inputBorder));
+                    border: 1px solid ${colors.neutral[600]};
+                    background-color: ${colors.neutral[700]};
                     padding: 32px;
                     max-width: 480px;
                     border-radius: 8px;
