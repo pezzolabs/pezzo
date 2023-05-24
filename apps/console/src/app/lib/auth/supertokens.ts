@@ -21,7 +21,6 @@ const toRgba = (hexColor: string) => {
   return `${r}, ${g}, ${b}`;
 };
 
-console.log(toRgba(colors.indigo[400]), colors.indigo[400]);
 const githubEnabled = AUTH_GITHUB_ENABLED === "true";
 const googleEnabled = AUTH_GOOGLE_ENABLED === "true";
 
