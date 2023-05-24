@@ -12,9 +12,12 @@ import { google } from "googleapis";
 import { UsersService } from "../identity/users.service";
 import { UserCreateRequest } from "../identity/users.types";
 import { AnalyticsService } from "../analytics/analytics.service";
+import { PinoLogger } from "../logger/pino-logger";
 
 @Injectable()
 export class SupertokensService {
+  private logger: PinoLogger = new PinoLogger();
+
   constructor(
     private readonly config: ConfigService,
     private readonly usersService: UsersService,
@@ -38,6 +41,9 @@ export class SupertokensService {
         UserMetadata.init(),
         ThirdPartyEmailPassword.init({
           providers: this.getActiveProviders(),
+          signUpFeature: {
+            formFields: [{ id: "name" }],
+          },
           override: {
             apis: (originalImplementation) => {
               return {
@@ -51,11 +57,27 @@ export class SupertokensService {
                       id: res.user.id,
                     };
 
+                    this.logger.assign({ userId: res.user.id });
                     await this.usersService.createUser(userCreateRequest);
-                    this.analytics.track("USER:SIGNUP", res.user.id, {
-                      email: res.user.email,
-                      method: "EMAIL_PASSWORD",
-                    });
+
+                    const fullName = input.formFields.find(
+                      (field) => field.id === "name"
+                    )?.value;
+
+                    if (fullName) {
+                      try {
+                        await UserMetadata.updateUserMetadata(res.user.id, {
+                          profile: {
+                            name: fullName,
+                          },
+                        });
+                      } catch (error) {
+                        this.logger.error(
+                          { error },
+                          "Failed to update user metadata fields"
+                        );
+                      }
+                    }
                   }
                   return res;
                 },
@@ -77,6 +99,8 @@ export class SupertokensService {
                       auth: client,
                       fields: "email,given_name,family_name,picture",
                     });
+
+                    this.logger.assign({ userId: res.user.id });
 
                     const userCreateRequest: UserCreateRequest = {
                       email: data.email,
@@ -100,8 +124,11 @@ export class SupertokensService {
 
                     await UserMetadata.updateUserMetadata(res.user.id, {
                       profile: metadataFields,
-                    }).catch((err) => {
-                      console.log("Failed to update user metadata fields", err);
+                    }).catch((error) => {
+                      this.logger.error(
+                        { error },
+                        "Failed to update user metadata fields"
+                      );
                     });
                   }
                   return res;
