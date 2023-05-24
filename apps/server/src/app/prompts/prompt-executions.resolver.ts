@@ -133,7 +133,7 @@ export class PromptExecutionsResolver {
       integrationId: prompt.integrationId,
       data: {
         status: execution.status,
-        duration: (execution.duration / 1000),
+        duration: execution.duration / 1000,
       },
     });
 
@@ -210,7 +210,7 @@ export class PromptExecutionsResolver {
       executionId: "test",
       data: {
         status: execution.status,
-        duration: (execution.duration / 1000),
+        duration: execution.duration / 1000,
       },
     });
 

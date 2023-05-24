@@ -9,7 +9,8 @@ export class PromptEnvironmentsService {
     promptId: string,
     environmentId: string,
     environmentSlug: string,
-    promptVersionSha: string
+    promptVersionSha: string,
+    publishedByUserId: string
   ) {
     const promptEnvironment = await this.prisma.promptEnvironment.upsert({
       create: {
@@ -17,6 +18,7 @@ export class PromptEnvironmentsService {
         promptId,
         environmentId,
         promptVersionSha,
+        publishedById: publishedByUserId,
       },
       update: {
         promptId,

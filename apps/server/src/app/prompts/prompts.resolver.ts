@@ -307,7 +307,10 @@ export class PromptsResolver {
     isProjectMemberOrThrow(user, prompt.projectId);
 
     try {
-      const promptVersion = await this.promptsService.createPromptVersion(data);
+      const promptVersion = await this.promptsService.createPromptVersion(
+        data,
+        user.id
+      );
       this.analytics.track("PROMPT_VERSION:CREATED", user.id, {
         projectId: prompt.projectId,
         promptId: prompt.id,
