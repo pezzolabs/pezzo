@@ -88,12 +88,14 @@ export class ProjectsResolver {
     }
 
     try {
-      return this.projectsService.createProject(
+      const project = await this.projectsService.createProject(
         data.name,
         slug,
         data.organizationId,
         user.id
       );
+
+      return project;
     } catch (error) {
       this.logger.error({ error }, "Error creating project");
       throw new InternalServerErrorException();

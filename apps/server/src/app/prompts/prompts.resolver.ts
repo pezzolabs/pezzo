@@ -368,6 +368,7 @@ export class PromptsResolver {
     try {
       deployedPrompt = await this.prisma.promptEnvironment.findFirst({
         where: { promptId: prompt.id, environmentId: environment.id },
+        orderBy: { createdAt: "desc" },
       });
     } catch (error) {
       this.logger.error({ error }, "Error getting deployed prompt environment");

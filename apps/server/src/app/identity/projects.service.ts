@@ -27,6 +27,15 @@ export class ProjectsService {
       },
     });
 
+    // Create default environment
+    await this.prisma.environment.create({
+      data: {
+        name: "Development",
+        slug: "development",
+        projectId: project.id,
+      },
+    });
+
     this.logger
       .assign({ projectId: project.id })
       .info("Creating API key for project");

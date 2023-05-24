@@ -48,7 +48,7 @@ export class AuthGuard implements CanActivate {
     const apiKey = await this.apiKeysService.getApiKey(keyValue);
 
     if (!apiKey) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException("Invalid Pezzo API Key");
     }
 
     req.projectId = apiKey.projectId;
