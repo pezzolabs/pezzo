@@ -7,7 +7,7 @@ import pretty from "pino-pretty";
 export class PinoLogger {
   private logger: pino.Logger;
 
-  constructor(@Inject(CONTEXT) private readonly context) {
+  constructor(@Inject(CONTEXT) private readonly context = { requestId: null, logger: null }) {
     const prettyStream = pretty({
       levelFirst: true,
       colorize: true,

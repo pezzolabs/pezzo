@@ -12,13 +12,16 @@ import { google } from "googleapis";
 import { UsersService } from "../identity/users.service";
 import { UserCreateRequest } from "../identity/users.types";
 import { AnalyticsService } from "../analytics/analytics.service";
+import { PinoLogger } from "../logger/pino-logger";
 
 @Injectable()
 export class SupertokensService {
+  private logger: PinoLogger = new PinoLogger();
+  
   constructor(
     private readonly config: ConfigService,
     private readonly usersService: UsersService,
-    private readonly analytics: AnalyticsService
+    private readonly analytics: AnalyticsService,
   ) {
     supertokens.init({
       appInfo: {
@@ -54,6 +57,8 @@ export class SupertokensService {
                       id: res.user.id,
                     };
 
+                    this.logger.assign({ userId: res.user.id });
+
                     const userCreatePromise =
                       this.usersService.createUser(userCreateRequest);
 
@@ -69,9 +74,9 @@ export class SupertokensService {
                             name: fullName,
                           },
                         }),
-                      ]).catch((err) => {
-                        console.error(
-                          { err },
+                      ]).catch((error) => {
+                        this.logger.error(
+                          { error },
                           "Failed to update user metadata fields"
                         );
                       });
@@ -100,6 +105,8 @@ export class SupertokensService {
                       fields: "email,given_name,family_name,picture",
                     });
 
+                    this.logger.assign({ userId: res.user.id });
+
                     const userCreateRequest: UserCreateRequest = {
                       email: data.email,
                       id: res.user.id,
@@ -122,9 +129,9 @@ export class SupertokensService {
 
                     await UserMetadata.updateUserMetadata(res.user.id, {
                       profile: metadataFields,
-                    }).catch((err) => {
-                      console.error(
-                        { err },
+                    }).catch((error) => {
+                      this.logger.error(
+                        { error },
                         "Failed to update user metadata fields"
                       );
                     });
