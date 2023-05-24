@@ -32,18 +32,7 @@ const topMenuItems = [
   },
 ];
 
-const bottomMenuItems = [
-  {
-    key: "info",
-    label: "Info",
-    icon: <QuestionMarkCircleIcon height={18} />,
-  },
-  {
-    key: "signout",
-    label: "Sign Out",
-    icon: <ArrowRightOnRectangleIcon height={18} />,
-  },
-];
+const bottomMenuItems = [];
 
 const SidebarContainer = styled.div`
   background: #141414;
@@ -75,14 +64,7 @@ export const SideNavigation = () => {
     navigate(`/projects/${project.id}/${item.key}`);
   };
 
-  const handleBottomMenuClick = async (item) => {
-    if (item.key === "signout") {
-      await signOut();
-      window.location.href = "/login";
-    }
-
-    if (item.key === "info") navigate(`/projects/${project.id}/info`);
-  };
+  const handleBottomMenuClick = async (_item) => {};
 
   return (
     <Layout.Sider style={{ overflow: "hidden" }} collapsed={isCollapsed}>

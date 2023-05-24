@@ -16,8 +16,12 @@ import { colors } from "../../lib/theme/colors";
 import { useAuthContext } from "../../lib/providers/AuthProvider";
 import { DownOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowRightOnRectangleIcon,
+  QuestionMarkCircleIcon,
+} from "@heroicons/react/24/outline";
 import { signOut } from "supertokens-auth-react/recipe/session";
+import { useNavigate } from "react-router-dom";
 
 const Logo = styled.img`
   height: 40px;
@@ -30,19 +34,31 @@ const UserProfileButton = styled(Button)`
   }
   border: none;
   outline: none;
-
-}
 `;
+
 const menuItems: MenuProps["items"] = [
+  {
+    key: "info",
+    label: (
+      <Row style={{ width: "100%" }} align="middle">
+        <Col>
+          <Typography.Text>Info</Typography.Text>
+        </Col>
+        <Col style={{ marginLeft: "auto" }}>
+          <QuestionMarkCircleIcon height={16} />
+        </Col>
+      </Row>
+    ),
+  },
   {
     key: "signout",
     label: (
       <Row style={{ width: "100%" }} align="middle">
         <Col>
-          <Typography.Text>Sign Out</Typography.Text>
+          <Typography.Text>Sign out</Typography.Text>
         </Col>
         <Col style={{ marginLeft: "auto" }}>
-          <ArrowRightOnRectangleIcon height={14} />
+          <ArrowRightOnRectangleIcon height={16} />
         </Col>
       </Row>
     ),
@@ -59,6 +75,7 @@ const buildInitials = (name: string) => {
 export const Header = () => {
   const { currentUser } = useAuthContext();
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <Layout.Header
@@ -76,7 +93,9 @@ export const Header = () => {
     >
       <div style={{ display: "flex", alignItems: "center" }}>
         <Space size="large">
-          <Logo src={LogoSquare} alt="Logo" />
+          <a href="/">
+            <Logo src={LogoSquare} alt="Logo" />
+          </a>
         </Space>
       </div>
 
@@ -94,7 +113,11 @@ export const Header = () => {
             onClick: async (info) => {
               if (info.key === "signout") {
                 await signOut();
-                window.location.reload();
+                window.location.href = "/login";
+              }
+
+              if (info.key === "info") {
+                navigate(`/info`);
               }
             },
           }}

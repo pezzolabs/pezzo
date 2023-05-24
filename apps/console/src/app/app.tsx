@@ -82,6 +82,15 @@ export function App() {
                     }
                   />
 
+                  <Route
+                    path="/info"
+                    element={
+                      <LayoutWrapper withSideNav={false}>
+                        <InfoPage />
+                      </LayoutWrapper>
+                    }
+                  />
+
                   {/* Projects selection */}
                   <Route
                     element={
@@ -123,10 +132,6 @@ export function App() {
                     <Route
                       path="/projects/:projectId/api-keys"
                       element={<APIKeysPage />}
-                    />
-                    <Route
-                      path="/projects/:projectId/info"
-                      element={<InfoPage />}
                     />
                   </Route>
                 </Route>
