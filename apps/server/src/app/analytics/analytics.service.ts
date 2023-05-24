@@ -39,6 +39,10 @@ export class AnalyticsService {
       return;
     }
 
-    return this.analytics.track({ userId, event, properties: properties });
+    try {
+      return this.analytics.track({ userId, event, properties });
+    } catch (error) {
+      console.error("Error tracking event", error);
+    }
   }
 }

@@ -165,7 +165,7 @@ export class PromptsResolver {
       throw new NotFoundException(`Prompt "${data.name}" not found"`);
     }
 
-    this.analytics.track("PROMPT:FIND_WITH_API_KEY", null, {
+    this.analytics.track("PROMPT:FIND_WITH_API_KEY", "api", {
       projectId,
       promptId: prompt.id,
     });

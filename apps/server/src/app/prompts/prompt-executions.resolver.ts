@@ -126,7 +126,7 @@ export class PromptExecutionsResolver {
       throw new InternalServerErrorException();
     }
 
-    this.analytics.track("PROMPT_EXECUTION:REPORTED", null, {
+    this.analytics.track("PROMPT_EXECUTION:REPORTED", "api", {
       projectId,
       promptId,
       executionId: execution.id,
