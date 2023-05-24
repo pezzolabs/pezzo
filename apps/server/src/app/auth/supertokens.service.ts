@@ -17,11 +17,11 @@ import { PinoLogger } from "../logger/pino-logger";
 @Injectable()
 export class SupertokensService {
   private logger: PinoLogger = new PinoLogger();
-  
+
   constructor(
     private readonly config: ConfigService,
     private readonly usersService: UsersService,
-    private readonly analytics: AnalyticsService,
+    private readonly analytics: AnalyticsService
   ) {
     supertokens.init({
       appInfo: {
@@ -58,30 +58,25 @@ export class SupertokensService {
                     };
 
                     this.logger.assign({ userId: res.user.id });
-
-                    const userCreatePromise =
-                      this.usersService.createUser(userCreateRequest);
+                    await this.usersService.createUser(userCreateRequest);
 
                     const fullName = input.formFields.find(
                       (field) => field.id === "name"
                     )?.value;
 
                     if (fullName) {
-                      await Promise.all([
-                        userCreatePromise,
-                        UserMetadata.updateUserMetadata(res.user.id, {
+                      try {
+                        await UserMetadata.updateUserMetadata(res.user.id, {
                           profile: {
                             name: fullName,
                           },
-                        }),
-                      ]).catch((error) => {
+                        });
+                      } catch (error) {
                         this.logger.error(
                           { error },
                           "Failed to update user metadata fields"
                         );
-                      });
-                    } else {
-                      await userCreatePromise;
+                      }
                     }
                   }
                   return res;
