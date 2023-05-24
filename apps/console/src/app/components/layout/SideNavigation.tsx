@@ -1,17 +1,10 @@
-import {
-  BoltIcon,
-  ServerStackIcon,
-  KeyIcon,
-  ArrowRightOnRectangleIcon,
-} from "@heroicons/react/24/solid";
+import { BoltIcon, ServerStackIcon, KeyIcon } from "@heroicons/react/24/solid";
 import { Layout, Menu } from "antd";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
-import { signOut } from "supertokens-auth-react/recipe/thirdpartyemailpassword";
 
 import { colors } from "../../lib/theme/colors";
-import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 
 const topMenuItems = [
@@ -31,8 +24,6 @@ const topMenuItems = [
     icon: <KeyIcon height={18} />,
   },
 ];
-
-const bottomMenuItems = [];
 
 const SidebarContainer = styled.div`
   background: #141414;
@@ -64,8 +55,6 @@ export const SideNavigation = () => {
     navigate(`/projects/${project.id}/${item.key}`);
   };
 
-  const handleBottomMenuClick = async (_item) => {};
-
   return (
     <Layout.Sider style={{ overflow: "hidden" }} collapsed={isCollapsed}>
       <SidebarContainer>
@@ -74,12 +63,6 @@ export const SideNavigation = () => {
           defaultSelectedKeys={["prompts"]}
           selectedKeys={[location.pathname.replace("/", "")]}
           items={topMenuItems}
-          mode="inline"
-        />
-        <BottomMenu
-          onClick={handleBottomMenuClick}
-          selectedKeys={null}
-          items={bottomMenuItems}
           mode="inline"
         />
       </SidebarContainer>
