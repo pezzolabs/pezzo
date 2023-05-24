@@ -16,6 +16,7 @@ import { RequestUser } from "../identity/users.types";
 import { isProjectMemberOrThrow } from "../identity/identity.utils";
 import { PinoLogger } from "../logger/pino-logger";
 import { Environment } from "@prisma/client";
+import { AnalyticsService } from "../analytics/analytics.service";
 
 @UseGuards(AuthGuard)
 @Resolver()
@@ -24,7 +25,8 @@ export class PromptEnvironmentsResolver {
     private promptEnvironmentsService: PromptEnvironmentsService,
     private environmentsService: EnvironmentsService,
     private prisma: PrismaService,
-    private logger: PinoLogger
+    private logger: PinoLogger,
+    private analytics: AnalyticsService
   ) {}
 
   @Mutation(() => PromptEnvironment)
@@ -90,6 +92,12 @@ export class PromptEnvironmentsResolver {
       this.logger.error({ error }, "Error creating prompt environment");
       throw new InternalServerErrorException();
     }
+
+    this.analytics.track("PROMPT:PUBLISHED", user.id, {
+      projectId: data.projectId,
+      promptId: data.promptId,
+      environmentId: environment.id,
+    });
 
     return promptEnvironment;
   }

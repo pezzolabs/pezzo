@@ -9,13 +9,15 @@ import { AuthGuard } from "../auth/auth.guard";
 import { GetProviderApiKeysInput } from "./inputs/get-provider-api-keys.input";
 import { isProjectMemberOrThrow } from "../identity/identity.utils";
 import { PinoLogger } from "../logger/pino-logger";
+import { AnalyticsService } from "../analytics/analytics.service";
 
 @UseGuards(AuthGuard)
 @Resolver(() => ProviderApiKey)
 export class ProviderApiKeysResolver {
   constructor(
     private providerAPIKeysService: ProviderApiKeysService,
-    private logger: PinoLogger
+    private logger: PinoLogger,
+    private analytics: AnalyticsService
   ) {}
 
   @Query(() => [ProviderApiKey])
@@ -56,6 +58,11 @@ export class ProviderApiKeysResolver {
         value,
         projectId
       );
+
+      this.analytics.track("PROVIDER_API_KEY:CREATED", user.id, {
+        projectId,
+        provider,
+      });
 
       return {
         ...key,

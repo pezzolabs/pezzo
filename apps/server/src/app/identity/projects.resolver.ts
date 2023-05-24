@@ -15,13 +15,15 @@ import { RequestUser } from "./users.types";
 import { slugify } from "@pezzo/common";
 import { ProjectWhereUniqueInput } from "../../@generated/project/project-where-unique.input";
 import { PinoLogger } from "../logger/pino-logger";
+import { AnalyticsService } from "../analytics/analytics.service";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Project)
 export class ProjectsResolver {
   constructor(
     private projectsService: ProjectsService,
-    private logger: PinoLogger
+    private logger: PinoLogger,
+    private analytics: AnalyticsService
   ) {}
 
   @Query(() => Project)
@@ -94,6 +96,11 @@ export class ProjectsResolver {
         data.organizationId,
         user.id
       );
+
+      this.analytics.track("PROJECT:CREATED", user.id, {
+        projectId: project.id,
+        name,
+      });
 
       return project;
     } catch (error) {

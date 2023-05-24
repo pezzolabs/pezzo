@@ -16,14 +16,15 @@ import { EnvironmentsService } from "./environments.service";
 import { GetEnvironmentsInput } from "./inputs/get-environments.input";
 import { isProjectMemberOrThrow } from "../identity/identity.utils";
 import { PinoLogger } from "../logger/pino-logger";
+import { AnalyticsService } from "../analytics/analytics.service";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Environment)
 export class EnvironmentsResolver {
   constructor(
-    private prisma: PrismaService,
     private environmentsService: EnvironmentsService,
-    private logger: PinoLogger
+    private logger: PinoLogger,
+    private analytics: AnalyticsService
   ) {}
 
   @Query(() => [Environment])
@@ -92,7 +93,17 @@ export class EnvironmentsResolver {
 
     try {
       this.logger.info("Creating environment");
-      return this.environmentsService.createEnvironment(name, slug, projectId);
+      const environment = await this.environmentsService.createEnvironment(
+        name,
+        slug,
+        projectId
+      );
+      this.analytics.track("ENVIRONMENT:CREATED", user.id, {
+        projectId,
+        name,
+        environmentId: environment.id,
+      });
+      return environment;
     } catch (error) {
       this.logger.error({ error }, "Error creating environment");
       throw new InternalServerErrorException();
