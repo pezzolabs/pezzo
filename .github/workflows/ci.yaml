@@ -5,12 +5,14 @@ on:
   pull_request:
     branches:
       - "main"
+      - "release/*"
     paths-ignore:
       - "**/*.md"
       - ".github/workflows/release.yaml"
   push:
     branches:
       - "main"
+      - "release/*"
     paths-ignore:
       - "**/*.md"
       - ".github/workflows/release.yaml"
