@@ -85,7 +85,8 @@ export class PromptEnvironmentsResolver {
           data.promptId,
           environment.id,
           environment.slug,
-          data.promptVersionSha
+          data.promptVersionSha,
+          user.id
         );
       this.logger.info("Prompt published to environment");
     } catch (error) {
