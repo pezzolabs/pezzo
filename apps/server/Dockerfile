@@ -1,4 +1,4 @@
-FROM node:18-slim AS base
+FROM node:18 AS base
 LABEL org.opencontainers.image.source https://github.com/pezzolabs/pezzo
 
 RUN apt-get update
