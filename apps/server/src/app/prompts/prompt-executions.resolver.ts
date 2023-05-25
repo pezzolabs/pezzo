@@ -119,7 +119,25 @@ export class PromptExecutionsResolver {
 
     try {
       execution = await this.prisma.promptExecution.create({
-        data,
+        data: {
+          prompt: data.prompt,
+          promptVersionSha: data.promptVersionSha,
+          timestamp: data.timestamp,
+          status: data.status,
+          content: data.content,
+          interpolatedContent: data.interpolatedContent,
+          settings: data.settings,
+          result: data.result,
+          duration: data.duration,
+          promptTokens: data.promptTokens,
+          completionTokens: data.completionTokens,
+          totalTokens: data.totalTokens,
+          promptCost: data.promptCost,
+          completionCost: data.completionCost,
+          totalCost: data.totalCost,
+          error: data.error,
+          variables: data.variables,
+        },
       });
     } catch (error) {
       this.logger.error({ error }, "Error reporting prompt execution");

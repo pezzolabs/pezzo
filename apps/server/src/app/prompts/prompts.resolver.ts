@@ -248,43 +248,6 @@ export class PromptsResolver {
     return prompt;
   }
 
-  @Mutation(() => Prompt)
-  async updatePrompt(
-    @Args("data") data: PromptUpdateInput,
-    @CurrentUser() user: RequestUser
-  ) {
-    this.logger.assign({ ...data }).info("Updating prompt");
-    let exists: Prompt;
-
-    try {
-      exists = await this.promptsService.getPrompt(data.id.set);
-    } catch (error) {
-      this.logger.error({ error }, "Error getting existing prompt");
-      throw new InternalServerErrorException();
-    }
-
-    if (!exists) {
-      throw new NotFoundException();
-    }
-
-    isProjectMemberOrThrow(user, exists.projectId);
-
-    try {
-      const prompt = await this.prisma.prompt.update({
-        where: {
-          id: data.id.set,
-        },
-        data: {
-          ...data,
-        },
-      });
-      return prompt;
-    } catch (error) {
-      this.logger.error({ error }, "Error updating prompt");
-      throw new InternalServerErrorException();
-    }
-  }
-
   @Mutation(() => PromptVersion)
   async createPromptVersion(
     @Args("data") data: CreatePromptVersionInput,
