@@ -60,7 +60,6 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        platform: ["linux/amd64", "linux/arm64"]
         project: ["server", "console"]
     steps:
       - uses: actions/checkout@v2
@@ -104,7 +103,7 @@ jobs:
           file: ./apps/${{ matrix.project }}/Dockerfile
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          platforms: ${{ matrix.platform }}
+          platforms: linux/amd64,linux/arm64
           push: true
           provenance: false
 
