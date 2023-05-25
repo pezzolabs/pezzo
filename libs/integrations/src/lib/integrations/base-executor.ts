@@ -73,7 +73,7 @@ export abstract class BaseExecutor {
         } = executionResult;
 
         throw new PezzoClientError(
-          "Prompt execution failed. Check the Pezzo History to see what went wrong.",
+          `Prompt execution failed. Check the Pezzo History to see what went wrong ${promptName}.`,
           error,
           status
         );

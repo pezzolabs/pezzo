@@ -19,7 +19,7 @@ const integration: IntegrationDefinition = {
     let codeBlock = "";
 
     codeBlock += `import { Pezzo } from "@pezzo/client";
-import { AI21Executor } from "@pezzo/integrations/ai21";
+import { AI21Executor } from "@pezzo/integrations";
 
 // Initialize the Pezzo client
 const pezzo = new Pezzo({

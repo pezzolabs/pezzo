@@ -19,7 +19,7 @@ const integration: IntegrationDefinition = {
     let codeBlock = "";
 
     codeBlock += `import { Pezzo } from "@pezzo/client";
-import { OpenAIExecutor } from "@pezzo/integrations/openai";
+import { OpenAIExecutor } from "@pezzo/integrations";
 
 // Initialize the Pezzo client
 const pezzo = new Pezzo({
