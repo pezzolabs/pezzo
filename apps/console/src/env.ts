@@ -14,3 +14,4 @@ export const SUPERTOKENS_API_DOMAIN = getEnvVariable(
 export const SUPERTOKENS_WEBSITE_DOMAIN = getEnvVariable(
   "NX_SUPERTOKENS_WEBSITE_DOMAIN"
 );
+export const SENTRY_DSN_URL = getEnvVariable("NX_SENTRY_DSN_URL");
