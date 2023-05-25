@@ -1,8 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { gqlClient } from "../graphql";
-import {
-  GET_ALL_PROVIDER_API_KEYS,
-} from "../../graphql/queries/api-keys";
+import { GET_ALL_PROVIDER_API_KEYS } from "../../graphql/queries/api-keys";
 import { useCurrentProject } from "../hooks/useCurrentProject";
 import { GET_ME } from "../../graphql/queries/users";
 import { GET_ALL_PROJECTS } from "../../graphql/queries/projects";

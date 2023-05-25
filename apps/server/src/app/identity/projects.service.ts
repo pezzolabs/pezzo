@@ -8,7 +8,7 @@ export class ProjectsService {
   constructor(
     private prisma: PrismaService,
     private environmentsService: EnvironmentsService,
-    private logger: PinoLogger,
+    private logger: PinoLogger
   ) {}
 
   async createProject(

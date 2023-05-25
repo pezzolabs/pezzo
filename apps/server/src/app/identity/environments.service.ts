@@ -22,12 +22,13 @@ export class EnvironmentsService {
       },
     });
 
-
     return environment;
   }
 
   async getById(id: string) {
-    const environment = await this.prisma.environment.findUnique({ where: { id }});
+    const environment = await this.prisma.environment.findUnique({
+      where: { id },
+    });
 
     return environment;
   }
@@ -43,7 +44,9 @@ export class EnvironmentsService {
   }
 
   async getByName(name: string, projectId: string) {
-    const environment = await this.prisma.environment.findFirst({ where: { name, projectId }});
+    const environment = await this.prisma.environment.findFirst({
+      where: { name, projectId },
+    });
     return environment;
   }
 }

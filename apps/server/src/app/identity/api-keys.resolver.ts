@@ -16,7 +16,7 @@ export class ApiKeysResolver {
   constructor(
     private apiKeysService: ApiKeysService,
     private logger: PinoLogger,
-    private environmentService: EnvironmentsService,
+    private environmentService: EnvironmentsService
   ) {}
 
   @Query(() => ApiKey)

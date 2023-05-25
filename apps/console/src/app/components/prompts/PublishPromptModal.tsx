@@ -90,10 +90,7 @@ export const PublishPromptModal = ({ open, onClose }: Props) => {
             />
           )}
 
-          <Radio.Group
-            style={{ width: "100%" }}
-            value={selectedEnvironmentId}
-          >
+          <Radio.Group style={{ width: "100%" }} value={selectedEnvironmentId}>
             <List
               bordered
               dataSource={environments}

@@ -13,7 +13,7 @@ const integration: IntegrationDefinition = {
   defaultSettings,
   consumeInstructionsFn: (
     promptName: string,
-    variables: Record<string, string>,
+    variables: Record<string, string>
   ) => {
     let codeBlock = "";
 

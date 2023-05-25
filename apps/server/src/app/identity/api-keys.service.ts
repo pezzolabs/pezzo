@@ -21,8 +21,8 @@ export class ApiKeysService {
         id: value,
       },
       include: {
-        environment: true
-      }
+        environment: true,
+      },
     });
 
     return apiKey;

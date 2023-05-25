@@ -31,20 +31,18 @@ export const APIKeysPage = () => {
   return (
     <>
       {
-      // apiKeyData && (
-      //   <div style={{ marginBottom: token.marginLG }}>
-      //     <Typography.Title level={2}>Pezzo API Key</Typography.Title>
-
-      //     <Typography.Paragraph style={{ marginBottom: token.marginMD }}>
-      //       Below you can find your Pezzo API key. This API key is provided to
-      //       the Pezzo client when executing prompts.
-      //     </Typography.Paragraph>
-
-      //     <Space direction="vertical">
-      //       {/* <PezzoApiKeyListItem value={apiKeyData.currentApiKey.id} /> */}
-      //     </Space>
-      //   </div>
-      // )
+        // apiKeyData && (
+        //   <div style={{ marginBottom: token.marginLG }}>
+        //     <Typography.Title level={2}>Pezzo API Key</Typography.Title>
+        //     <Typography.Paragraph style={{ marginBottom: token.marginMD }}>
+        //       Below you can find your Pezzo API key. This API key is provided to
+        //       the Pezzo client when executing prompts.
+        //     </Typography.Paragraph>
+        //     <Space direction="vertical">
+        //       {/* <PezzoApiKeyListItem value={apiKeyData.currentApiKey.id} /> */}
+        //     </Space>
+        //   </div>
+        // )
       }
 
       {providerApiKeysData && (

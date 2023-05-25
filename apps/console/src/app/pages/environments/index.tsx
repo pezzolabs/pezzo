@@ -23,11 +23,9 @@ export const EnvironmentsPage = () => {
       title: "API Key",
       dataIndex: "apiKey",
       key: "apiKey",
-      render: (apiKey: string) => (
-        <PezzoApiKeyListItem value={apiKey} />
-      )
-    }
-  ]
+      render: (apiKey: string) => <PezzoApiKeyListItem value={apiKey} />,
+    },
+  ];
 
   return (
     <>
@@ -49,11 +47,15 @@ export const EnvironmentsPage = () => {
         </div>
 
         {environments && (
-          <Table pagination={false} columns={columns} dataSource={environments.map(e => ({
-            key: e.id,
-            name: e.name,
-            apiKey: e.apiKey.id,
-          }))} />
+          <Table
+            pagination={false}
+            columns={columns}
+            dataSource={environments.map((e) => ({
+              key: e.id,
+              name: e.name,
+              apiKey: e.apiKey.id,
+            }))}
+          />
         )}
       </Spin>
     </>

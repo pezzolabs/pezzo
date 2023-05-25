@@ -1,4 +1,11 @@
-import { Args, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from "@nestjs/graphql";
 import { Environment } from "../../@generated/environment/environment.model";
 import {
   ConflictException,
@@ -23,7 +30,7 @@ export class EnvironmentsResolver {
     private environmentsService: EnvironmentsService,
     private logger: PinoLogger,
     private analytics: AnalyticsService,
-    private apiKeysService: ApiKeysService,
+    private apiKeysService: ApiKeysService
   ) {}
 
   @Query(() => [Environment])
@@ -44,7 +51,7 @@ export class EnvironmentsResolver {
   }
 
   @ResolveField(() => Environment)
-  async apiKey (@Parent() environment: Environment) {
+  async apiKey(@Parent() environment: Environment) {
     return this.apiKeysService.getApiKeyByEnvironmentId(environment.id);
   }
 
@@ -66,9 +73,7 @@ export class EnvironmentsResolver {
     }
 
     if (exists) {
-      throw new ConflictException(
-        `Environment "${name}" already exists`
-      );
+      throw new ConflictException(`Environment "${name}" already exists`);
     }
 
     try {

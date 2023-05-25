@@ -4,7 +4,7 @@ import { Field, InputType } from "@nestjs/graphql";
 export class CreateEnvironmentInput {
   @Field(() => String, { nullable: false })
   name: string;
-  
+
   @Field(() => String, { nullable: false })
   projectId: string;
 }

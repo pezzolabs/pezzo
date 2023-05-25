@@ -308,7 +308,7 @@ export class PromptsResolver {
   async deployedVersion(
     @Parent() prompt: PrismaPrompt,
     @Args("data") data: ResolveDeployedVersionInput,
-    @CurrentUser() user: RequestUser,
+    @CurrentUser() user: RequestUser
   ) {
     this.logger.assign({ ...data }).info("Resolving deployed version");
 
@@ -316,9 +316,7 @@ export class PromptsResolver {
     let environment: Environment;
 
     try {
-      environment = await this.environmentsService.getById(
-        environmentId,
-      );
+      environment = await this.environmentsService.getById(environmentId);
     } catch (error) {
       this.logger.error({ error }, "Error getting environment");
       throw new InternalServerErrorException();
@@ -327,9 +325,7 @@ export class PromptsResolver {
     isProjectMemberOrThrow(user, environment.projectId);
 
     if (!environment) {
-      throw new NotFoundException(
-        `Environment not found`
-      );
+      throw new NotFoundException(`Environment not found`);
     }
 
     let deployedPrompt: PromptEnvironment;
