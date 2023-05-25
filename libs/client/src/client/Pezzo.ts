@@ -9,15 +9,23 @@ export interface PezzoClientOptions {
   environment: string;
 }
 
+const defaultOptions: Partial<PezzoClientOptions> = {
+  serverUrl: "https://api.pezzo.ai"
+};
+
 export class Pezzo {
   options: PezzoClientOptions;
   private readonly gqlClient: GraphQLClient;
 
   constructor(options: PezzoClientOptions) {
-    this.options = options;
-    this.gqlClient = new GraphQLClient(`${options.serverUrl}/graphql`, {
+    this.options = { 
+      ...defaultOptions,
+      ...options 
+    };
+
+    this.gqlClient = new GraphQLClient(`${this.options.serverUrl}/graphql`, {
       headers: {
-        "x-api-key": options.apiKey,
+        "x-api-key": this.options.apiKey,
       },
     });
   }
