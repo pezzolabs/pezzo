@@ -63,7 +63,8 @@ jobs:
           name: dist-artifact
           path: ./dist
 
-  Dockerize:
+  dockerize:
+    name: Dockerize
     needs: ci
     runs-on: ubuntu-20.04
     strategy:
@@ -114,9 +115,3 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: ${{ matrix.platform }}
-      # - name: Dockerize
-      #   run: npx nx run-many --target=docker:build --configuration=ci --all --parallel --maxParallel=4
-      #   env:
-      #     INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     INPUT_TAGS: "type=raw,value=${{ github.run_id }},prefix=gh-\ntype=ref,event=branch,prefix=branch-\ntype=sha,format=short"
-      #     INPUT_PLATFORMS: ${{ matrix.platform }}
