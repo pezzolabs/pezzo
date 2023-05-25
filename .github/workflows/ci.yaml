@@ -113,6 +113,6 @@ jobs:
           file: ./apps/${{ matrix.project }}/Dockerfile
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/arm64,linux/amd64
+          platforms: linux/amd64
           push: true
           provenance: false
