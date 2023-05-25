@@ -10,7 +10,6 @@ on:
       - "**/*.md"
       - ".github/workflows/release.yaml"
   push:
-    tags: -"v*"
     branches:
       - "main"
       - "release/*"
