@@ -112,9 +112,8 @@ jobs:
         with:
           context: .
           file: ./apps/${{ matrix.project }}/Dockerfile
-          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: ${{ matrix.platform }}
+          push: true
           provenance: false
-          debug: true
