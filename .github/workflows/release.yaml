@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    name: Release
+    name: Build
     runs-on: ubuntu-20.04
     permissions:
       packages: write
@@ -54,7 +54,8 @@ jobs:
           name: dist-artifact
           path: ./dist
 
-  Dockerize:
+  dockerize:
+    name: Dockerize
     needs: build
     runs-on: ubuntu-20.04
     strategy:
@@ -106,28 +107,43 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           platforms: ${{ matrix.platform }}
 
-  # NPM Publish:
-  #   needs: build
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 0
+  npm_publish:
+    name: NPM Publish
+    needs: build
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        library: ["client", "integrations"]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
-  #     - name: Download 'dist' folder
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: dist-artifact
-  #         path: ./dist
+      - name: Download 'dist' folder
+        uses: actions/download-artifact@v2
+        with:
+          name: dist-artifact
+          path: ./dist
 
-  #     - uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 18.x
-  #         registry-url: https://registry.npmjs.org/
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          registry-url: https://registry.npmjs.org/
 
-  #     - name: NPM Publish (@pezzo/client)
-  #       continue-on-error: true
-  #       run: npm publish --access public
-  #       working-directory: dist/libs/client
-  #       env:
-  #         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Check package version
+        id: cpv
+        uses: PostHog/check-package-version@v2
+        with:
+          path: ./dist/libs/${{ matrix.library }}
+
+      - name: Echo versions
+        run: |
+          echo "Committed version: ${{ steps.cpv.outputs.committed-version }}"
+          echo "Published version: ${{ steps.cpv.outputs.published-version }}"
+
+      - name: NPM Publish (@pezzo/${{ matrix.library }})
+        if: steps.cpv.outputs.is-new-version == 'true'
+        run: npm publish --access public
+        working-directory: dist/libs/${{ matrix.library }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
