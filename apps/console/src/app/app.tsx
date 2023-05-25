@@ -139,7 +139,7 @@ export function App() {
                       element={<EnvironmentsPage />}
                     />
                     <Route
-                      path="/projects/:projectId/api-keys"
+                      path="/projects/:projectId/provider-api-keys"
                       element={<APIKeysPage />}
                     />
                   </Route>

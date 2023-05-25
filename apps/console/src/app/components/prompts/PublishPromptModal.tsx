@@ -17,7 +17,7 @@ export const PublishPromptModal = ({ open, onClose }: Props) => {
   const { project } = useCurrentProject();
   const { currentPromptVersion, prompt } = useCurrentPrompt();
   const { environments } = useEnvironments();
-  const [selectedEnvironmentSlug, setSelectedEnvironmentSlug] =
+  const [selectedEnvironmentId, setSelectedEnvironmentId] =
     useState<string>(undefined);
   const [selectedEnvironmentName, setSelectedEnvironmentName] =
     useState<string>(undefined);
@@ -34,14 +34,13 @@ export const PublishPromptModal = ({ open, onClose }: Props) => {
   const handlePublish = async () => {
     publishPromptMutation.mutate({
       promptId: prompt.id,
-      environmentSlug: selectedEnvironmentSlug,
-      projectId: project.id,
+      environmentId: selectedEnvironmentId,
       promptVersionSha: currentPromptVersion.sha,
     });
   };
 
   useEffect(() => {
-    setSelectedEnvironmentSlug(undefined);
+    setSelectedEnvironmentId(undefined);
     setSelectedEnvironmentName(undefined);
     publishPromptMutation.reset();
   }, [open]);
@@ -61,7 +60,7 @@ export const PublishPromptModal = ({ open, onClose }: Props) => {
         cancelText="Close"
         okText="Publish"
         okButtonProps={{
-          disabled: !selectedEnvironmentSlug,
+          disabled: !selectedEnvironmentId,
         }}
         onOk={handlePublish}
         open={open}
@@ -91,10 +90,7 @@ export const PublishPromptModal = ({ open, onClose }: Props) => {
             />
           )}
 
-          <Radio.Group
-            style={{ width: "100%" }}
-            value={selectedEnvironmentSlug}
-          >
+          <Radio.Group style={{ width: "100%" }} value={selectedEnvironmentId}>
             <List
               bordered
               dataSource={environments}
@@ -102,12 +98,12 @@ export const PublishPromptModal = ({ open, onClose }: Props) => {
                 <List.Item
                   style={{ cursor: "pointer" }}
                   onClick={() => {
-                    setSelectedEnvironmentSlug(env.slug);
+                    setSelectedEnvironmentId(env.id);
                     setSelectedEnvironmentName(env.name);
                   }}
                 >
                   <Typography.Text>{env.name}</Typography.Text>
-                  <Radio value={env.slug} />
+                  <Radio value={env.id} />
                 </List.Item>
               )}
             />

@@ -9,7 +9,6 @@ import { randomUUID } from "crypto";
 import { ApolloServerPluginLandingPageLocalDefault } from "@apollo/server/plugin/landingPage/default";
 import { PromptsModule } from "./prompts/prompts.module";
 import { HealthController } from "./health.controller";
-import { EnvironmentsModule } from "./environments/environments.module";
 import { formatError } from "../lib/gql-format-error";
 import { PromptEnvironmentsModule } from "./prompt-environments/prompt-environments.module";
 import { CredentialsModule } from "./credentials/credentials.module";
@@ -64,7 +63,6 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
       },
       include: [
         PromptsModule,
-        EnvironmentsModule,
         PromptEnvironmentsModule,
         CredentialsModule,
         IdentityModule,
@@ -86,7 +84,6 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
     AuthModule.forRoot(),
     AnalyticsModule,
     PromptsModule,
-    EnvironmentsModule,
     PromptEnvironmentsModule,
     CredentialsModule,
     IdentityModule,
