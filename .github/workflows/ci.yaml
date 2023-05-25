@@ -66,10 +66,6 @@ jobs:
           path: ./dist
 
   dockerize:
-    name: Dockerize
-    runs-on: ubuntu-20.04
-
-  dockerize:
     needs: ci
     runs-on: ubuntu-20.04
     strategy:
