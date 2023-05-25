@@ -50,7 +50,7 @@ export class PromptsResolver {
     private environmentsService: EnvironmentsService,
     private logger: PinoLogger,
     private analytics: AnalyticsService,
-    private apiKeysService: ApiKeysService,
+    private apiKeysService: ApiKeysService
   ) {}
 
   @Query(() => [Prompt])
@@ -164,7 +164,7 @@ export class PromptsResolver {
     }
 
     if (!prompt) {
-      throw new NotFoundException(`Prompt "${data.name}" not found"`);
+      throw new NotFoundException(`Prompt "${data.name}" not found`);
     }
 
     this.analytics.track("PROMPT:FIND_WITH_API_KEY", "api", {
@@ -321,8 +321,6 @@ export class PromptsResolver {
     }
 
     const environment = apiKey.environment;
-
-    isProjectMemberOrThrow(user, environment.projectId);
 
     if (!environment) {
       throw new NotFoundException(`Environment not found`);
