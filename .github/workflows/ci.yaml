@@ -115,6 +115,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          platforms: ${{ matrix.platform }}
       # - name: Dockerize
       #   run: npx nx run-many --target=docker:build --configuration=ci --all --parallel --maxParallel=4
       #   env:
