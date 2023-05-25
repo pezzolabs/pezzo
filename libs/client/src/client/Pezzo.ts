@@ -6,7 +6,6 @@ import { IntegrationBaseSettings, PromptExecutionStatus } from "../types";
 export interface PezzoClientOptions {
   serverUrl: string;
   apiKey: string;
-  environment: string;
 }
 
 const defaultOptions: Partial<PezzoClientOptions> = {
@@ -68,7 +67,7 @@ export class Pezzo {
         name: promptName,
       },
       deployedVersionData: {
-        environmentSlug: this.options.environment,
+        apiKey: this.options.apiKey,
       },
     });
 

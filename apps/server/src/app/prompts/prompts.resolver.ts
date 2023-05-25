@@ -39,6 +39,7 @@ import { ApiKeyProjectId } from "../identity/api-key-project-id.decorator";
 import { ResolveDeployedVersionInput } from "./inputs/resolve-deployed-version.input";
 import { PinoLogger } from "../logger/pino-logger";
 import { AnalyticsService } from "../analytics/analytics.service";
+import { ApiKeysService } from "../identity/api-keys.service";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Prompt)
@@ -48,7 +49,8 @@ export class PromptsResolver {
     private promptsService: PromptsService,
     private environmentsService: EnvironmentsService,
     private logger: PinoLogger,
-    private analytics: AnalyticsService
+    private analytics: AnalyticsService,
+    private apiKeysService: ApiKeysService,
   ) {}
 
   @Query(() => [Prompt])
@@ -312,15 +314,13 @@ export class PromptsResolver {
   ) {
     this.logger.assign({ ...data }).info("Resolving deployed version");
 
-    const { environmentId } = data;
-    let environment: Environment;
+    const apiKey = await this.apiKeysService.getApiKey(data.apiKey);
 
-    try {
-      environment = await this.environmentsService.getById(environmentId);
-    } catch (error) {
-      this.logger.error({ error }, "Error getting environment");
-      throw new InternalServerErrorException();
+    if (!apiKey) {
+      throw new NotFoundException(`Deployed version could not be found`);
     }
+
+    const environment = apiKey.environment;
 
     isProjectMemberOrThrow(user, environment.projectId);
 
