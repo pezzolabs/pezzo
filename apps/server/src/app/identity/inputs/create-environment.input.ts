@@ -1,10 +1,10 @@
 import { Field, InputType } from "@nestjs/graphql";
 
 @InputType()
-export class GetEnvironmentBySlugInput {
+export class CreateEnvironmentInput {
   @Field(() => String, { nullable: false })
-  slug: string;
-
+  name: string;
+  
   @Field(() => String, { nullable: false })
   projectId: string;
 }

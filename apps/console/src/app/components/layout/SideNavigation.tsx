@@ -19,8 +19,8 @@ const topMenuItems = [
     icon: <ServerStackIcon height={18} />,
   },
   {
-    key: "api-keys",
-    label: "API Keys",
+    key: "provider-api-keys",
+    label: "Provider API Keys",
     icon: <KeyIcon height={18} />,
   },
 ];

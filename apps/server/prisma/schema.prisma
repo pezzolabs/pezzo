@@ -35,7 +35,6 @@ model Project {
   name            String
   organization    Organization     @relation(fields: [organizationId], references: [id])
   organizationId  String
-  apiKeys         ApiKey[]
   providerApiKeys ProviderApiKey[]
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
@@ -78,12 +77,20 @@ enum OrgRole {
 
 model Environment {
   id                 String              @id @default(cuid())
-  slug               String
   name               String
   projectId          String
   promptEnvironments PromptEnvironment[]
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
+  apiKeys            ApiKey[]
+}
+
+model ApiKey {
+  id            String   @id
+  name          String   @default("Default")
+  environmentId String
+  environment   Environment  @relation(fields: [environmentId], references: [id])
+  createdAt     DateTime @default(now())
 }
 
 model Prompt {
@@ -149,14 +156,6 @@ model PromptExecution {
 enum PromptExecutionStatus {
   Success
   Error
-}
-
-model ApiKey {
-  id        String   @id
-  name      String   @default("Default")
-  projectId String
-  project   Project  @relation(fields: [projectId], references: [id])
-  createdAt DateTime @default(now())
 }
 
 model ProviderApiKey {

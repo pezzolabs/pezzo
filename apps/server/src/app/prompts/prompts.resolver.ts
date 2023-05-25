@@ -33,7 +33,7 @@ import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
 import { isProjectMemberOrThrow } from "../identity/identity.utils";
 import { FindPromptByNameInput } from "./inputs/find-prompt-by-name.input";
-import { EnvironmentsService } from "../environments/environments.service";
+import { EnvironmentsService } from "../identity/environments.service";
 import { GetProjectPromptsInput } from "./inputs/get-project-prompts.input";
 import { ApiKeyProjectId } from "../identity/api-key-project-id.decorator";
 import { ResolveDeployedVersionInput } from "./inputs/resolve-deployed-version.input";
@@ -307,27 +307,28 @@ export class PromptsResolver {
   @ResolveField(() => PromptVersion)
   async deployedVersion(
     @Parent() prompt: PrismaPrompt,
-    @Args("data") data: ResolveDeployedVersionInput
+    @Args("data") data: ResolveDeployedVersionInput,
+    @CurrentUser() user: RequestUser,
   ) {
     this.logger.assign({ ...data }).info("Resolving deployed version");
 
-    const { projectId } = prompt;
-    const { environmentSlug } = data;
+    const { environmentId } = data;
     let environment: Environment;
 
     try {
-      environment = await this.environmentsService.getBySlug(
-        environmentSlug,
-        projectId
+      environment = await this.environmentsService.getById(
+        environmentId,
       );
     } catch (error) {
       this.logger.error({ error }, "Error getting environment");
       throw new InternalServerErrorException();
     }
 
+    isProjectMemberOrThrow(user, environment.projectId);
+
     if (!environment) {
       throw new NotFoundException(
-        `Environment with slug "${environmentSlug}" not found`
+        `Environment not found`
       );
     }
 
@@ -345,7 +346,7 @@ export class PromptsResolver {
 
     if (!deployedPrompt) {
       throw new NotFoundException(
-        `Prompt was not deployed to the "${environmentSlug}" environment`
+        `Prompt was not deployed to this environment`
       );
     }
 

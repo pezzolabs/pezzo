@@ -2,7 +2,6 @@ import { useMutation } from "@tanstack/react-query";
 import { Modal, Form, Input, Button, Alert } from "antd";
 import { gqlClient, queryClient } from "../../lib/graphql";
 import { css } from "@emotion/css";
-import { slugify } from "../../lib/utils/string-utils";
 import { CREATE_ENVIRONMENT } from "../../graphql/mutations/environments";
 import { CreateEnvironmentMutation } from "@pezzo/graphql";
 import { GraphQLErrorResponse } from "../../graphql/types";
@@ -16,7 +15,6 @@ interface Props {
 
 type Inputs = {
   name: string;
-  slug: string;
 };
 
 export const CreateEnvironmentModal = ({ open, onClose, onCreated }: Props) => {
@@ -31,7 +29,6 @@ export const CreateEnvironmentModal = ({ open, onClose, onCreated }: Props) => {
     mutationFn: (data: Inputs) =>
       gqlClient.request(CREATE_ENVIRONMENT, {
         data: {
-          slug: data.slug,
           name: data.name,
           projectId: project.id,
         },
@@ -45,12 +42,6 @@ export const CreateEnvironmentModal = ({ open, onClose, onCreated }: Props) => {
   const handleFormFinish = async (values: Inputs) => {
     mutate(values);
     form.resetFields();
-  };
-
-  const handleFormValuesChange = () => {
-    const { name } = form.getFieldsValue();
-    const slug = slugify(name);
-    form.setFieldsValue({ slug });
   };
 
   return (
@@ -69,7 +60,6 @@ export const CreateEnvironmentModal = ({ open, onClose, onCreated }: Props) => {
         name="basic"
         style={{ maxWidth: 600, marginTop: 20 }}
         onFinish={handleFormFinish}
-        onValuesChange={handleFormValuesChange}
         autoComplete="off"
       >
         <Form.Item
@@ -79,14 +69,6 @@ export const CreateEnvironmentModal = ({ open, onClose, onCreated }: Props) => {
           rules={[{ required: true, message: "Environment name is required" }]}
         >
           <Input placeholder="e.g. Development" />
-        </Form.Item>
-
-        <Form.Item
-          label="Slug"
-          name="slug"
-          rules={[{ required: true, message: "Slug is required" }]}
-        >
-          <Input disabled placeholder="Type your environment name" />
         </Form.Item>
 
         <Form.Item
