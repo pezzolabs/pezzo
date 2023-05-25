@@ -10,8 +10,7 @@ on:
       - "**/*.md"
       - ".github/workflows/release.yaml"
   push:
-    tags:
-      -"v*"
+    tags: -"v*"
     branches:
       - "main"
       - "release/*"
@@ -65,7 +64,7 @@ jobs:
           name: dist-artifact
           path: ./dist
 
-  dockerize:
+  Dockerize:
     needs: ci
     runs-on: ubuntu-20.04
     strategy:
@@ -87,7 +86,7 @@ jobs:
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-    
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
