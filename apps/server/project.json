@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/server/src",
   "projectType": "application",
-  "implicitDependencies": ["graphql"],
+  "implicitDependencies": [],
   "targets": {
     "build": {
       "dependsOn": [
@@ -44,7 +44,7 @@
     "serve": {
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
-      "dependsOn": ["prisma:generate", "^prebuild", "prebuild"],
+      "dependsOn": ["prisma-generate", "^prebuild", "prebuild"],
       "options": {
         "buildTarget": "server:build"
       },

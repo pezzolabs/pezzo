@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/console/src",
   "projectType": "application",
-  "implicitDependencies": ["server"],
+  "implicitDependencies": [],
   "targets": {
     "build": {
       "dependsOn": ["^graphql-codegen-offline", "^prebuild", "prebuild"],
