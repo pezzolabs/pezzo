@@ -1,5 +1,6 @@
 import { Route, Routes, Navigate, Outlet } from "react-router-dom";
 import * as reactRouterDom from "react-router-dom";
+import { hotjar } from "react-hotjar";
 import "antd/dist/reset.css";
 import "./styles.css";
 
@@ -23,11 +24,15 @@ import { LayoutWrapper } from "./components/layout/LayoutWrapper";
 import { OnboardingPage } from "./pages/onboarding";
 import { AuthProvider } from "./lib/providers/AuthProvider";
 import { ThirdpartyEmailPasswordComponentsOverrideProvider } from "supertokens-auth-react/recipe/thirdpartyemailpassword";
-
 import LogoSquare from "../assets/logo.svg";
 import { OptionalIntercomProvider } from "./lib/providers/OptionalIntercomProvider";
+import { HOTJAR_SITE_ID, HOTJAR_VERSION } from "../env";
 
 initSuperTokens();
+
+if (HOTJAR_SITE_ID && HOTJAR_VERSION) {
+  hotjar.initialize(Number(HOTJAR_SITE_ID), Number(HOTJAR_VERSION));
+}
 
 export function App() {
   return (

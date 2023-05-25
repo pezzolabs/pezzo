@@ -16,7 +16,7 @@ export const OptionalIntercomProvider = ({
         autoBoot
         autoBootProps={{
           email: currentUser.email,
-          name: currentUser.name,
+          name: currentUser?.name,
           userId: currentUser.id,
         }}
       >

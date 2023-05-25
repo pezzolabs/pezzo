@@ -1,12 +1,12 @@
 import styled from "@emotion/styled";
+import { hotjar } from "react-hotjar";
+import { Col, Empty, Row } from "antd";
+import { createContext, useContext, useEffect, useMemo } from "react";
 import { useGetCurrentUser } from "../hooks/queries";
-import { Col, Empty, Row, Spin } from "antd";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { GetMeQuery } from "@pezzo/graphql";
 import { LayoutWrapper } from "../../components/layout/LayoutWrapper";
-import { Loading3QuartersOutlined, LoadingOutlined } from "@ant-design/icons";
+import { Loading3QuartersOutlined } from "@ant-design/icons";
 import { colors } from "../theme/colors";
-import { Navigate } from "react-router-dom";
 
 const SpinnerOverlay = styled(Row)`
   height: 100%;
@@ -37,6 +37,15 @@ export const AuthProvider = ({ children }) => {
     }),
     [data, isLoading]
   );
+
+  useEffect(() => {
+    if (hotjar.initialized() && value.currentUser) {
+      hotjar.identify(value.currentUser.id, {
+        name: value.currentUser?.name,
+        email: value.currentUser?.email,
+      });
+    }
+  }, [value.currentUser]);
 
   return (
     <AuthProviderContext.Provider value={value}>
