@@ -45,6 +45,7 @@
     "react-click-away-listener": "^2.2.3",
     "react-dom": "18.2.0",
     "react-router-dom": "6.8.1",
+    "react-use-intercom": "^5.1.4",
     "recharts": "^2.5.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.0.0",

@@ -8,6 +8,7 @@ import {
   MenuProps,
   Row,
   Space,
+  Tag,
   Typography,
 } from "antd";
 import styled from "@emotion/styled";
@@ -92,10 +93,13 @@ export const Header = () => {
       }}
     >
       <div style={{ display: "flex", alignItems: "center" }}>
-        <Space size="large">
+        <Space size="small" direction="horizontal" align="center">
           <a href="/">
             <Logo src={LogoSquare} alt="Logo" />
           </a>
+          <Tag color={colors.indigo[500]} style={{ fontSize: 10 }}>
+            BETA
+          </Tag>
         </Space>
       </div>
 
