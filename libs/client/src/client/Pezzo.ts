@@ -10,7 +10,7 @@ export interface PezzoClientOptions {
 }
 
 const defaultOptions: Partial<PezzoClientOptions> = {
-  serverUrl: "https://api.pezzo.ai"
+  serverUrl: "https://api.pezzo.ai",
 };
 
 export class Pezzo {
@@ -18,9 +18,9 @@ export class Pezzo {
   private readonly gqlClient: GraphQLClient;
 
   constructor(options: PezzoClientOptions) {
-    this.options = { 
+    this.options = {
       ...defaultOptions,
-      ...options 
+      ...options,
     };
 
     this.gqlClient = new GraphQLClient(`${this.options.serverUrl}/graphql`, {
