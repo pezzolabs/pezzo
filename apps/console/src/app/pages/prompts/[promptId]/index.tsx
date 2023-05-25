@@ -19,14 +19,9 @@ const TabLabel = styled.div`
   padding-right: 10px;
 `;
 
-const BreadcrumbTitle = styled.span`
-  cursor: pointer;
-`;
-
 export const PromptPage = () => {
   const params = useParams();
-  const { setCurrentPromptId, prompt, integration, isLoading } =
-    useCurrentPrompt();
+  const { setCurrentPromptId, prompt, isLoading } = useCurrentPrompt();
   const [activeView, setActiveView] = useState("dashboard");
   const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] =
     useState(false);
