@@ -73,6 +73,10 @@ jobs:
         platform: ["linux/amd64", "linux/arm64"]
         project: ["server", "console"]
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
       - name: Download 'dist' folder
         uses: actions/download-artifact@v2
         with:
@@ -107,6 +111,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
+          file: ./apps/${{ matrix.project }}/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
