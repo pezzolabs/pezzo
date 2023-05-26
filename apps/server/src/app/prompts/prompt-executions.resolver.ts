@@ -103,10 +103,9 @@ export class PromptExecutionsResolver {
   async reportPromptExecutionWithApiKey(
     @Args("data") data: PromptExecutionCreateInput,
     @ApiKeyProjectId() projectId: string,
-    @ApiKeyEnvironmentId() environmentId: string,
+    @ApiKeyEnvironmentId() environmentId: string
   ) {
-
-    console.log('environmentId', environmentId)
+    console.log("environmentId", environmentId);
 
     this.logger.assign({ ...data }).info("Reporting prompt execution");
     const promptId = data.prompt.connect.id;

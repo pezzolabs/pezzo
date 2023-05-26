@@ -42,7 +42,7 @@ export class Pezzo {
     duration: number;
   }> {
     const result = await this.gqlClient.request(REPORT_PROMPT_EXECUTION, {
-      data: { ...data as any, environmentId: '' }, // eslint-disable-line @typescript-eslint/no-explicit-any
+      data: { ...(data as any), environmentId: "" }, // eslint-disable-line @typescript-eslint/no-explicit-any
     });
 
     const { result: resultString, ...rest } =
