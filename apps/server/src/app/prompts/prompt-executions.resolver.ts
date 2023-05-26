@@ -25,6 +25,7 @@ import { Point } from "@influxdata/influxdb-client";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { PinoLogger } from "../logger/pino-logger";
 import { TestPromptResult } from "@pezzo/client";
+import { ApiKeyEnvironmentId } from "../identity/api-key-environment-id.dedocator";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Prompt)
@@ -101,8 +102,12 @@ export class PromptExecutionsResolver {
   @Mutation(() => PromptExecution)
   async reportPromptExecutionWithApiKey(
     @Args("data") data: PromptExecutionCreateInput,
-    @ApiKeyProjectId() projectId: string
+    @ApiKeyProjectId() projectId: string,
+    @ApiKeyEnvironmentId() environmentId: string,
   ) {
+
+    console.log('environmentId', environmentId)
+
     this.logger.assign({ ...data }).info("Reporting prompt execution");
     const promptId = data.prompt.connect.id;
     const prompt = await this.promptsService.getPrompt(promptId);
@@ -120,6 +125,7 @@ export class PromptExecutionsResolver {
     try {
       execution = await this.prisma.promptExecution.create({
         data: {
+          environmentId,
           prompt: data.prompt,
           promptVersionSha: data.promptVersionSha,
           timestamp: data.timestamp,
