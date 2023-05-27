@@ -93,10 +93,10 @@ export class AuthGuard implements CanActivate {
 
     try {
       const projects = await this.projectsService.getProjectsByUser(
-        supertokensUser.id
+        supertokensUser.email
       );
       const memberships = await this.usersService.getUserOrgMemberships(
-        supertokensUser.id
+        supertokensUser.email
       );
 
       const reqUser: RequestUser = {

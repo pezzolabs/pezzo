@@ -45,6 +45,43 @@ export class SupertokensService {
             formFields: [{ id: "name" }],
           },
           override: {
+            functions: (originalImplementation) => {
+              return {
+                ...originalImplementation,
+                emailPasswordSignUp: async function (input) {
+                  const existingUsers =
+                    await ThirdPartyEmailPassword.getUsersByEmail(input.email);
+                  if (existingUsers.length === 0) {
+                    // this means this email is new so we allow sign up
+                    return originalImplementation.emailPasswordSignUp(input);
+                  }
+                  return {
+                    status: "EMAIL_ALREADY_EXISTS_ERROR",
+                  };
+                },
+                thirdPartySignInUp: async function (input) {
+                  const existingUsers =
+                    await ThirdPartyEmailPassword.getUsersByEmail(input.email);
+                  if (existingUsers.length === 0) {
+                    // this means this email is new so we allow sign up
+                    return originalImplementation.thirdPartySignInUp(input);
+                  }
+                  if (
+                    existingUsers.find(
+                      (i) =>
+                        i.thirdParty !== undefined &&
+                        i.thirdParty.id === input.thirdPartyId &&
+                        i.thirdParty.userId === input.thirdPartyUserId
+                    )
+                  ) {
+                    // this means we are trying to sign in with the same social login. So we allow it
+                    return originalImplementation.thirdPartySignInUp(input);
+                  }
+                  // this means that the email already exists with another social or email password login method, so we throw an error.
+                  throw new Error("Cannot sign up as email already exists");
+                },
+              };
+            },
             apis: (originalImplementation) => {
               return {
                 ...originalImplementation,
@@ -82,56 +119,73 @@ export class SupertokensService {
                   return res;
                 },
                 thirdPartySignInUpPOST: async (input) => {
-                  const res =
-                    await originalImplementation.thirdPartySignInUpPOST(input);
+                  try {
+                    const res =
+                      await originalImplementation.thirdPartySignInUpPOST(
+                        input
+                      );
 
-                  if (res.status === "OK") {
-                    const { access_token } = res.authCodeResponse;
-                    const client = new google.auth.OAuth2(
-                      config.get("GOOGLE_OAUTH_CLIENT_ID"),
-                      config.get("GOOGLE_OAUTH_CLIENT_SECRET")
-                    );
+                    if (res.status === "OK") {
+                      const { access_token } = res.authCodeResponse;
+                      const client = new google.auth.OAuth2(
+                        config.get("GOOGLE_OAUTH_CLIENT_ID"),
+                        config.get("GOOGLE_OAUTH_CLIENT_SECRET")
+                      );
 
-                    client.setCredentials({ access_token });
+                      client.setCredentials({ access_token });
 
-                    // get user info from google since supertokens doesn't return it
-                    const { data } = await google.oauth2("v2").userinfo.get({
-                      auth: client,
-                      fields: "email,given_name,family_name,picture",
-                    });
+                      // get user info from google since supertokens doesn't return it
+                      const { data } = await google.oauth2("v2").userinfo.get({
+                        auth: client,
+                        fields: "email,given_name,family_name,picture",
+                      });
 
-                    this.logger.assign({ userId: res.user.id });
+                      this.logger.assign({ userId: res.user.id });
 
-                    const userCreateRequest: UserCreateRequest = {
-                      email: data.email,
-                      id: res.user.id,
-                    };
+                      const userCreateRequest: UserCreateRequest = {
+                        email: data.email,
+                        id: res.user.id,
+                      };
 
-                    const metadataFields = {
-                      name: `${data.given_name} ${data.family_name}`,
-                      photoUrl: data.picture,
-                    };
+                      const metadataFields = {
+                        name: `${data.given_name} ${data.family_name}`,
+                        photoUrl: data.picture,
+                      };
 
-                    const user = await this.usersService.getUser(data.email);
+                      const user = await this.usersService.getUser(data.email);
 
-                    if (!user) {
-                      await this.usersService.createUser(userCreateRequest);
-                      this.analytics.track("USER:SIGNUP", res.user.id, {
-                        email: res.user.email,
-                        method: "GOOGLE",
+                      if (!user) {
+                        await this.usersService.createUser(userCreateRequest);
+                        this.analytics.track("USER:SIGNUP", res.user.id, {
+                          email: res.user.email,
+                          method: "GOOGLE",
+                        });
+                      }
+
+                      await UserMetadata.updateUserMetadata(res.user.id, {
+                        profile: metadataFields,
+                      }).catch((error) => {
+                        this.logger.error(
+                          { error },
+                          "Failed to update user metadata fields"
+                        );
                       });
                     }
-
-                    await UserMetadata.updateUserMetadata(res.user.id, {
-                      profile: metadataFields,
-                    }).catch((error) => {
-                      this.logger.error(
-                        { error },
-                        "Failed to update user metadata fields"
-                      );
-                    });
+                    return res;
+                  } catch (e) {
+                    if (
+                      e.message === "Cannot sign up as email already exists"
+                    ) {
+                      // this error was thrown from our function override above.
+                      // so we send a useful message to the user
+                      return {
+                        status: "GENERAL_ERROR",
+                        message:
+                          "Seems like you already have an account with Google. Please use that instead.",
+                      };
+                    }
+                    throw e;
                   }
-                  return res;
                 },
               };
             },

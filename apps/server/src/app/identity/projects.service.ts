@@ -66,12 +66,14 @@ export class ProjectsService {
     });
   }
 
-  async getProjectsByUser(userId: string) {
+  async getProjectsByUser(email: string) {
     return this.prisma.project.findMany({
       where: {
         members: {
           some: {
-            userId,
+            user: {
+              email,
+            },
           },
         },
       },
