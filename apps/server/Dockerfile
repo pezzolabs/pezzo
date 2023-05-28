@@ -8,7 +8,7 @@ WORKDIR /app
 
 COPY ./dist/apps/server/package*.json ./
 
-# RUN npm i --omit=dev
+RUN npm i --omit=dev
 
 COPY ./dist/apps/server .
 # RUN chmod +x ./entrypoint.sh
