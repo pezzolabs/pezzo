@@ -4,7 +4,7 @@ import { GraphQLClient } from "graphql-request";
 import { IntegrationBaseSettings, PromptExecutionStatus } from "../types";
 
 export interface PezzoClientOptions {
-  serverUrl: string;
+  serverUrl?: string;
   apiKey: string;
 }
 
