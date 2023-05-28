@@ -12,7 +12,7 @@ WORKDIR /app
 FROM base AS dependencies
 COPY ./dist/apps/server/package*.json ./
 # Install production dependencies only
-RUN npm ci --only=production
+RUN npm install --omit=dev
 
 # Copy production dependencies
 FROM base AS release
