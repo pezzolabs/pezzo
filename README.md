@@ -47,50 +47,13 @@
 
 💡 **Simplified Integration:** Reduce code overhead by 90% by consuming your AI prompts using the Pezzo Client, regardless of the model provider.
 
-# Roadmap
+# Documentation
+[Click here to navigate to the Official Pezzo Documentation](https://docs.pezzo.ai/).
 
-Below you can find the roadmap with all upcoming features:
+In the documentation, you can find information on how to use Pezzo, its architecture, as well as a tutorial for getting up and running with a simple demo app.
 
-| **Feature**              | **Status**     |
-| ------------------------ | -------------- |
-| Documentation Site       | ✅ Done        |
-| Auth                     | ✅ Done        |
-| Official Helm Chart      | ✅ Done        |
-| API Keys Support         | ✅ Done        |
-| Pezzo OpenAI Integration | ✅ Done        |
-| Pezzo Client for Node.js | ✅ Done        |
-| Error Handling           | ✅ Done        |
-| Logger                   | ✅ Done        |
-| Demo app                 | 🚧 In Progress |
-| Test Coverage            | 🔜 Coming Soon |
-| Pezzo Client for Python  | 🔜 Coming Soon |
-| Pezzo Client for Golang  | 🔜 Coming Soon |
-
-If you are missing features, please create an issue and we'll consider adding them to the roadmap.
-
-# Getting Started
-
-Clone the repository:
-
-```
-git clone https://github.com/pezzolabs/pezzo.git
-```
-
-## 🐳 Option 1: Running Pezzo via Docker Compose
-
-This is a straightforward way to run Pezzo and start using it.
-
-Simply run the following command:
-
-```
-docker-compose up
-```
-
-Pezzo should now be accessible at https://localhost:4200 🚀
-
-## 🕹️ Option 2: Running Pezzo in Development Mode
-
-This method is useful for contirbutors and developers.
+# Getting Started - Development
+This section is useful for contributors who want to run Pezzo locally in development mode.
 
 ### Prerequisites
 
@@ -153,6 +116,10 @@ That's it! Pezzo is now accessible at http://localhost:4200 🚀
 # Contributing
 
 We welcome contributions from the community! Please feel free to submit pull requests or create issues for bugs or feature suggestions.
+
+If you want to contribute but not sure how, join our [Discord](https://discord.gg/h5nBW5ySqQ) and we'll be happy to help you out!
+
+Please check out [CONTRIBUTING.md](CONTRIBUTING.md) before contributing.
 
 # Alpha Disclaimer
 
