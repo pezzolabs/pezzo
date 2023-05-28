@@ -96,6 +96,10 @@ export class SupertokensService {
 
                     this.logger.assign({ userId: res.user.id });
                     await this.usersService.createUser(userCreateRequest);
+                    this.analytics.track("USER:SIGNUP", res.user.id, {
+                      email: res.user.email,
+                      method: "EMAIL_PASSWORD",
+                    });
 
                     const fullName = input.formFields.find(
                       (field) => field.id === "name"
