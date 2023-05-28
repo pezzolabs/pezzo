@@ -1,15 +1,31 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, List, Spin, Typography, theme } from "antd";
-import { InlineCodeSnippet } from "../../components/common/InlineCodeSnippet";
+import { Button, Spin, Table, Typography, theme } from "antd";
 import { CreateEnvironmentModal } from "../../components/environments/CreateEnvironmentModal";
 import { useState } from "react";
 import { useEnvironments } from "../../lib/hooks/useEnvironments";
+import type { ColumnsType } from "antd/es/table";
+import { Environment } from "@pezzo/graphql";
+import { PezzoApiKeyListItem } from "../../components/api-keys/PezzoApiKeyListItem";
 
 export const EnvironmentsPage = () => {
   const { environments, isLoading } = useEnvironments();
   const [isCreateEnvironmentModalOpen, setIsCreateEnvironmentModalOpen] =
     useState(false);
   const { token } = theme.useToken();
+
+  const columns = [
+    {
+      title: "Environment",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "API Key",
+      dataIndex: "apiKey",
+      key: "apiKey",
+      render: (apiKey: string) => <PezzoApiKeyListItem value={apiKey} />,
+    },
+  ];
 
   return (
     <>
@@ -31,16 +47,14 @@ export const EnvironmentsPage = () => {
         </div>
 
         {environments && (
-          <List
-            bordered
-            dataSource={environments}
-            renderItem={(item) => (
-              <List.Item>
-                <Typography.Text>
-                  {item.name} <InlineCodeSnippet>{item.slug}</InlineCodeSnippet>
-                </Typography.Text>
-              </List.Item>
-            )}
+          <Table
+            pagination={false}
+            columns={columns}
+            dataSource={environments.map((e) => ({
+              key: e.id,
+              name: e.name,
+              apiKey: e.apiKey.id,
+            }))}
           />
         )}
       </Spin>

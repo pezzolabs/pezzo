@@ -2,13 +2,13 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 
 @Injectable()
-export class APIKeysService {
+export class ApiKeysService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getApiKeyByProjectId(projectId: string) {
+  async getApiKeyByEnvironmentId(environmentId: string) {
     const apiKey = await this.prisma.apiKey.findFirst({
       where: {
-        projectId,
+        environmentId,
       },
     });
 
@@ -19,6 +19,9 @@ export class APIKeysService {
     const apiKey = await this.prisma.apiKey.findFirst({
       where: {
         id: value,
+      },
+      include: {
+        environment: true,
       },
     });
 

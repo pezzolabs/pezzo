@@ -4,20 +4,27 @@ import { GraphQLClient } from "graphql-request";
 import { IntegrationBaseSettings, PromptExecutionStatus } from "../types";
 
 export interface PezzoClientOptions {
-  serverUrl: string;
+  serverUrl?: string;
   apiKey: string;
-  environment: string;
 }
+
+const defaultOptions: Partial<PezzoClientOptions> = {
+  serverUrl: "https://api.pezzo.ai",
+};
 
 export class Pezzo {
   options: PezzoClientOptions;
   private readonly gqlClient: GraphQLClient;
 
   constructor(options: PezzoClientOptions) {
-    this.options = options;
-    this.gqlClient = new GraphQLClient(`${options.serverUrl}/graphql`, {
+    this.options = {
+      ...defaultOptions,
+      ...options,
+    };
+
+    this.gqlClient = new GraphQLClient(`${this.options.serverUrl}/graphql`, {
       headers: {
-        "x-api-key": options.apiKey,
+        "x-api-key": this.options.apiKey,
       },
     });
   }
@@ -35,7 +42,7 @@ export class Pezzo {
     duration: number;
   }> {
     const result = await this.gqlClient.request(REPORT_PROMPT_EXECUTION, {
-      data: data as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+      data: { ...(data as any), environmentId: "" }, // eslint-disable-line @typescript-eslint/no-explicit-any
     });
 
     const { result: resultString, ...rest } =
@@ -60,7 +67,7 @@ export class Pezzo {
         name: promptName,
       },
       deployedVersionData: {
-        environmentSlug: this.options.environment,
+        apiKey: this.options.apiKey,
       },
     });
 

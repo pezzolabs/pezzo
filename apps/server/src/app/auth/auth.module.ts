@@ -3,11 +3,13 @@ import {
   Module,
   NestModule,
   DynamicModule,
+  Global,
 } from "@nestjs/common";
 
 import { AuthMiddleware } from "./auth.middleware";
 import { SupertokensService } from "./supertokens.service";
 import { IdentityModule } from "../identity/identity.module";
+import { AnalyticsModule } from "../analytics/analytics.module";
 
 @Module({
   providers: [],
@@ -23,7 +25,7 @@ export class AuthModule implements NestModule {
     return {
       providers: [SupertokensService],
       exports: [],
-      imports: [IdentityModule],
+      imports: [IdentityModule, AnalyticsModule],
       module: AuthModule,
     };
   }

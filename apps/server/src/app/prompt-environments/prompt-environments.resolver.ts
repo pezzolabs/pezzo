@@ -9,13 +9,14 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { PromptEnvironmentsService } from "./prompt-environments.service";
-import { EnvironmentsService } from "../environments/environments.service";
+import { EnvironmentsService } from "../identity/environments.service";
 import { AuthGuard } from "../auth/auth.guard";
 import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
 import { isProjectMemberOrThrow } from "../identity/identity.utils";
 import { PinoLogger } from "../logger/pino-logger";
 import { Environment } from "@prisma/client";
+import { AnalyticsService } from "../analytics/analytics.service";
 
 @UseGuards(AuthGuard)
 @Resolver()
@@ -24,7 +25,8 @@ export class PromptEnvironmentsResolver {
     private promptEnvironmentsService: PromptEnvironmentsService,
     private environmentsService: EnvironmentsService,
     private prisma: PrismaService,
-    private logger: PinoLogger
+    private logger: PinoLogger,
+    private analytics: AnalyticsService
   ) {}
 
   @Mutation(() => PromptEnvironment)
@@ -32,26 +34,22 @@ export class PromptEnvironmentsResolver {
     @Args("data") data: PublishPromptInput,
     @CurrentUser() user: RequestUser
   ) {
-    isProjectMemberOrThrow(user, data.projectId);
     this.logger.assign({ ...data });
     this.logger.info("Publishing prompt to environment");
 
     let environment: Environment;
 
     try {
-      environment = await this.environmentsService.getBySlug(
-        data.environmentSlug,
-        data.projectId
-      );
+      environment = await this.environmentsService.getById(data.environmentId);
     } catch (error) {
       this.logger.error({ error }, "Error getting environment");
       throw new InternalServerErrorException();
     }
 
+    isProjectMemberOrThrow(user, environment.projectId);
+
     if (!environment) {
-      throw new NotFoundException(
-        `Environment with slug "${data.environmentSlug}" not found`
-      );
+      throw new NotFoundException(`Environment not found`);
     }
 
     let versionAlreadyPublished: PromptEnvironment;
@@ -71,7 +69,7 @@ export class PromptEnvironmentsResolver {
 
     if (versionAlreadyPublished) {
       throw new ConflictException(
-        `Prompt version already published to environment "${data.environmentSlug}"`
+        `Prompt version is already published to this environment`
       );
     }
 
@@ -82,14 +80,20 @@ export class PromptEnvironmentsResolver {
         await this.promptEnvironmentsService.createPromptEnvironment(
           data.promptId,
           environment.id,
-          environment.slug,
-          data.promptVersionSha
+          data.promptVersionSha,
+          user.id
         );
       this.logger.info("Prompt published to environment");
     } catch (error) {
       this.logger.error({ error }, "Error creating prompt environment");
       throw new InternalServerErrorException();
     }
+
+    this.analytics.track("PROMPT:PUBLISHED", user.id, {
+      projectId: environment.projectId,
+      promptId: data.promptId,
+      environmentId: environment.id,
+    });
 
     return promptEnvironment;
   }

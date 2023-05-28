@@ -6,10 +6,7 @@ export class PublishPromptInput {
   promptId: string;
 
   @Field(() => String, { nullable: false })
-  environmentSlug: string;
-
-  @Field(() => String, { nullable: false })
-  projectId: string;
+  environmentId: string;
 
   @Field(() => String, { nullable: false })
   promptVersionSha: string;

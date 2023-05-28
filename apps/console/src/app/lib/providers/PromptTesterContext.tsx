@@ -1,5 +1,4 @@
 import { createContext, useContext, useState } from "react";
-import { OpenAIChatSettings } from "@pezzo/common";
 import { TEST_PROMPT } from "../../graphql/mutations/prompts";
 import { gqlClient } from "../graphql";
 import { GetPromptExecutionQuery, PromptExecution } from "@pezzo/graphql";
@@ -9,7 +8,7 @@ import { useCurrentProject } from "../hooks/useCurrentProject";
 
 export interface PromptTestInput {
   content: string;
-  settings: OpenAIChatSettings;
+  settings: any;
   variables: Record<string, string>;
 }
 

@@ -16,14 +16,6 @@ export const CREATE_PROMPT_VERSION = graphql(/* GraphQL */ `
   }
 `);
 
-export const UPDATE_PROMPT = graphql(/* GraphQL */ `
-  mutation updatePrompt($data: PromptUpdateInput!) {
-    updatePrompt(data: $data) {
-      id
-    }
-  }
-`);
-
 export const TEST_PROMPT = graphql(/* GraphQL */ `
   mutation testPrompt($data: TestPromptInput!) {
     testPrompt(data: $data) {
