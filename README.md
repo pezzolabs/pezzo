@@ -48,11 +48,13 @@
 💡 **Simplified Integration:** Reduce code overhead by 90% by consuming your AI prompts using the Pezzo Client, regardless of the model provider.
 
 # Documentation
+
 [Click here to navigate to the Official Pezzo Documentation](https://docs.pezzo.ai/).
 
 In the documentation, you can find information on how to use Pezzo, its architecture, as well as a tutorial for getting up and running with a simple demo app.
 
 # Getting Started - Development
+
 This section is useful for contributors who want to run Pezzo locally in development mode.
 
 ### Prerequisites
