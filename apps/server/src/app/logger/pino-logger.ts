@@ -11,11 +11,18 @@ export class PinoLogger {
     @Inject(CONTEXT)
     private readonly context = { requestId: null, logger: null }
   ) {
-    const prettyStream = pretty({
-      levelFirst: true,
-      colorize: true,
-    });
-    const logger = pino({ redact: ["pid", "hostname", "res"] }, prettyStream);
+    let logger: pino.Logger;
+
+    if (process.env.PINO_PRETTIFY === "true") {
+      const prettyStream = pretty({
+        levelFirst: true,
+        colorize: true,
+      });
+      logger = pino({ redact: ["pid", "hostname", "res"] }, prettyStream);
+    } else {
+      logger = pino({ redact: ["pid", "hostname", "res"] });
+    }
+
     const child = logger.child({ requestId: this.context.requestId });
     this.setLogger(child);
   }
