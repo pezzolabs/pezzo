@@ -33,11 +33,13 @@ import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
 import { isProjectMemberOrThrow } from "../identity/identity.utils";
 import { FindPromptByNameInput } from "./inputs/find-prompt-by-name.input";
-import { EnvironmentsService } from "../environments/environments.service";
+import { EnvironmentsService } from "../identity/environments.service";
 import { GetProjectPromptsInput } from "./inputs/get-project-prompts.input";
 import { ApiKeyProjectId } from "../identity/api-key-project-id.decorator";
 import { ResolveDeployedVersionInput } from "./inputs/resolve-deployed-version.input";
 import { PinoLogger } from "../logger/pino-logger";
+import { AnalyticsService } from "../analytics/analytics.service";
+import { ApiKeysService } from "../identity/api-keys.service";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Prompt)
@@ -46,7 +48,9 @@ export class PromptsResolver {
     private prisma: PrismaService,
     private promptsService: PromptsService,
     private environmentsService: EnvironmentsService,
-    private logger: PinoLogger
+    private logger: PinoLogger,
+    private analytics: AnalyticsService,
+    private apiKeysService: ApiKeysService
   ) {}
 
   @Query(() => [Prompt])
@@ -160,9 +164,13 @@ export class PromptsResolver {
     }
 
     if (!prompt) {
-      throw new NotFoundException(`Prompt "${data.name}" not found"`);
+      throw new NotFoundException(`Prompt "${data.name}" not found`);
     }
 
+    this.analytics.track("PROMPT:FIND_WITH_API_KEY", "api", {
+      projectId,
+      promptId: prompt.id,
+    });
     return prompt;
   }
 
@@ -222,54 +230,24 @@ export class PromptsResolver {
     }
 
     let prompt: Prompt;
+
     try {
       prompt = await this.promptsService.createPrompt(
         name,
         integrationId,
         projectId
       );
-      return prompt;
     } catch (error) {
       this.logger.error({ error }, "Error creating prompt");
       throw new InternalServerErrorException();
     }
-  }
 
-  @Mutation(() => Prompt)
-  async updatePrompt(
-    @Args("data") data: PromptUpdateInput,
-    @CurrentUser() user: RequestUser
-  ) {
-    this.logger.assign({ ...data }).info("Updating prompt");
-    let exists: Prompt;
+    this.analytics.track("PROMPT:CREATED", user.id, {
+      projectId,
+      promptId: prompt.id,
+    });
 
-    try {
-      exists = await this.promptsService.getPrompt(data.id.set);
-    } catch (error) {
-      this.logger.error({ error }, "Error getting existing prompt");
-      throw new InternalServerErrorException();
-    }
-
-    if (!exists) {
-      throw new NotFoundException();
-    }
-
-    isProjectMemberOrThrow(user, exists.projectId);
-
-    try {
-      const prompt = await this.prisma.prompt.update({
-        where: {
-          id: data.id.set,
-        },
-        data: {
-          ...data,
-        },
-      });
-      return prompt;
-    } catch (error) {
-      this.logger.error({ error }, "Error updating prompt");
-      throw new InternalServerErrorException();
-    }
+    return prompt;
   }
 
   @Mutation(() => PromptVersion)
@@ -294,7 +272,14 @@ export class PromptsResolver {
     isProjectMemberOrThrow(user, prompt.projectId);
 
     try {
-      const promptVersion = await this.promptsService.createPromptVersion(data);
+      const promptVersion = await this.promptsService.createPromptVersion(
+        data,
+        user.id
+      );
+      this.analytics.track("PROMPT_VERSION:CREATED", user.id, {
+        projectId: prompt.projectId,
+        promptId: prompt.id,
+      });
       return promptVersion;
     } catch (error) {
       this.logger.error({ error }, "Error creating prompt version");
@@ -324,28 +309,21 @@ export class PromptsResolver {
   @ResolveField(() => PromptVersion)
   async deployedVersion(
     @Parent() prompt: PrismaPrompt,
-    @Args("data") data: ResolveDeployedVersionInput
+    @Args("data") data: ResolveDeployedVersionInput,
+    @CurrentUser() user: RequestUser
   ) {
     this.logger.assign({ ...data }).info("Resolving deployed version");
 
-    const { projectId } = prompt;
-    const { environmentSlug } = data;
-    let environment: Environment;
+    const apiKey = await this.apiKeysService.getApiKey(data.apiKey);
 
-    try {
-      environment = await this.environmentsService.getBySlug(
-        environmentSlug,
-        projectId
-      );
-    } catch (error) {
-      this.logger.error({ error }, "Error getting environment");
-      throw new InternalServerErrorException();
+    if (!apiKey) {
+      throw new NotFoundException(`Deployed version could not be found`);
     }
 
+    const environment = apiKey.environment;
+
     if (!environment) {
-      throw new NotFoundException(
-        `Environment with slug "${environmentSlug}" not found`
-      );
+      throw new NotFoundException(`Environment not found`);
     }
 
     let deployedPrompt: PromptEnvironment;
@@ -362,7 +340,7 @@ export class PromptsResolver {
 
     if (!deployedPrompt) {
       throw new NotFoundException(
-        `Prompt was not deployed to the "${environmentSlug}" environment`
+        `Prompt was not deployed to this environment`
       );
     }
 

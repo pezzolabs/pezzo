@@ -4,6 +4,7 @@ import { GET_PROMPT } from "../../graphql/queries/prompts";
 import { GetPromptQuery, GetPromptVersionQuery } from "@pezzo/graphql";
 import { useQuery } from "@tanstack/react-query";
 import { IntegrationDefinition, getIntegration } from "@pezzo/integrations";
+import { Navigate } from "react-router-dom";
 
 interface CurrentPromptContextValue {
   isDraft: boolean;
@@ -37,7 +38,11 @@ export const CurrentPromptProvider = ({ children }) => {
 
   const queryKey = ["prompt", promptId, promptVersion];
 
-  const { data: currentPrompt, isLoading } = useQuery({
+  const {
+    data: currentPrompt,
+    isError,
+    isLoading,
+  } = useQuery({
     queryKey,
     queryFn: () =>
       gqlClient.request(GET_PROMPT, {
@@ -45,6 +50,10 @@ export const CurrentPromptProvider = ({ children }) => {
       }),
     enabled: !!promptId && !!promptVersion,
   });
+
+  if (isError) {
+    return <Navigate to={`/projects`} />;
+  }
 
   const value = {
     isDraft: currentPrompt?.prompt.version === null,

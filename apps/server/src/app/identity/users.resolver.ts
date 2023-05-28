@@ -36,8 +36,9 @@ export class UsersResolver {
     const organizationIds = userInfo.orgMemberships.map(
       (m) => m.organizationId
     );
+
     const { metadata } = (await UserMetadata.getUserMetadata(
-      user.id
+      userInfo.id
     )) as SupertokensMetadata;
 
     if (metadata) {

@@ -57,6 +57,36 @@ jobs:
       - name: Build
         run: npx nx run-many --target=build --all --parallel --maxParallel=3
 
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist-artifact
+          path: ./dist
+
+  dockerize:
+    name: Dockerize
+    needs: ci
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        project: ["server", "console"]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Download 'dist' folder
+        uses: actions/download-artifact@v2
+        with:
+          name: dist-artifact
+          path: ./dist
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -64,14 +94,25 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ghcr.io/pezzolabs/pezzo/${{ matrix.project }}
+          tags: |
+            type=raw,value=${{ github.run_id }},prefix=gh-
+            type=ref,event=branch,prefix=branch-
+            type=ref,event=tag
+            type=sha,format=short
 
-      - name: Dockerize
-        run: npx nx run-many --target=docker:build --configuration=ci --all --parallel --maxParallel=4
-        env:
-          INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          INPUT_TAGS: "type=raw,value=${{ github.run_id }},prefix=gh-\ntype=ref,event=branch,prefix=branch-\ntype=sha,format=short"
-          INPUT_PLATFORMS: "linux/amd64"
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./apps/${{ matrix.project }}/Dockerfile
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64
+          push: true
+          provenance: false

@@ -8,15 +8,16 @@ export class PromptEnvironmentsService {
   async createPromptEnvironment(
     promptId: string,
     environmentId: string,
-    environmentSlug: string,
-    promptVersionSha: string
+    promptVersionSha: string,
+    publishedByUserId: string
   ) {
     const promptEnvironment = await this.prisma.promptEnvironment.upsert({
       create: {
-        id: `${environmentSlug}_${promptId}`,
+        id: `${environmentId}_${promptId}`,
         promptId,
         environmentId,
         promptVersionSha,
+        publishedById: publishedByUserId,
       },
       update: {
         promptId,
@@ -24,16 +25,16 @@ export class PromptEnvironmentsService {
         promptVersionSha,
       },
       where: {
-        id: `${environmentSlug}_${promptId}`,
+        id: `${environmentId}_${promptId}`,
       },
     });
 
     return promptEnvironment;
   }
 
-  async getPromptEnvironment(promptId: string, environmentSlug: string) {
+  async getPromptEnvironment(promptId: string, environmentId: string) {
     const promptEnvironment = await this.prisma.promptEnvironment.findUnique({
-      where: { id: `${environmentSlug}_${promptId}` },
+      where: { id: `${environmentId}_${promptId}` },
     });
 
     return promptEnvironment;

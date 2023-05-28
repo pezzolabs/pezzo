@@ -9,8 +9,7 @@ export interface IntegrationDefinition {
   defaultSettings: any;
   consumeInstructionsFn: (
     promptName: string,
-    variables: Record<string, string>,
-    pezzoApiKey: string
+    variables: Record<string, string>
   ) => string;
 }
 

@@ -1,4 +1,3 @@
-import { OpenAIChatSettings } from "@pezzo/common";
 import { Form } from "antd";
 import { useEffect, useState } from "react";
 import { useCurrentPrompt } from "../providers/CurrentPromptContext";
@@ -6,11 +5,11 @@ import { getIntegration } from "@pezzo/integrations";
 
 export type PromptEditFormInputs = {
   content: string;
-  settings: OpenAIChatSettings;
+  settings: any;
 };
 
 function findVariables(text: string): Record<string, null> {
-  const regex = /\{\{([\w\s]+)\}\}/g;
+  const regex = /\{([\w\s]+)\}/g;
   const matches = text.match(regex);
   const interpolatableValues = matches
     ? matches.map((match) => match.replace(/[{}]/g, ""))

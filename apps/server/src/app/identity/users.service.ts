@@ -42,9 +42,13 @@ export class UsersService {
     return user;
   }
 
-  async getUserOrgMemberships(userId: string) {
+  async getUserOrgMemberships(email: string) {
     const memberships = await this.prisma.organizationMember.findMany({
-      where: { userId },
+      where: {
+        user: {
+          email,
+        },
+      },
     });
     return memberships;
   }

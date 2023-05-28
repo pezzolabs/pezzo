@@ -56,7 +56,7 @@ export const useBreadcrumbItems = () => {
   const pathSnippets = location.pathname.split("/").filter((i) => i);
 
   const extraBreadcrumbItems =
-    projectId && data
+    projectId && currentProject && data
       ? pathSnippets.map((_, index) => {
           const url = `/${pathSnippets.slice(0, index + 1).join("/")}`;
           const selectedBreadcrumb = breadcrumbNameMap(

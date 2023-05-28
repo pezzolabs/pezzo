@@ -10,7 +10,7 @@ import { GqlExecutionContext } from "@nestjs/graphql";
 import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
 import { UsersService } from "../identity/users.service";
 import { RequestUser } from "../identity/users.types";
-import { APIKeysService } from "../identity/api-keys.service";
+import { ApiKeysService } from "../identity/api-keys.service";
 import Session, { SessionContainer } from "supertokens-node/recipe/session";
 import { ProjectsService } from "../identity/projects.service";
 import { PinoLogger } from "../logger/pino-logger";
@@ -24,14 +24,13 @@ export enum AuthMethod {
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly usersService: UsersService,
-    private readonly apiKeysService: APIKeysService,
+    private readonly apiKeysService: ApiKeysService,
     private readonly projectsService: ProjectsService,
     private readonly logger: PinoLogger
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const gqlCtx = GqlExecutionContext.create(context);
-
     const ctx = gqlCtx.getContext();
     const req = ctx.req;
     const res = ctx.res;
@@ -44,6 +43,7 @@ export class AuthGuard implements CanActivate {
   }
 
   private async authorizeApiKey(req, _res) {
+    this.logger.assign({ method: AuthMethod.ApiKey });
     const keyValue = req.headers["x-api-key"];
     const apiKey = await this.apiKeysService.getApiKey(keyValue);
 
@@ -51,10 +51,14 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException("Invalid Pezzo API Key");
     }
 
-    req.projectId = apiKey.projectId;
+    const environment = apiKey.environment;
+
+    req.projectId = environment.projectId;
+    req.environmentId = environment.id;
     req.authMethod = AuthMethod.ApiKey;
     this.logger.assign({
-      projectIdByApiKey: apiKey.projectId,
+      environmentId: environment.id,
+      projectId: environment.projectId,
     });
 
     return true;
@@ -89,10 +93,10 @@ export class AuthGuard implements CanActivate {
 
     try {
       const projects = await this.projectsService.getProjectsByUser(
-        supertokensUser.id
+        supertokensUser.email
       );
       const memberships = await this.usersService.getUserOrgMemberships(
-        supertokensUser.id
+        supertokensUser.email
       );
 
       const reqUser: RequestUser = {

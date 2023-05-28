@@ -9,7 +9,6 @@ import { randomUUID } from "crypto";
 import { ApolloServerPluginLandingPageLocalDefault } from "@apollo/server/plugin/landingPage/default";
 import { PromptsModule } from "./prompts/prompts.module";
 import { HealthController } from "./health.controller";
-import { EnvironmentsModule } from "./environments/environments.module";
 import { formatError } from "../lib/gql-format-error";
 import { PromptEnvironmentsModule } from "./prompt-environments/prompt-environments.module";
 import { CredentialsModule } from "./credentials/credentials.module";
@@ -20,6 +19,7 @@ import { InfluxModuleOptions } from "./influxdb/types";
 import { MetricsModule } from "./metrics/metrics.module";
 import { LoggerModule } from "./logger/logger.module";
 import { PinoLogger } from "./logger/pino-logger";
+import { AnalyticsModule } from "./analytics/analytics.module";
 
 const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
 
@@ -31,6 +31,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
       envFilePath: ".env",
       validationSchema: Joi.object({
         PINO_PRETTIFY: Joi.boolean().default(false),
+        SEGMENT_KEY: Joi.string().optional().default(null),
         DATABASE_URL: Joi.string().required(),
         PORT: Joi.number().default(3000),
         SUPERTOKENS_CONNECTION_URI: Joi.string().required(),
@@ -62,7 +63,6 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
       },
       include: [
         PromptsModule,
-        EnvironmentsModule,
         PromptEnvironmentsModule,
         CredentialsModule,
         IdentityModule,
@@ -82,8 +82,8 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
       },
     }),
     AuthModule.forRoot(),
+    AnalyticsModule,
     PromptsModule,
-    EnvironmentsModule,
     PromptEnvironmentsModule,
     CredentialsModule,
     IdentityModule,

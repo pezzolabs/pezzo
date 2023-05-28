@@ -49,7 +49,10 @@ export const DashboardView = () => {
             fillEmpty={"0.0"}
             field={PromptExecutionMetricField.Duration}
           >
-            <SimpleChart lineLabel="Executions" />
+            <SimpleChart
+              lineLabel="Duration"
+              tooltipFormatter={(v) => `${Number(v).toFixed(2)}s`}
+            />
           </MetricProvider>
         </Col>
       </Row>

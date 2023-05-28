@@ -1,14 +1,83 @@
-import { Breadcrumb, Layout, Menu, Space } from "antd";
+import {
+  Avatar,
+  Button,
+  Col,
+  Dropdown,
+  Layout,
+  Menu,
+  MenuProps,
+  Row,
+  Space,
+  Tag,
+  Typography,
+} from "antd";
 import styled from "@emotion/styled";
 import LogoSquare from "../../../assets/logo.svg";
 import { colors } from "../../lib/theme/colors";
+import { useAuthContext } from "../../lib/providers/AuthProvider";
+import { DownOutlined } from "@ant-design/icons";
+import { useState } from "react";
+import {
+  ArrowRightOnRectangleIcon,
+  QuestionMarkCircleIcon,
+} from "@heroicons/react/24/outline";
+import { signOut } from "supertokens-auth-react/recipe/session";
+import { useNavigate } from "react-router-dom";
 
 const Logo = styled.img`
   height: 40px;
   display: block;
 `;
 
+const UserProfileButton = styled(Button)`
+  &:hover {
+    border: none;
+  }
+  border: none;
+  outline: none;
+`;
+
+const menuItems: MenuProps["items"] = [
+  {
+    key: "info",
+    label: (
+      <Row style={{ width: "100%" }} align="middle">
+        <Col>
+          <Typography.Text>Info</Typography.Text>
+        </Col>
+        <Col style={{ marginLeft: "auto" }}>
+          <QuestionMarkCircleIcon height={16} />
+        </Col>
+      </Row>
+    ),
+  },
+  {
+    key: "signout",
+    label: (
+      <Row style={{ width: "100%" }} align="middle">
+        <Col>
+          <Typography.Text>Sign out</Typography.Text>
+        </Col>
+        <Col style={{ marginLeft: "auto" }}>
+          <ArrowRightOnRectangleIcon height={16} />
+        </Col>
+      </Row>
+    ),
+  },
+];
+
+const buildInitials = (name: string) => {
+  const splittedName = name.split(" ");
+  if (splittedName.length === 1) return splittedName[0][0];
+  const [firstName, lastName] = splittedName;
+  return `${firstName[0]}${lastName[0]}`;
+};
+
 export const Header = () => {
+  const { currentUser } = useAuthContext();
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
   return (
     <Layout.Header
       style={{
@@ -24,8 +93,13 @@ export const Header = () => {
       }}
     >
       <div style={{ display: "flex", alignItems: "center" }}>
-        <Space size="large">
-          <Logo src={LogoSquare} alt="Logo" />
+        <Space size="small" direction="horizontal" align="center">
+          <a href="/">
+            <Logo src={LogoSquare} alt="Logo" />
+          </a>
+          <Tag color={colors.indigo[500]} style={{ fontSize: 10 }}>
+            BETA
+          </Tag>
         </Space>
       </div>
 
@@ -36,7 +110,49 @@ export const Header = () => {
           alignItems: "center",
           justifyContent: "flex-end",
         }}
-      ></div>
+      >
+        <Dropdown
+          menu={{
+            items: menuItems,
+            onClick: async (info) => {
+              if (info.key === "signout") {
+                await signOut();
+                window.location.href = "/login";
+              }
+
+              if (info.key === "info") {
+                navigate(`/info`);
+              }
+            },
+          }}
+          align={{ offset: [0, 12] }}
+          trigger={["click"]}
+          onOpenChange={setOpen}
+        >
+          <UserProfileButton ghost style={{ padding: 4, height: "auto" }}>
+            <Space size="middle">
+              <Avatar
+                size="large"
+                src={
+                  currentUser?.photoUrl ? (
+                    <img src={currentUser?.photoUrl} alt="avatar" />
+                  ) : undefined
+                }
+              >
+                {buildInitials(currentUser?.name || "")}
+              </Avatar>
+
+              <Typography.Text type="secondary">
+                {currentUser?.name}
+              </Typography.Text>
+              <DownOutlined
+                style={{ color: colors.neutral[300], width: 12, height: 12 }}
+                rotate={open ? 180 : 0}
+              />
+            </Space>
+          </UserProfileButton>
+        </Dropdown>
+      </div>
 
       <Menu theme="dark" mode="horizontal" />
     </Layout.Header>
