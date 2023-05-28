@@ -45,6 +45,7 @@ export const initSuperTokens = () => {
     },
     recipeList: [
       ThirdPartyEmailPassword.init({
+        useShadowDom: true,
         signInAndUpFeature: {
           providers,
           signUpForm: {
