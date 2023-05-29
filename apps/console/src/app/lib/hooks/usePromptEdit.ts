@@ -47,16 +47,20 @@ export const usePromptEdit = () => {
     setIsFormTouched(touched);
     setContent(content);
 
-    const variables = findVariables(content);
-    setVariables(variables);
-  };
+    setVariables((oldVarialbes) => {
+      const newVariables = findVariables(content);
+      const mappedVariables = Object.keys(newVariables).reduce<
+        Record<string, string | null>
+      >((acc, key: string) => {
+        if (oldVarialbes[key]) {
+          acc[key] = oldVarialbes[key];
+        }
 
-  useEffect(() => {
-    if (content) {
-      const variables = findVariables(content);
-      setVariables(variables);
-    }
-  }, [content]);
+        return acc;
+      }, newVariables);
+      return mappedVariables;
+    });
+  };
 
   const setVariable = (key: string, value: string) => {
     const newVariables = { ...variables };
