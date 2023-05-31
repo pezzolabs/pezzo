@@ -4,10 +4,6 @@ export interface ExecutorOptions {
   apiKey: string;
 }
 
-export interface ExecutorOptions {
-  apiKey: string;
-}
-
 export interface CompletionOptions {
   autoParse?: boolean;
 }
