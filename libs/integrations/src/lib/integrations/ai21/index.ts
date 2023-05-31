@@ -22,7 +22,6 @@ import { AI21Executor } from "@pezzo/integrations";
 
 // Initialize the Pezzo client
 const pezzo = new Pezzo({
-  serverUrl: "http://localhost:3000",
   apiKey: "...", // <-- Environment API key
 });
 

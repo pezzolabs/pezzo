@@ -1,15 +1,15 @@
 import { BaseExecutor, ExecuteProps, ExecuteResult } from "../base-executor";
 import { Pezzo } from "@pezzo/client";
 import { OpenAIIntegrationSettings, ExecutorOptions } from "./types";
-import { OpenAIApi } from "openai";
+import { ConfigurationParameters, OpenAIApi } from "openai";
 import { initSdk } from "./sdk";
 
 export class OpenAIExecutor extends BaseExecutor {
   private readonly openai: OpenAIApi;
 
-  constructor(pezzoClient: Pezzo, options: ExecutorOptions) {
+  constructor(pezzoClient: Pezzo, options: ConfigurationParameters) {
     super(pezzoClient);
-    this.openai = initSdk(options.apiKey);
+    this.openai = initSdk(options);
   }
 
   async execute(
