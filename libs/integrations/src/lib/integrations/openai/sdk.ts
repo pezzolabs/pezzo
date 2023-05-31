@@ -1,9 +1,6 @@
-import { Configuration, OpenAIApi } from "openai";
+import { Configuration, ConfigurationParameters, OpenAIApi } from "openai";
 
-export const initSdk = (apiKey: string) => {
-  const configuration = new Configuration({
-    apiKey,
-  });
-
+export const initSdk = (configurationParameters: ConfigurationParameters) => {
+  const configuration = new Configuration(configurationParameters);
   return new OpenAIApi(configuration);
 };
