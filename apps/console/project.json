@@ -110,15 +110,8 @@
       "options": {},
       "configurations": {
         "local": {
-          "tags": ["ghcr.io/pezzolabs/pezzo/console"],
+          "tags": ["pezzolabs/pezzo/console"],
           "push": false
-        },
-        "ci": {
-          "push": true,
-          "metadata": {
-            "images": ["ghcr.io/pezzolabs/pezzo/console"],
-            "platforms": ["linux/amd64", "linux/arm64"]
-          }
         }
       }
     }
