@@ -3,7 +3,6 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/server/src",
   "projectType": "application",
-  "implicitDependencies": ["graphql"],
   "targets": {
     "build": {
       "dependsOn": [
@@ -91,6 +90,20 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "GITHUB_ACTIONS=true npx ts-node -P apps/server/tsconfig.app.json -r tsconfig-paths/register apps/server/scripts/generate-graphql-schema.ts"
+      }
+    },
+    "graphql:codegen": {
+      "dependsOn": ["graphql:schema-generate"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx graphql-codegen"
+      }
+    },
+    "graphql:codegen:offline": {
+      "dependsOn": ["graphql:schema-generate"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "OFFLINE=true npx graphql-codegen"
       }
     },
     "docker:build": {
