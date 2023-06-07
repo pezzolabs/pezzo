@@ -1,7 +1,10 @@
 import { createContext, useContext, useState } from "react";
 import { TEST_PROMPT } from "../../graphql/mutations/prompts";
 import { gqlClient } from "../graphql";
-import { GetPromptExecutionQuery, PromptExecution } from "../../../@generated/graphql/graphql";
+import {
+  GetPromptExecutionQuery,
+  PromptExecution,
+} from "../../../@generated/graphql/graphql";
 import { TestPromptResult } from "@pezzo/client";
 import { useCurrentPrompt } from "./CurrentPromptContext";
 import { useCurrentProject } from "../hooks/useCurrentProject";
