@@ -17,6 +17,11 @@ on:
       - "**/*.md"
       - ".github/workflows/release.yaml"
 
+env:
+  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+  NX_BRANCH: ${{ github.head_ref || github.ref_name }}
+  BASE: ${{ github.base_ref }}
+
 jobs:
   ci:
     name: Continuous Integration
@@ -24,9 +29,13 @@ jobs:
     permissions:
       packages: write
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      - uses: nrwl/nx-set-shas@v3
+        with:
+          main-branch-name: ${{ env.BASE }}
 
       - name: Cache node modules
         id: cache
