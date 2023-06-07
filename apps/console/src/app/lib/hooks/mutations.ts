@@ -2,7 +2,7 @@ import {
   CreateProjectInput,
   CreateProjectMutation,
   UpdateProfileInput,
-} from "@pezzo/graphql";
+} from "../../../@generated/graphql/graphql";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { gqlClient } from "../graphql";
 import { UPDATE_PROFILE } from "../../graphql/queries/users";

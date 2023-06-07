@@ -3,8 +3,6 @@ import { Button, Spin, Table, Typography, theme } from "antd";
 import { CreateEnvironmentModal } from "../../components/environments/CreateEnvironmentModal";
 import { useState } from "react";
 import { useEnvironments } from "../../lib/hooks/useEnvironments";
-import type { ColumnsType } from "antd/es/table";
-import { Environment } from "@pezzo/graphql";
 import { PezzoApiKeyListItem } from "../../components/api-keys/PezzoApiKeyListItem";
 
 export const EnvironmentsPage = () => {

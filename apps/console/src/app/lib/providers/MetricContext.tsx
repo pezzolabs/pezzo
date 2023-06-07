@@ -5,7 +5,7 @@ import {
   GetMetricsQuery,
   Granularity,
   PromptExecutionMetricField,
-} from "@pezzo/graphql";
+} from "../../../@generated/graphql/graphql";
 import { useGetPromptExecutionMetric } from "../hooks/useGetPromptExecutionMetric";
 import { format } from "date-fns";
 import { Card, Col, Empty, Radio, Row, Select, Typography, theme } from "antd";
