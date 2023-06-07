@@ -142,38 +142,6 @@ export class PromptsResolver {
     return promptVersions;
   }
 
-  @Query(() => Prompt)
-  async findPromptWithApiKey(
-    @Args("data") data: FindPromptByNameInput,
-    @ApiKeyProjectId() projectId: string
-  ) {
-    const { name } = data;
-    this.logger.assign({ name, projectId }).info("Finding prompt with API key");
-    let prompt: Prompt;
-
-    try {
-      prompt = await this.prisma.prompt.findFirst({
-        where: {
-          name: data.name,
-          projectId,
-        },
-      });
-    } catch (error) {
-      this.logger.error({ error }, "Error finding prompt with API key");
-      throw new InternalServerErrorException();
-    }
-
-    if (!prompt) {
-      throw new NotFoundException(`Prompt "${data.name}" not found`);
-    }
-
-    this.analytics.track("PROMPT:FIND_WITH_API_KEY", "api", {
-      projectId,
-      promptId: prompt.id,
-    });
-    return prompt;
-  }
-
   @Query(() => PromptVersion)
   async promptVersion(
     @Args("data") data: GetPromptVersionInput,
@@ -302,56 +270,6 @@ export class PromptsResolver {
       return executions;
     } catch (error) {
       this.logger.error({ error }, "Error getting prompt executions");
-      throw new InternalServerErrorException();
-    }
-  }
-
-  @ResolveField(() => PromptVersion)
-  async deployedVersion(
-    @Parent() prompt: PrismaPrompt,
-    @Args("data") data: ResolveDeployedVersionInput,
-    @CurrentUser() user: RequestUser
-  ) {
-    this.logger.assign({ ...data }).info("Resolving deployed version");
-
-    const apiKey = await this.apiKeysService.getApiKey(data.apiKey);
-
-    if (!apiKey) {
-      throw new NotFoundException(`Deployed version could not be found`);
-    }
-
-    const environment = apiKey.environment;
-
-    if (!environment) {
-      throw new NotFoundException(`Environment not found`);
-    }
-
-    let deployedPrompt: PromptEnvironment;
-
-    try {
-      deployedPrompt = await this.prisma.promptEnvironment.findFirst({
-        where: { promptId: prompt.id, environmentId: environment.id },
-        orderBy: { createdAt: "desc" },
-      });
-    } catch (error) {
-      this.logger.error({ error }, "Error getting deployed prompt environment");
-      throw new InternalServerErrorException();
-    }
-
-    if (!deployedPrompt) {
-      throw new NotFoundException(
-        `Prompt was not deployed to this environment`
-      );
-    }
-
-    try {
-      const promptVersion = await this.promptsService.getPromptVersion(
-        deployedPrompt.promptVersionSha
-      );
-
-      return promptVersion;
-    } catch (error) {
-      this.logger.error({ error }, "Error getting prompt version");
       throw new InternalServerErrorException();
     }
   }
