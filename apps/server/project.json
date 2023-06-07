@@ -5,11 +5,7 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "dependsOn": [
-        "prisma:generate",
-        "^prebuild",
-        "prebuild"
-      ],
+      "dependsOn": ["prisma:generate", "^prebuild", "prebuild"],
       "executor": "@nrwl/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
