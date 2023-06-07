@@ -3,7 +3,7 @@ import { hotjar } from "react-hotjar";
 import { Col, Empty, Row } from "antd";
 import { createContext, useContext, useEffect, useMemo } from "react";
 import { useGetCurrentUser } from "../hooks/queries";
-import { GetMeQuery } from "@pezzo/graphql";
+import { GetMeQuery } from "../../../@generated/graphql/graphql";
 import { LayoutWrapper } from "../../components/layout/LayoutWrapper";
 import { Loading3QuartersOutlined } from "@ant-design/icons";
 import { colors } from "../theme/colors";

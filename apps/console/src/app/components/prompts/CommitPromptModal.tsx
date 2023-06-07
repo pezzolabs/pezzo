@@ -9,7 +9,7 @@ import { PromptEditFormInputs } from "../../lib/hooks/usePromptEdit";
 import {
   CreatePromptVersionInput,
   CreatePromptVersionMutation,
-} from "@pezzo/graphql";
+} from "../../../@generated/graphql/graphql";
 import { GraphQLErrorResponse } from "../../graphql/types";
 
 interface Props {

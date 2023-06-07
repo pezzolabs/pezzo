@@ -1,4 +1,7 @@
-import { Aggregation, PromptExecutionMetricField } from "@pezzo/graphql";
+import {
+  Aggregation,
+  PromptExecutionMetricField,
+} from "../../../../@generated/graphql/graphql";
 import { Col, Row, theme } from "antd";
 import { MetricProvider } from "../../../lib/providers/MetricContext";
 import { SimpleChart } from "../metrics/SimpleChart";

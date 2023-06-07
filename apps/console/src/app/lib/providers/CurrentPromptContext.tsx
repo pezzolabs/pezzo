@@ -1,7 +1,10 @@
 import { createContext, useContext, useState } from "react";
 import { gqlClient } from "../graphql";
 import { GET_PROMPT } from "../../graphql/queries/prompts";
-import { GetPromptQuery, GetPromptVersionQuery } from "@pezzo/graphql";
+import {
+  GetPromptQuery,
+  GetPromptVersionQuery,
+} from "../../../@generated/graphql/graphql";
 import { useQuery } from "@tanstack/react-query";
 import { IntegrationDefinition, getIntegration } from "@pezzo/integrations";
 import { Navigate } from "react-router-dom";

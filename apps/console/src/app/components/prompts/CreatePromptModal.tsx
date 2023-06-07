@@ -5,7 +5,7 @@ import { gqlClient, queryClient } from "../../lib/graphql";
 import { css } from "@emotion/css";
 import { PromptIntegrationSelector } from "./PromptIntegrationSelector";
 import { integrations } from "@pezzo/integrations";
-import { CreatePromptMutation } from "@pezzo/graphql";
+import { CreatePromptMutation } from "../../../@generated/graphql/graphql";
 import { GraphQLErrorResponse } from "../../graphql/types";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 

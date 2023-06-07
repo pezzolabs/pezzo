@@ -3,7 +3,6 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/console/src",
   "projectType": "application",
-  "implicitDependencies": ["server"],
   "targets": {
     "build": {
       "dependsOn": ["^graphql:codegen:offline", "^prebuild", "prebuild"],
@@ -111,15 +110,8 @@
       "options": {},
       "configurations": {
         "local": {
-          "tags": ["ghcr.io/pezzolabs/pezzo/console"],
+          "tags": ["pezzolabs/pezzo/console"],
           "push": false
-        },
-        "ci": {
-          "push": true,
-          "metadata": {
-            "images": ["ghcr.io/pezzolabs/pezzo/console"],
-            "platforms": ["linux/amd64", "linux/arm64"]
-          }
         }
       }
     }
