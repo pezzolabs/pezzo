@@ -2,6 +2,7 @@ import { Pezzo } from "@pezzo/client";
 
 import { interpolateVariables } from "../utils/interpolate-variables";
 import { PezzoClientError } from "./types";
+import type { CreatePromptExecutionDto } from "@pezzo/common";
 
 export interface ExecuteProps<T = unknown> {
   content: string;
@@ -60,72 +61,46 @@ export abstract class BaseExecutor {
     const end = performance.now();
     const duration = Math.ceil(end - start);
 
-    const promptConnect = {
-      connect: {
-        id: prompt.id,
-      },
+    if (executionResult.error) {
+      const {
+        error: { error, status },
+      } = executionResult;
+
+      throw new PezzoClientError(
+        `Prompt execution failed. Check the Pezzo History to see what went wrong ${promptName}.`,
+        error,
+        status
+      );
+    }
+
+    const data: CreatePromptExecutionDto = {
+      promptId: prompt.id,
+      promptVersionSha: promptVersion.sha,
+      content: content,
+      variables: variables,
+      interpolatedContent: interpolatedContent,
+      settings: settings as any,
+      promptTokens: executionResult.promptTokens,
+      completionTokens: executionResult.completionTokens,
+      totalTokens:
+        executionResult.promptTokens + executionResult.completionTokens,
+      promptCost: executionResult.promptCost,
+      completionCost: executionResult.completionCost,
+      totalCost: executionResult.promptCost + executionResult.completionCost,
+      duration: duration,
+      status: executionResult.status,
+      result: executionResult.result,
     };
 
-    try {
-      if (executionResult.error) {
-        const {
-          error: { error, status },
-        } = executionResult;
-
-        throw new PezzoClientError(
-          `Prompt execution failed. Check the Pezzo History to see what went wrong ${promptName}.`,
-          error,
-          status
-        );
-      }
-
-      return this.pezzoClient.reportPromptExecution<T>(
-        {
-          prompt: promptConnect,
-          promptVersionSha: promptVersion.sha,
-          status: executionResult.status,
-          content,
-          variables,
-          interpolatedContent,
-          settings,
-          result: executionResult.result,
-          ...(executionResult.error && {
-            error: executionResult?.error.printableError,
-          }),
-          promptTokens: executionResult.promptTokens,
-          completionTokens: executionResult.completionTokens,
-          totalTokens:
-            executionResult.promptTokens + executionResult.completionTokens,
-          promptCost: executionResult.promptCost,
-          completionCost: executionResult.completionCost,
-          totalCost:
-            executionResult.promptCost + executionResult.completionCost,
-          duration,
-        },
-        options.autoParseJSON
-      );
-    } catch (e) {
-      await this.pezzoClient.reportPromptExecution<T>({
-        prompt: promptConnect,
-        promptVersionSha: promptVersion.sha,
-        status: "Error",
-        content,
-        variables,
-        interpolatedContent,
-        settings,
-        ...(executionResult.error && {
-          error: executionResult?.error.printableError,
-        }),
-        promptTokens: executionResult.promptTokens,
-        completionTokens: executionResult.completionTokens,
-        totalTokens:
-          executionResult.promptTokens + executionResult.completionTokens,
-        promptCost: executionResult.promptCost,
-        completionCost: executionResult.completionCost,
-        totalCost: executionResult.promptCost + executionResult.completionCost,
-        duration,
-      });
-      throw e;
+    if (executionResult.error) {
+      data.error = executionResult.error.printableError;
     }
+
+    await this.pezzoClient.reportPromptExecution<T>(
+      data,
+      options.autoParseJSON
+    );
+
+    return executionResult;
   }
 }

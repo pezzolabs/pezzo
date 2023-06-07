@@ -1,0 +1,54 @@
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  Scope,
+  UnauthorizedException,
+} from "@nestjs/common";
+import { ApiKeysService } from "../identity/api-keys.service";
+import { PinoLogger } from "../logger/pino-logger";
+
+export enum AuthMethod {
+  ApiKey = "ApiKey",
+  BearerToken = "BearerToken",
+}
+
+@Injectable({ scope: Scope.REQUEST })
+export class ApiKeyAuthGuard implements CanActivate {
+  constructor(
+    private readonly apiKeysService: ApiKeysService,
+    private readonly logger: PinoLogger
+  ) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const req = context.switchToHttp().getRequest();
+
+    if (!req.headers["x-api-key"]) {
+      throw new UnauthorizedException("Invalid Pezzo API Key");
+    }
+
+    return this.authorizeApiKey(req);
+  }
+
+  private async authorizeApiKey(req) {
+    this.logger.assign({ method: AuthMethod.ApiKey });
+    const keyValue = req.headers["x-api-key"];
+    const apiKey = await this.apiKeysService.getApiKey(keyValue);
+
+    if (!apiKey) {
+      throw new UnauthorizedException("Invalid Pezzo API Key");
+    }
+
+    const environment = apiKey.environment;
+
+    req.projectId = environment.projectId;
+    req.environmentId = environment.id;
+    req.authMethod = AuthMethod.ApiKey;
+    this.logger.assign({
+      environmentId: environment.id,
+      projectId: environment.projectId,
+    });
+
+    return true;
+  }
+}

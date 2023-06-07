@@ -1,7 +1,7 @@
 {
   "name": "@pezzo/client",
   "description": "TypeScript API client for Pezzo",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "type": "commonjs",
   "author": "Ariel Weinberger",
   "keywords": [
@@ -19,9 +19,8 @@
     "gpt-3.5-turbo"
   ],
   "dependencies": {
-    "graphql-request": "^6.0.0",
-    "tslib": "^2.3.0",
-    "graphql": "^16.6.0"
+    "axios": "^1.4.0",
+    "tslib": "^2.3.0"
   },
   "repository": {
     "type": "git",

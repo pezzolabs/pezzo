@@ -5,12 +5,7 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "dependsOn": [
-        "prisma:generate",
-        "graphql:codegen:offline",
-        "^prebuild",
-        "prebuild"
-      ],
+      "dependsOn": ["prisma:generate", "^prebuild", "prebuild"],
       "executor": "@nrwl/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
@@ -102,7 +97,7 @@
       }
     },
     "graphql:codegen:offline": {
-      "dependsOn": ["graphql:schema-generate"],
+      "dependsOn": ["prsima:generate", "graphql:schema-generate"],
       "executor": "nx:run-commands",
       "options": {
         "command": "OFFLINE=true npx graphql-codegen"
