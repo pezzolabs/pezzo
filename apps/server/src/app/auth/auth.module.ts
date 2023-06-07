@@ -3,7 +3,6 @@ import {
   Module,
   NestModule,
   DynamicModule,
-  Global,
 } from "@nestjs/common";
 
 import { AuthMiddleware } from "./auth.middleware";

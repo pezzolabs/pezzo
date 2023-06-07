@@ -6,6 +6,7 @@ import { PromptsService } from "./prompts.service";
 import { PromptTesterService } from "./prompt-tester.service";
 import { CredentialsModule } from "../credentials/credentials.module";
 import { IdentityModule } from "../identity/identity.module";
+import { PromptsController } from "./prompts.controller";
 
 @Module({
   imports: [CredentialsModule, IdentityModule],
@@ -17,5 +18,6 @@ import { IdentityModule } from "../identity/identity.module";
     PromptTesterService,
     PromptExecutionsResolver,
   ],
+  controllers: [PromptsController],
 })
 export class PromptsModule {}

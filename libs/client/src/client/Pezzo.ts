@@ -1,7 +1,6 @@
-import { GET_DEPLOYED_PROMPT_VERSION } from "../graphql/queries";
-import { REPORT_PROMPT_EXECUTION } from "../graphql/mutations";
-import { GraphQLClient } from "graphql-request";
+import axios, { AxiosInstance } from "axios";
 import { IntegrationBaseSettings, PromptExecutionStatus } from "../types";
+import type { CreatePromptExecutionDto } from "@pezzo/common";
 
 export interface PezzoClientOptions {
   serverUrl?: string;
@@ -14,7 +13,7 @@ const defaultOptions: Partial<PezzoClientOptions> = {
 
 export class Pezzo {
   options: PezzoClientOptions;
-  private readonly gqlClient: GraphQLClient;
+  private readonly axios: AxiosInstance;
 
   constructor(options: PezzoClientOptions) {
     this.options = {
@@ -22,7 +21,8 @@ export class Pezzo {
       ...options,
     };
 
-    this.gqlClient = new GraphQLClient(`${this.options.serverUrl}/graphql`, {
+    this.axios = axios.create({
+      baseURL: `${this.options.serverUrl}/api`,
       headers: {
         "x-api-key": this.options.apiKey,
       },
@@ -30,7 +30,7 @@ export class Pezzo {
   }
 
   async reportPromptExecution<T>(
-    data: unknown,
+    dto: CreatePromptExecutionDto,
     autoParseJSON?: boolean
   ): Promise<{
     id: string;
@@ -41,44 +41,33 @@ export class Pezzo {
     totalTokens: number;
     duration: number;
   }> {
-    const result = await this.gqlClient.request(REPORT_PROMPT_EXECUTION, {
-      data: { ...(data as any), environmentId: "" }, // eslint-disable-line @typescript-eslint/no-explicit-any
+    const { data } = await this.axios.post(`prompts/execution`, {
+      ...dto,
     });
 
-    const { result: resultString, ...rest } =
-      result.reportPromptExecutionWithApiKey;
-
-    const report = { ...rest };
-
-    if (result) {
-      return {
-        ...report,
+    if (data.result) {
+      const report = {
+        ...data,
         result: autoParseJSON
-          ? (JSON.parse(resultString) as T)
-          : (resultString as T),
+          ? (JSON.parse(data.result) as T)
+          : (data.result as T),
       };
+
+      return report;
+    } else {
+      return data;
     }
-    return report;
   }
 
   async getDeployedPromptVersion<T>(promptName: string) {
-    const result = await this.gqlClient.request(GET_DEPLOYED_PROMPT_VERSION, {
-      data: {
-        name: promptName,
-      },
-      deployedVersionData: {
-        apiKey: this.options.apiKey,
-      },
-    });
-
-    const prompt = result.findPromptWithApiKey;
+    const { data } = await this.axios.get(`prompts/${promptName}/deployment`);
 
     return {
-      id: prompt.id,
+      id: data.promptId,
       deployedVersion: {
-        sha: prompt.deployedVersion.sha,
-        content: prompt.deployedVersion.content,
-        settings: prompt.deployedVersion.settings as IntegrationBaseSettings<T>,
+        sha: data.sha,
+        content: data.content,
+        settings: data.settings as IntegrationBaseSettings<T>,
       },
     };
   }
