@@ -7,7 +7,6 @@
     "build": {
       "dependsOn": [
         "prisma:generate",
-        "graphql:codegen:offline",
         "^prebuild",
         "prebuild"
       ],
@@ -102,7 +101,7 @@
       }
     },
     "graphql:codegen:offline": {
-      "dependsOn": ["graphql:schema-generate"],
+      "dependsOn": ["prsima:generate", "graphql:schema-generate"],
       "executor": "nx:run-commands",
       "options": {
         "command": "OFFLINE=true npx graphql-codegen"
