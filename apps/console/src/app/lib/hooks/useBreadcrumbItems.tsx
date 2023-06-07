@@ -4,7 +4,7 @@ import React, { useMemo } from "react";
 import { useCurrentPrompt } from "../providers/CurrentPromptContext";
 import { Col, Row, Typography } from "antd";
 import { IntegrationDefinition } from "@pezzo/integrations";
-import { GetPromptQuery } from "@pezzo/graphql";
+import { GetPromptQuery } from "../../../@generated/graphql/graphql";
 
 const breadcrumbNameMap = (
   projectId: string,

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { gqlClient, queryClient } from "../../lib/graphql";
 import { PUBLISH_PROMPT } from "../../graphql/mutations/prompt-environments";
-import { PublishPromptInput } from "@pezzo/graphql";
+import { PublishPromptInput } from "../../../@generated/graphql/graphql";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 
 interface Props {

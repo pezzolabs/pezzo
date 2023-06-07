@@ -20,7 +20,10 @@ import {
 } from "../../lib/hooks/mutations";
 import { useCallback, useEffect } from "react";
 import { Form } from "antd";
-import { CreateProjectMutation, UpdateProfileMutation } from "@pezzo/graphql";
+import {
+  CreateProjectMutation,
+  UpdateProfileMutation,
+} from "../../../@generated/graphql/graphql";
 import { useAuthContext } from "../../lib/providers/AuthProvider";
 
 const StyledButton = styled(Button)<{ spacing: number }>`

@@ -3,7 +3,7 @@ import { Modal, Form, Input, Button, Alert } from "antd";
 import { gqlClient, queryClient } from "../../lib/graphql";
 import { css } from "@emotion/css";
 import { CREATE_ENVIRONMENT } from "../../graphql/mutations/environments";
-import { CreateEnvironmentMutation } from "@pezzo/graphql";
+import { CreateEnvironmentMutation } from "../../../@generated/graphql/graphql";
 import { GraphQLErrorResponse } from "../../graphql/types";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 

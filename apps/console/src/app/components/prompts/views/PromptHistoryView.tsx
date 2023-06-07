@@ -1,7 +1,7 @@
 import { usePromptExecutions } from "../../../lib/hooks/usePromptExecutions";
 import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
 import { Button, Space, Table, Tag, Tooltip } from "antd";
-import { PromptExecutionStatus } from "@pezzo/graphql";
+import { PromptExecutionStatus } from "../../../../@generated/graphql/graphql";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { InlineCodeSnippet } from "../../common/InlineCodeSnippet";
 import { PromptTester } from "../PromptTester";

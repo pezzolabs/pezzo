@@ -3,12 +3,11 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/server/src",
   "projectType": "application",
-  "implicitDependencies": ["graphql"],
   "targets": {
     "build": {
       "dependsOn": [
         "prisma:generate",
-        "^graphql:codegen:offline",
+        "graphql:codegen:offline",
         "^prebuild",
         "prebuild"
       ],
@@ -81,34 +80,43 @@
     },
     "prisma:generate": {
       "executor": "nx:run-commands",
-      "outputs": ["apps/server/prisma/schema.prisma"],
+      "inputs": ["{projectRoot}/prisma/schema.prisma"],
+      "outputs": ["{projectRoot}/prisma/schema.prisma"],
       "options": {
         "command": "npx prisma generate --schema apps/server/prisma/schema.prisma"
       }
     },
     "graphql:schema-generate": {
       "dependsOn": ["prisma:generate"],
+      "outputs": ["{projectRoot}/src/schema.graphql"],
       "executor": "nx:run-commands",
       "options": {
         "command": "GITHUB_ACTIONS=true npx ts-node -P apps/server/tsconfig.app.json -r tsconfig-paths/register apps/server/scripts/generate-graphql-schema.ts"
       }
     },
+    "graphql:codegen": {
+      "dependsOn": ["graphql:schema-generate"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx graphql-codegen"
+      }
+    },
+    "graphql:codegen:offline": {
+      "dependsOn": ["graphql:schema-generate"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "OFFLINE=true npx graphql-codegen"
+      }
+    },
     "docker:build": {
       "executor": "@nx-tools/nx-container:build",
-      "dependsOn": ["build"],
+      "inputs": ["{projectRoot}/../../dist/apps/server"],
       "defaultConfiguration": "local",
       "options": {},
       "configurations": {
         "local": {
-          "tags": ["ghcr.io/pezzolabs/pezzo/server"],
+          "tags": ["pezzolabs/pezzo/server"],
           "push": false
-        },
-        "ci": {
-          "push": true,
-          "metadata": {
-            "images": ["ghcr.io/pezzolabs/pezzo/server"],
-            "platforms": ["linux/amd64", "linux/arm64"]
-          }
         }
       }
     }
