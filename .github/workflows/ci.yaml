@@ -20,7 +20,7 @@ on:
 env:
   NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
   NX_BRANCH: ${{ github.head_ref || github.ref_name }}
-  BASE: ${{ github.base_ref }}
+  BASE: ${{ github.base_ref || github.event.repository.default_branch }}
 
 jobs:
   ci:
