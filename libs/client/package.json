@@ -1,7 +1,7 @@
 {
   "name": "@pezzo/client",
   "description": "TypeScript API client for Pezzo",
-  "version": "0.2.0",
+  "version": "0.2.0-alpha.0",
   "type": "commonjs",
   "author": "Ariel Weinberger",
   "keywords": [

@@ -1,6 +1,6 @@
 {
   "name": "pezzo",
-  "version": "0.2.0",
+  "version": "0.2.0-alpha.0",
   "license": "MIT",
   "scripts": {
     "graphql:codegen": "nx graphql:codegen:offline server",
