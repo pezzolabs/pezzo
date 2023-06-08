@@ -1,7 +1,8 @@
 import { Space, Typography, theme } from "antd";
 import { integrations } from "@pezzo/integrations";
 import { ProviderApiKeyListItem } from "../../components/api-keys/ProviderApiKeyListItem";
-import { useProviderApiKeys } from "../../lib/hooks/queries";
+import { usePezzoApiKeys, useProviderApiKeys } from "../../lib/hooks/queries";
+import { PezzoApiKeyListItem } from "../../components/api-keys/PezzoApiKeyListItem";
 
 export const APIKeysPage = () => {
   const { token } = theme.useToken();
@@ -12,6 +13,7 @@ export const APIKeysPage = () => {
   }));
 
   const { data: providerApiKeysData } = useProviderApiKeys();
+  const { data: pezzoApiKeysData } = usePezzoApiKeys();
 
   const renderProviderApiKey = (provider) => {
     const apiKey = providerApiKeysData.providerApiKeys.find(
@@ -30,20 +32,20 @@ export const APIKeysPage = () => {
 
   return (
     <>
-      {
-        // apiKeyData && (
-        //   <div style={{ marginBottom: token.marginLG }}>
-        //     <Typography.Title level={2}>Pezzo API Key</Typography.Title>
-        //     <Typography.Paragraph style={{ marginBottom: token.marginMD }}>
-        //       Below you can find your Pezzo API key. This API key is provided to
-        //       the Pezzo client when executing prompts.
-        //     </Typography.Paragraph>
-        //     <Space direction="vertical">
-        //       {/* <PezzoApiKeyListItem value={apiKeyData.currentApiKey.id} /> */}
-        //     </Space>
-        //   </div>
-        // )
-      }
+      {pezzoApiKeysData && (
+        <div style={{ marginBottom: token.marginLG }}>
+          <Typography.Title level={2}>Pezzo API Key</Typography.Title>
+          <Typography.Paragraph style={{ marginBottom: token.marginMD }}>
+            Below you can find your Pezzo API key. This API key is provided to
+            the Pezzo client when executing prompts.
+          </Typography.Paragraph>
+          <Space direction="vertical">
+            {pezzoApiKeysData.apiKeys.map((item, index) => (
+              <PezzoApiKeyListItem key={item.id} value={item.id} />
+            ))}
+          </Space>
+        </div>
+      )}
 
       {providerApiKeysData && (
         <div>

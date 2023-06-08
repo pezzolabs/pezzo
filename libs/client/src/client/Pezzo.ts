@@ -5,6 +5,7 @@ import type { CreatePromptExecutionDto } from "@pezzo/common";
 export interface PezzoClientOptions {
   serverUrl?: string;
   apiKey: string;
+  environment: string;
 }
 
 const defaultOptions: Partial<PezzoClientOptions> = {

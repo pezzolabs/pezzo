@@ -30,11 +30,18 @@ export const GET_PROMPT = graphql(/* GraphQL */ `
   }
 `);
 
-export const GET_PROMPT_VERSIONS_LIST = graphql(/* GraphQL */ `
-  query promptVersions($data: PromptWhereUniqueInput!) {
-    promptVersions(data: $data) {
-      sha
-      message
+export const GET_PROMPT_VERSIONS = graphql(/* GraphQL */ `
+  query GetPromptVersionsWithTags($data: GetPromptInput!) {
+    prompt(data: $data) {
+      versions {
+        sha
+        message
+        createdAt
+        createdBy {
+          name
+          photoUrl
+        }
+      }
     }
   }
 `);

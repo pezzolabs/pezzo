@@ -11,11 +11,11 @@ const noop = {} as Pezzo;
 export class PromptTesterService {
   constructor(private providerAPIKeysService: ProviderApiKeysService) {}
 
-  private async executorFactory(integrationId: string, projectId: string) {
+  private async executorFactory(integrationId: string, organizationId: string) {
     const { provider } = getIntegration(integrationId);
     const apiKey = await this.providerAPIKeysService.getByProvider(
       provider,
-      projectId
+      organizationId
     );
 
     if (!apiKey) {
@@ -32,11 +32,11 @@ export class PromptTesterService {
 
   async testPrompt(
     input: TestPromptInput,
-    projectId: string
+    organizationId: string
   ): Promise<TestPromptResult> {
     const { integrationId, content, variables } = input;
     const interpolatedContent = interpolateVariables(content, variables);
-    const executor = await this.executorFactory(integrationId, projectId);
+    const executor = await this.executorFactory(integrationId, organizationId);
     const settings = input.settings;
 
     const start = performance.now();

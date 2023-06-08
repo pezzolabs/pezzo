@@ -33,7 +33,7 @@ export const ProviderApiKeyListItem = ({
         data: {
           provider: data.provider,
           value: data.value,
-          projectId: data.projectId,
+          organizationId: data.organizationId,
         },
       }),
     onSuccess: () => {
@@ -58,7 +58,7 @@ export const ProviderApiKeyListItem = ({
     await updateKeyMutation.mutateAsync({
       provider,
       value: editValue,
-      projectId: project.id,
+      organizationId: project.organizationId,
     });
     setIsEditing(false);
   };

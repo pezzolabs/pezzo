@@ -39,14 +39,12 @@ export class ApiKeyAuthGuard implements CanActivate {
       throw new UnauthorizedException("Invalid Pezzo API Key");
     }
 
-    const environment = apiKey.environment;
+    const organization = apiKey.organization;
 
-    req.projectId = environment.projectId;
-    req.environmentId = environment.id;
+    req.organizationId = organization.id;
     req.authMethod = AuthMethod.ApiKey;
     this.logger.assign({
-      environmentId: environment.id,
-      projectId: environment.projectId,
+      organizationId: organization.id,
     });
 
     return true;
