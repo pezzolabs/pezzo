@@ -46,7 +46,9 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
-        run: npx nx run-many --target=build --all --parallel --maxParallel=3
+        run: |
+          npm run graphql:codegen
+          npx nx run-many --target=build --all --parallel --maxParallel=3
 
       - name: Upload dist artifact
         uses: actions/upload-artifact@v2
