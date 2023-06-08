@@ -93,8 +93,8 @@ jobs:
             ghcr.io/pezzolabs/pezzo/${{ matrix.project }}
           tags: |
             type=semver,pattern={{version}}
-            type=raw,value=latest
             type=sha,format=short
+            type=raw,value=latest,enable=${{ contains(github.ref, 'refs/tags/v') && !contains(github.ref, 'alpha') }}
 
       - name: Build and push
         uses: docker/build-push-action@v4
@@ -143,7 +143,13 @@ jobs:
 
       - name: NPM Publish (@pezzo/${{ matrix.library }})
         if: steps.cpv.outputs.is-new-version == 'true'
-        run: npm publish --access public
+        run: |
+          version=$(node -p "require('./package.json').version")
+          if [[ $version == *"alpha"* ]]; then
+            npm publish --access public --tag alpha
+          else
+            npm publish --access public
+          fi
         working-directory: dist/libs/${{ matrix.library }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
