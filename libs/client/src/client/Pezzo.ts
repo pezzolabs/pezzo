@@ -64,7 +64,7 @@ export class Pezzo {
     const url = new URL(`${this.options.serverUrl}/api/prompts/deployment`);
     url.searchParams.append("name", promptName);
     url.searchParams.append("environmentName", this.options.environment);
-    
+
     const { data } = await this.axios.get(url.toString());
 
     return {
