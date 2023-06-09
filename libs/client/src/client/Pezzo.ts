@@ -5,6 +5,7 @@ import type { CreatePromptExecutionDto } from "@pezzo/common";
 export interface PezzoClientOptions {
   serverUrl?: string;
   apiKey: string;
+  environment: string;
 }
 
 const defaultOptions: Partial<PezzoClientOptions> = {
@@ -60,7 +61,11 @@ export class Pezzo {
   }
 
   async getDeployedPromptVersion<T>(promptName: string) {
-    const { data } = await this.axios.get(`prompts/${promptName}/deployment`);
+    const url = new URL(`${this.options.serverUrl}/api/prompts/deployment`);
+    url.searchParams.append("name", promptName);
+    url.searchParams.append("environmentName", this.options.environment);
+
+    const { data } = await this.axios.get(url.toString());
 
     return {
       id: data.promptId,

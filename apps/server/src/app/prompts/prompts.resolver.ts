@@ -9,17 +9,10 @@ import {
 import { Prompt } from "../../@generated/prompt/prompt.model";
 import { PrismaService } from "../prisma.service";
 import { PromptWhereUniqueInput } from "../../@generated/prompt/prompt-where-unique.input";
-import { PromptUpdateInput } from "../../@generated/prompt/prompt-update.input";
 import { PromptExecution } from "../../@generated/prompt-execution/prompt-execution.model";
-import {
-  Environment,
-  Prompt as PrismaPrompt,
-  PromptEnvironment,
-} from "@prisma/client";
+import { Prompt as PrismaPrompt } from "@prisma/client";
 import { CreatePromptInput } from "./inputs/create-prompt.input";
 import { PromptsService } from "./prompts.service";
-import { PromptVersion } from "../../@generated/prompt-version/prompt-version.model";
-import { CreatePromptVersionInput } from "./inputs/create-prompt-version.input";
 import { GetPromptVersionInput } from "./inputs/get-prompt-version.input";
 import { GetPromptInput } from "./inputs/get-prompt.input";
 import {
@@ -32,25 +25,18 @@ import { AuthGuard } from "../auth/auth.guard";
 import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
 import { isProjectMemberOrThrow } from "../identity/identity.utils";
-import { FindPromptByNameInput } from "./inputs/find-prompt-by-name.input";
-import { EnvironmentsService } from "../identity/environments.service";
 import { GetProjectPromptsInput } from "./inputs/get-project-prompts.input";
-import { ApiKeyProjectId } from "../identity/api-key-project-id.decorator";
-import { ResolveDeployedVersionInput } from "./inputs/resolve-deployed-version.input";
 import { PinoLogger } from "../logger/pino-logger";
 import { AnalyticsService } from "../analytics/analytics.service";
-import { ApiKeysService } from "../identity/api-keys.service";
-
+import { PromptVersion } from "../../@generated/prompt-version/prompt-version.model";
 @UseGuards(AuthGuard)
 @Resolver(() => Prompt)
 export class PromptsResolver {
   constructor(
     private prisma: PrismaService,
     private promptsService: PromptsService,
-    private environmentsService: EnvironmentsService,
     private logger: PinoLogger,
-    private analytics: AnalyticsService,
-    private apiKeysService: ApiKeysService
+    private analytics: AnalyticsService
   ) {}
 
   @Query(() => [Prompt])
@@ -130,7 +116,7 @@ export class PromptsResolver {
 
     isProjectMemberOrThrow(user, prompt.projectId);
 
-    let promptVersions: PromptVersion[];
+    let promptVersions;
 
     try {
       promptVersions = await this.promptsService.getPromptVersions(data.id);
@@ -148,7 +134,7 @@ export class PromptsResolver {
     @CurrentUser() user: RequestUser
   ) {
     const { promptId, sha } = data;
-    let promptVersion: PromptVersion;
+    let promptVersion;
 
     try {
       if (sha === "latest") {
@@ -216,43 +202,6 @@ export class PromptsResolver {
     });
 
     return prompt;
-  }
-
-  @Mutation(() => PromptVersion)
-  async createPromptVersion(
-    @Args("data") data: CreatePromptVersionInput,
-    @CurrentUser() user: RequestUser
-  ) {
-    this.logger.assign({ ...data }).info("Creating prompt version");
-    let prompt: Prompt;
-
-    try {
-      prompt = await this.promptsService.getPrompt(data.promptId);
-    } catch (error) {
-      this.logger.error({ error }, "Error getting existing prompt");
-      throw new InternalServerErrorException();
-    }
-
-    if (!prompt) {
-      throw new NotFoundException();
-    }
-
-    isProjectMemberOrThrow(user, prompt.projectId);
-
-    try {
-      const promptVersion = await this.promptsService.createPromptVersion(
-        data,
-        user.id
-      );
-      this.analytics.track("PROMPT_VERSION:CREATED", user.id, {
-        projectId: prompt.projectId,
-        promptId: prompt.id,
-      });
-      return promptVersion;
-    } catch (error) {
-      this.logger.error({ error }, "Error creating prompt version");
-      throw new InternalServerErrorException();
-    }
   }
 
   @ResolveField(() => [PromptExecution])

@@ -46,7 +46,9 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
-        run: npx nx run-many --target=build --all --parallel --maxParallel=3
+        run: |
+          npm run graphql:codegen
+          npx nx run-many --target=build --all --parallel --maxParallel=3
 
       - name: Upload dist artifact
         uses: actions/upload-artifact@v2
@@ -93,8 +95,8 @@ jobs:
             ghcr.io/pezzolabs/pezzo/${{ matrix.project }}
           tags: |
             type=semver,pattern={{version}}
-            type=raw,value=latest
             type=sha,format=short
+            type=raw,value=latest,enable=${{ contains(github.ref, 'refs/tags/v') && !contains(github.ref, 'alpha') }}
 
       - name: Build and push
         uses: docker/build-push-action@v4
@@ -103,7 +105,7 @@ jobs:
           file: ./apps/${{ matrix.project }}/Dockerfile
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           provenance: false
 
@@ -143,7 +145,13 @@ jobs:
 
       - name: NPM Publish (@pezzo/${{ matrix.library }})
         if: steps.cpv.outputs.is-new-version == 'true'
-        run: npm publish --access public
+        run: |
+          version=$(node -p "require('./package.json').version")
+          if [[ $version == *"alpha"* ]]; then
+            npm publish --access public --tag alpha
+          else
+            npm publish --access public
+          fi
         working-directory: dist/libs/${{ matrix.library }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

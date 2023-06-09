@@ -12,6 +12,9 @@ export class CreatePromptExecutionDto {
   promptId: string;
 
   @IsString()
+  environmentName: string;
+
+  @IsString()
   promptVersionSha: string;
 
   @IsEnum(PromptExecutionStatus)

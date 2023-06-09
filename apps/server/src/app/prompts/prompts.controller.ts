@@ -5,14 +5,12 @@ import {
   Get,
   InternalServerErrorException,
   NotFoundException,
-  Param,
   Post,
+  Query,
 } from "@nestjs/common";
 import { UseGuards } from "@nestjs/common";
 import { ApiKeyAuthGuard } from "../auth/api-key-auth.guard";
 import { PinoLogger } from "../logger/pino-logger";
-import { ApiKeyProjectId } from "../identity/api-key-project-id.decorator";
-import { ApiKeyEnvironmentId } from "../identity/api-key-environment-id.dedocator";
 import { CreatePromptExecutionDto } from "@pezzo/common";
 import { PromptsService } from "./prompts.service";
 import {
@@ -25,6 +23,8 @@ import { InfluxDbService } from "../influxdb/influxdb.service";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { PrismaService } from "../prisma.service";
 import { Point } from "@influxdata/influxdb-client";
+import { ApiKeyOrgId } from "../identity/api-key-org-id.decoator";
+import { GetPromptDeploymentDto } from "./dto/get-prompt-deployment.dto";
 
 @UseGuards(ApiKeyAuthGuard)
 @Controller("prompts")
@@ -37,25 +37,40 @@ export class PromptsController {
     private analytics: AnalyticsService
   ) {}
 
-  @Get("/:name/deployment")
+  @Get("/deployment")
   async getPromptDeployment(
-    @Param("name") name: string,
-    @ApiKeyProjectId() projectId: string,
-    @ApiKeyEnvironmentId() environmentId: string
+    @Query() query: GetPromptDeploymentDto,
+    @ApiKeyOrgId() organizationId: string
   ) {
+    const { name, environmentName } = query;
     this.logger.info(
-      { name, projectId, environmentId },
+      { name, organizationId, environmentName },
       "Getting prompt deployment"
     );
     let prompt: Prompt;
 
+    const orgProjects = await this.prisma.project.findMany({
+      where: { organizationId },
+    });
+
+    const projectIds = orgProjects.map((p) => p.id);
+    let projectId: string;
+
     try {
       prompt = await this.prisma.prompt.findFirst({
         where: {
-          name,
-          projectId,
+          name: {
+            equals: name,
+          },
+          projectId: {
+            in: projectIds,
+          },
         },
       });
+
+      console.log("prompt", prompt);
+
+      projectId = prompt.projectId;
     } catch (error) {
       this.logger.error({ error }, "Error finding prompt with API key");
       throw new InternalServerErrorException();
@@ -66,15 +81,20 @@ export class PromptsController {
     }
 
     this.analytics.track("PROMPT:FIND_WITH_API_KEY", "api", {
+      organizationId,
       projectId,
       promptId: prompt.id,
+    });
+
+    const environment = await this.prisma.environment.findFirst({
+      where: { name: environmentName, projectId },
     });
 
     let deployedPrompt: PromptEnvironment;
 
     try {
       deployedPrompt = await this.prisma.promptEnvironment.findFirst({
-        where: { promptId: prompt.id, environmentId },
+        where: { promptId: prompt.id, environmentId: environment.id },
         orderBy: { createdAt: "desc" },
       });
     } catch (error) {
@@ -105,30 +125,35 @@ export class PromptsController {
   @Post("execution")
   async createPromptExecution(
     @Body() data: CreatePromptExecutionDto,
-    @ApiKeyProjectId() projectId: string,
-    @ApiKeyEnvironmentId() environmentId: string
+    @ApiKeyOrgId() organizationId: string
   ): Promise<{ success: boolean }> {
-    this.logger.info(
-      { ...data, projectId, environmentId },
-      "Reporting prompt execution"
-    );
-    const { promptId } = data;
+    this.logger.info({ ...data, organizationId }, "Reporting prompt execution");
+    const { promptId, environmentName } = data;
+
     const prompt = await this.promptsService.getPrompt(promptId);
 
     if (!prompt) {
       throw new NotFoundException();
     }
 
-    if (prompt.projectId !== projectId) {
+    const project = await this.prisma.project.findUnique({
+      where: { id: prompt.projectId },
+    });
+
+    if (organizationId !== project.organizationId) {
       throw new ForbiddenException();
     }
+
+    const environment = await this.prisma.environment.findFirst({
+      where: { name: environmentName, projectId: prompt.projectId },
+    });
 
     let execution: PromptExecution;
 
     try {
       execution = await this.prisma.promptExecution.create({
         data: {
-          environmentId,
+          environmentId: environment.id,
           prompt: { connect: { id: promptId } },
           promptVersionSha: data.promptVersionSha,
           timestamp: new Date(),
@@ -154,7 +179,7 @@ export class PromptsController {
     }
 
     this.analytics.track("PROMPT_EXECUTION:REPORTED", "api", {
-      projectId,
+      projectId: project.id,
       promptId,
       executionId: execution.id,
       integrationId: prompt.integrationId,

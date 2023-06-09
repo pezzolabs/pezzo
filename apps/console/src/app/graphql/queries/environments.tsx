@@ -5,9 +5,6 @@ export const GET_ALL_ENVIRONMENTS = graphql(/* GraphQL */ `
     environments(data: $data) {
       id
       name
-      apiKey {
-        id
-      }
     }
   }
 `);
