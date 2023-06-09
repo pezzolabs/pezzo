@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
-import { randomBytes } from "crypto";
 
 @Injectable()
 export class EnvironmentsService {
@@ -11,14 +10,6 @@ export class EnvironmentsService {
       data: {
         name,
         projectId,
-      },
-    });
-
-    const apiKeyValue = `pez_${randomBytes(16).toString("hex")}`;
-    await this.prisma.apiKey.create({
-      data: {
-        id: apiKeyValue,
-        environmentId: environment.id,
       },
     });
 

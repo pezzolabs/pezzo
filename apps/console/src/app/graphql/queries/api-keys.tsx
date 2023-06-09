@@ -9,3 +9,11 @@ export const GET_ALL_PROVIDER_API_KEYS = graphql(/* GraphQL */ `
     }
   }
 `);
+
+export const GET_ALL_API_KEYS = graphql(/* GraphQL */ `
+  query ApiKeys($data: GetApiKeysInput!) {
+    apiKeys(data: $data) {
+      id
+    }
+  }
+`);

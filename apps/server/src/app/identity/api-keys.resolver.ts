@@ -1,38 +1,33 @@
 import { Args, Query, Resolver } from "@nestjs/graphql";
 import { ApiKey } from "../../@generated/api-key/api-key.model";
 import { ApiKeysService } from "./api-keys.service";
-import { InternalServerErrorException, UseGuards } from "@nestjs/common";
+import { UseGuards } from "@nestjs/common";
 import { AuthGuard } from "../auth/auth.guard";
-import { CurrentUser } from "../identity/current-user.decorator";
-import { RequestUser } from "../identity/users.types";
-import { GetApiKeyInput } from "./inputs/get-api-key.input";
-import { isProjectMemberOrThrow } from "../identity/identity.utils";
 import { PinoLogger } from "../logger/pino-logger";
-import { EnvironmentsService } from "./environments.service";
+import { GetApiKeysInput } from "./inputs/get-api-keys.input";
+import { isOrgMemberOrThrow } from "./identity.utils";
+import { CurrentUser } from "./current-user.decorator";
+import { RequestUser } from "./users.types";
 
 @UseGuards(AuthGuard)
 @Resolver(() => ApiKey)
 export class ApiKeysResolver {
   constructor(
     private apiKeysService: ApiKeysService,
-    private logger: PinoLogger,
-    private environmentService: EnvironmentsService
+    private logger: PinoLogger
   ) {}
 
-  @Query(() => ApiKey)
-  currentApiKey(
-    @Args("data") data: GetApiKeyInput,
+  @Query(() => [ApiKey])
+  async apiKeys(
+    @Args("data") data: GetApiKeysInput,
     @CurrentUser() user: RequestUser
   ) {
-    const { environmentId } = data;
-    isProjectMemberOrThrow(user, environmentId);
-    this.logger.assign({ environmentId }).info("Getting current API key");
+    const { organizationId } = data;
+    isOrgMemberOrThrow(user, organizationId);
 
-    try {
-      return this.apiKeysService.getApiKeyByEnvironmentId(environmentId);
-    } catch (error) {
-      this.logger.error({ error }, "Error getting current API key");
-      throw new InternalServerErrorException();
-    }
+    const apiKeys = await this.apiKeysService.getApiKeysByOrganizationId(
+      organizationId
+    );
+    return apiKeys;
   }
 }

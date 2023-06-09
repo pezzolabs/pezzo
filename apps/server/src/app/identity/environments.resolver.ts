@@ -1,11 +1,4 @@
-import {
-  Args,
-  Mutation,
-  Parent,
-  Query,
-  ResolveField,
-  Resolver,
-} from "@nestjs/graphql";
+import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { Environment } from "../../@generated/environment/environment.model";
 import {
   ConflictException,
@@ -48,11 +41,6 @@ export class EnvironmentsResolver {
       this.logger.error({ error }, "Error getting environments");
       throw new InternalServerErrorException();
     }
-  }
-
-  @ResolveField(() => Environment)
-  async apiKey(@Parent() environment: Environment) {
-    return this.apiKeysService.getApiKeyByEnvironmentId(environment.id);
   }
 
   @Mutation(() => Environment)
