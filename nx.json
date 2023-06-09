@@ -10,7 +10,6 @@
           "lint",
           "test",
           "e2e",
-          "prisma:generate",
           "graphql:schema-generate"
         ],
         "accessToken": "ZDM4NGExYTItZDFiMy00ZmFlLWJiYTEtMGZmZjQ1NzIxMDQyfHJlYWQtd3JpdGU="
