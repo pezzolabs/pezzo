@@ -1,5 +1,5 @@
 import { Form } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCurrentPrompt } from "../providers/CurrentPromptContext";
 import { getIntegration } from "@pezzo/integrations";
 
@@ -32,6 +32,7 @@ export const getDraftPromptData = (integrationId: string) => {
 export const usePromptEdit = () => {
   const { prompt, currentPromptVersion, isDraft } = useCurrentPrompt();
   const [form] = Form.useForm<PromptEditFormInputs>();
+  const isFirstRunRef = useRef(true);
   const [isFormTouched, setIsFormTouched] = useState<boolean>(false);
   const [variables, setVariables] = useState<{ [key: string]: string }>({});
   const versionInitialSnapshot = isDraft
@@ -61,6 +62,12 @@ export const usePromptEdit = () => {
       return mappedVariables;
     });
   };
+
+  useEffect(() => {
+    if (!isFirstRunRef.current) return;
+    isFirstRunRef.current = false;
+    setVariables(findVariables(content));
+  }, [content]);
 
   const setVariable = (key: string, value: string) => {
     const newVariables = { ...variables };
