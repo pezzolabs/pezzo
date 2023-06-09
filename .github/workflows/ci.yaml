@@ -25,7 +25,7 @@ env:
 jobs:
   ci:
     name: Continuous Integration
-    runs-on: ubuntu-20.04
+    runs-on: self-hosted
     permissions:
       packages: write
     steps:
@@ -124,6 +124,6 @@ jobs:
           file: ./apps/${{ matrix.project }}/Dockerfile
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           push: true
           provenance: false
