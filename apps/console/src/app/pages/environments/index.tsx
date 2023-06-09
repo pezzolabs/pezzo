@@ -1,29 +1,14 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Spin, Table, Typography, theme } from "antd";
+import { Button, Card, Space, Spin, Table, Typography, theme } from "antd";
 import { CreateEnvironmentModal } from "../../components/environments/CreateEnvironmentModal";
 import { useState } from "react";
 import { useEnvironments } from "../../lib/hooks/useEnvironments";
-import { PezzoApiKeyListItem } from "../../components/api-keys/PezzoApiKeyListItem";
 
 export const EnvironmentsPage = () => {
   const { environments, isLoading } = useEnvironments();
   const [isCreateEnvironmentModalOpen, setIsCreateEnvironmentModalOpen] =
     useState(false);
   const { token } = theme.useToken();
-
-  const columns = [
-    {
-      title: "Environment",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "API Key",
-      dataIndex: "apiKey",
-      key: "apiKey",
-      render: (apiKey: string) => <PezzoApiKeyListItem value={apiKey} />,
-    },
-  ];
 
   return (
     <>
@@ -44,17 +29,12 @@ export const EnvironmentsPage = () => {
           </Button>
         </div>
 
-        {environments && (
-          <Table
-            pagination={false}
-            columns={columns}
-            dataSource={environments.map((e) => ({
-              key: e.id,
-              name: e.name,
-              apiKey: e.apiKey.id,
-            }))}
-          />
-        )}
+        {environments &&
+          environments.map((e) => (
+            <Card style={{ marginBottom: 10, maxWidth: 600 }} size="small">
+              {e.name}
+            </Card>
+          ))}
       </Spin>
     </>
   );

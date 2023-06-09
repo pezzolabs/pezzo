@@ -32,7 +32,7 @@ export class ProjectsService {
     });
 
     // Create default environment
-    await this.environmentsService.createEnvironment("Development", project.id);
+    await this.environmentsService.createEnvironment("Production", project.id);
 
     this.logger
       .assign({ projectId: project.id })

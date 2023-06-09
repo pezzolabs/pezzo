@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Button,
   Col,
   Dropdown,
@@ -23,6 +22,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { signOut } from "supertokens-auth-react/recipe/session";
 import { useNavigate } from "react-router-dom";
+import { Avatar } from "../common/Avatar";
 
 const Logo = styled.img`
   height: 40px;
@@ -65,13 +65,6 @@ const menuItems: MenuProps["items"] = [
     ),
   },
 ];
-
-const buildInitials = (name: string) => {
-  const splittedName = name.split(" ");
-  if (splittedName.length === 1) return splittedName[0][0];
-  const [firstName, lastName] = splittedName;
-  return `${firstName[0]}${lastName[0]}`;
-};
 
 export const Header = () => {
   const { currentUser } = useAuthContext();
@@ -129,28 +122,21 @@ export const Header = () => {
           trigger={["click"]}
           onOpenChange={setOpen}
         >
-          <UserProfileButton ghost style={{ padding: 4, height: "auto" }}>
-            <Space size="middle">
-              <Avatar
-                size="large"
-                src={
-                  currentUser?.photoUrl ? (
-                    <img src={currentUser?.photoUrl} alt="avatar" />
-                  ) : undefined
-                }
-              >
-                {buildInitials(currentUser?.name || "")}
-              </Avatar>
+          {currentUser && (
+            <UserProfileButton ghost style={{ padding: 4, height: "auto" }}>
+              <Space size="middle">
+                <Avatar user={currentUser} size="large" />
 
-              <Typography.Text type="secondary">
-                {currentUser?.name}
-              </Typography.Text>
-              <DownOutlined
-                style={{ color: colors.neutral[300], width: 12, height: 12 }}
-                rotate={open ? 180 : 0}
-              />
-            </Space>
-          </UserProfileButton>
+                <Typography.Text type="secondary">
+                  {currentUser.name}
+                </Typography.Text>
+                <DownOutlined
+                  style={{ color: colors.neutral[300], width: 12, height: 12 }}
+                  rotate={open ? 180 : 0}
+                />
+              </Space>
+            </UserProfileButton>
+          )}
         </Dropdown>
       </div>
 

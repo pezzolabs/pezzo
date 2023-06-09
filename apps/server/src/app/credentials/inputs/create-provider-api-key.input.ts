@@ -9,5 +9,5 @@ export class CreateProviderApiKeyInput {
   value: string;
 
   @Field(() => String, { nullable: false })
-  projectId: string;
+  organizationId: string;
 }

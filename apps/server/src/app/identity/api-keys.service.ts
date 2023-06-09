@@ -1,18 +1,19 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
+import { ApiKey } from "@prisma/client";
 
 @Injectable()
 export class ApiKeysService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getApiKeyByEnvironmentId(environmentId: string) {
-    const apiKey = await this.prisma.apiKey.findFirst({
+  async getApiKeysByOrganizationId(organizationId: string): Promise<ApiKey[]> {
+    const apiKeys = await this.prisma.apiKey.findMany({
       where: {
-        environmentId,
+        organizationId,
       },
     });
 
-    return apiKey;
+    return apiKeys;
   }
 
   async getApiKey(value: string) {
@@ -21,7 +22,7 @@ export class ApiKeysService {
         id: value,
       },
       include: {
-        environment: true,
+        organization: true,
       },
     });
 

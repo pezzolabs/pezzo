@@ -11,6 +11,14 @@ generator nestgraphql {
   provider      = "node node_modules/prisma-nestjs-graphql"
   output        = "../src/@generated"
   binaryTargets = ["native", "debian-openssl-1.1.x", "linux-arm64-openssl-1.1.x"]
+  purgeOutput   = true
+
+  // ExtendedUser
+  fields_ExtendedUser_from        = "../../app/identity/models/extended-user.model"
+  fields_ExtendedUser_input       = false
+  fields_ExtendedUser_models      = true
+  fields_ExtendedUser_output      = true
+  fields_ExtendedUser_namedImport = true
 }
 
 datasource db {
@@ -18,11 +26,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model PromptVersion {
+  sha                String              @id
+  content            String
+  settings           Json
+  promptId           String
+  prompt             Prompt              @relation(fields: [promptId], references: [id])
+  createdAt          DateTime            @default(now())
+  promptEnvironments PromptEnvironment[]
+  message            String?
+  createdById        String
+  /// @FieldType('ExtendedUser')
+  /// @PropertyType('ExtendedUser')
+  createdBy          User                @relation(fields: [createdById], references: [id])
+}
+
 model User {
   id                    String               @id
   email                 String               @unique
-  createdAt             DateTime             @default(now())
-  updatedAt             DateTime             @updatedAt
+  createdAt             DateTime?            @default(now())
+  updatedAt             DateTime?            @updatedAt
   orgMemberships        OrganizationMember[]
   projectMemberships    ProjectMember[]
   publishedPrompts      PromptEnvironment[]
@@ -52,12 +75,14 @@ model ProjectMember {
 }
 
 model Organization {
-  id        String               @id @default(cuid())
-  name      String
-  createdAt DateTime             @default(now())
-  updatedAt DateTime             @updatedAt
-  members   OrganizationMember[]
-  projects  Project[]
+  id              String               @id @default(cuid())
+  name            String
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  members         OrganizationMember[]
+  projects        Project[]
+  apiKeys         ApiKey[]
+  providerApiKeys ProviderApiKey[]
 }
 
 model OrganizationMember {
@@ -86,11 +111,13 @@ model Environment {
 }
 
 model ApiKey {
-  id            String   @id
-  name          String   @default("Default")
-  environmentId String
-  environment   Environment  @relation(fields: [environmentId], references: [id])
-  createdAt     DateTime @default(now())
+  id             String        @id
+  name           String        @default("Default")
+  environmentId  String?
+  environment    Environment?   @relation(fields: [environmentId], references: [id])
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  createdAt      DateTime      @default(now())
 }
 
 model Prompt {
@@ -103,19 +130,6 @@ model Prompt {
   versions           PromptVersion[]
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
-}
-
-model PromptVersion {
-  sha                String              @id
-  content            String
-  settings           Json
-  promptId           String
-  prompt             Prompt              @relation(fields: [promptId], references: [id])
-  createdAt          DateTime            @default(now())
-  promptEnvironments PromptEnvironment[]
-  message            String?
-  createdById        String
-  createdBy          User                @relation(fields: [createdById], references: [id])
 }
 
 model PromptEnvironment {
@@ -160,11 +174,13 @@ enum PromptExecutionStatus {
 }
 
 model ProviderApiKey {
-  id        String   @id @default(cuid())
-  provider  String
-  value     String
-  projectId String
-  project   Project  @relation(fields: [projectId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String       @id @default(cuid())
+  provider       String
+  value          String
+  projectId      String?
+  project        Project?      @relation(fields: [projectId], references: [id])
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }

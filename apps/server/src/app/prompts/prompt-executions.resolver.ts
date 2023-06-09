@@ -2,7 +2,6 @@ import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { Prompt } from "../../@generated/prompt/prompt.model";
 import { PrismaService } from "../prisma.service";
 import { PromptExecution } from "../../@generated/prompt-execution/prompt-execution.model";
-import { PromptExecutionCreateInput } from "../../@generated/prompt-execution/prompt-execution-create.input";
 import { PromptExecutionWhereInput } from "../../@generated/prompt-execution/prompt-execution-where.input";
 import { PromptExecutionWhereUniqueInput } from "../../@generated/prompt-execution/prompt-execution-where-unique.input";
 import { PromptExecutionStatus } from "../../@generated/prisma/prompt-execution-status.enum";
@@ -13,19 +12,15 @@ import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
 import { AuthGuard } from "../auth/auth.guard";
 import {
-  ForbiddenException,
   InternalServerErrorException,
   NotFoundException,
   UseGuards,
 } from "@nestjs/common";
-import { ApiKeyProjectId } from "../identity/api-key-project-id.decorator";
 import { isProjectMemberOrThrow } from "../identity/identity.utils";
 import { InfluxDbService } from "../influxdb/influxdb.service";
-import { Point } from "@influxdata/influxdb-client";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { PinoLogger } from "../logger/pino-logger";
 import { TestPromptResult } from "@pezzo/client";
-import { ApiKeyEnvironmentId } from "../identity/api-key-environment-id.dedocator";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Prompt)
@@ -114,10 +109,17 @@ export class PromptExecutionsResolver {
       .info("Testing prompt");
     isProjectMemberOrThrow(user, data.projectId);
 
+    const project = await this.prisma.project.findUnique({
+      where: { id: data.projectId },
+    });
+
     let result: TestPromptResult;
 
     try {
-      result = await this.promptTesterService.testPrompt(data, data.projectId);
+      result = await this.promptTesterService.testPrompt(
+        data,
+        project.organizationId
+      );
     } catch (error) {
       this.logger.error({ error }, "Error testing prompt");
       throw new InternalServerErrorException();
@@ -146,6 +148,7 @@ export class PromptExecutionsResolver {
     execution.variables = result.variables;
 
     this.analytics.track("PROMPT:TESTED", user.id, {
+      organizationId: project.organizationId,
       projectId: data.projectId,
       integrationId: data.integrationId,
       executionId: "test",

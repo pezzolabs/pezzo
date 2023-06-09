@@ -74,6 +74,7 @@ export abstract class BaseExecutor {
     }
 
     const data: CreatePromptExecutionDto = {
+      environmentName: this.pezzoClient.options.environment,
       promptId: prompt.id,
       promptVersionSha: promptVersion.sha,
       content: content,

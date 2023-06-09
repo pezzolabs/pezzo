@@ -7,7 +7,7 @@ import { RequestUser } from "../identity/users.types";
 import { InternalServerErrorException, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "../auth/auth.guard";
 import { GetProviderApiKeysInput } from "./inputs/get-provider-api-keys.input";
-import { isProjectMemberOrThrow } from "../identity/identity.utils";
+import { isOrgMemberOrThrow } from "../identity/identity.utils";
 import { PinoLogger } from "../logger/pino-logger";
 import { AnalyticsService } from "../analytics/analytics.service";
 
@@ -25,12 +25,12 @@ export class ProviderApiKeysResolver {
     @Args("data") data: GetProviderApiKeysInput,
     @CurrentUser() user: RequestUser
   ) {
-    const { projectId } = data;
-    isProjectMemberOrThrow(user, projectId);
+    const { organizationId } = data;
+    isOrgMemberOrThrow(user, organizationId);
     try {
-      this.logger.assign({ projectId }).info("Getting provider API keys");
+      this.logger.assign({ organizationId }).info("Getting provider API keys");
       const keys = await this.providerAPIKeysService.getAllProviderApiKeys(
-        projectId
+        organizationId
       );
       return keys.map((key) => ({
         ...key,
@@ -46,21 +46,21 @@ export class ProviderApiKeysResolver {
     @Args("data") data: CreateProviderApiKeyInput,
     @CurrentUser() user: RequestUser
   ) {
-    const { provider, projectId, value } = data;
-    isProjectMemberOrThrow(user, projectId);
+    const { provider, organizationId, value } = data;
+    isOrgMemberOrThrow(user, organizationId);
 
     try {
       this.logger
-        .assign({ provider, projectId })
+        .assign({ provider, organizationId })
         .info("Updating provider API key");
       const key = await this.providerAPIKeysService.upsertProviderApiKey(
         provider,
         value,
-        projectId
+        organizationId
       );
 
       this.analytics.track("PROVIDER_API_KEY:CREATED", user.id, {
-        projectId,
+        organizationId,
         provider,
       });
 

@@ -16,6 +16,7 @@ export const GET_ALL_PROJECTS = graphql(/* GraphQL */ `
       id
       slug
       name
+      organizationId
     }
   }
 `);

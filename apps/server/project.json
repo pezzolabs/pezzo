@@ -76,7 +76,7 @@
     "prisma:generate": {
       "executor": "nx:run-commands",
       "inputs": ["{projectRoot}/prisma/schema.prisma"],
-      "outputs": ["{projectRoot}/prisma/schema.prisma"],
+      "outputs": ["{projectRoot}/src/generated"],
       "options": {
         "command": "npx prisma generate --schema apps/server/prisma/schema.prisma"
       }

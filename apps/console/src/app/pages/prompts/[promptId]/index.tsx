@@ -3,6 +3,7 @@ import {
   EditOutlined,
   HistoryOutlined,
   DashboardOutlined,
+  BranchesOutlined,
 } from "@ant-design/icons";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
@@ -12,6 +13,7 @@ import { DeletePromptConfirmationModal } from "../../../components/prompts/Delet
 import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
 import { DashboardView } from "../../../components/prompts/views/DashboardView";
 import { useParams } from "react-router-dom";
+import { PromptVersionsView } from "../../../components/prompts/views/PromptVersionsView";
 
 const TabLabel = styled.div`
   display: inline-block;
@@ -52,6 +54,14 @@ export const PromptPage = () => {
     {
       label: (
         <TabLabel>
+          <BranchesOutlined /> Versions
+        </TabLabel>
+      ),
+      key: "versions",
+    },
+    {
+      label: (
+        <TabLabel>
           <HistoryOutlined /> History
         </TabLabel>
       ),
@@ -76,6 +86,7 @@ export const PromptPage = () => {
         <>
           {activeView === "history" && <PromptHistoryView />}
           {activeView === "edit" && <PromptEditView />}
+          {activeView === "versions" && <PromptVersionsView />}
           {activeView === "dashboard" && <DashboardView />}
         </>
       )}

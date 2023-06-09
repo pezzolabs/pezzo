@@ -44,7 +44,7 @@ export class PromptsService {
     data: CreatePromptVersionInput,
     createdByUserId: string
   ) {
-    const { content, settings, promptId } = data;
+    const { content, settings, promptId, message } = data;
 
     const sha = sha256(
       `${JSON.stringify({ content, settings })}-${promptId}-${Date.now()}`
@@ -57,6 +57,7 @@ export class PromptsService {
         settings: settings as any, // eslint-disable-line @typescript-eslint/no-explicit-any
         promptId,
         createdById: createdByUserId,
+        message,
       },
     });
 

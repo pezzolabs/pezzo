@@ -1,16 +1,12 @@
 import { PromptExecution } from "@prisma/client";
 
-export type BaseProjectEventPayload = {
-  projectId: string;
-};
-
 // Event names follow the "{SUBJECT}:{ACTION}" pattern
 export type AnalyticsPayloads = {
   "USER:SIGNUP": {
     email: string;
     method: "EMAIL_PASSWORD" | "GOOGLE";
   };
-  "PROVIDER_API_KEY:CREATED": { projectId: string; provider: string };
+  "PROVIDER_API_KEY:CREATED": { organizationId: string; provider: string };
   "ENVIRONMENT:CREATED": {
     environmentId: string;
     projectId: string;
@@ -31,6 +27,7 @@ export type AnalyticsPayloads = {
     projectId: string;
   };
   "PROMPT:FIND_WITH_API_KEY": {
+    organizationId: string;
     projectId: string;
     promptId: string;
   };
@@ -42,6 +39,7 @@ export type AnalyticsPayloads = {
     data: Partial<PromptExecution>;
   };
   "PROMPT:TESTED": {
+    organizationId: string;
     projectId: string;
     integrationId: string;
     executionId: string;

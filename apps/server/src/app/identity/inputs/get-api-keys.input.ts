@@ -1,7 +1,7 @@
 import { Field, InputType } from "@nestjs/graphql";
 
 @InputType()
-export class GetApiKeyInput {
+export class GetApiKeysInput {
   @Field(() => String, { nullable: false })
-  environmentId: string;
+  organizationId: string;
 }
