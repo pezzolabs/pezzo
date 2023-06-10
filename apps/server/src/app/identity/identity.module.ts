@@ -9,6 +9,8 @@ import { EnvironmentsResolver } from "./environments.resolver";
 import { EnvironmentsService } from "./environments.service";
 import { ApiKeysResolver } from "./api-keys.resolver";
 import { ApiKeysService } from "./api-keys.service";
+import { OrganizationsResolver } from "./organizations.resolver";
+import { OrgInvitationsResolver } from "./org-invitations.resolver";
 
 @Module({
   providers: [
@@ -22,6 +24,8 @@ import { ApiKeysService } from "./api-keys.service";
     EnvironmentsService,
     ApiKeysService,
     ApiKeysResolver,
+    OrganizationsResolver,
+    OrgInvitationsResolver,
   ],
   exports: [
     UsersService,
