@@ -97,11 +97,11 @@ export abstract class BaseExecutor {
       data.error = executionResult.error.printableError;
     }
 
-    await this.pezzoClient.reportPromptExecution<T>(
+    const promptExecution = await this.pezzoClient.reportPromptExecution<T>(
       data,
       options.autoParseJSON
     );
 
-    return executionResult;
+    return promptExecution;
   }
 }
