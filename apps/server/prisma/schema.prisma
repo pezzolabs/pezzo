@@ -71,7 +71,7 @@ model Organization {
   projects        Project[]
   apiKeys         ApiKey[]
   providerApiKeys ProviderApiKey[]
-  invitations     Invitation[]
+  invitations    Invitation[]
 }
 
 model OrganizationMember {
@@ -88,22 +88,22 @@ model OrganizationMember {
 }
 
 model Invitation {
-  id             String           @id @default(cuid())
-  email          String
-  role           OrgRole
-  status         InvitationStatus
-  createdAt      DateTime         @default(now())
+  id String @id @default(cuid())
+  email String
+  role OrgRole
+  status InvitationStatus
+  createdAt DateTime @default(now())
   organizationId String
-  organization   Organization     @relation(fields: [organizationId], references: [id])
-  invitedById    String
+  organization Organization @relation(fields: [organizationId], references: [id])
+  invitedById String
   /// @FieldType('ExtendedUser')
   /// @PropertyType('ExtendedUser')
-  invitedBy      User             @relation(fields: [invitedById], references: [id])
+  invitedBy User @relation(fields: [invitedById], references: [id])
 }
 
 enum InvitationStatus {
   Pending
-  Accepted
+  Accepted  
 }
 
 enum OrgRole {

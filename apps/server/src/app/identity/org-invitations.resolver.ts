@@ -8,38 +8,29 @@ import {
 } from "@nestjs/graphql";
 import { Invitation } from "../../@generated/invitation/invitation.model";
 import { GetOrgInvitationsInput } from "./inputs/get-org-invitations.input";
+import { PrismaService } from "../prisma.service";
 import { CurrentUser } from "./current-user.decorator";
 import { RequestUser } from "./users.types";
 import { isOrgAdminOrThrow, isOrgMember } from "./identity.utils";
 import {
   ConflictException,
-  InternalServerErrorException,
   NotFoundException,
   UseGuards,
 } from "@nestjs/common";
 import { AuthGuard } from "../auth/auth.guard";
 import { CreateOrgInvitationInput } from "./inputs/create-org-invitation.input";
+import { InvitationStatus, OrgRole } from "@prisma/client";
 import { UsersService } from "./users.service";
 import { ExtendedUser } from "./models/extended-user.model";
 import { InvitationWhereUniqueInput } from "../../@generated/invitation/invitation-where-unique.input";
-import { Organization } from "../../@generated/organization/organization.model";
-import { KafkaProducerService } from "@pezzo/kafka";
-import { UpdateOrgInvitationInput } from "./inputs/update-org-invitation.input";
-import { ConfigService } from "@nestjs/config";
-import { PinoLogger } from "../logger/pino-logger";
-import { OrganizationsService } from "./organizations.service";
-import { InvitationsService } from "./invitations.service";
+import { OrganizationMember } from "../../@generated/organization-member/organization-member.model";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Invitation)
 export class OrgInvitationsResolver {
   constructor(
-    private usersService: UsersService,
-    private kafkaProducer: KafkaProducerService,
-    private organizationService: OrganizationsService,
-    private invitationsService: InvitationsService,
-    private logger: PinoLogger,
-    private config: ConfigService
+    private prisma: PrismaService,
+    private usersService: UsersService
   ) {}
 
   @Mutation(() => Invitation)
@@ -47,123 +38,41 @@ export class OrgInvitationsResolver {
     @Args("data") data: CreateOrgInvitationInput,
     @CurrentUser() user: RequestUser
   ): Promise<Invitation> {
-    this.logger.assign({ userId: user.id }).info("Creating org invitation");
-
     const { organizationId, email } = data;
     isOrgAdminOrThrow(user, organizationId);
 
-    let organization: Organization;
-    try {
-      this.logger.info("Getting org");
-      organization = await this.organizationService.getById(organizationId);
-    } catch (error) {
-      this.logger.error({ error }, "Failed to get organization");
-      throw new InternalServerErrorException();
-    }
+    const organization = await this.prisma.organization.findUnique({
+      where: {
+        id: organizationId,
+      },
+    });
 
     if (!organization) {
       throw new NotFoundException("Organization not found");
     }
 
-    const isMemberAlready = organization.members?.some(
-      (member) => member.user?.email === email
-    );
-
-    if (isMemberAlready) {
-      throw new ConflictException(
-        "User is already a member of this organization"
-      );
-    }
-
-    let exists: boolean;
-    try {
-      this.logger.info("Checking if invitation exists");
-      exists = !!(await this.invitationsService.getInvitationByEmail(
+    const exists = await this.prisma.invitation.findFirst({
+      where: {
+        organizationId,
         email,
-        organizationId
-      ));
-    } catch (error) {
-      this.logger.error({ error }, "Failed to get invitation");
-      throw new InternalServerErrorException();
-    }
+      },
+    });
 
     if (exists) {
       throw new ConflictException("Invitation to this email already exists");
     }
 
-    let invitation: Invitation;
-    try {
-      this.logger.info("Creating invitation");
-      invitation = await this.invitationsService.createInvitation(
+    const invitation = await this.prisma.invitation.create({
+      data: {
         email,
         organizationId,
-        user.id
-      );
-    } catch (error) {
-      this.logger.error({ error }, "Error getting invitation");
-      throw new InternalServerErrorException();
-    }
-
-    const consoleHost = this.config.get("CONSOLE_HOST");
-    const invitationUrl = new URL(consoleHost);
-    invitationUrl.pathname = `/invitations/${invitation.id}/accept`;
-
-    const topic = "org-invitation-created";
-
-    this.logger
-      .assign({ topic })
-      .info("Sending kafka invitation created event");
-
-    await this.kafkaProducer.produce("org-invitation-created", {
-      key: invitation.id,
-      invitationUrl: invitationUrl.toString(),
-      invitationId: invitation.id,
-      organizationId,
-      organizationName: organization.name,
-      email,
-      role: invitation.role,
+        role: OrgRole.Member,
+        status: InvitationStatus.Pending,
+        invitedById: user.id,
+      },
     });
 
     return invitation;
-  }
-
-  @Mutation(() => Invitation)
-  async updateOrgInvitation(
-    @Args("data") data: UpdateOrgInvitationInput,
-    @CurrentUser() user: RequestUser
-  ): Promise<Invitation> {
-    const { invitationId, role } = data;
-
-    this.logger
-      .assign({ userId: user.id, invitationId: data.invitationId })
-      .info("Updating org invitation");
-    let invitation: Invitation;
-    try {
-      invitation = await this.invitationsService.getInvitationById(
-        invitationId
-      );
-    } catch (error) {
-      this.logger.error({ error }, "Error getting invitation");
-      throw new InternalServerErrorException();
-    }
-    if (!invitation) {
-      throw new NotFoundException("Invitation not found");
-    }
-
-    isOrgAdminOrThrow(user, invitation.organizationId);
-
-    let updatedInvitation: Invitation;
-    try {
-      updatedInvitation = await this.invitationsService.upsertRoleById(
-        invitationId,
-        role
-      );
-    } catch (error) {
-      this.logger.error({ error }, "Error updating invitation");
-      throw new InternalServerErrorException();
-    }
-
-    return updatedInvitation;
   }
 
   @Query(() => [Invitation])
@@ -174,29 +83,21 @@ export class OrgInvitationsResolver {
     const { organizationId } = data;
     isOrgAdminOrThrow(user, organizationId);
 
-    let organization: Organization;
-    try {
-      this.logger
-        .assign({ userId: user.id, organizationId: organization.id })
-        .info("Getting org");
-      organization = await this.organizationService.getById(organizationId);
-    } catch (error) {
-      this.logger.error({ error }, "Error getting org");
-      throw new InternalServerErrorException();
-    }
+    const organization = await this.prisma.organization.findUnique({
+      where: {
+        id: organizationId,
+      },
+    });
 
     if (!organization) {
       throw new NotFoundException("Organization not found");
     }
 
-    let invitations: Invitation[];
-    try {
-      this.logger.info("Getting invitations for organization");
-      invitations = await this.invitationsService.getAllByOrgId(organizationId);
-    } catch (error) {
-      this.logger.error({ error }, "Error getting invitations");
-      throw new InternalServerErrorException();
-    }
+    const invitations = await this.prisma.invitation.findMany({
+      where: {
+        organizationId: data.organizationId,
+      },
+    });
 
     return invitations;
   }
@@ -208,16 +109,11 @@ export class OrgInvitationsResolver {
   ): Promise<Invitation> {
     const { id } = data;
 
-    this.logger.assign({ userId: user.id, invitationId: id });
-
-    let invitation: Invitation;
-    try {
-      this.logger.info("Getting invitation");
-      invitation = await this.invitationsService.getInvitationById(id);
-    } catch (error) {
-      this.logger.error({ error }, "Error getting invitation");
-      throw new InternalServerErrorException();
-    }
+    const invitation = await this.prisma.invitation.findUnique({
+      where: {
+        id,
+      },
+    });
 
     if (!invitation) {
       throw new NotFoundException("Invitation not found");
@@ -225,31 +121,27 @@ export class OrgInvitationsResolver {
 
     isOrgAdminOrThrow(user, invitation.organizationId);
 
-    try {
-      this.logger.info("Deleting invitation");
-      await this.invitationsService.deleteInvitationById(id);
-    } catch (error) {
-      this.logger.error({ error }, "Error deleting invitation");
-      throw new InternalServerErrorException();
-    }
+    await this.prisma.invitation.delete({
+      where: {
+        id,
+      },
+    });
 
     return invitation;
   }
 
-  @Mutation(() => Organization)
+  @Mutation(() => OrganizationMember)
   async acceptOrgInvitation(
     @Args("data") data: InvitationWhereUniqueInput,
     @CurrentUser() user: RequestUser
-  ): Promise<Organization> {
+  ): Promise<OrganizationMember> {
     const { id } = data;
 
-    let invitation: Invitation;
-    try {
-      invitation = await this.invitationsService.getInvitationById(id);
-    } catch (error) {
-      this.logger.error({ error }, "Error getting invitation");
-      throw new InternalServerErrorException();
-    }
+    const invitation = await this.prisma.invitation.findUnique({
+      where: {
+        id,
+      },
+    });
 
     if (!invitation) {
       throw new NotFoundException("Invitation not found");
@@ -263,57 +155,36 @@ export class OrgInvitationsResolver {
       );
     }
 
-    let organization: Organization;
-    try {
-      organization = await this.organizationService.getById(
-        invitation.organizationId
-      );
-    } catch (error) {
-      this.logger.error({ error }, "Error getting organization");
-      throw new InternalServerErrorException();
-    }
+    const organization = await this.prisma.organization.findUnique({
+      where: {
+        id: invitation.organizationId,
+      },
+    });
 
     if (!organization) {
       throw new NotFoundException("Organization not found");
     }
 
-    try {
-      await this.organizationService.addMember(
-        invitation.organizationId,
-        user.id,
-        invitation.role
-      );
-    } catch (error) {
-      this.logger.error({ error }, "Error adding member to organization");
-      throw new InternalServerErrorException();
-    }
+    const orgMembership = await this.prisma.organizationMember.create({
+      data: {
+        organizationId: invitation.organizationId,
+        userId: user.id,
+        role: invitation.role,
+      },
+    });
 
-    try {
-      await this.invitationsService.deleteInvitationById(id);
-    } catch (error) {
-      this.logger.error({ error }, "Error deleting invitation");
-      throw new InternalServerErrorException();
-    }
+    await this.prisma.invitation.delete({
+      where: {
+        id,
+      },
+    });
 
-    return organization;
+    return orgMembership;
   }
 
   @ResolveField(() => ExtendedUser)
   async invitedBy(@Parent() invitation: Invitation): Promise<ExtendedUser> {
-    try {
-      this.logger
-        .assign({ invitedById: invitation.invitedById })
-        .info("Getting invited by user");
-      const user = await this.usersService.getById(invitation.invitedById);
-
-      if (!user) {
-        throw new NotFoundException("User not found");
-      }
-
-      return this.usersService.serializeExtendedUser(user);
-    } catch (error) {
-      this.logger.error({ error }, "Error getting invited by user");
-      throw new InternalServerErrorException();
-    }
+    const user = await this.usersService.getById(invitation.invitedById);
+    return this.usersService.serializeExtendedUser(user);
   }
 }
