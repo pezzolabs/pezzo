@@ -28,8 +28,6 @@ import LogoVertical from "../assets/logo-vertical.svg";
 import { OptionalIntercomProvider } from "./lib/providers/OptionalIntercomProvider";
 import { HOTJAR_SITE_ID, HOTJAR_VERSION } from "../env";
 import { OrgPage } from "./pages/organizations/OrgPage";
-import { AcceptInvitationPage } from "./pages/invitations/AcceptInvitationPage";
-import { LogoutPage } from "./pages/LogoutPage";
 
 initSuperTokens();
 
@@ -40,9 +38,7 @@ if (HOTJAR_SITE_ID && HOTJAR_VERSION) {
 // We need to define the paths this way for the
 // breadcrumbs to work properly (useBreadcrumbItems)
 export const paths = {
-  "/logout": "/logout",
   "/projects": "/projects",
-  "/invitations/:token/accept": "/invitations/:token/accept",
   "/onboarding": "/onboarding",
   "/info": "/info",
   "/orgs/:orgId": "/orgs/:orgId",
@@ -51,6 +47,8 @@ export const paths = {
   "/projects/:projectId/prompts/:promptId":
     "/projects/:projectId/prompts/:promptId",
   "/projects/:projectId/environments": "/projects/:projectId/environments",
+  "/projects/:projectId/provider-api-keys":
+    "/projects/:projectId/provider-api-keys",
 };
 
 export function App() {
@@ -102,19 +100,6 @@ export function App() {
                     </SessionAuth>
                   }
                 >
-                  <Route
-                    path={paths["/invitations/:token/accept"]}
-                    element={
-                      <LayoutWrapper
-                        withSideNav={false}
-                        withHeader={false}
-                        withBreadcrumbs={false}
-                      >
-                        <AcceptInvitationPage />
-                      </LayoutWrapper>
-                    }
-                  />
-
                   <Route
                     path={paths["/onboarding"]}
                     element={
@@ -186,6 +171,10 @@ export function App() {
                     <Route
                       path={paths["/projects/:projectId/environments"]}
                       element={<EnvironmentsPage />}
+                    />
+                    <Route
+                      path={paths["/projects/:projectId/provider-api-keys"]}
+                      element={<APIKeysPage />}
                     />
                   </Route>
                 </Route>
