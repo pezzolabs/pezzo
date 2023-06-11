@@ -1,12 +1,9 @@
 import { PromptExecutionStatus } from "../types";
+
 export class CreatePromptExecutionDto {
-  timestamp: string;
-
-  environmentId: string;
-
   promptVersionSha: string;
 
-  status: PromptExecutionStatus;
+  status: "Success" | "Error";
 
   settings: Record<string, unknown>;
 
