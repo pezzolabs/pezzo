@@ -1,5 +1,14 @@
 import { LoadingOutlined } from "@ant-design/icons";
-import { Button, Col, Input, Row, Space, Typography, Card, theme } from "antd";
+import {
+  Button,
+  Col,
+  Input,
+  Row,
+  Space,
+  Typography,
+  Card,
+  theme,
+} from "antd";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
@@ -74,7 +83,7 @@ export const OnboardingPage = () => {
       await Promise.all(actions.filter(Boolean));
       return navigate("/projects");
     },
-    [updateCurrentUser, createProject, organization?.id, hasName, navigate]
+    [updateCurrentUser, createProject, organization.id, hasName, navigate]
   );
 
   useEffect(() => {
