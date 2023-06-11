@@ -1,11 +1,10 @@
-import { InfoCircleFilled, LoadingOutlined } from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
 import {
   Button,
   Col,
   Input,
   Row,
   Space,
-  Tooltip,
   Typography,
   Card,
   theme,
@@ -25,6 +24,7 @@ import {
   UpdateProfileMutation,
 } from "../../../@generated/graphql/graphql";
 import { useAuthContext } from "../../lib/providers/AuthProvider";
+import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
 
 const StyledButton = styled(Button)<{ spacing: number }>`
   margin-top: ${(props) => props.spacing}px;
@@ -43,6 +43,7 @@ interface FormValues {
 }
 export const OnboardingPage = () => {
   const [form] = Form.useForm<FormValues>();
+  const { organization } = useCurrentOrganization();
   const { mutateAsync: updateCurrentUser, isLoading: isUpdatingUserLoading } =
     useUpdateCurrentUserMutation();
   const { mutateAsync: createProject, isLoading: isProjectCreationLoading } =
@@ -66,7 +67,7 @@ export const OnboardingPage = () => {
       ] = [
         createProject({
           name: values.projectName,
-          organizationId: currentUser.organizationIds[0],
+          organizationId: organization?.id,
         }),
         null,
       ];
@@ -82,7 +83,7 @@ export const OnboardingPage = () => {
       await Promise.all(actions.filter(Boolean));
       return navigate("/projects");
     },
-    [updateCurrentUser, createProject, currentUser, hasName, navigate]
+    [updateCurrentUser, createProject, organization.id, hasName, navigate]
   );
 
   useEffect(() => {
