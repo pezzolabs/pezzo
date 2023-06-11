@@ -20,7 +20,7 @@ const topMenuItems = [
   },
   {
     key: "provider-api-keys",
-    label: "Provider API Keys",
+    label: "API Keys",
     icon: <KeyIcon height={18} />,
   },
 ];

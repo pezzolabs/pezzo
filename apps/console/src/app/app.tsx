@@ -27,12 +27,29 @@ import { ThirdpartyEmailPasswordComponentsOverrideProvider } from "supertokens-a
 import LogoSquare from "../assets/logo.svg";
 import { OptionalIntercomProvider } from "./lib/providers/OptionalIntercomProvider";
 import { HOTJAR_SITE_ID, HOTJAR_VERSION } from "../env";
+import { OrgPage } from "./pages/organizations/OrgPage";
 
 initSuperTokens();
 
 if (HOTJAR_SITE_ID && HOTJAR_VERSION) {
   hotjar.initialize(Number(HOTJAR_SITE_ID), Number(HOTJAR_VERSION));
 }
+
+// We need to define the paths this way for the
+// breadcrumbs to work properly (useBreadcrumbItems)
+export const paths = {
+  "/projects": "/projects",
+  "/onboarding": "/onboarding",
+  "/info": "/info",
+  "/orgs/:orgId": "/orgs/:orgId",
+  "/projects/:projectId": "/projects/:projectId",
+  "/projects/:projectId/prompts": "/projects/:projectId/prompts",
+  "/projects/:projectId/prompts/:promptId":
+    "/projects/:projectId/prompts/:promptId",
+  "/projects/:projectId/environments": "/projects/:projectId/environments",
+  "/projects/:projectId/provider-api-keys":
+    "/projects/:projectId/provider-api-keys",
+};
 
 export function App() {
   return (
@@ -83,7 +100,7 @@ export function App() {
                   }
                 >
                   <Route
-                    path="/onboarding"
+                    path={paths["/onboarding"]}
                     element={
                       <LayoutWrapper withSideNav={false}>
                         <OnboardingPage />
@@ -92,13 +109,23 @@ export function App() {
                   />
 
                   <Route
-                    path="/info"
+                    path={paths["/info"]}
                     element={
                       <LayoutWrapper withSideNav={false}>
                         <InfoPage />
                       </LayoutWrapper>
                     }
                   />
+
+                  {/* Organizations */}
+                  <Route
+                    path={paths["/orgs/:orgId"]}
+                    element={
+                      <LayoutWrapper withSideNav={false}>
+                        <OrgPage />
+                      </LayoutWrapper>
+                    }
+                  ></Route>
 
                   {/* Projects selection */}
                   <Route
@@ -108,13 +135,19 @@ export function App() {
                       </LayoutWrapper>
                     }
                   >
-                    <Route index element={<Navigate to="/projects" />} />
-                    <Route path="/projects" element={<ProjectsPage />} />
+                    <Route
+                      index
+                      element={<Navigate to={paths["/projects"]} />}
+                    />
+                    <Route
+                      path={paths["/projects"]}
+                      element={<ProjectsPage />}
+                    />
                   </Route>
 
                   {/* In-project routes */}
                   <Route
-                    path="/projects/:projectId"
+                    path={paths["/projects/:projectId"]}
                     element={
                       <CurrentPromptProvider>
                         <PromptTesterProvider>
@@ -127,19 +160,19 @@ export function App() {
                   >
                     <Route
                       index
-                      path="/projects/:projectId/prompts"
+                      path={paths["/projects/:projectId/prompts"]}
                       element={<PromptsPage />}
                     />
                     <Route
-                      path="/projects/:projectId/prompts/:promptId"
+                      path={paths["/projects/:projectId/prompts/:promptId"]}
                       element={<PromptPage />}
                     />
                     <Route
-                      path="/projects/:projectId/environments"
+                      path={paths["/projects/:projectId/environments"]}
                       element={<EnvironmentsPage />}
                     />
                     <Route
-                      path="/projects/:projectId/provider-api-keys"
+                      path={paths["/projects/:projectId/provider-api-keys"]}
                       element={<APIKeysPage />}
                     />
                   </Route>
