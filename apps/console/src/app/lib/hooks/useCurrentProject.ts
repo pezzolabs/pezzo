@@ -4,11 +4,11 @@ import { useGetProjects } from "./queries";
 
 export const useCurrentProject = () => {
   const { projectId } = useParams();
-  const { data, isLoading } = useGetProjects();
+  const { projects, isLoading } = useGetProjects();
 
   const project = useMemo(
-    () => data?.projects.find((project) => project.id === projectId),
-    [data, projectId]
+    () => projects?.find((project) => project.id === projectId),
+    [projects, projectId]
   );
 
   return { project, isLoading };

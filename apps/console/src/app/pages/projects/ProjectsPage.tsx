@@ -24,7 +24,7 @@ const Paper = styled.div`
 const isOdd = (number: number) => number % 2 === 0;
 
 export const ProjectsPage = () => {
-  const { data, isLoading } = useGetProjects();
+  const { projects, isLoading } = useGetProjects();
   const [isCreateNewProjectModalOpen, setIsCreateNewProjectModalOpen] =
     useState(false);
   const navigate = useNavigate();
@@ -32,8 +32,8 @@ export const ProjectsPage = () => {
 
   useEffect(() => {
     if (isLoading) return;
-    if (!data?.projects.length) navigate("/onboarding");
-  }, [data, isLoading, navigate]);
+    if (!projects?.length) navigate("/onboarding");
+  }, [projects, isLoading, navigate]);
 
   if (isLoading) return <Spinner />;
 
@@ -58,7 +58,7 @@ export const ProjectsPage = () => {
       </Row>
 
       <Row gutter={16}>
-        {data.projects?.map((project, index) => (
+        {projects?.map((project, index) => (
           <Col span={12} key={project.id}>
             <ProjectCard
               name={project.name}
@@ -67,7 +67,7 @@ export const ProjectsPage = () => {
             />
           </Col>
         ))}
-        {!isOdd(data.projects.length) && (
+        {!isOdd(projects?.length) && (
           <Col span={12}>
             <Card
               hoverable

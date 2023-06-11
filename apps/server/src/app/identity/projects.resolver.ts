@@ -24,6 +24,7 @@ import { ProjectWhereUniqueInput } from "../../@generated/project/project-where-
 import { PinoLogger } from "../logger/pino-logger";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { Organization } from "../../@generated/organization/organization.model";
+import { GetProjectsInput } from "./inputs/get-projects.input";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Project)
@@ -59,12 +60,16 @@ export class ProjectsResolver {
   }
 
   @Query(() => [Project])
-  async projects(@CurrentUser() user: RequestUser) {
-    const orgId = user.orgMemberships[0].organizationId;
-    this.logger.assign({ orgId }).info("Getting projects");
+  async projects(
+    @Args("data") data: GetProjectsInput,
+    @CurrentUser() user: RequestUser
+  ) {
+    const { organizationId } = data;
+    isOrgMemberOrThrow(user, organizationId);
+    this.logger.assign({ organizationId }).info("Getting projects");
 
     try {
-      return this.projectsService.getProjectsByOrgId(orgId);
+      return this.projectsService.getProjectsByOrgId(organizationId);
     } catch (error) {
       this.logger.error({ error }, "Error getting projects");
       throw new InternalServerErrorException();

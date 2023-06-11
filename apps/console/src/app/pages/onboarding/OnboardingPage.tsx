@@ -48,7 +48,7 @@ export const OnboardingPage = () => {
   const { mutateAsync: createProject, isLoading: isProjectCreationLoading } =
     useCreateProjectMutation();
 
-  const { data: projectsData, isLoading: isProjectsLoading } = useGetProjects();
+  const { projects, isLoading: isProjectsLoading } = useGetProjects();
 
   const { currentUser } = useAuthContext();
 
@@ -86,10 +86,10 @@ export const OnboardingPage = () => {
   );
 
   useEffect(() => {
-    if (projectsData?.projects && projectsData?.projects.length > 0) {
+    if (projects && projects.length > 0) {
       navigate("/projects", { replace: true });
     }
-  }, [projectsData, navigate]);
+  }, [projects, navigate]);
 
   if (isProjectsLoading) {
     return <LoadingOutlined />;
@@ -128,14 +128,9 @@ export const OnboardingPage = () => {
               <Row gutter={4} align="middle">
                 <Col>
                   <Typography.Text>
-                    How do you wanna call your first project?
+                    How do you want to call your first project?
                   </Typography.Text>
                 </Col>
-                <Tooltip title="A project is a collection of prompts">
-                  <Col flex="grow">
-                    <Button type="text" icon={<InfoCircleFilled />} />
-                  </Col>
-                </Tooltip>
               </Row>
 
               <Form.Item
@@ -143,11 +138,11 @@ export const OnboardingPage = () => {
                 rules={[
                   {
                     required: true,
-                    message: "Please set a name to your project",
+                    message: "You must enter a valid project name",
                   },
                 ]}
               >
-                <Input placeholder="Content Creation" />
+                <Input placeholder="e.g. Content Creation" />
               </Form.Item>
             </VerticalSpace>
 
@@ -157,7 +152,7 @@ export const OnboardingPage = () => {
                 htmlType="submit"
                 loading={isCreatingProject}
               >
-                Create a project <ArrowRightOutlined />
+                Create Project <ArrowRightOutlined />
               </StyledButton>
             </Row>
           </Form>

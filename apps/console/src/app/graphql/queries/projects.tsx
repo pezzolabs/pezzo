@@ -15,8 +15,8 @@ export const GET_PROJECT = graphql(/* GraphQL */ `
 `);
 
 export const GET_ALL_PROJECTS = graphql(/* GraphQL */ `
-  query getProjects {
-    projects {
+  query getProjects($data: GetProjectsInput!) {
+    projects(data: $data) {
       id
       slug
       name
