@@ -59,7 +59,7 @@ export const ProjectsPage = () => {
       </Row>
 
       <Row gutter={16}>
-        {projects?.map((project, index) => (
+        {data.projects?.map((project, index) => (
           <Col span={12} key={project.id}>
             <ProjectCard
               name={project.name}

@@ -93,11 +93,12 @@ export const Header = () => {
 
       <div
         style={{
-          marginLeft: 19,
-          borderLeft: `1px solid ${colors.neutral["800"]}`,
+          marginLeft: 20,
+          borderLeft: "1px solid rgba(255, 255, 255, 0.1)",
+          borderRight: "1px solid rgba(255, 255, 255, 0.1)",
         }}
       >
-        <span style={{ visibility: "hidden" }}>Pezzo</span>
+        <OrgSelector />
       </div>
 
       <div

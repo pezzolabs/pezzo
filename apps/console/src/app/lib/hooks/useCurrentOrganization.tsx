@@ -1,28 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { gqlClient } from "../graphql";
-import { GET_ORGANIZATION } from "../../graphql/definitions/queries/organizations";
+import { GET_ORGANIZATION } from "../../graphql/queries/organizations";
 import { useLocalStorage } from "usehooks-ts";
 import { useEffect } from "react";
 import { useOrganizations } from "./useOrganizations";
-import { useParams } from "react-router-dom";
 
-const defaultProps = {
-  includeMembers: false,
-  includeInvitations: false,
-};
-
-export const useCurrentOrganization = ({
-  includeMembers,
-  includeInvitations,
-} = defaultProps) => {
+export const useCurrentOrganization = () => {
   const { organizations } = useOrganizations();
-  const { orgId } = useParams<{ orgId: string }>();
-
-  // TODO: currentOrgId in local storage might be different than the actual org if customer has multiple orgs for multiple users
-  const [currentOrgId, setCurrentOrgId] = useLocalStorage(
-    "currentOrgId",
-    orgId
-  );
+  const [currentOrgId, setCurrentOrgId] = useLocalStorage("currentOrgId", null);
 
   useEffect(() => {
     if (organizations && !currentOrgId) {
@@ -31,18 +16,9 @@ export const useCurrentOrganization = ({
   }, [currentOrgId, organizations, setCurrentOrgId]);
 
   const { data, isLoading } = useQuery({
-    queryKey: [
-      "currentOrganization",
-      currentOrgId,
-      includeMembers,
-      includeInvitations,
-    ],
+    queryKey: ["organization", currentOrgId],
     queryFn: async () =>
-      gqlClient.request(GET_ORGANIZATION, {
-        data: { id: currentOrgId },
-        includeMembers,
-        includeInvitations,
-      }),
+      gqlClient.request(GET_ORGANIZATION, { data: { id: currentOrgId } }),
     enabled: !!currentOrgId,
   });
 
@@ -53,7 +29,6 @@ export const useCurrentOrganization = ({
   return {
     organization: data?.organization,
     isLoading,
-    currentOrgId,
     selectOrg,
   };
 };

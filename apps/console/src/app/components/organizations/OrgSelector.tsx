@@ -1,9 +1,9 @@
+import { CaretDownOutlined } from "@ant-design/icons";
 import { Button, Popover, Typography } from "antd";
 import styled from "@emotion/styled";
 import { useOrganizations } from "../../lib/hooks/useOrganizations";
 import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 const StyledOrgButton = styled.div`
   padding-top: 10px;
@@ -14,11 +14,9 @@ const StyledOrgButton = styled.div`
 export const OrgSelector = () => {
   const { organizations } = useOrganizations();
   const { organization: currentOrg, selectOrg } = useCurrentOrganization();
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleSelectOrg = (orgId: string) => {
-    setIsPopoverOpen(false);
     selectOrg(orgId);
     navigate(`/orgs/${orgId}`, { replace: true });
   };
@@ -29,8 +27,6 @@ export const OrgSelector = () => {
       <Popover
         trigger={["click"]}
         title="Select organization"
-        open={isPopoverOpen}
-        onOpenChange={setIsPopoverOpen}
         content={
           organizations &&
           organizations.map((org) => (
@@ -45,6 +41,7 @@ export const OrgSelector = () => {
       >
         <Button type="link" style={{ color: "white" }}>
           {currentOrg.name}
+          <CaretDownOutlined />
         </Button>
       </Popover>
     )

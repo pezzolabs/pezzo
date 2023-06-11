@@ -1,19 +1,10 @@
-import { Tabs, Typography } from "antd";
+import { Breadcrumb, Tabs, Typography, theme } from "antd";
 import styled from "@emotion/styled";
-import {
-  AppstoreOutlined,
-  KeyOutlined,
-  SettingOutlined,
-  TeamOutlined,
-} from "@ant-design/icons";
+import { AppstoreOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
 import { ProjectsPage } from "../projects";
-import { MembersView } from "./MembersView";
-import { SettingsView } from "./SettingsView";
-import { ApiKeysView } from "./ApiKeysView";
-import { useCurrentOrgMembership } from "../../lib/hooks/useCurrentOrgMembership";
 
 const TabLabel = styled.div`
   display: inline-block;
@@ -21,43 +12,12 @@ const TabLabel = styled.div`
   padding-right: 10px;
 `;
 
-enum TabItemKey {
-  Projects = "projects",
-  Members = "members",
-  ApiKeys = "apiKeys",
-  Settings = "settings",
-}
-
 const tabsItems = [
   {
-    key: TabItemKey.Projects,
+    key: "projects",
     label: (
       <TabLabel>
         <AppstoreOutlined /> Projects
-      </TabLabel>
-    ),
-  },
-  {
-    key: TabItemKey.Members,
-    label: (
-      <TabLabel>
-        <TeamOutlined /> Members
-      </TabLabel>
-    ),
-  },
-  {
-    key: TabItemKey.ApiKeys,
-    label: (
-      <TabLabel>
-        <KeyOutlined /> API Keys
-      </TabLabel>
-    ),
-  },
-  {
-    key: TabItemKey.Settings,
-    label: (
-      <TabLabel>
-        <SettingOutlined /> Settings
       </TabLabel>
     ),
   },
@@ -66,7 +26,6 @@ const tabsItems = [
 export const OrgPage = () => {
   const { orgId: orgIdParam } = useParams();
   const { selectOrg, organization } = useCurrentOrganization();
-  const { isOrgAdmin } = useCurrentOrgMembership();
   const [activeView, setActiveView] = useState("projects");
 
   useEffect(() => {
@@ -75,14 +34,6 @@ export const OrgPage = () => {
     }
   }, [orgIdParam, selectOrg]);
 
-  const availableTabItems = useMemo(
-    () =>
-      tabsItems.filter((tabItem) =>
-        tabItem.key === TabItemKey.Settings ? isOrgAdmin : true
-      ),
-    [tabsItems, isOrgAdmin]
-  );
-
   return (
     organization && (
       <>
@@ -90,12 +41,9 @@ export const OrgPage = () => {
           {organization.name}
         </Typography.Title>
 
-        <Tabs items={availableTabItems} onChange={setActiveView} />
+        <Tabs items={tabsItems} />
 
-        {activeView === TabItemKey.Projects && <ProjectsPage />}
-        {activeView === TabItemKey.Members && <MembersView />}
-        {activeView === TabItemKey.ApiKeys && <ApiKeysView />}
-        {activeView === TabItemKey.Settings && isOrgAdmin && <SettingsView />}
+        <>{activeView === "projects" && <ProjectsPage />}</>
       </>
     )
   );

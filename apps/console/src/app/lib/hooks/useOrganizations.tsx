@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { gqlClient } from "../graphql";
-import { GET_ORGANIZATIONS } from "../../graphql/definitions/queries/organizations";
+import { GET_ORGANIZATIONS } from "../../graphql/queries/organizations";
 
 export const useOrganizations = () => {
   const { data, isLoading } = useQuery({
