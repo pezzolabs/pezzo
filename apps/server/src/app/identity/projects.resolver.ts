@@ -24,6 +24,7 @@ import { ProjectWhereUniqueInput } from "../../@generated/project/project-where-
 import { PinoLogger } from "../logger/pino-logger";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { Organization } from "../../@generated/organization/organization.model";
+import { GetProjectsInput } from "./inputs/get-projects.input";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Project)

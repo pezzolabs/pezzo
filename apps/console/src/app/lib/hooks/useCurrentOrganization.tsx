@@ -22,6 +22,8 @@ export const useCurrentOrganization = () => {
     enabled: !!currentOrgId,
   });
 
+  console.log("data", data);
+
   const selectOrg = (orgId: string) => {
     setCurrentOrgId(orgId);
   };
@@ -29,6 +31,7 @@ export const useCurrentOrganization = () => {
   return {
     organization: data?.organization,
     isLoading,
+    currentOrgId,
     selectOrg,
   };
 };
