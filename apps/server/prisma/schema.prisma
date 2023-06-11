@@ -59,7 +59,6 @@ model Project {
   name            String
   organization    Organization     @relation(fields: [organizationId], references: [id])
   organizationId  String
-  providerApiKeys ProviderApiKey[]
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   members         ProjectMember[]
@@ -129,16 +128,13 @@ model Environment {
   promptEnvironments PromptEnvironment[]
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
-  apiKeys            ApiKey[]
 }
 
 model ApiKey {
   id             String        @id
   name           String        @default("Default")
-  environmentId  String?
-  environment    Environment?   @relation(fields: [environmentId], references: [id])
-  organizationId String?
-  organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
   createdAt      DateTime      @default(now())
 }
 
@@ -199,10 +195,8 @@ model ProviderApiKey {
   id             String       @id @default(cuid())
   provider       String
   value          String
-  projectId      String?
-  project        Project?      @relation(fields: [projectId], references: [id])
-  organizationId String?
-  organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 }
