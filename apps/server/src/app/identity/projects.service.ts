@@ -46,6 +46,9 @@ export class ProjectsService {
       where: {
         id,
       },
+      include: {
+        organization: true,
+      },
     });
   }
 

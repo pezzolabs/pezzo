@@ -1,4 +1,11 @@
-import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from "@nestjs/graphql";
 import { Project } from "../../@generated/project/project.model";
 import { CreateProjectInput } from "./inputs/create-project.input";
 import { ProjectsService } from "./projects.service";
@@ -16,6 +23,7 @@ import { slugify } from "@pezzo/common";
 import { ProjectWhereUniqueInput } from "../../@generated/project/project-where-unique.input";
 import { PinoLogger } from "../logger/pino-logger";
 import { AnalyticsService } from "../analytics/analytics.service";
+import { Organization } from "../../@generated/organization/organization.model";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Project)
@@ -107,5 +115,10 @@ export class ProjectsResolver {
       this.logger.error({ error }, "Error creating project");
       throw new InternalServerErrorException();
     }
+  }
+
+  @ResolveField(() => Organization)
+  async oganization(@Parent() project: Project) {
+    return project.organization;
   }
 }

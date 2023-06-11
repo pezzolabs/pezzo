@@ -39,8 +39,6 @@ export const ProjectsPage = () => {
 
   return (
     <Paper>
-      <Typography.Title level={2}>Projects</Typography.Title>
-
       <CreateNewProjectModal
         open={isCreateNewProjectModalOpen}
         onClose={() => setIsCreateNewProjectModalOpen(false)}
@@ -61,9 +59,8 @@ export const ProjectsPage = () => {
 
       <Row gutter={16}>
         {data.projects?.map((project, index) => (
-          <Col span={12}>
+          <Col span={12} key={project.id}>
             <ProjectCard
-              key={project.id}
               name={project.name}
               slug={project.slug}
               id={project.id}

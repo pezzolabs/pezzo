@@ -6,6 +6,10 @@ export const GET_PROJECT = graphql(/* GraphQL */ `
       id
       slug
       name
+      organization {
+        id
+        name
+      }
     }
   }
 `);
