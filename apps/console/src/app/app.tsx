@@ -40,7 +40,7 @@ if (HOTJAR_SITE_ID && HOTJAR_VERSION) {
 // breadcrumbs to work properly (useBreadcrumbItems)
 export const paths = {
   "/projects": "/projects",
-  "/invitations/accept": "/invitations/accept",
+  "/invitations/:token/accept": "/invitations/:token/accept",
   "/onboarding": "/onboarding",
   "/info": "/info",
   "/orgs/:orgId": "/orgs/:orgId",
@@ -102,7 +102,7 @@ export function App() {
                   }
                 >
                   <Route
-                    path={paths["/invitations/accept"]}
+                    path={paths["/invitations/:token/accept"]}
                     element={
                       <LayoutWrapper
                         withSideNav={false}

@@ -7,6 +7,8 @@ import {
   InvitationWhereUniqueInput,
   UpdateOrgMemberRoleInput,
   UpdateOrgMemberRoleMutation,
+  UpdateOrgSettingsInput,
+  UpdateOrgSettingsMutation,
   UpdateProfileInput,
 } from "../../../@generated/graphql/graphql";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -19,6 +21,7 @@ import {
   DELETE_INVITATION,
   DELETE_ORG_MEMBER,
   UPDATE_ORG_MEMBER_ROLE,
+  UPDATE_ORG_SETTINGS,
 } from "../../graphql/mutations/organizations";
 import { GraphQLErrorResponse } from "../../graphql/types";
 
@@ -123,6 +126,24 @@ export const useUpdateOrgMemberRoleMutation = () => {
   >({
     mutationFn: (data: UpdateOrgMemberRoleInput) =>
       gqlClient.request(UPDATE_ORG_MEMBER_ROLE, { data }),
+    onSuccess: () => {
+      queryCache.invalidateQueries({
+        queryKey: ["currentOrganization"],
+      });
+    },
+  });
+};
+
+export const useUpdateOrgSettingsMutation = () => {
+  const queryCache = useQueryClient();
+
+  return useMutation<
+    UpdateOrgSettingsMutation,
+    GraphQLErrorResponse,
+    UpdateOrgSettingsInput
+  >({
+    mutationFn: (data: UpdateOrgSettingsInput) =>
+      gqlClient.request(UPDATE_ORG_SETTINGS, { data }),
     onSuccess: () => {
       queryCache.invalidateQueries({
         queryKey: ["currentOrganization"],
