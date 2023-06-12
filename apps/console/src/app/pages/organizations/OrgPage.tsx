@@ -1,10 +1,11 @@
-import { Breadcrumb, Tabs, Typography, theme } from "antd";
+import { Tabs, Typography } from "antd";
 import styled from "@emotion/styled";
-import { AppstoreOutlined } from "@ant-design/icons";
+import { AppstoreOutlined, TeamOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
 import { ProjectsPage } from "../projects";
+import { MembersView } from "./MembersView";
 
 const TabLabel = styled.div`
   display: inline-block;
@@ -18,6 +19,14 @@ const tabsItems = [
     label: (
       <TabLabel>
         <AppstoreOutlined /> Projects
+      </TabLabel>
+    ),
+  },
+  {
+    key: "members",
+    label: (
+      <TabLabel>
+        <TeamOutlined /> Members
       </TabLabel>
     ),
   },
@@ -41,9 +50,10 @@ export const OrgPage = () => {
           {organization.name}
         </Typography.Title>
 
-        <Tabs items={tabsItems} />
+        <Tabs items={tabsItems} onChange={setActiveView} />
 
         <>{activeView === "projects" && <ProjectsPage />}</>
+        <>{activeView === "members" && <MembersView />}</>
       </>
     )
   );

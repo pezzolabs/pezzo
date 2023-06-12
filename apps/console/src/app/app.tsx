@@ -28,6 +28,7 @@ import LogoSquare from "../assets/logo.svg";
 import { OptionalIntercomProvider } from "./lib/providers/OptionalIntercomProvider";
 import { HOTJAR_SITE_ID, HOTJAR_VERSION } from "../env";
 import { OrgPage } from "./pages/organizations/OrgPage";
+import { AcceptInvitationPage } from "./pages/invitations/AcceptInvitationPage";
 
 initSuperTokens();
 
@@ -39,6 +40,7 @@ if (HOTJAR_SITE_ID && HOTJAR_VERSION) {
 // breadcrumbs to work properly (useBreadcrumbItems)
 export const paths = {
   "/projects": "/projects",
+  "/invitations/accept": "/invitations/accept",
   "/onboarding": "/onboarding",
   "/info": "/info",
   "/orgs/:orgId": "/orgs/:orgId",
@@ -99,6 +101,19 @@ export function App() {
                     </SessionAuth>
                   }
                 >
+                  <Route
+                    path={paths["/invitations/accept"]}
+                    element={
+                      <LayoutWrapper
+                        withSideNav={false}
+                        withHeader={false}
+                        withBreadcrumbs={false}
+                      >
+                        <AcceptInvitationPage />
+                      </LayoutWrapper>
+                    }
+                  />
+
                   <Route
                     path={paths["/onboarding"]}
                     element={

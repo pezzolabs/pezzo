@@ -1,4 +1,11 @@
-import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from "@nestjs/graphql";
 import { Organization } from "../../@generated/organization/organization.model";
 import { PrismaService } from "../prisma.service";
 import { ConflictException, UseGuards } from "@nestjs/common";
@@ -9,11 +16,17 @@ import { CreateOrganizationInput } from "./inputs/create-organization.input";
 import { OrgRole } from "@prisma/client";
 import { OrganizationWhereUniqueInput } from "../../@generated/organization/organization-where-unique.input";
 import { isOrgMemberOrThrow } from "./identity.utils";
+import { OrganizationMember } from "../../@generated/organization-member/organization-member.model";
+import { UsersService } from "./users.service";
+import { Invitation } from "../../@generated/invitation/invitation.model";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Organization)
 export class OrganizationsResolver {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private usersService: UsersService
+  ) {}
 
   @Query(() => [Organization])
   organizations(@CurrentUser() user: RequestUser) {
@@ -30,8 +43,8 @@ export class OrganizationsResolver {
 
   @Query(() => Organization)
   organization(
-    @Args("data") data: OrganizationWhereUniqueInput,
-    @CurrentUser() user: RequestUser
+    @CurrentUser() user: RequestUser,
+    @Args("data") data: OrganizationWhereUniqueInput
   ) {
     isOrgMemberOrThrow(user, data.id);
     return this.prisma.organization.findFirst({
@@ -86,5 +99,39 @@ export class OrganizationsResolver {
     });
 
     return org;
+  }
+
+  @ResolveField(() => [OrganizationMember])
+  async members(@Parent() organization: Organization) {
+    const members = await this.prisma.organizationMember.findMany({
+      where: {
+        organizationId: organization.id,
+      },
+      include: {
+        user: {
+          include: {
+            orgMemberships: true,
+          },
+        },
+      },
+    });
+
+    return members.map((member) => ({
+      ...member,
+      user: this.usersService.serializeExtendedUser(member.user),
+    }));
+  }
+
+  @ResolveField(() => [Invitation])
+  async invitations(@Parent() organization: Organization) {
+    const invitations = await this.prisma.invitation.findMany({
+      where: {
+        organizationId: organization.id,
+      },
+    });
+
+    return invitations.map((invitation) => ({
+      ...invitation,
+    }));
   }
 }

@@ -44,6 +44,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
         GOOGLE_OAUTH_CLIENT_SECRET: Joi.string().optional().default(null),
         INFLUXDB_URL: Joi.string().required(),
         INFLUXDB_TOKEN: Joi.string().required(),
+        CONSOLE_HOST: Joi.string().required(),
       }),
       // In CI, we need to skip validation because we don't have a .env file
       // This is consumed by the graphql:schema-generate Nx target

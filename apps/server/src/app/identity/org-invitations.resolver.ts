@@ -23,7 +23,7 @@ import { InvitationStatus, OrgRole } from "@prisma/client";
 import { UsersService } from "./users.service";
 import { ExtendedUser } from "./models/extended-user.model";
 import { InvitationWhereUniqueInput } from "../../@generated/invitation/invitation-where-unique.input";
-import { OrganizationMember } from "../../@generated/organization-member/organization-member.model";
+import { Organization } from "../../@generated/organization/organization.model";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Invitation)
@@ -130,11 +130,11 @@ export class OrgInvitationsResolver {
     return invitation;
   }
 
-  @Mutation(() => OrganizationMember)
+  @Mutation(() => Organization)
   async acceptOrgInvitation(
     @Args("data") data: InvitationWhereUniqueInput,
     @CurrentUser() user: RequestUser
-  ): Promise<OrganizationMember> {
+  ): Promise<Organization> {
     const { id } = data;
 
     const invitation = await this.prisma.invitation.findUnique({
@@ -165,7 +165,7 @@ export class OrgInvitationsResolver {
       throw new NotFoundException("Organization not found");
     }
 
-    const orgMembership = await this.prisma.organizationMember.create({
+    await this.prisma.organizationMember.create({
       data: {
         organizationId: invitation.organizationId,
         userId: user.id,
@@ -179,7 +179,7 @@ export class OrgInvitationsResolver {
       },
     });
 
-    return orgMembership;
+    return organization;
   }
 
   @ResolveField(() => ExtendedUser)
