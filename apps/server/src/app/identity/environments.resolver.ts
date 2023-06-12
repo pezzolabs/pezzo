@@ -11,10 +11,13 @@ import { RequestUser } from "../identity/users.types";
 import { AuthGuard } from "../auth/auth.guard";
 import { EnvironmentsService } from "./environments.service";
 import { GetEnvironmentsInput } from "./inputs/get-environments.input";
-import { isProjectMemberOrThrow } from "../identity/identity.utils";
+import {
+  isOrgMemberOrThrow,
+  isProjectMemberOrThrow,
+} from "../identity/identity.utils";
 import { PinoLogger } from "../logger/pino-logger";
 import { AnalyticsService } from "../analytics/analytics.service";
-import { ApiKeysService } from "./api-keys.service";
+import { PrismaService } from "../prisma.service";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Environment)
@@ -23,7 +26,7 @@ export class EnvironmentsResolver {
     private environmentsService: EnvironmentsService,
     private logger: PinoLogger,
     private analytics: AnalyticsService,
-    private apiKeysService: ApiKeysService
+    private prisma: PrismaService
   ) {}
 
   @Query(() => [Environment])
@@ -32,7 +35,14 @@ export class EnvironmentsResolver {
     @CurrentUser() user: RequestUser
   ) {
     const { projectId } = data;
-    isProjectMemberOrThrow(user, projectId);
+
+    const project = await this.prisma.project.findUnique({
+      where: {
+        id: projectId,
+      },
+    });
+
+    isOrgMemberOrThrow(user, project.organizationId);
 
     try {
       this.logger.assign({ projectId }).info("Getting environments");
@@ -50,7 +60,15 @@ export class EnvironmentsResolver {
   ) {
     const { projectId, name } = data;
     this.logger.assign({ projectId, name });
-    isProjectMemberOrThrow(user, projectId);
+
+    const project = await this.prisma.project.findUnique({
+      where: {
+        id: projectId,
+      },
+    });
+
+    isOrgMemberOrThrow(user, project.organizationId);
+
     let exists: Environment;
 
     try {
