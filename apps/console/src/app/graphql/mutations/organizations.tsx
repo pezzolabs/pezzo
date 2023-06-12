@@ -40,3 +40,11 @@ export const UPDATE_ORG_MEMBER_ROLE = graphql(/* GraphQL */ `
     }
   }
 `);
+
+export const UPDATE_ORG_SETTINGS = graphql(/* GraphQL */ `
+  mutation UpdateOrgSettings($data: UpdateOrgSettingsInput!) {
+    updateOrgSettings(data: $data) {
+      name
+    }
+  }
+`);

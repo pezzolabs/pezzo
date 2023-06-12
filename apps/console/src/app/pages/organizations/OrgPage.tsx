@@ -1,11 +1,16 @@
 import { Tabs, Typography } from "antd";
 import styled from "@emotion/styled";
-import { AppstoreOutlined, TeamOutlined } from "@ant-design/icons";
+import {
+  AppstoreOutlined,
+  SettingOutlined,
+  TeamOutlined,
+} from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
 import { ProjectsPage } from "../projects";
 import { MembersView } from "./MembersView";
+import { SettingsView } from "./SettingsView";
 
 const TabLabel = styled.div`
   display: inline-block;
@@ -27,6 +32,14 @@ const tabsItems = [
     label: (
       <TabLabel>
         <TeamOutlined /> Members
+      </TabLabel>
+    ),
+  },
+  {
+    key: "settings",
+    label: (
+      <TabLabel>
+        <SettingOutlined /> Settings
       </TabLabel>
     ),
   },
@@ -52,8 +65,9 @@ export const OrgPage = () => {
 
         <Tabs items={tabsItems} onChange={setActiveView} />
 
-        <>{activeView === "projects" && <ProjectsPage />}</>
-        <>{activeView === "members" && <MembersView />}</>
+        {activeView === "projects" && <ProjectsPage />}
+        {activeView === "members" && <MembersView />}
+        {activeView === "settings" && <SettingsView />}
       </>
     )
   );

@@ -34,8 +34,7 @@ export const OrgInvitationsList = ({ invitations }: Props) => {
 
   const handleCopyInvitation = (invitation: Invitation) => {
     const url = new URL(window.location.origin);
-    url.pathname = `/invitations/accept`;
-    url.searchParams.set("token", invitation.id);
+    url.pathname = `/invitations/${invitation.id}/accept`;
 
     copy(url.toString());
     messageApi.open({
