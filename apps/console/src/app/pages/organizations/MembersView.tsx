@@ -9,7 +9,7 @@ import { useCurrentOrgMembership } from "../../lib/hooks/useCurrentOrgMembership
 
 export const MembersView = () => {
   const { organization } = useCurrentOrganization({
-    includeMembers: true,
+    includeMembers: this,
     includeInvitations: true,
   });
   const { isOrgAdmin } = useCurrentOrgMembership();

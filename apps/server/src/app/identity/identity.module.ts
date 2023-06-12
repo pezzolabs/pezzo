@@ -11,6 +11,7 @@ import { ApiKeysResolver } from "./api-keys.resolver";
 import { ApiKeysService } from "./api-keys.service";
 import { OrganizationsResolver } from "./organizations.resolver";
 import { OrgInvitationsResolver } from "./org-invitations.resolver";
+import { OrganizationMembersResolver } from "./org-members.resolver";
 
 @Module({
   providers: [
@@ -27,6 +28,7 @@ import { OrgInvitationsResolver } from "./org-invitations.resolver";
     ApiKeysResolver,
     OrganizationsResolver,
     OrgInvitationsResolver,
+    OrganizationMembersResolver,
   ],
   exports: [
     UsersService,

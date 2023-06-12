@@ -9,16 +9,13 @@ import {
   message,
   Modal,
 } from "antd";
-import { GetOrgQuery, OrgRole } from "../../../@generated/graphql/graphql";
+import { GetOrgQuery } from "../../../@generated/graphql/graphql";
 import { DeleteOutlined, LinkOutlined } from "@ant-design/icons";
 import { OrgRoleSelector } from "./OrgRoleSelector";
 import colors from "tailwindcss/colors";
 import { useCopyToClipboard } from "usehooks-ts";
 import { useState } from "react";
-import {
-  useDeleteOrgInvitationMutation,
-  useUpdateOrgInvitationMutation,
-} from "../../graphql/hooks/mutations";
+import { useDeleteOrgInvitation } from "../../lib/hooks/mutations";
 import { useCurrentOrgMembership } from "../../lib/hooks/useCurrentOrgMembership";
 
 type Invitation = GetOrgQuery["organization"]["invitations"][0];
@@ -29,8 +26,7 @@ interface Props {
 
 export const OrgInvitationsList = ({ invitations }: Props) => {
   const { isOrgAdmin } = useCurrentOrgMembership();
-  const { mutateAsync: deleteOrgInvitation } = useDeleteOrgInvitationMutation();
-  const { mutateAsync: updateOrgInvitation } = useUpdateOrgInvitationMutation();
+  const { mutateAsync: deleteOrgInvitation } = useDeleteOrgInvitation();
   const [messageApi, contextHolder] = message.useMessage();
   const [deletingInvitation, setDeletingInvitation] =
     useState<Invitation>(null);
@@ -38,7 +34,8 @@ export const OrgInvitationsList = ({ invitations }: Props) => {
 
   const handleCopyInvitation = (invitation: Invitation) => {
     const url = new URL(window.location.origin);
-    url.pathname = `/invitations/${invitation.id}/accept`;
+    url.pathname = `/invitations/accept`;
+    url.searchParams.set("token", invitation.id);
 
     copy(url.toString());
     messageApi.open({
@@ -53,18 +50,6 @@ export const OrgInvitationsList = ({ invitations }: Props) => {
       content: "Invitation deleted",
     });
     await deleteOrgInvitation({ id: invitation.id });
-    setDeletingInvitation(null);
-  };
-
-  const handleUpdateRoleForInvitation = async (
-    invitation: Invitation,
-    role: OrgRole
-  ) => {
-    messageApi.open({
-      type: "success",
-      content: "Role updated",
-    });
-    await updateOrgInvitation({ invitationId: invitation.id, role });
     setDeletingInvitation(null);
   };
 
@@ -103,12 +88,10 @@ export const OrgInvitationsList = ({ invitations }: Props) => {
                     </Button>
                   </Col>
                   <Col>
+                    <Typography.Text type="secondary">Role: </Typography.Text>
                     <OrgRoleSelector
-                      onChange={(role) =>
-                        handleUpdateRoleForInvitation(invitation, role)
-                      }
+                      onChange={() => {}}
                       showArrow={isOrgAdmin}
-                      value={invitation.role}
                     />
                   </Col>
                   <Col>

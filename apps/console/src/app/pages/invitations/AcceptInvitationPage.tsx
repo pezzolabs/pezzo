@@ -1,18 +1,20 @@
 import { Result } from "antd";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { useAcceptOrgInvitationMutation } from "../../graphql/hooks/mutations";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useAcceptOrgInvitation } from "../../lib/hooks/mutations";
 import { useEffect, useState } from "react";
 import { GraphQLErrorResponse } from "../../graphql/types";
 
 export const AcceptInvitationPage = () => {
-  const params = useParams();
-  const { mutateAsync } = useAcceptOrgInvitationMutation();
+  const [searchParams] = useSearchParams();
+  const { mutateAsync } = useAcceptOrgInvitation();
   const [orgName, setOrgName] = useState<string>(null);
   const [error, setError] = useState<string>(null);
   const navigate = useNavigate();
 
+  const token = searchParams.get("token");
+
   useEffect(() => {
-    if (!params.token) {
+    if (!token) {
       setError("Invalid token");
     }
 
@@ -29,8 +31,8 @@ export const AcceptInvitationPage = () => {
         });
     };
 
-    acceptInvitation(params.token);
-  }, [params, setError, mutateAsync, navigate]);
+    acceptInvitation(token);
+  }, [token, setError, mutateAsync, navigate]);
 
   if (error) {
     return (

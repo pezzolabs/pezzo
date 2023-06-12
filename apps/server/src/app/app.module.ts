@@ -46,11 +46,6 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
         INFLUXDB_URL: Joi.string().required(),
         INFLUXDB_TOKEN: Joi.string().required(),
         CONSOLE_HOST: Joi.string().required(),
-        KAFKA_BROKERS: Joi.string().required(),
-        KAFKA_GROUP_ID: Joi.string().default("pezzo"),
-        KAFKA_REBALANCE_TIMEOUT: Joi.number().default(10000),
-        KAFKA_HEARTBEAT_INTERVAL: Joi.number().default(3000),
-        KAFKA_SESSION_TIMEOUT: Joi.number().default(10000),
       }),
       // In CI, we need to skip validation because we don't have a .env file
       // This is consumed by the graphql:schema-generate Nx target

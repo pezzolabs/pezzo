@@ -1,4 +1,4 @@
-import { graphql } from "../../../../@generated/graphql";
+import { graphql } from "../../../@generated/graphql";
 
 export const DELETE_INVITATION = graphql(/* GraphQL */ `
   mutation DeleteInvitation($data: InvitationWhereUniqueInput!) {
@@ -25,15 +25,6 @@ export const CREATE_ORG_INVITATION = graphql(/* GraphQL */ `
   }
 `);
 
-export const UPDATE_ORG_INVITATION = graphql(/* GraphQL */ `
-  mutation UpdateOrgInvitation($data: UpdateOrgInvitationInput!) {
-    updateOrgInvitation(data: $data) {
-      id
-      role
-    }
-  }
-`);
-
 export const DELETE_ORG_MEMBER = graphql(/* GraphQL */ `
   mutation DeleteOrgMember($data: OrganizationMemberWhereUniqueInput!) {
     deleteOrgMember(data: $data) {
@@ -46,14 +37,6 @@ export const UPDATE_ORG_MEMBER_ROLE = graphql(/* GraphQL */ `
   mutation UpdateOrgMemberRole($data: UpdateOrgMemberRoleInput!) {
     updateOrgMemberRole(data: $data) {
       role
-    }
-  }
-`);
-
-export const UPDATE_ORG_SETTINGS = graphql(/* GraphQL */ `
-  mutation UpdateOrgSettings($data: UpdateOrgSettingsInput!) {
-    updateOrgSettings(data: $data) {
-      name
     }
   }
 `);

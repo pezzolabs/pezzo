@@ -15,9 +15,9 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { OrgRoleSelector } from "./OrgRoleSelector";
 import { useState } from "react";
 import {
-  useDeleteOrgMemberMutation,
+  useDeleteOrgMember,
   useUpdateOrgMemberRoleMutation,
-} from "../../graphql/hooks/mutations";
+} from "../../lib/hooks/mutations";
 import { useAuthContext } from "../../lib/providers/AuthProvider";
 import { useCurrentOrgMembership } from "../../lib/hooks/useCurrentOrgMembership";
 
@@ -30,7 +30,7 @@ interface Props {
 export const OrgMembersList = ({ members }: Props) => {
   const { isOrgAdmin } = useCurrentOrgMembership();
   const { currentUser } = useAuthContext();
-  const { mutateAsync: deleteOrgMember } = useDeleteOrgMemberMutation();
+  const { mutateAsync: deleteOrgMember } = useDeleteOrgMember();
   const { mutate: updateOrgMemberRole } = useUpdateOrgMemberRoleMutation();
   const [messageApi, contextHolder] = message.useMessage();
   const [deletingMember, setDeletingMember] = useState<Member>(null);
@@ -97,6 +97,7 @@ export const OrgMembersList = ({ members }: Props) => {
                 </Col>
                 <Space size="large">
                   <Col>
+                    <Typography.Text type="secondary">Role: </Typography.Text>
                     <OrgRoleSelector
                       disabled={
                         !isOrgAdmin || member.user.id === currentUser.id
