@@ -5,7 +5,15 @@ import { useLocalStorage } from "usehooks-ts";
 import { useEffect } from "react";
 import { useOrganizations } from "./useOrganizations";
 
-export const useCurrentOrganization = () => {
+const defaultProps = {
+  includeMembers: false,
+  includeInvitations: false,
+};
+
+export const useCurrentOrganization = ({
+  includeMembers,
+  includeInvitations,
+} = defaultProps) => {
   const { organizations } = useOrganizations();
   const [currentOrgId, setCurrentOrgId] = useLocalStorage("currentOrgId", null);
 
@@ -16,13 +24,20 @@ export const useCurrentOrganization = () => {
   }, [currentOrgId, organizations, setCurrentOrgId]);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["organization", currentOrgId],
+    queryKey: [
+      "currentOrganization",
+      currentOrgId,
+      includeMembers,
+      includeInvitations,
+    ],
     queryFn: async () =>
-      gqlClient.request(GET_ORGANIZATION, { data: { id: currentOrgId } }),
+      gqlClient.request(GET_ORGANIZATION, {
+        data: { id: currentOrgId },
+        includeMembers,
+        includeInvitations,
+      }),
     enabled: !!currentOrgId,
   });
-
-  console.log("data", data);
 
   const selectOrg = (orgId: string) => {
     setCurrentOrgId(orgId);

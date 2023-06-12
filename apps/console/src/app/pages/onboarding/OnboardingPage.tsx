@@ -1,14 +1,5 @@
 import { LoadingOutlined } from "@ant-design/icons";
-import {
-  Button,
-  Col,
-  Input,
-  Row,
-  Space,
-  Typography,
-  Card,
-  theme,
-} from "antd";
+import { Button, Col, Input, Row, Space, Typography, Card, theme } from "antd";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
