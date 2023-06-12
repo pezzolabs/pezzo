@@ -47,7 +47,6 @@ model User {
   createdAt             DateTime?            @default(now())
   updatedAt             DateTime?            @updatedAt
   orgMemberships        OrganizationMember[]
-  projectMemberships    ProjectMember[]
   publishedPrompts      PromptEnvironment[]
   createdPromptVersions PromptVersion[]
   sentInvitations       Invitation[]
@@ -61,17 +60,6 @@ model Project {
   organizationId  String
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
-  members         ProjectMember[]
-}
-
-model ProjectMember {
-  id        String   @id @default(cuid())
-  projectId String
-  userId    String
-  project   Project  @relation(fields: [projectId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model Organization {

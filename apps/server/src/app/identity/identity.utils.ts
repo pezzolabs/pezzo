@@ -6,12 +6,6 @@ export function isOrgMember(user: RequestUser, organizationId: string) {
   return !!user.orgMemberships.find((m) => m.organizationId === organizationId);
 }
 
-export function isProjectMemberOrThrow(user: RequestUser, projectId: string) {
-  if (!user.projects.find((p) => p.id === projectId)) {
-    throw new ForbiddenException();
-  }
-}
-
 export function isOrgMemberOrThrow(user: RequestUser, organizationId: string) {
   if (!user.orgMemberships.find((m) => m.organizationId === organizationId)) {
     throw new ForbiddenException();
