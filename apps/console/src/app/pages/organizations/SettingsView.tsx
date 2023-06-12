@@ -15,7 +15,14 @@ export const SettingsView = () => {
   const { mutate: updateSettings, isLoading } = useUpdateOrgSettingsMutation();
 
   const handleFormFinish = async (values: Inputs) => {
-    updateSettings({ organizationId: organization.id, name: values.name });
+    updateSettings(
+      { organizationId: organization.id, name: values.name },
+      {
+        onSuccess: () => {
+          setIsTouched(false);
+        },
+      }
+    );
   };
 
   const initialValues = useMemo(
