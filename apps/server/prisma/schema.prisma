@@ -53,13 +53,13 @@ model User {
 }
 
 model Project {
-  id             String       @id @default(cuid())
-  slug           String
-  name           String
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  organizationId String
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  id              String           @id @default(cuid())
+  slug            String
+  name            String
+  organization    Organization     @relation(fields: [organizationId], references: [id])
+  organizationId  String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 }
 
 model Organization {
