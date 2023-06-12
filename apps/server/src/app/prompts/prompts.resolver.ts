@@ -24,7 +24,10 @@ import {
 import { AuthGuard } from "../auth/auth.guard";
 import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
-import { isProjectMemberOrThrow } from "../identity/identity.utils";
+import {
+  isOrgMemberOrThrow,
+  isProjectMemberOrThrow,
+} from "../identity/identity.utils";
 import { GetProjectPromptsInput } from "./inputs/get-project-prompts.input";
 import { PinoLogger } from "../logger/pino-logger";
 import { AnalyticsService } from "../analytics/analytics.service";
@@ -45,7 +48,15 @@ export class PromptsResolver {
     @CurrentUser() user: RequestUser
   ) {
     const { projectId } = data;
-    isProjectMemberOrThrow(user, data.projectId);
+
+    const project = await this.prisma.project.findUnique({
+      where: {
+        id: projectId,
+      },
+    });
+
+    isOrgMemberOrThrow(user, project.organizationId);
+
     this.logger.assign({ projectId }).info("Getting prompts");
 
     try {
@@ -89,7 +100,13 @@ export class PromptsResolver {
       throw new NotFoundException();
     }
 
-    isProjectMemberOrThrow(user, prompt.projectId);
+    const project = await this.prisma.project.findUnique({
+      where: {
+        id: prompt.projectId,
+      },
+    });
+
+    isOrgMemberOrThrow(user, project.organizationId);
     return prompt;
   }
 
@@ -153,7 +170,13 @@ export class PromptsResolver {
       throw new NotFoundException();
     }
 
-    isProjectMemberOrThrow(user, promptVersion.prompt.projectId);
+    const project = await this.prisma.project.findUnique({
+      where: {
+        id: promptVersion.prompt.projectId,
+      },
+    });
+
+    isOrgMemberOrThrow(user, project.organizationId);
     return promptVersion;
   }
 
@@ -162,11 +185,19 @@ export class PromptsResolver {
     @Args("data") data: CreatePromptInput,
     @CurrentUser() user: RequestUser
   ) {
-    isProjectMemberOrThrow(user, data.projectId);
     const { name, integrationId, projectId } = data;
     this.logger
       .assign({ name, integrationId, projectId })
       .info("Creating prompt");
+
+    const project = await this.prisma.project.findUnique({
+      where: {
+        id: projectId,
+      },
+    });
+
+    isOrgMemberOrThrow(user, project.organizationId);
+
     let exists: Prompt;
 
     try {

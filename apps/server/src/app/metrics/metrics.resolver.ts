@@ -12,9 +12,13 @@ import {
 import { PinoLogger } from "../logger/pino-logger";
 import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
-import { isProjectMemberOrThrow } from "../identity/identity.utils";
+import {
+  isOrgMemberOrThrow,
+  isProjectMemberOrThrow,
+} from "../identity/identity.utils";
 import { PromptsService } from "../prompts/prompts.service";
 import { Prompt } from "@prisma/client";
+import { PrismaService } from "../prisma.service";
 
 interface PromptExecutionQueryResult extends InfluxQueryResult {
   prompt_id: string;
@@ -34,6 +38,7 @@ const granularityMapping = {
 @Resolver(() => Metric)
 export class MetricsResolver {
   constructor(
+    private prismaService: PrismaService,
     private influxService: InfluxDbService,
     private promptService: PromptsService,
     private readonly logger: PinoLogger
@@ -60,7 +65,13 @@ export class MetricsResolver {
       throw new NotFoundException();
     }
 
-    isProjectMemberOrThrow(user, prompt.projectId);
+    const project = await this.prismaService.project.findUnique({
+      where: {
+        id: prompt.projectId,
+      },
+    });
+
+    isOrgMemberOrThrow(user, project.organizationId);
     const queryClient = this.influxService.getQueryApi("primary");
 
     const {
