@@ -13,7 +13,10 @@ import { EnvironmentsService } from "../identity/environments.service";
 import { AuthGuard } from "../auth/auth.guard";
 import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
-import { isOrgMemberOrThrow } from "../identity/identity.utils";
+import {
+  isOrgMemberOrThrow,
+  isProjectMemberOrThrow,
+} from "../identity/identity.utils";
 import { PinoLogger } from "../logger/pino-logger";
 import { Environment } from "@prisma/client";
 import { AnalyticsService } from "../analytics/analytics.service";

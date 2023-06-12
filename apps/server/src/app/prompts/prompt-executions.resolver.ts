@@ -16,7 +16,10 @@ import {
   NotFoundException,
   UseGuards,
 } from "@nestjs/common";
-import { isOrgMemberOrThrow } from "../identity/identity.utils";
+import {
+  isOrgMemberOrThrow,
+  isProjectMemberOrThrow,
+} from "../identity/identity.utils";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { PinoLogger } from "../logger/pino-logger";
 import { TestPromptResult } from "@pezzo/client";

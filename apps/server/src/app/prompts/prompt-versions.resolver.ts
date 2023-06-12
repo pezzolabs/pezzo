@@ -18,7 +18,10 @@ import {
   NotFoundException,
   UseGuards,
 } from "@nestjs/common";
-import { isOrgMemberOrThrow } from "../identity/identity.utils";
+import {
+  isOrgMemberOrThrow,
+  isProjectMemberOrThrow,
+} from "../identity/identity.utils";
 import { PromptsService } from "./prompts.service";
 import { AuthGuard } from "../auth/auth.guard";
 import { ExtendedUser } from "../identity/models/extended-user.model";
