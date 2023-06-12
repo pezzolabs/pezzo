@@ -59,9 +59,6 @@ export class AuthGuard implements CanActivate {
     req["supertokensUser"] = supertokensUser;
 
     try {
-      const projects = await this.projectsService.getProjectsByUser(
-        supertokensUser.email
-      );
       const memberships = await this.usersService.getUserOrgMemberships(
         supertokensUser.email
       );
@@ -69,7 +66,6 @@ export class AuthGuard implements CanActivate {
       const reqUser: RequestUser = {
         id: supertokensUser.id,
         email: supertokensUser.email,
-        projects: projects.map((p) => ({ id: p.id })),
         orgMemberships: memberships.map((m) => ({
           organizationId: m.organizationId,
           memberSince: m.createdAt,

@@ -106,8 +106,7 @@ export class ProjectsResolver {
       const project = await this.projectsService.createProject(
         data.name,
         slug,
-        data.organizationId,
-        user.id
+        data.organizationId
       );
 
       this.analytics.track("PROJECT:CREATED", user.id, {

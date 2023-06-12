@@ -12,10 +12,7 @@ import {
 import { PinoLogger } from "../logger/pino-logger";
 import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
-import {
-  isOrgMemberOrThrow,
-  isProjectMemberOrThrow,
-} from "../identity/identity.utils";
+import { isOrgMemberOrThrow } from "../identity/identity.utils";
 import { PromptsService } from "../prompts/prompts.service";
 import { Prompt } from "@prisma/client";
 import { PrismaService } from "../prisma.service";
