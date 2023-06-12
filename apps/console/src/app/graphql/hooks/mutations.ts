@@ -26,9 +26,8 @@ import {
   UPDATE_ORG_INVITATION,
   UPDATE_ORG_MEMBER_ROLE,
   UPDATE_ORG_SETTINGS,
-} from "../definitions/mutations/organizations";
-import { GraphQLErrorResponse } from "../types";
-import { DELETE_PROMPT } from "../definitions/mutations/prompts";
+} from "../../graphql/mutations/organizations";
+import { GraphQLErrorResponse } from "../../graphql/types";
 
 export const useUpdateCurrentUserMutation = () =>
   useMutation({

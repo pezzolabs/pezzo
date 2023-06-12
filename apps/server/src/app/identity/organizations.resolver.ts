@@ -15,10 +15,11 @@ import { RequestUser } from "./users.types";
 import { CreateOrganizationInput } from "./inputs/create-organization.input";
 import { OrgRole } from "@prisma/client";
 import { OrganizationWhereUniqueInput } from "../../@generated/organization/organization-where-unique.input";
-import { isOrgMemberOrThrow } from "./identity.utils";
+import { isOrgAdminOrThrow, isOrgMemberOrThrow } from "./identity.utils";
 import { OrganizationMember } from "../../@generated/organization-member/organization-member.model";
 import { UsersService } from "./users.service";
 import { Invitation } from "../../@generated/invitation/invitation.model";
+import { UpdateOrgSettingsInput } from "./inputs/update-org-settings.input";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Organization)
@@ -133,5 +134,34 @@ export class OrganizationsResolver {
     return invitations.map((invitation) => ({
       ...invitation,
     }));
+  }
+
+  @Mutation(() => Organization)
+  async updateOrgSettings(
+    @Args("data") data: UpdateOrgSettingsInput,
+    @CurrentUser() user: RequestUser
+  ) {
+    const { organizationId, name } = data;
+
+    const org = await this.prisma.organization.findFirst({
+      where: {
+        id: organizationId,
+      },
+    });
+
+    if (!org) {
+      throw new ConflictException("Organization not found");
+    }
+
+    isOrgAdminOrThrow(user, organizationId);
+
+    return this.prisma.organization.update({
+      where: {
+        id: organizationId,
+      },
+      data: {
+        name,
+      },
+    });
   }
 }

@@ -2,7 +2,7 @@ import { Button, Form, Input } from "antd";
 import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
 import { SaveOutlined } from "@ant-design/icons";
 import { useMemo, useState } from "react";
-import { useUpdateOrgSettingsMutation } from "../../graphql/hooks/mutations";
+import { useUpdateOrgSettingsMutation } from "../../lib/hooks/mutations";
 
 type Inputs = {
   name: string;
@@ -15,14 +15,7 @@ export const SettingsView = () => {
   const { mutate: updateSettings, isLoading } = useUpdateOrgSettingsMutation();
 
   const handleFormFinish = async (values: Inputs) => {
-    updateSettings(
-      { organizationId: organization.id, name: values.name },
-      {
-        onSuccess: () => {
-          setIsTouched(false);
-        },
-      }
-    );
+    updateSettings({ organizationId: organization.id, name: values.name });
   };
 
   const initialValues = useMemo(
