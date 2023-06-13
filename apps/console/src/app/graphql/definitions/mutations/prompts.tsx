@@ -38,3 +38,11 @@ export const TEST_PROMPT = graphql(/* GraphQL */ `
     }
   }
 `);
+
+export const DELETE_PROMPT = graphql(/* GraphQL */ `
+  mutation deletePrompt($data: PromptWhereUniqueInput!) {
+    deletePrompt(data: $data) {
+      id
+    }
+  }
+`);

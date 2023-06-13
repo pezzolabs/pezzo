@@ -238,6 +238,30 @@ export class PromptsResolver {
     return prompt;
   }
 
+  @Mutation(() => Prompt)
+  async deletePrompt(
+    @Args("data") data: PromptWhereUniqueInput,
+    @CurrentUser() user: RequestUser
+  ) {
+    const { id } = data;
+    this.logger.assign({ id }).info("Deleting prompt");
+
+    let prompt: Prompt;
+
+    try {
+      prompt = await this.promptsService.deletePrompt(id);
+    } catch (error) {
+      this.logger.error({ error }, "Error deleting prompt");
+      throw new InternalServerErrorException();
+    }
+
+    this.analytics.track("PROMPT:DELETED", user.id, {
+      promptId: id,
+    });
+
+    return prompt;
+  }
+
   @ResolveField(() => [PromptExecution])
   async executions(@Parent() prompt: PrismaPrompt) {
     this.logger
