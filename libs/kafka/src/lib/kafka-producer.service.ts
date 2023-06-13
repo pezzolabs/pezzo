@@ -5,9 +5,7 @@ import {
   OnModuleInit,
 } from "@nestjs/common";
 import { Kafka, Producer, ProducerRecord } from "kafkajs";
-import { KafkaModuleOptions } from "./kafka.module";
-import { MODULE_OPTIONS_TOKEN } from "./kafka.module-definitions";
-import { KafkaSchemas } from "../schemas";
+import { KafkaModuleConfig } from "./kafka.module";
 
 @Injectable()
 export class KafkaProducerService
@@ -16,15 +14,9 @@ export class KafkaProducerService
   private kafka: Kafka;
   private producer: Producer;
 
-  constructor(
-    @Inject(MODULE_OPTIONS_TOKEN) private kafkaConfig: KafkaModuleOptions
-  ) {}
+  constructor(@Inject("KAFKA_CONFIG") private kafkaConfig: KafkaModuleConfig) {}
 
   async onModuleInit() {
-    return this.connect();
-  }
-
-  async connect() {
     this.kafka = new Kafka(this.kafkaConfig.client);
     this.producer = this.kafka.producer(this.kafkaConfig.producer);
     await this.producer.connect();
@@ -34,25 +26,7 @@ export class KafkaProducerService
     await this.producer.disconnect();
   }
 
-  async produce<K extends keyof KafkaSchemas>(
-    topic: K,
-    payload: KafkaSchemas[K],
-    producerRecordOverrides?: ProducerRecord
-  ) {
-    const record: ProducerRecord = {
-      topic: topic as string,
-      messages: [
-        {
-          key: payload.key || null,
-          value: JSON.stringify(payload),
-        },
-      ],
-    };
-
-    if (producerRecordOverrides) {
-      Object.assign(record, producerRecordOverrides);
-    }
-
+  async produce(record: ProducerRecord) {
     await this.producer.send(record);
   }
 }

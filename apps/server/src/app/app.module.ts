@@ -52,22 +52,10 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
       validate:
         process.env.SKIP_CONFIG_VALIDATION === "true" ? () => ({}) : undefined,
     }),
-    KafkaModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (config: ConfigService) => ({
-        client: {
-          brokers: config.get("KAFKA_BROKERS").split(","),
-        },
-        consumer: {
-          groupId: config.get("KAFKA_GROUP_ID"),
-          rebalanceTimeout: config.get("KAFKA_REBALANCE_TIMEOUT"),
-          heartbeatInterval: config.get("KAFKA_HEARTBEAT_INTERVAL"),
-          sessionTimeout: config.get("KAFKA_SESSION_TIMEOUT"),
-        },
-        producer: {},
-      }),
-      isGlobal: true,
-      inject: [ConfigService],
+    KafkaModule.register({
+      client: {
+        brokers: ["localhost:9092"],
+      },
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
