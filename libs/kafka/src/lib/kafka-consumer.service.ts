@@ -16,7 +16,9 @@ export class KafkaConsumerService
   private kafka: Kafka;
   private consumers: Consumer[] = [];
 
-  constructor(@Inject(MODULE_OPTIONS_TOKEN) private kafkaConfig: KafkaModuleOptions ) {}
+  constructor(
+    @Inject(MODULE_OPTIONS_TOKEN) private kafkaConfig: KafkaModuleOptions
+  ) {}
 
   async onModuleInit() {
     this.kafka = new Kafka(this.kafkaConfig.client);
