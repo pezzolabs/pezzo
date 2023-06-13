@@ -6,7 +6,8 @@ import {
 } from "@nestjs/common";
 import { ConsumerRunConfig } from "kafkajs";
 import { Consumer, ConsumerSubscribeTopics, Kafka } from "kafkajs";
-import { KafkaModuleConfig } from "./kafka.module";
+import { MODULE_OPTIONS_TOKEN } from "./kafka.module-definitions";
+import { KafkaModuleOptions } from "./kafka.module";
 
 @Injectable()
 export class KafkaConsumerService
@@ -15,7 +16,7 @@ export class KafkaConsumerService
   private kafka: Kafka;
   private consumers: Consumer[] = [];
 
-  constructor(@Inject("KAFKA_CONFIG") private kafkaConfig: KafkaModuleConfig) {}
+  constructor(@Inject(MODULE_OPTIONS_TOKEN) private kafkaConfig: KafkaModuleOptions ) {}
 
   async onModuleInit() {
     this.kafka = new Kafka(this.kafkaConfig.client);
