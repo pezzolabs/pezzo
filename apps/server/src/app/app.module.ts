@@ -46,17 +46,52 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
         INFLUXDB_URL: Joi.string().required(),
         INFLUXDB_TOKEN: Joi.string().required(),
         CONSOLE_HOST: Joi.string().required(),
+        KAFKA_BROKERS: Joi.string().required(),
+        KAFKA_GROUP_ID: Joi.string().default("pezzo"),
+        KAFKA_REBALANCE_TIMEOUT: Joi.number().default(10000),
+        KAFKA_HEARTBEAT_INTERVAL: Joi.number().default(3000),
+        KAFKA_SESSION_TIMEOUT: Joi.number().default(10000),
       }),
       // In CI, we need to skip validation because we don't have a .env file
       // This is consumed by the graphql:schema-generate Nx target
       validate:
         process.env.SKIP_CONFIG_VALIDATION === "true" ? () => ({}) : undefined,
     }),
-    KafkaModule.register({
-      client: {
-        brokers: ["localhost:9092"],
-      },
+    KafkaModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => ({
+        client: {
+          brokers: config.get("KAFKA_BROKERS").split(",")
+        },
+        consumer: {
+            groupId: config.get("KAFKA_GROUP_ID"),
+            rebalanceTimeout: config.get("KAFKA_REBALANCE_TIMEOUT"),
+            heartbeatInterval: config.get("KAFKA_HEARTBEAT_INTERVAL"),
+            sessionTimeout: config.get("KAFKA_SESSION_TIMEOUT"),
+        },
+        producer: {},
+      }),
+      isGlobal: true,
+      inject: [ConfigService],
     }),
+    // KafkaModule.registerAsync({
+    //   imports: [ConfigModule],
+    //   useFactory: async (configService: ConfigService) => {
+    //     return {
+    //       client: {
+    //         brokers: configService.get("KAFKA_BROKERS").split(","),
+    //       },
+    //       consumer: {
+    //         groupId: "pezzo",
+    //         rebalanceTimeout: 10000,
+    //         heartbeatInterval: 3000,
+    //         sessionTimeout: 10000
+    //       },
+    //       producer: {}
+    //     };
+    //   },
+    //   inject: [ConfigService],
+    // }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       playground: false,
