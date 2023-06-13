@@ -34,8 +34,8 @@ export const LayoutWrapper = ({
   withHeader = true,
   withBreadcrumbs = true,
 }: Props) => {
-  const breadcrumbItems = useBreadcrumbItems();
   const { token } = theme.useToken();
+  const breadcrumbItems = useBreadcrumbItems();
 
   return (
     <Layout

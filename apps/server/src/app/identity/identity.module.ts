@@ -12,8 +12,10 @@ import { ApiKeysService } from "./api-keys.service";
 import { OrganizationsResolver } from "./organizations.resolver";
 import { OrgInvitationsResolver } from "./org-invitations.resolver";
 import { OrganizationMembersResolver } from "./org-members.resolver";
+import { KafkaModule } from "@pezzo/kafka";
 
 @Module({
+  imports: [KafkaModule],
   providers: [
     OrganizationsService,
     ProjectsResolver,

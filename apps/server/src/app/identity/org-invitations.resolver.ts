@@ -24,13 +24,15 @@ import { UsersService } from "./users.service";
 import { ExtendedUser } from "./models/extended-user.model";
 import { InvitationWhereUniqueInput } from "../../@generated/invitation/invitation-where-unique.input";
 import { Organization } from "../../@generated/organization/organization.model";
+import { KafkaProducerService } from "@pezzo/kafka";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Invitation)
 export class OrgInvitationsResolver {
   constructor(
     private prisma: PrismaService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private kafkaProducer: KafkaProducerService
   ) {}
 
   @Mutation(() => Invitation)
@@ -70,6 +72,22 @@ export class OrgInvitationsResolver {
         status: InvitationStatus.Pending,
         invitedById: user.id,
       },
+    });
+
+    await this.kafkaProducer.produce({
+      topic: "org-invitation-created",
+      messages: [
+        {
+          key: invitation.id,
+          value: JSON.stringify({
+            invitationid: invitation.id,
+            email,
+            role: invitation.role,
+            organizationId,
+            organizationName: organization.name,
+          }),
+        },
+      ],
     });
 
     return invitation;
