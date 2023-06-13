@@ -20,6 +20,7 @@ import { MetricsModule } from "./metrics/metrics.module";
 import { LoggerModule } from "./logger/logger.module";
 import { PinoLogger } from "./logger/pino-logger";
 import { AnalyticsModule } from "./analytics/analytics.module";
+import { KafkaModule } from "@pezzo/kafka";
 
 const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
 
@@ -50,6 +51,11 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
       // This is consumed by the graphql:schema-generate Nx target
       validate:
         process.env.SKIP_CONFIG_VALIDATION === "true" ? () => ({}) : undefined,
+    }),
+    KafkaModule.register({
+      client: {
+        brokers: ["localhost:9092"],
+      },
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,

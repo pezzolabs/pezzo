@@ -1,0 +1,16 @@
+{
+  "name": "kafka",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/kafka/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/kafka/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}

@@ -85,11 +85,11 @@ export const useBreadcrumbItems = () => {
       },
       {
         title: (
-          <Link to={`/orgs/${organization.id}`} replace={true}>
+          <Link to={`/orgs/${organization?.id}`} replace={true}>
             {organization.name}
           </Link>
         ),
-        key: `/orgs/${organization.id}`,
+        key: `/orgs/${organization?.id}`,
       },
       ...parts,
     ]

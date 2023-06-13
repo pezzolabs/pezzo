@@ -43,21 +43,18 @@ export class OrganizationsResolver {
   }
 
   @Query(() => Organization)
-  organization(
+  async organization(
     @CurrentUser() user: RequestUser,
     @Args("data") data: OrganizationWhereUniqueInput
   ) {
-    isOrgMemberOrThrow(user, data.id);
-    return this.prisma.organization.findFirst({
+    const org = await this.prisma.organization.findFirst({
       where: {
         id: data.id,
-        members: {
-          some: {
-            userId: user.id,
-          },
-        },
       },
     });
+
+    isOrgMemberOrThrow(user, org.id);
+    return org;
   }
 
   @Mutation(() => Organization)
