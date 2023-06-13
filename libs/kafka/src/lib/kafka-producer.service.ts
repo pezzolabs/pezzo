@@ -15,7 +15,9 @@ export class KafkaProducerService
   private kafka: Kafka;
   private producer: Producer;
 
-  constructor(@Inject(MODULE_OPTIONS_TOKEN) private kafkaConfig: KafkaModuleOptions) {}
+  constructor(
+    @Inject(MODULE_OPTIONS_TOKEN) private kafkaConfig: KafkaModuleOptions
+  ) {}
 
   async onModuleInit() {
     this.kafka = new Kafka(this.kafkaConfig.client);
