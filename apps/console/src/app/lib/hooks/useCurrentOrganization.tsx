@@ -15,6 +15,7 @@ export const useCurrentOrganization = ({
   includeInvitations,
 } = defaultProps) => {
   const { organizations } = useOrganizations();
+  // TODO: currentOrgId in local storage might be different than the actual org if customer has multiple orgs for multiple users
   const [currentOrgId, setCurrentOrgId] = useLocalStorage("currentOrgId", null);
 
   useEffect(() => {
