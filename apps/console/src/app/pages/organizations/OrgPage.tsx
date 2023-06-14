@@ -6,11 +6,12 @@ import {
   TeamOutlined,
 } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
 import { ProjectsPage } from "../projects";
 import { MembersView } from "./MembersView";
 import { SettingsView } from "./SettingsView";
+import { useCurrentOrgMembership } from "../../lib/hooks/useCurrentOrgMembership";
 
 const TabLabel = styled.div`
   display: inline-block;
@@ -18,9 +19,16 @@ const TabLabel = styled.div`
   padding-right: 10px;
 `;
 
+enum TabItemKey {
+  Projects = "projects",
+  Members = "members",
+  ApiKeys = "apiKeys",
+  Settings = "settings",
+}
+
 const tabsItems = [
   {
-    key: "projects",
+    key: TabItemKey.Projects,
     label: (
       <TabLabel>
         <AppstoreOutlined /> Projects
@@ -28,7 +36,7 @@ const tabsItems = [
     ),
   },
   {
-    key: "members",
+    key: TabItemKey.Members,
     label: (
       <TabLabel>
         <TeamOutlined /> Members
@@ -36,7 +44,7 @@ const tabsItems = [
     ),
   },
   {
-    key: "settings",
+    key: TabItemKey.Settings,
     label: (
       <TabLabel>
         <SettingOutlined /> Settings
@@ -48,6 +56,7 @@ const tabsItems = [
 export const OrgPage = () => {
   const { orgId: orgIdParam } = useParams();
   const { selectOrg, organization } = useCurrentOrganization();
+  const { isOrgAdmin } = useCurrentOrgMembership();
   const [activeView, setActiveView] = useState("projects");
 
   useEffect(() => {
@@ -56,6 +65,14 @@ export const OrgPage = () => {
     }
   }, [orgIdParam, selectOrg]);
 
+  const availableTabItems = useMemo(
+    () =>
+      tabsItems.filter((tabItem) =>
+        tabItem.key === TabItemKey.Settings ? isOrgAdmin : true
+      ),
+    [tabsItems, isOrgAdmin]
+  );
+
   return (
     organization && (
       <>
@@ -63,11 +80,11 @@ export const OrgPage = () => {
           {organization.name}
         </Typography.Title>
 
-        <Tabs items={tabsItems} onChange={setActiveView} />
+        <Tabs items={availableTabItems} onChange={setActiveView} />
 
-        {activeView === "projects" && <ProjectsPage />}
-        {activeView === "members" && <MembersView />}
-        {activeView === "settings" && <SettingsView />}
+        {activeView === TabItemKey.Projects && <ProjectsPage />}
+        {activeView === TabItemKey.Members && <MembersView />}
+        {activeView === TabItemKey.Settings && isOrgAdmin && <SettingsView />}
       </>
     )
   );
