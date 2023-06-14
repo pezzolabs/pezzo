@@ -138,22 +138,6 @@ export const useUpdateOrgInvitationMutation = () => {
   });
 };
 
-export const useDeletePromptMutation = () => {
-  const queryCache = useQueryClient();
-
-  return useMutation<DeletePromptMutation, GraphQLErrorResponse, string>({
-    mutationFn: (id: string) =>
-      gqlClient.request(DELETE_PROMPT, {
-        data: {
-          id,
-        },
-      }),
-    onSuccess: (data) => {
-      queryCache.invalidateQueries({ queryKey: ["prompts"] });
-    },
-  });
-};
-
 export const useUpdateOrgMemberRoleMutation = () => {
   const queryCache = useQueryClient();
 
