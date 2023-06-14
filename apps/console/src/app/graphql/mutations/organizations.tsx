@@ -25,6 +25,15 @@ export const CREATE_ORG_INVITATION = graphql(/* GraphQL */ `
   }
 `);
 
+export const UPDATE_ORG_INVITATION = graphql(/* GraphQL */ `
+  mutation UpdateOrgInvitation($data: UpdateOrgInvitationInput!) {
+    updateOrgInvitation(data: $data) {
+      id
+      role
+    }
+  }
+`);
+
 export const DELETE_ORG_MEMBER = graphql(/* GraphQL */ `
   mutation DeleteOrgMember($data: OrganizationMemberWhereUniqueInput!) {
     deleteOrgMember(data: $data) {

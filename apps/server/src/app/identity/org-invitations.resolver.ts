@@ -25,6 +25,7 @@ import { ExtendedUser } from "./models/extended-user.model";
 import { InvitationWhereUniqueInput } from "../../@generated/invitation/invitation-where-unique.input";
 import { Organization } from "../../@generated/organization/organization.model";
 import { KafkaProducerService } from "@pezzo/kafka";
+import { UpdateOrgInvitationInput } from "./inputs/update-org-invitation.input";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Invitation)
@@ -91,6 +92,58 @@ export class OrgInvitationsResolver {
     });
 
     return invitation;
+  }
+
+  @Mutation(() => Invitation)
+  async updateOrgInvitation(
+    @Args("data") data: UpdateOrgInvitationInput,
+    @CurrentUser() user: RequestUser
+  ): Promise<Invitation> {
+    const { invitationId, role } = data;
+
+    const invitation = await this.prisma.invitation.findUnique({
+      where: {
+        id: invitationId,
+      },
+    });
+
+    if (!invitation) {
+      throw new NotFoundException("Invitation not found");
+    }
+
+    isOrgAdminOrThrow(user, invitation.organizationId);
+
+    const organization = await this.prisma.organization.findUnique({
+      where: {
+        id: invitation.organizationId,
+      },
+    });
+
+    const updatedInvitation = await this.prisma.invitation.update({
+      where: {
+        id: invitationId,
+      },
+      data: {
+        role,
+      },
+    });
+
+    await this.kafkaProducer.produce({
+      topic: "org-invitation-edited",
+      messages: [
+        {
+          key: invitation.id,
+          value: JSON.stringify({
+            invitationId: invitation.id,
+            role,
+            organizationId: invitation.organizationId,
+            organizationName: organization.name,
+          }),
+        },
+      ],
+    });
+
+    return updatedInvitation;
   }
 
   @Query(() => [Invitation])

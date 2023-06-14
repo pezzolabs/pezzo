@@ -5,6 +5,8 @@ import {
   CreateProjectInput,
   CreateProjectMutation,
   InvitationWhereUniqueInput,
+  UpdateOrgInvitationInput,
+  UpdateOrgInvitationMutation,
   UpdateOrgMemberRoleInput,
   UpdateOrgMemberRoleMutation,
   UpdateOrgSettingsInput,
@@ -20,6 +22,7 @@ import {
   CREATE_ORG_INVITATION,
   DELETE_INVITATION,
   DELETE_ORG_MEMBER,
+  UPDATE_ORG_INVITATION,
   UPDATE_ORG_MEMBER_ROLE,
   UPDATE_ORG_SETTINGS,
 } from "../../graphql/mutations/organizations";
@@ -108,6 +111,24 @@ export const useCreateOrgInvitationMutation = () => {
   >({
     mutationFn: (data: CreateOrgInvitationInput) =>
       gqlClient.request(CREATE_ORG_INVITATION, { data }),
+    onSuccess: () => {
+      queryCache.invalidateQueries({
+        queryKey: ["currentOrganization"],
+      });
+    },
+  });
+};
+
+export const useUpdateOrgInvitationMutation = () => {
+  const queryCache = useQueryClient();
+
+  return useMutation<
+    UpdateOrgInvitationMutation,
+    GraphQLErrorResponse,
+    UpdateOrgInvitationInput
+  >({
+    mutationFn: (data: UpdateOrgInvitationInput) =>
+      gqlClient.request(UPDATE_ORG_INVITATION, { data }),
     onSuccess: () => {
       queryCache.invalidateQueries({
         queryKey: ["currentOrganization"],
