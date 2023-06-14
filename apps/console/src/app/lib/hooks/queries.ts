@@ -10,25 +10,25 @@ import { GET_ALL_PROJECTS } from "../../graphql/queries/projects";
 import { useCurrentOrganization } from "./useCurrentOrganization";
 
 export const useProviderApiKeys = () => {
-  const { project } = useCurrentProject();
+  const { organization } = useCurrentOrganization();
 
   return useQuery({
-    queryKey: ["providerApiKeys", project.organizationId],
+    queryKey: ["providerApiKeys", organization.id],
     queryFn: () =>
       gqlClient.request(GET_ALL_PROVIDER_API_KEYS, {
-        data: { organizationId: project.organizationId },
+        data: { organizationId: organization.id },
       }),
   });
 };
 
 export const usePezzoApiKeys = () => {
-  const { project } = useCurrentProject();
+  const { organization } = useCurrentOrganization();
 
   return useQuery({
-    queryKey: ["pezzoApiKeys", project.organizationId],
+    queryKey: ["pezzoApiKeys", organization.id],
     queryFn: () =>
       gqlClient.request(GET_ALL_API_KEYS, {
-        data: { organizationId: project.organizationId },
+        data: { organizationId: organization.id },
       }),
   });
 };

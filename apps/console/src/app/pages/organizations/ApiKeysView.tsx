@@ -1,10 +1,10 @@
-import { Space, Typography, theme } from "antd";
+import { Space, theme, Typography } from "antd";
 import { integrations } from "@pezzo/integrations";
-import { ProviderApiKeyListItem } from "../../components/api-keys/ProviderApiKeyListItem";
 import { usePezzoApiKeys, useProviderApiKeys } from "../../lib/hooks/queries";
+import { ProviderApiKeyListItem } from "../../components/api-keys/ProviderApiKeyListItem";
 import { PezzoApiKeyListItem } from "../../components/api-keys/PezzoApiKeyListItem";
 
-export const APIKeysPage = () => {
+export const ApiKeysView = () => {
   const { token } = theme.useToken();
   const providers = Object.values(integrations).map((integration) => ({
     name: integration.name,
