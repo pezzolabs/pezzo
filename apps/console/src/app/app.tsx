@@ -12,7 +12,6 @@ import { PromptTesterProvider } from "./lib/providers/PromptTesterContext";
 import { EnvironmentsPage } from "./pages/environments";
 import { PromptsPage } from "./pages/prompts";
 import { PromptPage } from "./pages/prompts/[promptId]";
-import { APIKeysPage } from "./pages/api-keys";
 import { initSuperTokens } from "./lib/auth/supertokens";
 import { SuperTokensWrapper } from "supertokens-auth-react";
 import { getSuperTokensRoutesForReactRouterDom } from "supertokens-auth-react/ui";
@@ -49,8 +48,6 @@ export const paths = {
   "/projects/:projectId/prompts/:promptId":
     "/projects/:projectId/prompts/:promptId",
   "/projects/:projectId/environments": "/projects/:projectId/environments",
-  "/projects/:projectId/provider-api-keys":
-    "/projects/:projectId/provider-api-keys",
 };
 
 export function App() {
@@ -185,10 +182,6 @@ export function App() {
                     <Route
                       path={paths["/projects/:projectId/environments"]}
                       element={<EnvironmentsPage />}
-                    />
-                    <Route
-                      path={paths["/projects/:projectId/provider-api-keys"]}
-                      element={<APIKeysPage />}
                     />
                   </Route>
                 </Route>

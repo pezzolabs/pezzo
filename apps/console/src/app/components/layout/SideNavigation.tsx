@@ -18,11 +18,6 @@ const topMenuItems = [
     label: "Environments",
     icon: <ServerStackIcon height={18} />,
   },
-  {
-    key: "provider-api-keys",
-    label: "API Keys",
-    icon: <KeyIcon height={18} />,
-  },
 ];
 
 const SidebarContainer = styled.div`
