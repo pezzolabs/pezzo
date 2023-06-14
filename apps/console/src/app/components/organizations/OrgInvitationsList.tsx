@@ -9,13 +9,16 @@ import {
   message,
   Modal,
 } from "antd";
-import { GetOrgQuery } from "../../../@generated/graphql/graphql";
+import { GetOrgQuery, OrgRole } from "../../../@generated/graphql/graphql";
 import { DeleteOutlined, LinkOutlined } from "@ant-design/icons";
 import { OrgRoleSelector } from "./OrgRoleSelector";
 import colors from "tailwindcss/colors";
 import { useCopyToClipboard } from "usehooks-ts";
 import { useState } from "react";
-import { useDeleteOrgInvitation } from "../../lib/hooks/mutations";
+import {
+  useDeleteOrgInvitation,
+  useUpdateOrgInvitationMutation,
+} from "../../lib/hooks/mutations";
 import { useCurrentOrgMembership } from "../../lib/hooks/useCurrentOrgMembership";
 
 type Invitation = GetOrgQuery["organization"]["invitations"][0];
@@ -27,6 +30,7 @@ interface Props {
 export const OrgInvitationsList = ({ invitations }: Props) => {
   const { isOrgAdmin } = useCurrentOrgMembership();
   const { mutateAsync: deleteOrgInvitation } = useDeleteOrgInvitation();
+  const { mutateAsync: updateOrgInvitation } = useUpdateOrgInvitationMutation();
   const [messageApi, contextHolder] = message.useMessage();
   const [deletingInvitation, setDeletingInvitation] =
     useState<Invitation>(null);
@@ -49,6 +53,18 @@ export const OrgInvitationsList = ({ invitations }: Props) => {
       content: "Invitation deleted",
     });
     await deleteOrgInvitation({ id: invitation.id });
+    setDeletingInvitation(null);
+  };
+
+  const handleUpdateRoleForInvitation = async (
+    invitation: Invitation,
+    role: OrgRole
+  ) => {
+    messageApi.open({
+      type: "success",
+      content: "Role updated",
+    });
+    await updateOrgInvitation({ invitationId: invitation.id, role });
     setDeletingInvitation(null);
   };
 
@@ -89,8 +105,11 @@ export const OrgInvitationsList = ({ invitations }: Props) => {
                   <Col>
                     <Typography.Text type="secondary">Role: </Typography.Text>
                     <OrgRoleSelector
-                      onChange={() => {}}
+                      onChange={(role) =>
+                        handleUpdateRoleForInvitation(invitation, role)
+                      }
                       showArrow={isOrgAdmin}
+                      value={invitation.role}
                     />
                   </Col>
                   <Col>
