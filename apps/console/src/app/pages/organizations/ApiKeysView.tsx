@@ -1,9 +1,6 @@
 import { Space, theme, Typography } from "antd";
 import { integrations } from "@pezzo/integrations";
-import {
-  usePezzoApiKeys,
-  useProviderApiKeys,
-} from "../../graphql/hooks/queries";
+import { usePezzoApiKeys, useProviderApiKeys } from "../../lib/hooks/queries";
 import { ProviderApiKeyListItem } from "../../components/api-keys/ProviderApiKeyListItem";
 import { PezzoApiKeyListItem } from "../../components/api-keys/PezzoApiKeyListItem";
 

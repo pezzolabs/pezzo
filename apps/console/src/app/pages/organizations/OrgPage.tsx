@@ -2,6 +2,7 @@ import { Tabs, Typography } from "antd";
 import styled from "@emotion/styled";
 import {
   AppstoreOutlined,
+  KeyOutlined,
   SettingOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
@@ -11,6 +12,7 @@ import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
 import { ProjectsPage } from "../projects";
 import { MembersView } from "./MembersView";
 import { SettingsView } from "./SettingsView";
+import { ApiKeysView } from "./ApiKeysView";
 import { useCurrentOrgMembership } from "../../lib/hooks/useCurrentOrgMembership";
 
 const TabLabel = styled.div`
@@ -40,6 +42,14 @@ const tabsItems = [
     label: (
       <TabLabel>
         <TeamOutlined /> Members
+      </TabLabel>
+    ),
+  },
+  {
+    key: TabItemKey.ApiKeys,
+    label: (
+      <TabLabel>
+        <KeyOutlined /> API Keys
       </TabLabel>
     ),
   },
@@ -84,6 +94,7 @@ export const OrgPage = () => {
 
         {activeView === TabItemKey.Projects && <ProjectsPage />}
         {activeView === TabItemKey.Members && <MembersView />}
+        {activeView === TabItemKey.ApiKeys && <ApiKeysView />}
         {activeView === TabItemKey.Settings && isOrgAdmin && <SettingsView />}
       </>
     )

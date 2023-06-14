@@ -49,8 +49,6 @@ export const paths = {
   "/projects/:projectId/prompts/:promptId":
     "/projects/:projectId/prompts/:promptId",
   "/projects/:projectId/environments": "/projects/:projectId/environments",
-  "/projects/:projectId/provider-api-keys":
-    "/projects/:projectId/provider-api-keys",
 };
 
 export function App() {
@@ -186,10 +184,6 @@ export function App() {
                     <Route
                       path={paths["/projects/:projectId/environments"]}
                       element={<EnvironmentsPage />}
-                    />
-                    <Route
-                      path={paths["/projects/:projectId/provider-api-keys"]}
-                      element={<APIKeysPage />}
                     />
                   </Route>
                 </Route>
