@@ -74,7 +74,7 @@ export const OnboardingPage = () => {
       await Promise.all(actions.filter(Boolean));
       return navigate("/projects");
     },
-    [updateCurrentUser, createProject, organization.id, hasName, navigate]
+    [updateCurrentUser, createProject, organization?.id, hasName, navigate]
   );
 
   useEffect(() => {
