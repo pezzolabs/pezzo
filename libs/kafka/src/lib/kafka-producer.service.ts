@@ -20,6 +20,10 @@ export class KafkaProducerService
   ) {}
 
   async onModuleInit() {
+    return this.connect;
+  }
+
+  async connect() {
     this.kafka = new Kafka(this.kafkaConfig.client);
     this.producer = this.kafka.producer(this.kafkaConfig.producer);
     await this.producer.connect();
