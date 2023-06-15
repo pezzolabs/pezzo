@@ -26,6 +26,7 @@ import { InvitationWhereUniqueInput } from "../../@generated/invitation/invitati
 import { Organization } from "../../@generated/organization/organization.model";
 import { KafkaProducerService } from "@pezzo/kafka";
 import { UpdateOrgInvitationInput } from "./inputs/update-org-invitation.input";
+import { ConfigService } from "@nestjs/config";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Invitation)
@@ -33,7 +34,8 @@ export class OrgInvitationsResolver {
   constructor(
     private prisma: PrismaService,
     private usersService: UsersService,
-    private kafkaProducer: KafkaProducerService
+    private kafkaProducer: KafkaProducerService,
+    private config: ConfigService
   ) {}
 
   @Mutation(() => Invitation)
@@ -75,13 +77,18 @@ export class OrgInvitationsResolver {
       },
     });
 
+    const consoleHost = this.config.get("CONSOLE_HOST");
+    const invitationUrl = new URL(consoleHost);
+    invitationUrl.pathname = `/invitations/${invitation.id}/accept`;
+
     await this.kafkaProducer.produce({
       topic: "org-invitation-created",
       messages: [
         {
           key: invitation.id,
           value: JSON.stringify({
-            invitationid: invitation.id,
+            invitationUrl: invitationUrl.toString(),
+            invitationId: invitation.id,
             email,
             role: invitation.role,
             organizationId,
