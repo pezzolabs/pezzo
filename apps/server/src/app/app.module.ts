@@ -74,24 +74,6 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
       isGlobal: true,
       inject: [ConfigService],
     }),
-    // KafkaModule.registerAsync({
-    //   imports: [ConfigModule],
-    //   useFactory: async (configService: ConfigService) => {
-    //     return {
-    //       client: {
-    //         brokers: configService.get("KAFKA_BROKERS").split(","),
-    //       },
-    //       consumer: {
-    //         groupId: "pezzo",
-    //         rebalanceTimeout: 10000,
-    //         heartbeatInterval: 3000,
-    //         sessionTimeout: 10000
-    //       },
-    //       producer: {}
-    //     };
-    //   },
-    //   inject: [ConfigService],
-    // }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       playground: false,
