@@ -9,7 +9,7 @@ export const antTheme: ThemeConfig = {
   },
   components: {
     Typography: {
-      fontWeightStrong: 400
-    }
+      fontWeightStrong: 400,
+    },
   },
 };
