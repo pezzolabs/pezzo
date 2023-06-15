@@ -22,7 +22,7 @@ import { PromptVersionSelector } from "../PromptVersionSelector";
 import { CommitPromptModal } from "../CommitPromptModal";
 import { PublishPromptModal } from "../PublishPromptModal";
 import { ConsumePromptModal } from "../ConsumePromptModal";
-import { useProviderApiKeys } from "../../../lib/hooks/queries";
+import { useProviderApiKeys } from "../../../graphql/hooks/queries";
 
 export const PromptEditView = () => {
   const {

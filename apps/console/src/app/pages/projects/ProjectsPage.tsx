@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useGetProjects } from "../../lib/hooks/queries";
+import { useGetProjects } from "../../graphql/hooks/queries";
 import { useEffect, useState } from "react";
 import { Button, Card, Col, Row, Spin, Typography, theme } from "antd";
 import styled from "@emotion/styled";

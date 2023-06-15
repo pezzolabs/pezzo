@@ -1,6 +1,6 @@
 import { Alert, Form, Input, Modal, Space, Typography, theme } from "antd";
 import { useCallback } from "react";
-import { useCreateProjectMutation } from "../../lib/hooks/mutations";
+import { useCreateProjectMutation } from "../../graphql/hooks/mutations";
 import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
 
 interface Props {

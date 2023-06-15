@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { Modal, Form, Input, Button, Alert } from "antd";
-import { CREATE_PROMPT } from "../../graphql/mutations/prompts";
+import { CREATE_PROMPT } from "../../graphql/definitions/mutations/prompts";
 import { gqlClient, queryClient } from "../../lib/graphql";
 import { css } from "@emotion/css";
 import { PromptIntegrationSelector } from "./PromptIntegrationSelector";

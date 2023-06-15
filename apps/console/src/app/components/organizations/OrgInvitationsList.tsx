@@ -16,9 +16,9 @@ import colors from "tailwindcss/colors";
 import { useCopyToClipboard } from "usehooks-ts";
 import { useState } from "react";
 import {
-  useDeleteOrgInvitation,
+  useDeleteOrgInvitationMutation,
   useUpdateOrgInvitationMutation,
-} from "../../lib/hooks/mutations";
+} from "../../graphql/hooks/mutations";
 import { useCurrentOrgMembership } from "../../lib/hooks/useCurrentOrgMembership";
 
 type Invitation = GetOrgQuery["organization"]["invitations"][0];
@@ -29,7 +29,7 @@ interface Props {
 
 export const OrgInvitationsList = ({ invitations }: Props) => {
   const { isOrgAdmin } = useCurrentOrgMembership();
-  const { mutateAsync: deleteOrgInvitation } = useDeleteOrgInvitation();
+  const { mutateAsync: deleteOrgInvitation } = useDeleteOrgInvitationMutation();
   const { mutateAsync: updateOrgInvitation } = useUpdateOrgInvitationMutation();
   const [messageApi, contextHolder] = message.useMessage();
   const [deletingInvitation, setDeletingInvitation] =

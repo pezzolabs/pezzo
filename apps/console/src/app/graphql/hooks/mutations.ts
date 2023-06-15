@@ -14,9 +14,9 @@ import {
   UpdateProfileInput,
 } from "../../../@generated/graphql/graphql";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { gqlClient } from "../graphql";
-import { UPDATE_PROFILE } from "../../graphql/queries/users";
-import { CREATE_PROJECT } from "../../graphql/queries/projects";
+import { gqlClient } from "../../lib/graphql";
+import { UPDATE_PROFILE } from "../definitions/queries/users";
+import { CREATE_PROJECT } from "../definitions/queries/projects";
 import {
   ACCEPT_ORG_INVITATION,
   CREATE_ORG_INVITATION,
@@ -25,8 +25,8 @@ import {
   UPDATE_ORG_INVITATION,
   UPDATE_ORG_MEMBER_ROLE,
   UPDATE_ORG_SETTINGS,
-} from "../../graphql/mutations/organizations";
-import { GraphQLErrorResponse } from "../../graphql/types";
+} from "../definitions/mutations/organizations";
+import { GraphQLErrorResponse } from "../types";
 
 export const useUpdateCurrentUserMutation = () =>
   useMutation({
@@ -55,7 +55,7 @@ export const useCreateProjectMutation = (props?: {
   });
 };
 
-export const useDeleteOrgInvitation = () => {
+export const useDeleteOrgInvitationMutation = () => {
   const queryCache = useQueryClient();
 
   return useMutation({
@@ -69,7 +69,7 @@ export const useDeleteOrgInvitation = () => {
   });
 };
 
-export const useAcceptOrgInvitation = () => {
+export const useAcceptOrgInvitationMutation = () => {
   const queryCache = useQueryClient();
 
   return useMutation<
@@ -87,7 +87,7 @@ export const useAcceptOrgInvitation = () => {
   });
 };
 
-export const useDeleteOrgMember = () => {
+export const useDeleteOrgMemberMutation = () => {
   const queryCache = useQueryClient();
 
   return useMutation({
