@@ -20,7 +20,7 @@ export class KafkaProducerService
   ) {}
 
   async onModuleInit() {
-    return this.connect;
+    return this.connect();
   }
 
   async connect() {
