@@ -21,6 +21,10 @@ export class KafkaConsumerService
   ) {}
 
   async onModuleInit() {
+    return this.connect();
+  }
+
+  async connect() {
     this.kafka = new Kafka(this.kafkaConfig.client);
   }
 
