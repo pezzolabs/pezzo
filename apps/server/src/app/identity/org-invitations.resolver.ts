@@ -27,6 +27,7 @@ import { Organization } from "../../@generated/organization/organization.model";
 import { KafkaProducerService } from "@pezzo/kafka";
 import { UpdateOrgInvitationInput } from "./inputs/update-org-invitation.input";
 import { ConfigService } from "@nestjs/config";
+import { UpdateOrgMemberRoleInput } from "./inputs/update-org-member-role.input";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Invitation)
@@ -258,6 +259,37 @@ export class OrgInvitationsResolver {
     });
 
     return organization;
+  }
+
+  @Mutation(() => Invitation)
+  async updateOrgInvitationRole(
+    @Args("data") data: UpdateOrgMemberRoleInput,
+    @CurrentUser() user: RequestUser
+  ) {
+    const { id, role } = data;
+
+    const invitation = await this.prisma.invitation.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!invitation) {
+      throw new NotFoundException("Invitation not found");
+    }
+
+    isOrgAdminOrThrow(user, invitation.organizationId);
+
+    const updatedInvitation = await this.prisma.invitation.update({
+      where: {
+        id,
+      },
+      data: {
+        role,
+      },
+    });
+
+    return updatedInvitation;
   }
 
   @ResolveField(() => ExtendedUser)
