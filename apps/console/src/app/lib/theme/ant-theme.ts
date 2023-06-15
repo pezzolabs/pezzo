@@ -7,4 +7,9 @@ export const antTheme: ThemeConfig = {
     colorPrimary: colors.indigo["400"],
     fontFamily: "Inter",
   },
+  components: {
+    Typography: {
+      fontWeightStrong: 400
+    }
+  },
 };
