@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { gqlClient } from "../graphql";
-import { GET_PROMPT } from "../../graphql/queries/prompts";
+import { GET_PROMPT } from "../../graphql/definitions/queries/prompts";
 import {
   GetPromptQuery,
   GetPromptVersionQuery,

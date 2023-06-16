@@ -1,13 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { gqlClient } from "../graphql";
+import { gqlClient } from "../../lib/graphql";
 import {
   GET_ALL_API_KEYS,
   GET_ALL_PROVIDER_API_KEYS,
-} from "../../graphql/queries/api-keys";
-import { useCurrentProject } from "../hooks/useCurrentProject";
-import { GET_ME } from "../../graphql/queries/users";
-import { GET_ALL_PROJECTS } from "../../graphql/queries/projects";
-import { useCurrentOrganization } from "./useCurrentOrganization";
+} from "../definitions/queries/api-keys";
+import { GET_ME } from "../definitions/queries/users";
+import { GET_ALL_PROJECTS } from "../definitions/queries/projects";
+import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
 
 export const useProviderApiKeys = () => {
   const { organization } = useCurrentOrganization();

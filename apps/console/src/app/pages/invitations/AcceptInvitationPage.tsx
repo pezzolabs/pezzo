@@ -1,12 +1,12 @@
 import { Result } from "antd";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { useAcceptOrgInvitation } from "../../lib/hooks/mutations";
+import { useAcceptOrgInvitationMutation } from "../../graphql/hooks/mutations";
 import { useEffect, useState } from "react";
 import { GraphQLErrorResponse } from "../../graphql/types";
 
 export const AcceptInvitationPage = () => {
   const params = useParams();
-  const { mutateAsync } = useAcceptOrgInvitation();
+  const { mutateAsync } = useAcceptOrgInvitationMutation();
   const [orgName, setOrgName] = useState<string>(null);
   const [error, setError] = useState<string>(null);
   const navigate = useNavigate();

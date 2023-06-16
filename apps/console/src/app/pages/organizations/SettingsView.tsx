@@ -2,7 +2,7 @@ import { Button, Form, Input } from "antd";
 import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
 import { SaveOutlined } from "@ant-design/icons";
 import { useMemo, useState } from "react";
-import { useUpdateOrgSettingsMutation } from "../../lib/hooks/mutations";
+import { useUpdateOrgSettingsMutation } from "../../graphql/hooks/mutations";
 
 type Inputs = {
   name: string;

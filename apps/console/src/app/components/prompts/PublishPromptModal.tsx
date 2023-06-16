@@ -4,7 +4,7 @@ import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { gqlClient, queryClient } from "../../lib/graphql";
-import { PUBLISH_PROMPT } from "../../graphql/mutations/prompt-environments";
+import { PUBLISH_PROMPT } from "../../graphql/definitions/mutations/prompt-environments";
 import { PublishPromptInput } from "../../../@generated/graphql/graphql";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 
