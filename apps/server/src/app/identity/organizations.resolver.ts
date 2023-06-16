@@ -13,7 +13,6 @@ import { AuthGuard } from "../auth/auth.guard";
 import { CurrentUser } from "./current-user.decorator";
 import { RequestUser } from "./users.types";
 import { CreateOrganizationInput } from "./inputs/create-organization.input";
-import { OrgRole } from "@prisma/client";
 import { OrganizationWhereUniqueInput } from "../../@generated/organization/organization-where-unique.input";
 import { isOrgAdminOrThrow, isOrgMemberOrThrow } from "./identity.utils";
 import { OrganizationMember } from "../../@generated/organization-member/organization-member.model";

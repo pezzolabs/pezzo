@@ -22,19 +22,11 @@ export class OrganizationsService {
     });
   }
 
-  async getOrganizationMemberByOrganizationId(id: string, userId?: string) {
-    if (userId) {
-      return await this.prisma.organizationMember.findFirst({
-        where: {
-          organizationId: id,
-          userId,
-        },
-      });
-    }
-
+  async getOrganizationMemberByOrganizationId(id: string, userId: string) {
     return await this.prisma.organizationMember.findFirst({
       where: {
         organizationId: id,
+        userId,
       },
     });
   }
