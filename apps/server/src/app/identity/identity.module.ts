@@ -12,6 +12,7 @@ import { ApiKeysService } from "./api-keys.service";
 import { OrganizationsResolver } from "./organizations.resolver";
 import { OrgInvitationsResolver } from "./org-invitations.resolver";
 import { OrganizationMembersResolver } from "./org-members.resolver";
+import { InvitationsService } from "./invitations.service";
 
 @Module({
   providers: [
@@ -21,6 +22,7 @@ import { OrganizationMembersResolver } from "./org-members.resolver";
     PrismaService,
     UsersService,
     ProjectsService,
+    InvitationsService,
     EnvironmentsResolver,
     EnvironmentsService,
     ApiKeysService,
