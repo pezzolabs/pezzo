@@ -77,10 +77,7 @@ export class OrganizationsResolver {
     let exists: boolean;
     try {
       this.logger.info("Checking if organization available");
-      exists = await this.organizationService.isOrganizationExists(
-        name,
-        user.id
-      );
+      exists = await this.organizationService.isOrgExists(name, user.id);
     } catch (error) {
       this.logger.error({ error }, "Failed to check if organization available");
     }
@@ -94,7 +91,7 @@ export class OrganizationsResolver {
 
     try {
       this.logger.info("Creating organization");
-      org = await this.organizationService.createOrganization(name, user.id);
+      org = await this.organizationService.createOrg(name, user.id);
     } catch (error) {
       this.logger.error({ error }, "Failed to create organization");
     }
@@ -107,7 +104,7 @@ export class OrganizationsResolver {
     try {
       this.logger.assign({ organizationId: organization.id });
       this.logger.info("Getting all organization members");
-      const members = await this.organizationService.getOrganizationMembers(
+      const members = await this.organizationService.getOrgMembers(
         organization.id
       );
 
@@ -159,8 +156,10 @@ export class OrganizationsResolver {
 
     try {
       this.logger.info("Updating organization");
-      const updatedOrganization =
-        await this.organizationService.updateOrganization(name, organizationId);
+      const updatedOrganization = await this.organizationService.updateOrg(
+        name,
+        organizationId
+      );
       return updatedOrganization;
     } catch (error) {
       this.logger.error({ error }, "Failed to update organization");

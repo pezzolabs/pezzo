@@ -22,7 +22,7 @@ export class OrganizationsService {
     });
   }
 
-  async getOrganizationMemberByOrganizationId(id: string, userId: string) {
+  async getOrgMemberByOrgId(id: string, userId: string) {
     return await this.prisma.organizationMember.findFirst({
       where: {
         organizationId: id,
@@ -35,7 +35,7 @@ export class OrganizationsService {
     return await this.prisma.organizationMember.findUnique({ where: { id } });
   }
 
-  async getOrganizationMembers(id: string) {
+  async getOrgMembers(id: string) {
     return await this.prisma.organizationMember.findMany({
       where: {
         organizationId: id,
@@ -50,7 +50,7 @@ export class OrganizationsService {
     });
   }
 
-  async deleteOrganizationMember(id: string) {
+  async deleteOrgMember(id: string) {
     return await this.prisma.organizationMember.delete({ where: { id } });
   }
 
@@ -77,7 +77,7 @@ export class OrganizationsService {
     return member;
   }
 
-  async isOrganizationExists(name: string, userId: string) {
+  async isOrgExists(name: string, userId: string) {
     const exists = await this.prisma.organization.findFirst({
       where: {
         members: {
@@ -95,7 +95,7 @@ export class OrganizationsService {
     return !!exists;
   }
 
-  async createOrganization(name: string, creatorUserId: string) {
+  async createOrg(name: string, creatorUserId: string) {
     return await this.prisma.organization.create({
       data: {
         name,
@@ -109,7 +109,7 @@ export class OrganizationsService {
     });
   }
 
-  async updateOrganization(name: string, id: string) {
+  async updateOrg(name: string, id: string) {
     return await this.prisma.organization.update({
       where: {
         id,

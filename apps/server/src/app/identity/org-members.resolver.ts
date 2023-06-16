@@ -20,7 +20,6 @@ import { PinoLogger } from "../logger/pino-logger";
 @Resolver(OrganizationMember)
 export class OrganizationMembersResolver {
   constructor(
-    private readonly prisma: PrismaService,
     private logger: PinoLogger,
     private readonly organizationService: OrganizationsService
   ) {}
@@ -35,11 +34,10 @@ export class OrganizationMembersResolver {
 
     try {
       this.logger.info({ data }, "Getting user org membership");
-      member =
-        await this.organizationService.getOrganizationMemberByOrganizationId(
-          data.organizationId,
-          user.id
-        );
+      member = await this.organizationService.getOrgMemberByOrgId(
+        data.organizationId,
+        user.id
+      );
     } catch (error) {
       this.logger.error({ error }, "Failed to get user org membership");
     }
@@ -83,7 +81,7 @@ export class OrganizationMembersResolver {
 
     try {
       this.logger.info("Deleting org member");
-      return await this.organizationService.deleteOrganizationMember(data.id);
+      return await this.organizationService.deleteOrgMember(data.id);
     } catch (error) {
       this.logger.error({ error }, "Failed to delete org member");
     }
