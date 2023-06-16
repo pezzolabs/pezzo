@@ -13,23 +13,36 @@ import {
 import { AuthGuard } from "../auth/auth.guard";
 import { GetUserOrgMembershipInput } from "./inputs/get-user-org-membership.input";
 import { UpdateOrgMemberRoleInput } from "./inputs/update-org-member-role.input";
+import { OrganizationsService } from "./organizations.service";
+import { PinoLogger } from "../logger/pino-logger";
 
 @UseGuards(AuthGuard)
 @Resolver(OrganizationMember)
 export class OrganizationMembersResolver {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private logger: PinoLogger,
+    private readonly organizationService: OrganizationsService
+  ) {}
 
   @Query(() => OrganizationMember)
   async userOrgMembership(
     @Args("data") data: GetUserOrgMembershipInput,
     @CurrentUser() user: RequestUser
   ) {
-    const member = await this.prisma.organizationMember.findFirst({
-      where: {
-        userId: data.userId,
-        organizationId: data.organizationId,
-      },
-    });
+    this.logger.assign({ userId: user.id });
+    let member: OrganizationMember;
+
+    try {
+      this.logger.info({ data }, "Getting user org membership");
+      member =
+        await this.organizationService.getOrganizationMemberByOrganizationId(
+          data.organizationId,
+          user.id
+        );
+    } catch (error) {
+      this.logger.error({ error }, "Failed to get user org membership");
+    }
 
     if (!member) {
       throw new NotFoundException("Member not found");
@@ -44,11 +57,17 @@ export class OrganizationMembersResolver {
     @Args("data") data: OrganizationMemberWhereUniqueInput,
     @CurrentUser() user: RequestUser
   ) {
-    const member = await this.prisma.organizationMember.findUnique({
-      where: {
-        id: data.id,
-      },
-    });
+    this.logger.assign({ userId: user.id, orgMemberId: data.id });
+    let member: OrganizationMember;
+
+    try {
+      this.logger.info("Getting user org membership");
+      member = await this.organizationService.getOrganizationMemberById(
+        data.id
+      );
+    } catch (error) {
+      this.logger.error({ error }, "Failed to get user org membership");
+    }
 
     if (!member) {
       throw new NotFoundException("Member not found");
@@ -62,11 +81,12 @@ export class OrganizationMembersResolver {
       );
     }
 
-    return this.prisma.organizationMember.delete({
-      where: {
-        id: data.id,
-      },
-    });
+    try {
+      this.logger.info("Deleting org member");
+      return await this.organizationService.deleteOrganizationMember(data.id);
+    } catch (error) {
+      this.logger.error({ error }, "Failed to delete org member");
+    }
   }
 
   @Mutation(() => OrganizationMember)
@@ -74,11 +94,20 @@ export class OrganizationMembersResolver {
     @Args("data") data: UpdateOrgMemberRoleInput,
     @CurrentUser() user: RequestUser
   ) {
-    const member = await this.prisma.organizationMember.findUnique({
-      where: {
-        id: data.id,
-      },
+    this.logger.assign({
+      userId: user.id,
+      orgMemberId: data.id,
     });
+
+    let member: OrganizationMember;
+
+    try {
+      member = await this.organizationService.getOrganizationMemberById(
+        data.id
+      );
+    } catch (error) {
+      this.logger.error({ error }, "Failed to get org member");
+    }
 
     if (!member) {
       throw new NotFoundException("Member not found");
@@ -86,13 +115,17 @@ export class OrganizationMembersResolver {
 
     isOrgAdminOrThrow(user, member.organizationId);
 
-    return this.prisma.organizationMember.update({
-      where: {
-        id: data.id,
-      },
-      data: {
-        role: data.role,
-      },
-    });
+    let updatedMember: OrganizationMember;
+    try {
+      this.logger.info("Updating org member role");
+      updatedMember = await this.organizationService.updateMember(
+        data.id,
+        data.role
+      );
+    } catch (error) {
+      this.logger.error({ error }, "Failed to update org member role");
+    }
+
+    return updatedMember;
   }
 }
