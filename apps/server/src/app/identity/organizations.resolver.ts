@@ -13,33 +13,35 @@ import { AuthGuard } from "../auth/auth.guard";
 import { CurrentUser } from "./current-user.decorator";
 import { RequestUser } from "./users.types";
 import { CreateOrganizationInput } from "./inputs/create-organization.input";
-import { OrgRole } from "@prisma/client";
 import { OrganizationWhereUniqueInput } from "../../@generated/organization/organization-where-unique.input";
 import { isOrgAdminOrThrow, isOrgMemberOrThrow } from "./identity.utils";
 import { OrganizationMember } from "../../@generated/organization-member/organization-member.model";
 import { UsersService } from "./users.service";
 import { Invitation } from "../../@generated/invitation/invitation.model";
 import { UpdateOrgSettingsInput } from "./inputs/update-org-settings.input";
+import { PinoLogger } from "../logger/pino-logger";
+import { OrganizationsService } from "./organizations.service";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Organization)
 export class OrganizationsResolver {
   constructor(
-    private prisma: PrismaService,
-    private usersService: UsersService
+    private readonly prisma: PrismaService,
+    private readonly logger: PinoLogger,
+    private readonly organizationService: OrganizationsService,
+    private readonly usersService: UsersService
   ) {}
 
   @Query(() => [Organization])
-  organizations(@CurrentUser() user: RequestUser) {
-    return this.prisma.organization.findMany({
-      where: {
-        members: {
-          some: {
-            userId: user.id,
-          },
-        },
-      },
-    });
+  async organizations(@CurrentUser() user: RequestUser) {
+    this.logger.assign({ userId: user.id });
+    try {
+      this.logger.info("Getting all orgs");
+      const orgs = await this.organizationService.getAllByUserId(user.id);
+      return orgs;
+    } catch (error) {
+      this.logger.error({ error }, "Failed to get orgs");
+    }
   }
 
   @Query(() => Organization)
@@ -47,14 +49,18 @@ export class OrganizationsResolver {
     @CurrentUser() user: RequestUser,
     @Args("data") data: OrganizationWhereUniqueInput
   ) {
-    const org = await this.prisma.organization.findFirst({
-      where: {
-        id: data.id,
-      },
-    });
+    this.logger.assign({ userId: user.id, organizationId: data.id });
 
-    isOrgMemberOrThrow(user, org.id);
-    return org;
+    try {
+      this.logger.info("Getting org");
+      const org = await this.organizationService.getById(data.id);
+
+      isOrgMemberOrThrow(user, org.id);
+
+      return org;
+    } catch (error) {
+      this.logger.error({ error }, "Failed to get org");
+    }
   }
 
   @Mutation(() => Organization)
@@ -63,61 +69,52 @@ export class OrganizationsResolver {
     @CurrentUser() user: RequestUser
   ) {
     const { name } = data;
-
-    const exists = await this.prisma.organization.findFirst({
-      where: {
-        members: {
-          some: {
-            userId: user.id,
-          },
-        },
-        name: {
-          equals: name,
-          mode: "insensitive",
-        },
-      },
+    this.logger.assign({
+      userId: user.id,
+      organizationName: name,
     });
 
+    let exists: boolean;
+    try {
+      this.logger.info("Checking if org available");
+      exists = await this.organizationService.isOrgExists(name, user.id);
+    } catch (error) {
+      this.logger.error({ error }, "Failed to check if org available");
+    }
     if (exists) {
       throw new ConflictException(
         "You already have an organization with this name"
       );
     }
 
-    const org = await this.prisma.organization.create({
-      data: {
-        name,
-        members: {
-          create: {
-            userId: user.id,
-            role: OrgRole.Admin,
-          },
-        },
-      },
-    });
+    let org: Organization;
+
+    try {
+      this.logger.info("Creating org");
+      org = await this.organizationService.createOrg(name, user.id);
+    } catch (error) {
+      this.logger.error({ error }, "Failed to create org");
+    }
 
     return org;
   }
 
   @ResolveField(() => [OrganizationMember])
   async members(@Parent() organization: Organization) {
-    const members = await this.prisma.organizationMember.findMany({
-      where: {
-        organizationId: organization.id,
-      },
-      include: {
-        user: {
-          include: {
-            orgMemberships: true,
-          },
-        },
-      },
-    });
+    try {
+      this.logger.assign({ organizationId: organization.id });
+      this.logger.info("Getting all org members");
+      const members = await this.organizationService.getOrgMembers(
+        organization.id
+      );
 
-    return members.map((member) => ({
-      ...member,
-      user: this.usersService.serializeExtendedUser(member.user),
-    }));
+      return members.map((member) => ({
+        ...member,
+        user: this.usersService.serializeExtendedUser(member.user),
+      }));
+    } catch (error) {
+      this.logger.error({ error }, "Failed to get org members");
+    }
   }
 
   @ResolveField(() => [Invitation])
@@ -139,26 +136,33 @@ export class OrganizationsResolver {
     @CurrentUser() user: RequestUser
   ) {
     const { organizationId, name } = data;
-
-    const org = await this.prisma.organization.findFirst({
-      where: {
-        id: organizationId,
-      },
+    this.logger.assign({
+      organizationId: data.organizationId,
+      userId: user.id,
     });
+    let org: Organization;
 
+    try {
+      this.logger.info("Getting org");
+      org = await this.organizationService.getById(data.organizationId);
+    } catch (error) {
+      this.logger.error({ error }, "Failed to get org");
+    }
     if (!org) {
       throw new ConflictException("Organization not found");
     }
 
     isOrgAdminOrThrow(user, organizationId);
 
-    return this.prisma.organization.update({
-      where: {
-        id: organizationId,
-      },
-      data: {
+    try {
+      this.logger.info("Updating org");
+      const updatedOrganization = await this.organizationService.updateOrg(
         name,
-      },
-    });
+        organizationId
+      );
+      return updatedOrganization;
+    } catch (error) {
+      this.logger.error({ error }, "Failed to update organization");
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { gqlClient } from "../graphql";
-import { GET_PROMPT_EXECUTIONS } from "../../graphql/queries/prompt-executions";
+import { GET_PROMPT_EXECUTIONS } from "../../graphql/definitions/queries/prompt-executions";
 
 export const usePromptExecutions = (promptId: string) => {
   const { data: promptExecutions, isLoading } = useQuery({

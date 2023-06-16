@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { GET_PROMPT_EXECUTION_METRICS } from "../../graphql/queries/metrics";
+import { GET_PROMPT_EXECUTION_METRICS } from "../../graphql/definitions/queries/metrics";
 import { gqlClient } from "../graphql";
 import { GetMetricsInput } from "../../../@generated/graphql/graphql";
 

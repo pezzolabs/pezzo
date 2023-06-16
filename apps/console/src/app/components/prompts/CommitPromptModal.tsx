@@ -4,7 +4,7 @@ import { gqlClient, queryClient } from "../../lib/graphql";
 import { css } from "@emotion/css";
 import { useState } from "react";
 import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
-import { CREATE_PROMPT_VERSION } from "../../graphql/mutations/prompts";
+import { CREATE_PROMPT_VERSION } from "../../graphql/definitions/mutations/prompts";
 import { PromptEditFormInputs } from "../../lib/hooks/usePromptEdit";
 import {
   CreatePromptVersionInput,

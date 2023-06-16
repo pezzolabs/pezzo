@@ -1,4 +1,4 @@
-import { graphql } from "../../../@generated/graphql";
+import { graphql } from "../../../../@generated/graphql";
 
 export const GET_PROJECT = graphql(/* GraphQL */ `
   query getProject($data: ProjectWhereUniqueInput!) {
