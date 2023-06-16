@@ -36,11 +36,11 @@ export class OrganizationsResolver {
   async organizations(@CurrentUser() user: RequestUser) {
     this.logger.assign({ userId: user.id });
     try {
-      this.logger.info("Getting all organizations");
+      this.logger.info("Getting all orgs");
       const orgs = await this.organizationService.getAllByUserId(user.id);
       return orgs;
     } catch (error) {
-      this.logger.error({ error }, "Failed to get organizations");
+      this.logger.error({ error }, "Failed to get orgs");
     }
   }
 
@@ -52,14 +52,14 @@ export class OrganizationsResolver {
     this.logger.assign({ userId: user.id, organizationId: data.id });
 
     try {
-      this.logger.info("Getting organization");
+      this.logger.info("Getting org");
       const org = await this.organizationService.getById(data.id);
 
       isOrgMemberOrThrow(user, org.id);
 
       return org;
     } catch (error) {
-      this.logger.error({ error }, "Failed to get organization");
+      this.logger.error({ error }, "Failed to get org");
     }
   }
 
@@ -76,10 +76,10 @@ export class OrganizationsResolver {
 
     let exists: boolean;
     try {
-      this.logger.info("Checking if organization available");
+      this.logger.info("Checking if org available");
       exists = await this.organizationService.isOrgExists(name, user.id);
     } catch (error) {
-      this.logger.error({ error }, "Failed to check if organization available");
+      this.logger.error({ error }, "Failed to check if org available");
     }
     if (exists) {
       throw new ConflictException(
@@ -90,10 +90,10 @@ export class OrganizationsResolver {
     let org: Organization;
 
     try {
-      this.logger.info("Creating organization");
+      this.logger.info("Creating org");
       org = await this.organizationService.createOrg(name, user.id);
     } catch (error) {
-      this.logger.error({ error }, "Failed to create organization");
+      this.logger.error({ error }, "Failed to create org");
     }
 
     return org;
@@ -103,7 +103,7 @@ export class OrganizationsResolver {
   async members(@Parent() organization: Organization) {
     try {
       this.logger.assign({ organizationId: organization.id });
-      this.logger.info("Getting all organization members");
+      this.logger.info("Getting all org members");
       const members = await this.organizationService.getOrgMembers(
         organization.id
       );
@@ -113,7 +113,7 @@ export class OrganizationsResolver {
         user: this.usersService.serializeExtendedUser(member.user),
       }));
     } catch (error) {
-      this.logger.error({ error }, "Failed to get organization members");
+      this.logger.error({ error }, "Failed to get org members");
     }
   }
 
@@ -143,10 +143,10 @@ export class OrganizationsResolver {
     let org: Organization;
 
     try {
-      this.logger.info("Getting organization");
+      this.logger.info("Getting org");
       org = await this.organizationService.getById(data.organizationId);
     } catch (error) {
-      this.logger.error({ error }, "Failed to get organization");
+      this.logger.error({ error }, "Failed to get org");
     }
     if (!org) {
       throw new ConflictException("Organization not found");
@@ -155,7 +155,7 @@ export class OrganizationsResolver {
     isOrgAdminOrThrow(user, organizationId);
 
     try {
-      this.logger.info("Updating organization");
+      this.logger.info("Updating org");
       const updatedOrganization = await this.organizationService.updateOrg(
         name,
         organizationId

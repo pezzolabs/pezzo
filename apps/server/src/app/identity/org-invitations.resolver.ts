@@ -20,7 +20,6 @@ import {
 } from "@nestjs/common";
 import { AuthGuard } from "../auth/auth.guard";
 import { CreateOrgInvitationInput } from "./inputs/create-org-invitation.input";
-import { InvitationStatus, OrgRole } from "@prisma/client";
 import { UsersService } from "./users.service";
 import { ExtendedUser } from "./models/extended-user.model";
 import { InvitationWhereUniqueInput } from "../../@generated/invitation/invitation-where-unique.input";
@@ -36,7 +35,6 @@ import { InvitationsService } from "./invitations.service";
 @Resolver(() => Invitation)
 export class OrgInvitationsResolver {
   constructor(
-    private prisma: PrismaService,
     private usersService: UsersService,
     private kafkaProducer: KafkaProducerService,
     private organizationService: OrganizationsService,
@@ -50,16 +48,14 @@ export class OrgInvitationsResolver {
     @Args("data") data: CreateOrgInvitationInput,
     @CurrentUser() user: RequestUser
   ): Promise<Invitation> {
-    this.logger
-      .assign({ userId: user.id })
-      .info("Creating organization invitation");
+    this.logger.assign({ userId: user.id }).info("Creating org invitation");
 
     const { organizationId, email } = data;
     isOrgAdminOrThrow(user, organizationId);
 
     let organization: Organization;
     try {
-      this.logger.info("Getting organization");
+      this.logger.info("Getting org");
       organization = await this.organizationService.getById(organizationId);
     } catch (error) {
       this.logger.error({ error }, "Failed to get organization");
@@ -159,7 +155,7 @@ export class OrgInvitationsResolver {
         invitation.organizationId
       );
     } catch (error) {
-      this.logger.error({ error }, "Error getting organization");
+      this.logger.error({ error }, "Error getting org");
       throw new InternalServerErrorException();
     }
 
@@ -207,10 +203,10 @@ export class OrgInvitationsResolver {
     try {
       this.logger
         .assign({ userId: user.id, organizationId: organization.id })
-        .info("Getting organization");
+        .info("Getting org");
       organization = await this.organizationService.getById(organizationId);
     } catch (error) {
-      this.logger.error({ error }, "Error getting organization");
+      this.logger.error({ error }, "Error getting org");
       throw new InternalServerErrorException();
     }
 

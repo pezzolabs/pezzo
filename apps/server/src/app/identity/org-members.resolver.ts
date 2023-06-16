@@ -3,7 +3,6 @@ import { OrganizationMember } from "../../@generated/organization-member/organiz
 import { OrganizationMemberWhereUniqueInput } from "../../@generated/organization-member/organization-member-where-unique.input";
 import { CurrentUser } from "./current-user.decorator";
 import { RequestUser } from "./users.types";
-import { PrismaService } from "../prisma.service";
 import { isOrgAdminOrThrow, isOrgMemberOrThrow } from "./identity.utils";
 import {
   ForbiddenException,
