@@ -59,11 +59,10 @@ export class OrgInvitationsResolver {
 
     let organization: Organization;
     try {
+      this.logger.info("Getting organization");
       organization = await this.organizationService.getById(organizationId);
     } catch (error) {
-      this.logger
-        .assign({ userId: user.id })
-        .error({ error }, "Failed to get organization");
+      this.logger.error({ error }, "Failed to get organization");
       throw new InternalServerErrorException();
     }
 
@@ -73,6 +72,7 @@ export class OrgInvitationsResolver {
 
     let exists: boolean;
     try {
+      this.logger.info("Checking if invitation exists");
       exists = !!(await this.invitationService.getInvitationByEmail(
         email,
         organizationId
@@ -88,13 +88,14 @@ export class OrgInvitationsResolver {
 
     let invitation: Invitation;
     try {
+      this.logger.info("Creating invitation");
       invitation = await this.invitationService.createInvitation(
         email,
         organizationId,
         user.id
       );
     } catch (error) {
-      this.logger.error({ error }, "Error getting environments");
+      this.logger.error({ error }, "Error getting invitation");
       throw new InternalServerErrorException();
     }
 
@@ -271,11 +272,13 @@ export class OrgInvitationsResolver {
   ): Promise<Organization> {
     const { id } = data;
 
-    const invitation = await this.prisma.invitation.findUnique({
-      where: {
-        id,
-      },
-    });
+    let invitation: Invitation;
+    try {
+      invitation = await this.invitationService.getInvitationById(id);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting invitation");
+      throw new InternalServerErrorException();
+    }
 
     if (!invitation) {
       throw new NotFoundException("Invitation not found");
@@ -289,36 +292,57 @@ export class OrgInvitationsResolver {
       );
     }
 
-    const organization = await this.prisma.organization.findUnique({
-      where: {
-        id: invitation.organizationId,
-      },
-    });
+    let organization: Organization;
+    try {
+      organization = await this.organizationService.getById(
+        invitation.organizationId
+      );
+    } catch (error) {
+      this.logger.error({ error }, "Error getting organization");
+      throw new InternalServerErrorException();
+    }
 
     if (!organization) {
       throw new NotFoundException("Organization not found");
     }
 
-    await this.prisma.organizationMember.create({
-      data: {
-        organizationId: invitation.organizationId,
-        userId: user.id,
-        role: invitation.role,
-      },
-    });
+    try {
+      await this.organizationService.addMember(
+        invitation.organizationId,
+        user.id,
+        invitation.role
+      );
+    } catch (error) {
+      this.logger.error({ error }, "Error adding member to organization");
+      throw new InternalServerErrorException();
+    }
 
-    await this.prisma.invitation.delete({
-      where: {
-        id,
-      },
-    });
+    try {
+      await this.invitationService.deleteInvitationById(id);
+    } catch (error) {
+      this.logger.error({ error }, "Error deleting invitation");
+      throw new InternalServerErrorException();
+    }
 
     return organization;
   }
 
   @ResolveField(() => ExtendedUser)
   async invitedBy(@Parent() invitation: Invitation): Promise<ExtendedUser> {
-    const user = await this.usersService.getById(invitation.invitedById);
-    return this.usersService.serializeExtendedUser(user);
+    try {
+      this.logger
+        .assign({ invitedById: invitation.invitedById })
+        .info("Getting invited by user");
+      const user = await this.usersService.getById(invitation.invitedById);
+
+      if (!user) {
+        throw new NotFoundException("User not found");
+      }
+
+      return this.usersService.serializeExtendedUser(user);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting invited by user");
+      throw new InternalServerErrorException();
+    }
   }
 }
