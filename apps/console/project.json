@@ -5,7 +5,7 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "dependsOn": ["^graphql:codegen:offline", "^prebuild", "prebuild"],
+      "dependsOn": ["^graphql:codegen:offline", "^prebuild", "^build"],
       "executor": "@nrwl/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
