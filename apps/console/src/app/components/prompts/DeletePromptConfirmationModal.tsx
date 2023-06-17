@@ -1,16 +1,32 @@
 import { Button, Modal, Typography } from "antd";
+import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
+import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
+import { useNavigate } from "react-router-dom";
+import { useDeletePromptMutation } from "../../graphql/hooks/mutations";
+import { useEffect } from "react";
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  onConfirm: () => void;
 }
 
-export const DeletePromptConfirmationModal = ({
-  open,
-  onClose,
-  onConfirm,
-}: Props) => {
+export const DeletePromptConfirmationModal = ({ open, onClose }: Props) => {
+  const { project } = useCurrentProject();
+  const { prompt } = useCurrentPrompt();
+  const navigate = useNavigate();
+
+  const { mutate, isSuccess } = useDeletePromptMutation();
+
+  const handleDelete = () => {
+    mutate(prompt.id);
+  };
+
+  useEffect(() => {
+    if (!isSuccess) return;
+
+    navigate(`/projects/${project.id}/prompts`);
+  }, [isSuccess]);
+
   return (
     <Modal
       title="Delete prompt"
@@ -20,7 +36,7 @@ export const DeletePromptConfirmationModal = ({
         <Button key="cancel" onClick={onClose}>
           Cancel
         </Button>,
-        <Button danger type="primary" key="confirm" onClick={onConfirm}>
+        <Button danger type="primary" key="confirm" onClick={handleDelete}>
           Delete
         </Button>,
       ]}

@@ -29,12 +29,15 @@ import { GetProjectPromptsInput } from "./inputs/get-project-prompts.input";
 import { PinoLogger } from "../logger/pino-logger";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { PromptVersion } from "../../@generated/prompt-version/prompt-version.model";
+import { OrganizationsService } from "../identity/organizations.service";
+
 @UseGuards(AuthGuard)
 @Resolver(() => Prompt)
 export class PromptsResolver {
   constructor(
     private prisma: PrismaService,
     private promptsService: PromptsService,
+    private organizationsService: OrganizationsService,
     private logger: PinoLogger,
     private analytics: AnalyticsService
   ) {}
@@ -233,6 +236,37 @@ export class PromptsResolver {
     this.analytics.track("PROMPT:CREATED", user.id, {
       projectId,
       promptId: prompt.id,
+    });
+
+    return prompt;
+  }
+
+  @Mutation(() => Prompt)
+  async deletePrompt(
+    @Args("data") data: PromptWhereUniqueInput,
+    @CurrentUser() user: RequestUser
+  ) {
+    const { id } = data;
+    this.logger.assign({ id }).info("Deleting prompt");
+
+    let prompt = await this.promptsService.deletePrompt(id);
+    let org = await this.organizationsService.getOrgByProjectId(
+      prompt.projectId
+    );
+
+    isOrgMemberOrThrow(user, org.id);
+
+    try {
+      prompt = await this.promptsService.deletePrompt(id);
+    } catch (error) {
+      this.logger.error({ error }, "Error deleting prompt");
+      throw new InternalServerErrorException();
+    }
+
+    this.analytics.track("PROMPT:DELETED", user.id, {
+      promptId: id,
+      projectId: prompt.projectId,
+      organizationId: org.id,
     });
 
     return prompt;
