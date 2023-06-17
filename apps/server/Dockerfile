@@ -11,7 +11,6 @@ COPY ./dist/apps/server/package*.json ./
 RUN npm i --omit=dev
 
 COPY ./dist/apps/server .
-RUN chmod +x ./entrypoint.sh
 
 RUN npx prisma generate
 
