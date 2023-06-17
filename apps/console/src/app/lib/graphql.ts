@@ -1,10 +1,8 @@
 import { QueryClient } from "@tanstack/react-query";
 import { GraphQLClient } from "graphql-request";
 import { BASE_API_URL } from "../../env";
-import {
-  attemptRefreshingSession,
-  signOut,
-} from "supertokens-auth-react/recipe/session";
+import { attemptRefreshingSession } from "supertokens-auth-react/recipe/session";
+import { signOut } from "./utils/sign-out";
 
 export const gqlClient = new GraphQLClient(`${BASE_API_URL}/graphql`, {
   credentials: "include",
@@ -19,8 +17,7 @@ export const gqlClient = new GraphQLClient(`${BASE_API_URL}/graphql`, {
         const isSuccessful = await attemptRefreshingSession();
 
         if (!isSuccessful) {
-          signOut();
-          window.location.href = "/login";
+          await signOut();
           return;
         }
 
