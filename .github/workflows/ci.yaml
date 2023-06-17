@@ -39,30 +39,27 @@ jobs:
           route: POST /repos/{owner}/{repo}/dispatches
           owner: pezzolabs
           repo: pezzo-private
-          event_type: "ci"
+          event_type: "CI (Dispatched)"
           client_payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_DISPATCH_TOKEN }}
-          # token: 
-          # mediaType: '{"previews": ["everest"]}'
-          # eventType: "ci"
 
-  #     - name: Cache node modules
-  #       id: cache
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: |
-  #           node_modules
-  #         key: cache-node-modules-${{ hashFiles('**/package-lock.json') }}
+      # - name: Cache node modules
+      #   id: cache
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: |
+      #       node_modules
+      #     key: cache-node-modules-${{ hashFiles('**/package-lock.json') }}
 
-  #     - uses: actions/setup-node@v3
-  #       if: steps.cache.outputs.cache-hit != 'true'
-  #       with:
-  #         node-version: 18.x
+      # - uses: actions/setup-node@v3
+      #   if: steps.cache.outputs.cache-hit != 'true'
+      #   with:
+      #     node-version: 18.x
 
-  #     - name: Install Dependencies
-  #       if: steps.cache.outputs.cache-hit != 'true'
-  #       run: npm ci
+      # - name: Install Dependencies
+      #   if: steps.cache.outputs.cache-hit != 'true'
+      #   run: npm ci
 
   #     - name: Check Formatting
   #       run: npx nx format:check --all --verbose
