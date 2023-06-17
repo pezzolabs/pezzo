@@ -34,7 +34,8 @@
         "styles": [],
         "scripts": [],
         "isolatedConfig": false,
-        "webpackConfig": "apps/console/webpack.config.js"
+        "webpackConfig": "apps/console/webpack.config.js",
+        "buildLibsFromSource": true
       },
       "configurations": {
         "development": {
