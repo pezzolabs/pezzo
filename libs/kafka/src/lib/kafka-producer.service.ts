@@ -7,6 +7,7 @@ import {
 import { Kafka, Producer, ProducerRecord } from "kafkajs";
 import { KafkaModuleOptions } from "./kafka.module";
 import { MODULE_OPTIONS_TOKEN } from "./kafka.module-definitions";
+import { KafkaSchemas } from "../schemas";
 
 @Injectable()
 export class KafkaProducerService
@@ -33,7 +34,25 @@ export class KafkaProducerService
     await this.producer.disconnect();
   }
 
-  async produce(record: ProducerRecord) {
+  async produce<K extends keyof KafkaSchemas>(
+    topic: K,
+    payload: KafkaSchemas[K],
+    producerRecordOverrides?: ProducerRecord
+  ) {
+    const record: ProducerRecord = {
+      topic: topic as string,
+      messages: [
+        {
+          key: payload.key || null,
+          value: JSON.stringify(payload),
+        },
+      ],
+    };
+
+    if (producerRecordOverrides) {
+      Object.assign(record, producerRecordOverrides);
+    }
+
     await this.producer.send(record);
   }
 }
