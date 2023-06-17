@@ -19,7 +19,7 @@ import {
   ArrowRightOnRectangleIcon,
   QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";
-import { signOut } from "supertokens-auth-react/recipe/session";
+import { signOut } from "../../lib/utils/sign-out";
 import { useNavigate } from "react-router-dom";
 import { Avatar } from "../common/Avatar";
 import { OrgSelector } from "../organizations/OrgSelector";
@@ -120,7 +120,6 @@ export const Header = () => {
             onClick: async (info) => {
               if (info.key === "signout") {
                 await signOut();
-                window.location.href = "/login";
               }
 
               if (info.key === "info") {
