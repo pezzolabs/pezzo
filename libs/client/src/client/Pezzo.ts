@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import { IntegrationBaseSettings, PromptExecutionStatus } from "../types";
-import type { CreatePromptExecutionDto } from "@pezzo/common";
+import type { CreatePromptExecutionDto } from "./create-prompt-execution.dto";
 
 export interface PezzoClientOptions {
   serverUrl?: string;
