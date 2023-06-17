@@ -64,6 +64,17 @@ jobs:
           npm run graphql:codegen
           npx nx run-many --target=build --all --parallel --maxParallel=3
 
+      - name: "Dispatch CI"
+        uses: octokit/request-action@v2.x
+        with:
+          route: POST /repos/{owner}/{repo}/dispatches
+          owner: pezzolabs
+          repo: pezzo-private
+          event_type: "CI (Dispatched)"
+          client_payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_DISPATCH_TOKEN }}
+
       - name: Upload dist artifact
         uses: actions/upload-artifact@v2
         with:
@@ -112,17 +123,6 @@ jobs:
             type=ref,event=branch,prefix=branch-
             type=ref,event=tag
             type=sha,format=short
-
-      - name: "Dispatch CI"
-        uses: octokit/request-action@v2.x
-        with:
-          route: POST /repos/{owner}/{repo}/dispatches
-          owner: pezzolabs
-          repo: pezzo-private
-          event_type: "CI (Dispatched)"
-          client_payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
-        env:
-          GITHUB_TOKEN: ${{ secrets.REPO_DISPATCH_TOKEN }}
 
       - name: Build and push
         uses: docker/build-push-action@v4
