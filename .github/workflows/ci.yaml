@@ -120,7 +120,7 @@ jobs:
           owner: pezzolabs
           repo: pezzo-private
           event_type: "CI (Dispatched)"
-          client_payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "docker_metadata_tags": "${{ steps.meta.outputs.tags }}", "docker_metadata_labels": "${{ steps.meta.outputs.labels }}"}'
+          client_payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "shortSha": "${{ github.sha | slice(0, 7) }}"}'
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_DISPATCH_TOKEN }}
 
