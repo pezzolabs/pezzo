@@ -4,6 +4,7 @@ import {
   CreateOrgInvitationMutation,
   CreateProjectInput,
   CreateProjectMutation,
+  DeletePromptMutation,
   InvitationWhereUniqueInput,
   UpdateOrgInvitationInput,
   UpdateOrgInvitationMutation,
@@ -14,7 +15,7 @@ import {
   UpdateProfileInput,
 } from "../../../@generated/graphql/graphql";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { gqlClient } from "../../lib/graphql";
+import { gqlClient, queryClient } from "../../lib/graphql";
 import { UPDATE_PROFILE } from "../definitions/queries/users";
 import { CREATE_PROJECT } from "../definitions/queries/projects";
 import {
@@ -27,6 +28,7 @@ import {
   UPDATE_ORG_SETTINGS,
 } from "../definitions/mutations/organizations";
 import { GraphQLErrorResponse } from "../types";
+import { DELETE_PROMPT } from "../definitions/mutations/prompts";
 
 export const useUpdateCurrentUserMutation = () =>
   useMutation({
@@ -133,6 +135,22 @@ export const useUpdateOrgInvitationMutation = () => {
       queryCache.invalidateQueries({
         queryKey: ["currentOrganization"],
       });
+    },
+  });
+};
+
+export const useDeletePromptMutation = () => {
+  const queryCache = useQueryClient();
+
+  return useMutation<DeletePromptMutation, GraphQLErrorResponse, string>({
+    mutationFn: (id: string) =>
+      gqlClient.request(DELETE_PROMPT, {
+        data: {
+          id,
+        },
+      }),
+    onSuccess: (data) => {
+      queryCache.invalidateQueries({ queryKey: ["prompts"] });
     },
   });
 };

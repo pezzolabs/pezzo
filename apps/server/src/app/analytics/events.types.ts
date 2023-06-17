@@ -19,6 +19,8 @@ export type AnalyticsPayloads = {
   };
   "PROMPT:DELETED": {
     promptId: string;
+    projectId: string;
+    organizationId: string;
   };
   "PROMPT_VERSION:CREATED": {
     projectId: string;

@@ -1,12 +1,9 @@
 import { Button, Modal, Typography } from "antd";
 import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
-import { useMutation } from "@tanstack/react-query";
-import { DeletePromptMutation } from "../../../@generated/graphql/graphql";
-import { GraphQLErrorResponse } from "../../graphql/types";
-import { gqlClient, queryClient } from "../../lib/graphql";
-import { DELETE_PROMPT } from "../../graphql/mutations/prompts";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 import { useNavigate } from "react-router-dom";
+import { useDeletePromptMutation } from "../../graphql/hooks/mutations";
+import { useEffect } from "react";
 
 interface Props {
   open: boolean;
@@ -18,26 +15,17 @@ export const DeletePromptConfirmationModal = ({ open, onClose }: Props) => {
   const { prompt } = useCurrentPrompt();
   const navigate = useNavigate();
 
-  const { mutate, error } = useMutation<
-    DeletePromptMutation,
-    GraphQLErrorResponse,
-    string
-  >({
-    mutationFn: (id: string) =>
-      gqlClient.request(DELETE_PROMPT, {
-        data: {
-          id,
-        },
-      }),
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["prompts"] });
-      navigate(`/projects/${project.id}/prompts`);
-    },
-  });
+  const { mutate, isSuccess } = useDeletePromptMutation();
 
   const handleDelete = () => {
     mutate(prompt.id);
   };
+
+  useEffect(() => {
+    if (!isSuccess) return;
+
+    navigate(`/projects/${project.id}/prompts`);
+  }, [isSuccess]);
 
   return (
     <Modal

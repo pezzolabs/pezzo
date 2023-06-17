@@ -11,11 +11,23 @@ export class OrganizationsService {
   }
 
   async getAllByUserId(userId: string) {
-    return await this.prisma.organization.findMany({
+    return this.prisma.organization.findMany({
       where: {
         members: {
           some: {
             userId,
+          },
+        },
+      },
+    });
+  }
+
+  async getOrgByProjectId(projectId: string) {
+    return this.prisma.organization.findFirst({
+      where: {
+        projects: {
+          some: {
+            id: projectId,
           },
         },
       },
