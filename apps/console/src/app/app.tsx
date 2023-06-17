@@ -28,6 +28,7 @@ import { OptionalIntercomProvider } from "./lib/providers/OptionalIntercomProvid
 import { HOTJAR_SITE_ID, HOTJAR_VERSION } from "../env";
 import { OrgPage } from "./pages/organizations/OrgPage";
 import { AcceptInvitationPage } from "./pages/invitations/AcceptInvitationPage";
+import { LogoutPage } from "./pages/LogoutPage";
 
 initSuperTokens();
 
@@ -38,6 +39,7 @@ if (HOTJAR_SITE_ID && HOTJAR_VERSION) {
 // We need to define the paths this way for the
 // breadcrumbs to work properly (useBreadcrumbItems)
 export const paths = {
+  "/logout": "/logout",
   "/projects": "/projects",
   "/invitations/:token/accept": "/invitations/:token/accept",
   "/onboarding": "/onboarding",
@@ -84,6 +86,8 @@ export function App() {
                 {getSuperTokensRoutesForReactRouterDom(reactRouterDom, [
                   ThirdPartyEmailPasswordPreBuiltUI,
                 ])}
+
+                <Route path={paths["/logout"]} element={<LogoutPage />} />
               </Routes>
               {/* Authorized routes */}
               <Routes>
