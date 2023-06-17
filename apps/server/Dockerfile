@@ -18,4 +18,4 @@ RUN npx prisma generate
 ENV PORT=3000
 EXPOSE $PORT
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["node", "main.js"]
