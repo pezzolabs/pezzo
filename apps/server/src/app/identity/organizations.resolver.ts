@@ -54,7 +54,14 @@ export class OrganizationsResolver {
     @Args("data") data: OrganizationWhereUniqueInput
   ) {
     this.logger.assign({ userId: user.id, organizationId: data.id });
-    const org = await this.organizationService.getById(data.id);
+
+    let org: Organization;
+    try {
+      this.logger.info("Getting org");
+      org = await this.organizationService.getById(data.id);
+    } catch (error) {
+      this.logger.error({ error }, "Failed to get org");
+    }
 
     if (!org) {
       throw new NotFoundException();
