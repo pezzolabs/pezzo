@@ -37,106 +37,104 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Cache node modules
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+          key: cache-node-modules-${{ hashFiles('**/package-lock.json') }}
+
+      - uses: actions/setup-node@v3
+        if: steps.cache.outputs.cache-hit != 'true'
+        with:
+          node-version: 18.x
+
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Check Formatting
+        run: npx nx format:check --all --verbose
+
+      - name: Lint
+        run: npx nx run-many --target=lint --all --parallel --maxParallel=3
+
+      - name: Test
+        run: npx nx run-many --target=test --all --parallel --maxParallel=3
+
+      - name: Build
+        run: |
+          npm run graphql:codegen
+          npx nx run-many --target=build --all --parallel --maxParallel=3
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist-artifact
+          path: ./dist
+
       - name: "Dispatch CI"
         uses: octokit/request-action@v2.x
         with:
           route: POST /repos/{owner}/{repo}/dispatches
           owner: pezzolabs
           repo: pezzo-private
-          event_type: "ci"
+          event_type: "CI (Dispatched)"
+          client_payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "shortSha": "${{ steps.variables.outputs.short_sha }}"}'
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_DISPATCH_TOKEN }}
-          # token: 
-          # mediaType: '{"previews": ["everest"]}'
-          # eventType: "ci"
 
-  #     - name: Cache node modules
-  #       id: cache
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: |
-  #           node_modules
-  #         key: cache-node-modules-${{ hashFiles('**/package-lock.json') }}
+  dockerize:
+    name: Dockerize
+    needs: ci
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        project: ["server", "console"]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-  #     - uses: actions/setup-node@v3
-  #       if: steps.cache.outputs.cache-hit != 'true'
-  #       with:
-  #         node-version: 18.x
+      - name: Download 'dist' folder
+        uses: actions/download-artifact@v2
+        with:
+          name: dist-artifact
+          path: ./dist
 
-  #     - name: Install Dependencies
-  #       if: steps.cache.outputs.cache-hit != 'true'
-  #       run: npm ci
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
 
-  #     - name: Check Formatting
-  #       run: npx nx format:check --all --verbose
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-  #     - name: Lint
-  #       run: npx nx run-many --target=lint --all --parallel --maxParallel=3
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-  #     - name: Test
-  #       run: npx nx run-many --target=test --all --parallel --maxParallel=3
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ghcr.io/pezzolabs/pezzo/${{ matrix.project }}
+          tags: |
+            type=raw,value=${{ github.run_id }},prefix=gh-
+            type=ref,event=branch,prefix=branch-
+            type=ref,event=tag
+            type=sha,format=short
 
-  #     - name: Build
-  #       run: |
-  #         npm run graphql:codegen
-  #         npx nx run-many --target=build --all --parallel --maxParallel=3
-
-  #     - name: Upload dist artifact
-  #       uses: actions/upload-artifact@v2
-  #       with:
-  #         name: dist-artifact
-  #         path: ./dist
-
-  # dockerize:
-  #   name: Dockerize
-  #   needs: ci
-  #   runs-on: ubuntu-20.04
-  #   strategy:
-  #     matrix:
-  #       project: ["server", "console"]
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 0
-
-  #     - name: Download 'dist' folder
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: dist-artifact
-  #         path: ./dist
-
-  #     - name: Set up QEMU
-  #       uses: docker/setup-qemu-action@v2
-
-  #     - name: Set up Docker Buildx
-  #       uses: docker/setup-buildx-action@v2
-
-  #     - name: Login to GitHub Container Registry
-  #       uses: docker/login-action@v2
-  #       with:
-  #         registry: ghcr.io
-  #         username: ${{ github.actor }}
-  #         password: ${{ secrets.GITHUB_TOKEN }}
-
-  #     - name: Docker metadata
-  #       id: meta
-  #       uses: docker/metadata-action@v4
-  #       with:
-  #         images: |
-  #           ghcr.io/pezzolabs/pezzo/${{ matrix.project }}
-  #         tags: |
-  #           type=raw,value=${{ github.run_id }},prefix=gh-
-  #           type=ref,event=branch,prefix=branch-
-  #           type=ref,event=tag
-  #           type=sha,format=short
-
-  #     - name: Build and push
-  #       uses: docker/build-push-action@v4
-  #       with:
-  #         context: .
-  #         file: ./apps/${{ matrix.project }}/Dockerfile
-  #         tags: ${{ steps.meta.outputs.tags }}
-  #         labels: ${{ steps.meta.outputs.labels }}
-  #         platforms: linux/amd64
-  #         push: true
-  #         provenance: false
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./apps/${{ matrix.project }}/Dockerfile
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64
+          push: true
+          provenance: false
