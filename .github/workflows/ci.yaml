@@ -33,13 +33,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: "Dispach CI"
+      - name: "Dispatch CI"
         uses: octokit/request-action@v2.x
         with:
-          route: POST /repos/pezzolabs/pezzo-private/dispatches
-          token: ${{ secrets.REPO_DISPATCH_TOKEN }}
-          mediaType: '{"previews": ["everest"]}'
-          eventType: "ci"
+          route: POST /repos/{owner}/{repo}/dispatches
+          owner: pezzolabs
+          repo: pezzo-private
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_DISPATCH_TOKEN }}
+          # token: 
+          # mediaType: '{"previews": ["everest"]}'
+          # eventType: "ci"
 
   #     - name: Cache node modules
   #       id: cache
