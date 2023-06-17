@@ -8,6 +8,7 @@ module.exports = composePlugins(withNx(), withReact(), (config) => {
 
   config = {
     ...config,
+    devtool: "source-map",
   };
 
   return config;
