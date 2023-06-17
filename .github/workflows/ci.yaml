@@ -39,6 +39,7 @@ jobs:
           route: POST /repos/{owner}/{repo}/dispatches
           owner: pezzolabs
           repo: pezzo-private
+          event_type: "ci"
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_DISPATCH_TOKEN }}
           # token: 
