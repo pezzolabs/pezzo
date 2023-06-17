@@ -8,7 +8,6 @@ import {
 } from "@nestjs/graphql";
 import { Invitation } from "../../@generated/invitation/invitation.model";
 import { GetOrgInvitationsInput } from "./inputs/get-org-invitations.input";
-import { PrismaService } from "../prisma.service";
 import { CurrentUser } from "./current-user.decorator";
 import { RequestUser } from "./users.types";
 import { isOrgAdminOrThrow, isOrgMember } from "./identity.utils";
@@ -105,21 +104,14 @@ export class OrgInvitationsResolver {
       .assign({ topic })
       .info("Sending kafka invitation created event");
 
-    await this.kafkaProducer.produce({
-      topic: "org-invitation-created",
-      messages: [
-        {
-          key: invitation.id,
-          value: JSON.stringify({
-            invitationUrl: invitationUrl.toString(),
-            invitationId: invitation.id,
-            email,
-            role: invitation.role,
-            organizationId,
-            organizationName: organization.name,
-          }),
-        },
-      ],
+    await this.kafkaProducer.produce("org-invitation-created", {
+      key: invitation.id,
+      invitationUrl: invitationUrl.toString(),
+      invitationId: invitation.id,
+      organizationId,
+      organizationName: organization.name,
+      email,
+      role: invitation.role,
     });
 
     return invitation;
@@ -148,17 +140,6 @@ export class OrgInvitationsResolver {
 
     isOrgAdminOrThrow(user, invitation.organizationId);
 
-    let organization: Organization;
-
-    try {
-      organization = await this.organizationService.getById(
-        invitation.organizationId
-      );
-    } catch (error) {
-      this.logger.error({ error }, "Error getting org");
-      throw new InternalServerErrorException();
-    }
-
     let updatedInvitation: Invitation;
     try {
       updatedInvitation = await this.invitationService.upsertRoleById(
@@ -169,24 +150,6 @@ export class OrgInvitationsResolver {
       this.logger.error({ error }, "Error updating invitation");
       throw new InternalServerErrorException();
     }
-
-    const topic = "org-invitation-edited";
-    this.logger.assign({ topic }).info("Sending kafka invitation edited event");
-
-    await this.kafkaProducer.produce({
-      topic,
-      messages: [
-        {
-          key: invitation.id,
-          value: JSON.stringify({
-            invitationId: invitation.id,
-            role,
-            organizationId: invitation.organizationId,
-            organizationName: organization.name,
-          }),
-        },
-      ],
-    });
 
     return updatedInvitation;
   }
