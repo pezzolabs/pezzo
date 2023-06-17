@@ -5,5 +5,11 @@ const { withReact } = require("@nrwl/react");
 module.exports = composePlugins(withNx(), withReact(), (config) => {
   // Update the webpack config as needed here.
   // e.g. `config.plugins.push(new MyPlugin())`
+
+  config = {
+    ...config,
+    devtool: "source-map",
+  };
+
   return config;
 });

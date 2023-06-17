@@ -10,12 +10,13 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "compiler": "swc",
+        "compiler": "babel",
         "outputPath": "dist/apps/console",
         "index": "apps/console/src/index.html",
         "baseHref": "/",
         "main": "apps/console/src/main.tsx",
         "tsConfig": "apps/console/tsconfig.app.json",
+        "sourceMap": true,
         "assets": [
           "apps/console/src/favicon.ico",
           "apps/console/src/assets",
@@ -32,7 +33,7 @@
         ],
         "styles": [],
         "scripts": [],
-        "isolatedConfig": true,
+        "isolatedConfig": false,
         "webpackConfig": "apps/console/webpack.config.js"
       },
       "configurations": {

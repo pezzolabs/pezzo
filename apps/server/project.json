@@ -23,7 +23,8 @@
             "output": "prisma"
           }
         ],
-        "isolatedConfig": true,
+        "isolatedConfig": false,
+        "sourceMap": true,
         "webpackConfig": "apps/server/webpack.config.js"
       },
       "configurations": {
