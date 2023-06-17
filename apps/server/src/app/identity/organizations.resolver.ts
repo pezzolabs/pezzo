@@ -8,7 +8,11 @@ import {
 } from "@nestjs/graphql";
 import { Organization } from "../../@generated/organization/organization.model";
 import { PrismaService } from "../prisma.service";
-import { ConflictException, UseGuards } from "@nestjs/common";
+import {
+  ConflictException,
+  NotFoundException,
+  UseGuards,
+} from "@nestjs/common";
 import { AuthGuard } from "../auth/auth.guard";
 import { CurrentUser } from "./current-user.decorator";
 import { RequestUser } from "./users.types";
@@ -51,16 +55,21 @@ export class OrganizationsResolver {
   ) {
     this.logger.assign({ userId: user.id, organizationId: data.id });
 
+    let org: Organization;
     try {
       this.logger.info("Getting org");
-      const org = await this.organizationService.getById(data.id);
-
-      isOrgMemberOrThrow(user, org.id);
-
-      return org;
+      org = await this.organizationService.getById(data.id);
     } catch (error) {
       this.logger.error({ error }, "Failed to get org");
     }
+
+    if (!org) {
+      throw new NotFoundException();
+    }
+
+    isOrgMemberOrThrow(user, org.id);
+
+    return org;
   }
 
   @Mutation(() => Organization)
