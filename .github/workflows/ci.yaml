@@ -29,6 +29,10 @@ jobs:
     permissions:
       packages: write
     steps:
+      - name: Set variables
+        id: variables
+        run: echo ::set-output name=short_sha::${{ github.sha | slice(0, 7) }}
+
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -77,7 +81,7 @@ jobs:
           owner: pezzolabs
           repo: pezzo-private
           event_type: "CI (Dispatched)"
-          client_payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "shortSha": "${{ github.sha | cut -c 1-7 }}"}'
+          client_payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "shortSha": "${{ steps.variables.outputs.short_sha }}"}'
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_DISPATCH_TOKEN }}
 
