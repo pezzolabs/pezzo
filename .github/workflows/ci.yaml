@@ -85,7 +85,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_DISPATCH_TOKEN }}
 
-
   dockerize:
     name: Dockerize
     needs: ci
