@@ -250,7 +250,7 @@ export class PromptsResolver {
     this.logger.assign({ id }).info("Deleting prompt");
 
     let prompt = await this.promptsService.deletePrompt(id);
-    let org = await this.organizationsService.getOrgByProjectId(
+    const org = await this.organizationsService.getOrgByProjectId(
       prompt.projectId
     );
 
