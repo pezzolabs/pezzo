@@ -1,6 +1,6 @@
 import { Typography } from "antd";
 import { useEffect } from "react";
-import { signOut } from "../lib/utils/sign-out";
+import { signOut } from "supertokens-auth-react/recipe/session";
 
 export const LogoutPage = () => {
   useEffect(() => {
