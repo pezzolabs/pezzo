@@ -10,10 +10,10 @@ export const useCurrentOrgMembership = () => {
   const { currentUser } = useAuthContext();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["userOrgMembership", organization.id, currentUser.id],
+    queryKey: ["userOrgMembership", organization?.id, currentUser.id],
     queryFn: async () =>
       gqlClient.request(GET_USER_ORG_MEMBERSHIP, {
-        data: { organizationId: organization.id, userId: currentUser.id },
+        data: { organizationId: organization?.id, userId: currentUser.id },
       }),
     enabled: !!organization && !!currentUser,
   });
