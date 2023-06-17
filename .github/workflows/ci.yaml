@@ -31,7 +31,7 @@ jobs:
     steps:
       - name: Set variables
         id: variables
-        run: echo ::set-output name=short_sha::${{ github.sha | slice(0, 7) }}
+        run: echo ::set-output name=short_sha::${ github.sha::7 }
 
       - uses: actions/checkout@v3
         with:
