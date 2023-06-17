@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "graphql:codegen": "nx graphql:codegen:offline server",
-    "graphql:codegen:watch": "nx graphql:codegen server --watch"
+    "graphql:codegen:watch": "nx graphql:codegen server --watch",
+    "format": "prettier --write /Users/arielweinberger/Development/pezzo/pezzo/libs/kafka/src/lib/kafka.module.ts"
   },
   "private": true,
   "dependencies": {
@@ -44,6 +45,7 @@
     "graphql-scalars": "^1.22.2",
     "graphql-type-json": "^0.3.2",
     "joi": "^17.9.1",
+    "kafkajs": "^2.2.4",
     "openai": "^3.2.1",
     "pino": "^8.14.1",
     "pino-pretty": "^10.0.0",

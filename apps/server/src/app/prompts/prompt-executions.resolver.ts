@@ -16,8 +16,7 @@ import {
   NotFoundException,
   UseGuards,
 } from "@nestjs/common";
-import { isProjectMemberOrThrow } from "../identity/identity.utils";
-import { InfluxDbService } from "../influxdb/influxdb.service";
+import { isOrgMemberOrThrow } from "../identity/identity.utils";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { PinoLogger } from "../logger/pino-logger";
 import { TestPromptResult } from "@pezzo/client";
@@ -29,7 +28,6 @@ export class PromptExecutionsResolver {
     private prisma: PrismaService,
     private promptsService: PromptsService,
     private promptTesterService: PromptTesterService,
-    private influxService: InfluxDbService,
     private logger: PinoLogger,
     private analytics: AnalyticsService
   ) {}
@@ -61,7 +59,13 @@ export class PromptExecutionsResolver {
       promptExecution.promptId
     );
 
-    isProjectMemberOrThrow(user, prompt.projectId);
+    const project = await this.prisma.project.findUnique({
+      where: {
+        id: prompt.projectId,
+      },
+    });
+
+    isOrgMemberOrThrow(user, project.organizationId);
     return promptExecution;
   }
 
@@ -78,7 +82,13 @@ export class PromptExecutionsResolver {
       throw new NotFoundException();
     }
 
-    isProjectMemberOrThrow(user, prompt.projectId);
+    const project = await this.prisma.project.findUnique({
+      where: {
+        id: prompt.projectId,
+      },
+    });
+
+    isOrgMemberOrThrow(user, project.organizationId);
 
     try {
       const executions = await this.prisma.promptExecution.findMany({
@@ -107,11 +117,12 @@ export class PromptExecutionsResolver {
         settings: data.settings,
       })
       .info("Testing prompt");
-    isProjectMemberOrThrow(user, data.projectId);
 
     const project = await this.prisma.project.findUnique({
       where: { id: data.projectId },
     });
+
+    isOrgMemberOrThrow(user, project.organizationId);
 
     let result: TestPromptResult;
 

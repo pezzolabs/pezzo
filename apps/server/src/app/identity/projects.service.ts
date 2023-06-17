@@ -11,23 +11,13 @@ export class ProjectsService {
     private logger: PinoLogger
   ) {}
 
-  async createProject(
-    name: string,
-    slug: string,
-    organizationId: string,
-    creatorUserId: string
-  ) {
+  async createProject(name: string, slug: string, organizationId: string) {
     this.logger.info("Creating project in database");
     const project = await this.prisma.project.create({
       data: {
         name,
         slug,
         organizationId,
-        members: {
-          create: {
-            userId: creatorUserId,
-          },
-        },
       },
     });
 
@@ -46,6 +36,9 @@ export class ProjectsService {
       where: {
         id,
       },
+      include: {
+        organization: true,
+      },
     });
   }
 
@@ -62,20 +55,6 @@ export class ProjectsService {
       where: {
         slug,
         organizationId,
-      },
-    });
-  }
-
-  async getProjectsByUser(email: string) {
-    return this.prisma.project.findMany({
-      where: {
-        members: {
-          some: {
-            user: {
-              email,
-            },
-          },
-        },
       },
     });
   }

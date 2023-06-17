@@ -24,17 +24,20 @@ import {
 import { AuthGuard } from "../auth/auth.guard";
 import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
-import { isProjectMemberOrThrow } from "../identity/identity.utils";
+import { isOrgMemberOrThrow } from "../identity/identity.utils";
 import { GetProjectPromptsInput } from "./inputs/get-project-prompts.input";
 import { PinoLogger } from "../logger/pino-logger";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { PromptVersion } from "../../@generated/prompt-version/prompt-version.model";
+import { OrganizationsService } from "../identity/organizations.service";
+
 @UseGuards(AuthGuard)
 @Resolver(() => Prompt)
 export class PromptsResolver {
   constructor(
     private prisma: PrismaService,
     private promptsService: PromptsService,
+    private organizationsService: OrganizationsService,
     private logger: PinoLogger,
     private analytics: AnalyticsService
   ) {}
@@ -45,7 +48,15 @@ export class PromptsResolver {
     @CurrentUser() user: RequestUser
   ) {
     const { projectId } = data;
-    isProjectMemberOrThrow(user, data.projectId);
+
+    const project = await this.prisma.project.findUnique({
+      where: {
+        id: projectId,
+      },
+    });
+
+    isOrgMemberOrThrow(user, project.organizationId);
+
     this.logger.assign({ projectId }).info("Getting prompts");
 
     try {
@@ -89,7 +100,13 @@ export class PromptsResolver {
       throw new NotFoundException();
     }
 
-    isProjectMemberOrThrow(user, prompt.projectId);
+    const project = await this.prisma.project.findUnique({
+      where: {
+        id: prompt.projectId,
+      },
+    });
+
+    isOrgMemberOrThrow(user, project.organizationId);
     return prompt;
   }
 
@@ -114,7 +131,13 @@ export class PromptsResolver {
       throw new NotFoundException();
     }
 
-    isProjectMemberOrThrow(user, prompt.projectId);
+    const project = await this.prisma.project.findUnique({
+      where: {
+        id: prompt.projectId,
+      },
+    });
+
+    isOrgMemberOrThrow(user, project.organizationId);
 
     let promptVersions;
 
@@ -153,7 +176,13 @@ export class PromptsResolver {
       throw new NotFoundException();
     }
 
-    isProjectMemberOrThrow(user, promptVersion.prompt.projectId);
+    const project = await this.prisma.project.findUnique({
+      where: {
+        id: promptVersion.prompt.projectId,
+      },
+    });
+
+    isOrgMemberOrThrow(user, project.organizationId);
     return promptVersion;
   }
 
@@ -162,11 +191,19 @@ export class PromptsResolver {
     @Args("data") data: CreatePromptInput,
     @CurrentUser() user: RequestUser
   ) {
-    isProjectMemberOrThrow(user, data.projectId);
     const { name, integrationId, projectId } = data;
     this.logger
       .assign({ name, integrationId, projectId })
       .info("Creating prompt");
+
+    const project = await this.prisma.project.findUnique({
+      where: {
+        id: projectId,
+      },
+    });
+
+    isOrgMemberOrThrow(user, project.organizationId);
+
     let exists: Prompt;
 
     try {
@@ -199,6 +236,37 @@ export class PromptsResolver {
     this.analytics.track("PROMPT:CREATED", user.id, {
       projectId,
       promptId: prompt.id,
+    });
+
+    return prompt;
+  }
+
+  @Mutation(() => Prompt)
+  async deletePrompt(
+    @Args("data") data: PromptWhereUniqueInput,
+    @CurrentUser() user: RequestUser
+  ) {
+    const { id } = data;
+    this.logger.assign({ id }).info("Deleting prompt");
+
+    let prompt = await this.promptsService.deletePrompt(id);
+    const org = await this.organizationsService.getOrgByProjectId(
+      prompt.projectId
+    );
+
+    isOrgMemberOrThrow(user, org.id);
+
+    try {
+      prompt = await this.promptsService.deletePrompt(id);
+    } catch (error) {
+      this.logger.error({ error }, "Error deleting prompt");
+      throw new InternalServerErrorException();
+    }
+
+    this.analytics.track("PROMPT:DELETED", user.id, {
+      promptId: id,
+      projectId: prompt.projectId,
+      organizationId: org.id,
     });
 
     return prompt;

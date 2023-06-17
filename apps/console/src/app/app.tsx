@@ -12,7 +12,6 @@ import { PromptTesterProvider } from "./lib/providers/PromptTesterContext";
 import { EnvironmentsPage } from "./pages/environments";
 import { PromptsPage } from "./pages/prompts";
 import { PromptPage } from "./pages/prompts/[promptId]";
-import { APIKeysPage } from "./pages/api-keys";
 import { initSuperTokens } from "./lib/auth/supertokens";
 import { SuperTokensWrapper } from "supertokens-auth-react";
 import { getSuperTokensRoutesForReactRouterDom } from "supertokens-auth-react/ui";
@@ -27,12 +26,29 @@ import { ThirdpartyEmailPasswordComponentsOverrideProvider } from "supertokens-a
 import LogoSquare from "../assets/logo.svg";
 import { OptionalIntercomProvider } from "./lib/providers/OptionalIntercomProvider";
 import { HOTJAR_SITE_ID, HOTJAR_VERSION } from "../env";
+import { OrgPage } from "./pages/organizations/OrgPage";
+import { AcceptInvitationPage } from "./pages/invitations/AcceptInvitationPage";
 
 initSuperTokens();
 
 if (HOTJAR_SITE_ID && HOTJAR_VERSION) {
   hotjar.initialize(Number(HOTJAR_SITE_ID), Number(HOTJAR_VERSION));
 }
+
+// We need to define the paths this way for the
+// breadcrumbs to work properly (useBreadcrumbItems)
+export const paths = {
+  "/projects": "/projects",
+  "/invitations/:token/accept": "/invitations/:token/accept",
+  "/onboarding": "/onboarding",
+  "/info": "/info",
+  "/orgs/:orgId": "/orgs/:orgId",
+  "/projects/:projectId": "/projects/:projectId",
+  "/projects/:projectId/prompts": "/projects/:projectId/prompts",
+  "/projects/:projectId/prompts/:promptId":
+    "/projects/:projectId/prompts/:promptId",
+  "/projects/:projectId/environments": "/projects/:projectId/environments",
+};
 
 export function App() {
   return (
@@ -83,7 +99,20 @@ export function App() {
                   }
                 >
                   <Route
-                    path="/onboarding"
+                    path={paths["/invitations/:token/accept"]}
+                    element={
+                      <LayoutWrapper
+                        withSideNav={false}
+                        withHeader={false}
+                        withBreadcrumbs={false}
+                      >
+                        <AcceptInvitationPage />
+                      </LayoutWrapper>
+                    }
+                  />
+
+                  <Route
+                    path={paths["/onboarding"]}
                     element={
                       <LayoutWrapper withSideNav={false}>
                         <OnboardingPage />
@@ -92,13 +121,23 @@ export function App() {
                   />
 
                   <Route
-                    path="/info"
+                    path={paths["/info"]}
                     element={
                       <LayoutWrapper withSideNav={false}>
                         <InfoPage />
                       </LayoutWrapper>
                     }
                   />
+
+                  {/* Organizations */}
+                  <Route
+                    path={paths["/orgs/:orgId"]}
+                    element={
+                      <LayoutWrapper withSideNav={false}>
+                        <OrgPage />
+                      </LayoutWrapper>
+                    }
+                  ></Route>
 
                   {/* Projects selection */}
                   <Route
@@ -108,13 +147,19 @@ export function App() {
                       </LayoutWrapper>
                     }
                   >
-                    <Route index element={<Navigate to="/projects" />} />
-                    <Route path="/projects" element={<ProjectsPage />} />
+                    <Route
+                      index
+                      element={<Navigate to={paths["/projects"]} />}
+                    />
+                    <Route
+                      path={paths["/projects"]}
+                      element={<ProjectsPage />}
+                    />
                   </Route>
 
                   {/* In-project routes */}
                   <Route
-                    path="/projects/:projectId"
+                    path={paths["/projects/:projectId"]}
                     element={
                       <CurrentPromptProvider>
                         <PromptTesterProvider>
@@ -127,20 +172,16 @@ export function App() {
                   >
                     <Route
                       index
-                      path="/projects/:projectId/prompts"
+                      path={paths["/projects/:projectId/prompts"]}
                       element={<PromptsPage />}
                     />
                     <Route
-                      path="/projects/:projectId/prompts/:promptId"
+                      path={paths["/projects/:projectId/prompts/:promptId"]}
                       element={<PromptPage />}
                     />
                     <Route
-                      path="/projects/:projectId/environments"
+                      path={paths["/projects/:projectId/environments"]}
                       element={<EnvironmentsPage />}
-                    />
-                    <Route
-                      path="/projects/:projectId/provider-api-keys"
-                      element={<APIKeysPage />}
                     />
                   </Route>
                 </Route>

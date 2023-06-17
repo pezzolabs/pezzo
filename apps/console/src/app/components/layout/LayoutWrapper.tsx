@@ -1,4 +1,4 @@
-import { Breadcrumb, Layout, Row, Space, theme } from "antd";
+import { Breadcrumb, Layout, theme } from "antd";
 import { SideNavigation } from "./SideNavigation";
 import styled from "@emotion/styled";
 import { Header } from "./Header";
@@ -25,15 +25,17 @@ interface Props {
   children: React.ReactNode;
   withSideNav: boolean;
   withHeader?: boolean;
+  withBreadcrumbs?: boolean;
 }
 
 export const LayoutWrapper = ({
   children,
   withSideNav,
   withHeader = true,
+  withBreadcrumbs = true,
 }: Props) => {
-  const breadcrumbItems = useBreadcrumbItems();
   const { token } = theme.useToken();
+  const breadcrumbItems = useBreadcrumbItems();
 
   return (
     <Layout
@@ -43,12 +45,14 @@ export const LayoutWrapper = ({
       <div style={{ display: "flex", flexDirection: "row", height: "100%" }}>
         {withSideNav && <SideNavigation />}
         <StyledContent>
-          <Breadcrumb
-            items={breadcrumbItems}
-            style={{
-              marginBottom: token.marginLG,
-            }}
-          />
+          {withBreadcrumbs && (
+            <Breadcrumb
+              items={breadcrumbItems}
+              style={{
+                marginBottom: token.marginLG,
+              }}
+            />
+          )}
           {children}
         </StyledContent>
       </div>

@@ -3,7 +3,6 @@ import {
   Col,
   Dropdown,
   Layout,
-  Menu,
   MenuProps,
   Row,
   Space,
@@ -23,6 +22,7 @@ import {
 import { signOut } from "supertokens-auth-react/recipe/session";
 import { useNavigate } from "react-router-dom";
 import { Avatar } from "../common/Avatar";
+import { OrgSelector } from "../organizations/OrgSelector";
 
 const Logo = styled.img`
   height: 40px;
@@ -98,6 +98,16 @@ export const Header = () => {
 
       <div
         style={{
+          marginLeft: 20,
+          borderLeft: "1px solid rgba(255, 255, 255, 0.1)",
+          borderRight: "1px solid rgba(255, 255, 255, 0.1)",
+        }}
+      >
+        <OrgSelector />
+      </div>
+
+      <div
+        style={{
           display: "flex",
           flex: "100%",
           alignItems: "center",
@@ -139,8 +149,6 @@ export const Header = () => {
           )}
         </Dropdown>
       </div>
-
-      <Menu theme="dark" mode="horizontal" />
     </Layout.Header>
   );
 };

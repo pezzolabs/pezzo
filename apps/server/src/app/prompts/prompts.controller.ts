@@ -68,8 +68,6 @@ export class PromptsController {
         },
       });
 
-      console.log("prompt", prompt);
-
       projectId = prompt.projectId;
     } catch (error) {
       this.logger.error({ error }, "Error finding prompt with API key");

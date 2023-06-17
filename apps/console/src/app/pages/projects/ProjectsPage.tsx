@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useGetProjects } from "../../lib/hooks/queries";
+import { useGetProjects } from "../../graphql/hooks/queries";
 import { useEffect, useState } from "react";
 import { Button, Card, Col, Row, Spin, Typography, theme } from "antd";
 import styled from "@emotion/styled";
@@ -24,7 +24,7 @@ const Paper = styled.div`
 const isOdd = (number: number) => number % 2 === 0;
 
 export const ProjectsPage = () => {
-  const { data, isLoading } = useGetProjects();
+  const { projects, isLoading } = useGetProjects();
   const [isCreateNewProjectModalOpen, setIsCreateNewProjectModalOpen] =
     useState(false);
   const navigate = useNavigate();
@@ -32,15 +32,13 @@ export const ProjectsPage = () => {
 
   useEffect(() => {
     if (isLoading) return;
-    if (!data?.projects.length) navigate("/onboarding");
-  }, [data, isLoading, navigate]);
+    if (!projects?.length) navigate("/onboarding");
+  }, [projects, isLoading, navigate]);
 
   if (isLoading) return <Spinner />;
 
   return (
     <Paper>
-      <Typography.Title level={2}>Projects</Typography.Title>
-
       <CreateNewProjectModal
         open={isCreateNewProjectModalOpen}
         onClose={() => setIsCreateNewProjectModalOpen(false)}
@@ -60,17 +58,16 @@ export const ProjectsPage = () => {
       </Row>
 
       <Row gutter={16}>
-        {data.projects?.map((project, index) => (
-          <Col span={12}>
+        {projects?.map((project, index) => (
+          <Col span={12} key={project.id}>
             <ProjectCard
-              key={project.id}
               name={project.name}
               slug={project.slug}
               id={project.id}
             />
           </Col>
         ))}
-        {!isOdd(data.projects.length) && (
+        {!isOdd(projects?.length) && (
           <Col span={12}>
             <Card
               hoverable

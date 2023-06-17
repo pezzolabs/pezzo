@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 import { CloseOutlined, EditOutlined, SaveOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { UPDATE_PROVIDER_API_KEY } from "../../graphql/mutations/api-keys";
+import { UPDATE_PROVIDER_API_KEY } from "../../graphql/definitions/mutations/api-keys";
 import { gqlClient, queryClient } from "../../lib/graphql";
 import { CreateProviderApiKeyInput } from "../../../@generated/graphql/graphql";
 import { useEffect } from "react";
