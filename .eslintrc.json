@@ -16,9 +16,7 @@
         "@nrwl/nx/enforce-module-boundaries": [
           "error",
           {
-            "allow": [
-              "@pezzo/kafka"
-            ],
+            "allow": ["@pezzo/kafka"],
             "enforceBuildableLibDependency": true,
             "depConstraints": [
               {
