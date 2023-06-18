@@ -129,7 +129,9 @@ export class OrgInvitationsResolver {
       .info("Updating org invitation");
     let invitation: Invitation;
     try {
-      invitation = await this.invitationsService.getInvitationById(invitationId);
+      invitation = await this.invitationsService.getInvitationById(
+        invitationId
+      );
     } catch (error) {
       this.logger.error({ error }, "Error getting invitation");
       throw new InternalServerErrorException();
