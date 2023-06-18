@@ -21,7 +21,7 @@
       "@pezzo/integrations": ["libs/integrations/src/index.ts"],
       "@pezzo/integrations/*": ["libs/integrations/src/*"],
       "@pezzo/kafka": ["libs/kafka/src/index.ts"],
-      "@pezzo/prisma-server": ["libs/prisma-server/src/index.ts"],
+      "@pezzo/prisma-server": ["libs/prisma-server/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

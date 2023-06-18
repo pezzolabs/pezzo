@@ -29,7 +29,7 @@
       "options": {
         "command": "npx prisma generate --schema libs/prisma-server/prisma/schema.prisma"
       }
-    },
+    }
   },
   "tags": []
 }
