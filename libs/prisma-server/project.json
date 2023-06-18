@@ -15,13 +15,6 @@
         "assets": ["libs/prisma-server/*.md"]
       }
     },
-    "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["libs/prisma-server/**/*.ts"]
-      }
-    },
     "prisma:generate": {
       "executor": "nx:run-commands",
       "inputs": ["{projectRoot}/prisma/schema.prisma"],
