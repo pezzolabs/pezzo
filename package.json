@@ -46,6 +46,7 @@
     "graphql-type-json": "^0.3.2",
     "joi": "^17.9.1",
     "kafkajs": "^2.2.4",
+    "lottie-react": "^2.4.0",
     "openai": "^3.2.1",
     "pino": "^8.14.1",
     "pino-pretty": "^10.0.0",

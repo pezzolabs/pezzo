@@ -6,11 +6,10 @@ import {
   MenuProps,
   Row,
   Space,
-  Tag,
   Typography,
 } from "antd";
 import styled from "@emotion/styled";
-import LogoSquare from "../../../assets/logo.svg";
+import LogoSquare from "../../../assets/logo-square.svg";
 import { colors } from "../../lib/theme/colors";
 import { useAuthContext } from "../../lib/providers/AuthProvider";
 import { DownOutlined } from "@ant-design/icons";
@@ -82,7 +81,7 @@ export const Header = () => {
         display: "flex",
         alignItems: "center",
         background: "#141414",
-        borderBottom: `1px solid ${colors.neutral["700"]}`,
+        borderBottom: `1px solid ${colors.neutral["800"]}`,
       }}
     >
       <div style={{ display: "flex", alignItems: "center" }}>
@@ -90,20 +89,16 @@ export const Header = () => {
           <a href="/">
             <Logo src={LogoSquare} alt="Logo" />
           </a>
-          <Tag color={colors.indigo[500]} style={{ fontSize: 10 }}>
-            BETA
-          </Tag>
         </Space>
       </div>
 
       <div
         style={{
-          marginLeft: 20,
-          borderLeft: "1px solid rgba(255, 255, 255, 0.1)",
-          borderRight: "1px solid rgba(255, 255, 255, 0.1)",
+          marginLeft: 19,
+          borderLeft: `1px solid ${colors.neutral["800"]}`,
         }}
       >
-        <OrgSelector />
+        <span style={{ visibility: "hidden" }}>Pezzo</span>
       </div>
 
       <div

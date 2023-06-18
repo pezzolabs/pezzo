@@ -1,4 +1,4 @@
-import { BoltIcon, ServerStackIcon, KeyIcon } from "@heroicons/react/24/solid";
+import { BoltIcon, ServerStackIcon } from "@heroicons/react/24/solid";
 import { Layout, Menu } from "antd";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -22,7 +22,7 @@ const topMenuItems = [
 
 const SidebarContainer = styled.div`
   background: #141414;
-  border-inline-end: 1px solid ${colors.neutral["700"]};
+  border-inline-end: 1px solid ${colors.neutral["800"]};
   height: 100%;
 
   display: flex;
