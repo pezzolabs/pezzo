@@ -1,6 +1,7 @@
 import { OrgRole } from "@prisma/client";
 export interface RequestUser {
   id: string;
+  supertokensUserId: string;
   email: string;
   orgMemberships: {
     organizationId: string;
