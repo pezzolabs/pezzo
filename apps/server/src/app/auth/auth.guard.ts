@@ -68,8 +68,8 @@ export class AuthGuard implements CanActivate {
       );
 
       const reqUser: RequestUser = {
-        id: supertokensUser.id,
-        email: supertokensUser.email,
+        id: user.id,
+        email: user.email,
         orgMemberships: memberships.map((m) => ({
           organizationId: m.organizationId,
           memberSince: m.createdAt,
