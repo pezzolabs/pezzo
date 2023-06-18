@@ -1,0 +1,31 @@
+@font-face {
+  font-family: "Brockmann";
+  src: url("https://cdn.pezzo.ai/fonts/brockmann/brockmann-regular-webfont.ttf")
+    format("truetype");
+  font-weight: 400;
+  font-style: "normal";
+}
+
+@font-face {
+  font-family: "Brockmann";
+  src: url("https://cdn.pezzo.ai/fonts/brockmann/brockmann-medium-webfont.ttf")
+    format("truetype");
+  font-weight: 500;
+  font-style: "normal";
+}
+
+@font-face {
+  font-family: "Brockmann";
+  src: url("https://cdn.pezzo.ai/fonts/brockmann/brockmann-semibold-webfont.ttf")
+    format("truetype");
+  font-weight: 600;
+  font-style: "normal";
+}
+
+@font-face {
+  font-family: "Brockmann";
+  src: url("https://cdn.pezzo.ai/fonts/brockmann/brockmann-bold-webfont.ttf")
+    format("truetype");
+  font-weight: 700;
+  font-style: "normal";
+}
