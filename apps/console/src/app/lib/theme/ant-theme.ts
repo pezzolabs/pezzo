@@ -14,5 +14,11 @@ export const antTheme: ThemeConfig = {
     Typography: {
       fontWeightStrong: 400,
     },
+    Tabs: {
+      fontFamily: "Brockmann",
+    },
+    Button: {
+      fontFamily: "Brockmann",
+    },
   },
 };
