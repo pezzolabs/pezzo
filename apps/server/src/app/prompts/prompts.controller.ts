@@ -18,7 +18,7 @@ import {
   PromptEnvironment,
   PromptExecution,
   PromptVersion,
-} from "@prisma/client";
+} from "@pezzo/prisma-server";
 import { InfluxDbService } from "../influxdb/influxdb.service";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { PrismaService } from "../prisma.service";

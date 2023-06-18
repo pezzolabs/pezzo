@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
-import { InvitationStatus, OrgRole } from "@prisma/client";
+import { InvitationStatus, OrgRole } from "@pezzo/prisma-server";
 
 @Injectable()
 export class InvitationsService {

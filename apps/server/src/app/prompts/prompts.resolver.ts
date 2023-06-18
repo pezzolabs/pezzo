@@ -10,7 +10,7 @@ import { Prompt } from "../../@generated/prompt/prompt.model";
 import { PrismaService } from "../prisma.service";
 import { PromptWhereUniqueInput } from "../../@generated/prompt/prompt-where-unique.input";
 import { PromptExecution } from "../../@generated/prompt-execution/prompt-execution.model";
-import { Prompt as PrismaPrompt } from "@prisma/client";
+import { Prompt as PrismaPrompt } from "@pezzo/prisma-server";
 import { CreatePromptInput } from "./inputs/create-prompt.input";
 import { PromptsService } from "./prompts.service";
 import { GetPromptVersionInput } from "./inputs/get-prompt-version.input";

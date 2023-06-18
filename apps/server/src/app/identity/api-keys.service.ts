@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
-import { ApiKey } from "@prisma/client";
+import { ApiKey } from "@pezzo/prisma-server";
 
 @Injectable()
 export class ApiKeysService {

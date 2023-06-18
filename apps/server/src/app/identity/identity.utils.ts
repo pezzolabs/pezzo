@@ -1,6 +1,6 @@
 import { ForbiddenException } from "@nestjs/common";
 import { RequestUser } from "./users.types";
-import { OrgRole } from "@prisma/client";
+import { OrgRole } from "@pezzo/prisma-server";
 
 export function isOrgMember(user: RequestUser, organizationId: string) {
   return !!user.orgMemberships.find((m) => m.organizationId === organizationId);

@@ -9,7 +9,7 @@ const schema = OFFLINE
 
 const config: CodegenConfig = {
   schema,
-  documents: ["./libs/**/*.{ts,tsx}", "./apps/**/*.{ts,tsx}"],
+  documents: ["./apps/**/*.{ts,tsx}"],
   ignoreNoDocuments: true, // for better experience with the watcher
   generates: {
     "./apps/server/src/@generated/graphql/": {

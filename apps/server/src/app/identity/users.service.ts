@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
-import { OrganizationMember, User } from "@prisma/client";
+import { OrganizationMember, User } from "@pezzo/prisma-server";
 import { UserCreateRequest } from "./users.types";
 import { ExtendedUser } from "./models/extended-user.model";
 import UserMetadata from "supertokens-node/recipe/usermetadata";

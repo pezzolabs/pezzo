@@ -14,7 +14,7 @@ import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
 import { isOrgMemberOrThrow } from "../identity/identity.utils";
 import { PromptsService } from "../prompts/prompts.service";
-import { Prompt } from "@prisma/client";
+import { Prompt } from "@pezzo/prisma-server";
 import { PrismaService } from "../prisma.service";
 
 interface PromptExecutionQueryResult extends InfluxQueryResult {

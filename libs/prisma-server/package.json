@@ -1,0 +1,5 @@
+{
+  "name": "@pezzo/prisma-server",
+  "private": true,
+  "type": "commonjs"
+}

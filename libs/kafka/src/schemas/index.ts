@@ -1,4 +1,4 @@
-import { OrgRole } from "@prisma/client";
+import { OrgRole } from "@pezzo/prisma-server";
 
 type SchemaWithKey = {
   key: string;

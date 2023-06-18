@@ -1,4 +1,3 @@
-import { PromptExecutionStatus } from "@prisma/client";
 import {
   Button,
   Col,
@@ -21,6 +20,7 @@ import { PromptEditor } from "./PromptEditor";
 import { useEffect, useState } from "react";
 import { usePromptTester } from "../../lib/providers/PromptTesterContext";
 import { isJson } from "../../lib/utils/is-json";
+import { PromptExecutionStatus } from "../../../@generated/graphql/graphql";
 
 const StyledPre = styled.pre`
   white-space: pre-wrap;

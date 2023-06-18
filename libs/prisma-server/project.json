@@ -1,0 +1,35 @@
+{
+  "name": "prisma-server",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/prisma-server/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "dependsOn": ["^build"],
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/prisma-server",
+        "main": "libs/prisma-server/src/index.ts",
+        "tsConfig": "libs/prisma-server/tsconfig.lib.json",
+        "assets": ["libs/prisma-server/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/prisma-server/**/*.ts"]
+      }
+    },
+    "prisma:generate": {
+      "executor": "nx:run-commands",
+      "inputs": ["{projectRoot}/prisma/schema.prisma"],
+      "outputs": ["{projectRoot}/src/generated"],
+      "options": {
+        "command": "npx prisma generate --schema libs/prisma-server/prisma/schema.prisma"
+      }
+    },
+  },
+  "tags": []
+}

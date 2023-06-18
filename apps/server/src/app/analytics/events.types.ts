@@ -1,4 +1,4 @@
-import { PromptExecution } from "@prisma/client";
+import { PromptExecution } from "@pezzo/prisma-server";
 
 // Event names follow the "{SUBJECT}:{ACTION}" pattern
 export type AnalyticsPayloads = {

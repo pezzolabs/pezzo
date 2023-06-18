@@ -15,7 +15,7 @@ import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
 import { isOrgMemberOrThrow } from "../identity/identity.utils";
 import { PinoLogger } from "../logger/pino-logger";
-import { Environment } from "@prisma/client";
+import { Environment } from "@pezzo/prisma-server";
 import { AnalyticsService } from "../analytics/analytics.service";
 
 @UseGuards(AuthGuard)

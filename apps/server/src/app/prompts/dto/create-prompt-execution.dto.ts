@@ -1,4 +1,4 @@
-import { PromptExecutionStatus } from "@prisma/client";
+import { PromptExecutionStatus } from "@pezzo/prisma-server";
 import {
   IsDateString,
   IsEnum,

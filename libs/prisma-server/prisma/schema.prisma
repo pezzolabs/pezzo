@@ -1,15 +1,12 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native", "debian-openssl-1.1.x"]
-  engineType    = "binary"
+  binaryTargets = ["native", "debian-openssl-1.1.x", "linux-arm64-openssl-1.1.x"]
+  output = "../src/prisma-client"
 }
 
 generator nestgraphql {
   provider      = "node node_modules/prisma-nestjs-graphql"
-  output        = "../src/@generated"
+  output        = "../../../apps/server/src/@generated"
   binaryTargets = ["native", "debian-openssl-1.1.x", "linux-arm64-openssl-1.1.x"]
   purgeOutput   = true
 

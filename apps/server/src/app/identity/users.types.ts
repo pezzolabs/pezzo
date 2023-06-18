@@ -1,4 +1,5 @@
-import { OrgRole } from "@prisma/client";
+import { OrgRole } from "@pezzo/prisma-server";
+
 export interface RequestUser {
   id: string;
   supertokensUserId: string;

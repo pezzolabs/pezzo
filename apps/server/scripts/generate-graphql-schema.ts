@@ -1,7 +1,7 @@
 process.env.SKIP_CONFIG_VALIDATION = "true";
 
 import { NestFactory } from "@nestjs/core";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@pezzo/prisma-server";
 import supertokens from "supertokens-node";
 import { AppModule } from "../src/app/app.module";
 import { KafkaConsumerService, KafkaProducerService } from "@pezzo/kafka";
