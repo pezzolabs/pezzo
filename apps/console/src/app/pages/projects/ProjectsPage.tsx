@@ -24,6 +24,7 @@ const Paper = styled.div`
 const isOdd = (number: number) => number % 2 === 0;
 
 export const ProjectsPage = () => {
+  const { isOrgAdmin } = useCurrentOrgMembership();
   const { projects, isLoading } = useGetProjects();
   const [isCreateNewProjectModalOpen, setIsCreateNewProjectModalOpen] =
     useState(false);
@@ -44,18 +45,20 @@ export const ProjectsPage = () => {
         onClose={() => setIsCreateNewProjectModalOpen(false)}
         onCreated={() => setIsCreateNewProjectModalOpen(false)}
       />
-      <Row justify="end">
-        <Button
-          icon={<PlusOutlined />}
-          onClick={() => setIsCreateNewProjectModalOpen(true)}
-          style={{
-            marginBottom: token.marginLG,
-          }}
-          size="large"
-        >
-          Create project
-        </Button>
-      </Row>
+      {isOrgAdmin && (
+        <Row justify="end">
+          <Button
+            icon={<PlusOutlined />}
+            onClick={() => setIsCreateNewProjectModalOpen(true)}
+            style={{
+              marginBottom: token.marginLG,
+            }}
+            size="large"
+          >
+            Create project
+          </Button>
+        </Row>
+      )}
 
       <Row gutter={16}>
         {projects?.map((project, index) => (
