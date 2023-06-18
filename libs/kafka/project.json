@@ -5,7 +5,7 @@
   "projectType": "library",
   "targets": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^prisma:generate", "^build"],
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {

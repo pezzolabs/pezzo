@@ -1,7 +1,7 @@
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-1.1.x", "linux-arm64-openssl-1.1.x"]
-  output = "../src/prisma-client"
+  output = "../src/prisma-generated"
 }
 
 generator nestgraphql {

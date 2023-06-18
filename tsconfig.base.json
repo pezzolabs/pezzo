@@ -10,39 +10,18 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": [
-      "es2017",
-      "dom"
-    ],
+    "lib": ["es2017", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@pezzo/client": [
-        "libs/client/src/index.ts"
-      ],
-      "@pezzo/common": [
-        "libs/common/src/index.ts"
-      ],
-      "@pezzo/common/components": [
-        "libs/common/src/components"
-      ],
-      "@pezzo/integrations": [
-        "libs/integrations/src/index.ts"
-      ],
-      "@pezzo/integrations/*": [
-        "libs/integrations/src/*"
-      ],
-      "@pezzo/kafka": [
-        "libs/kafka/src/index.ts"
-      ],
-      "@pezzo/prisma-server": [
-        "libs/prisma-server/src/index.ts"
-      ]
+      "@pezzo/client": ["libs/client/src/index.ts"],
+      "@pezzo/common": ["libs/common/src/index.ts"],
+      "@pezzo/integrations": ["libs/integrations/src/index.ts"],
+      "@pezzo/integrations/*": ["libs/integrations/src/*"],
+      "@pezzo/kafka": ["libs/kafka/src/index.ts"],
+      "@pezzo/prisma-server": ["libs/prisma-server/src/index.ts"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "tmp"
-  ]
+  "exclude": ["node_modules", "tmp"]
 }
