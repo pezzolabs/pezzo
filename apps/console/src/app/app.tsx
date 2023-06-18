@@ -24,6 +24,7 @@ import { OnboardingPage } from "./pages/onboarding";
 import { AuthProvider } from "./lib/providers/AuthProvider";
 import { ThirdpartyEmailPasswordComponentsOverrideProvider } from "supertokens-auth-react/recipe/thirdpartyemailpassword";
 import LogoSquare from "../assets/logo.svg";
+import LogoVertical from "../assets/logo-vertical.svg";
 import { OptionalIntercomProvider } from "./lib/providers/OptionalIntercomProvider";
 import { HOTJAR_SITE_ID, HOTJAR_VERSION } from "../env";
 import { OrgPage } from "./pages/organizations/OrgPage";
@@ -66,11 +67,10 @@ export function App() {
                 return (
                   <div>
                     <img
-                      src={LogoSquare}
+                      src={LogoVertical}
                       alt="Logo"
                       style={{
-                        height: 60,
-                        marginBottom: 24,
+                        height: 180,
                       }}
                     />
                     <DefaultComponent {...props} />

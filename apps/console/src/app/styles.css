@@ -1,3 +1,4 @@
+@import url("./fonts");
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200;300;400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap");
 @tailwind utilities;
@@ -7,4 +8,29 @@ body {
   font-family: "Inter", sans-serif;
   font-size: 16px;
   color: theme("colors.slate.200");
+}
+
+h1.ant-typography,
+h2.ant-typography,
+h3.ant-typography,
+h4.ant-typography,
+h5.ant-typography {
+  font-family: "Brockmann", serif;
+  font-weight: 400;
+  color: theme("colors.slate.200");
+}
+
+.ant-btn {
+  font-family: "Brockmann", serif;
+  font-weight: 400;
+}
+
+.ant-tabs-tab {
+  font-family: "Brockmann", serif;
+  font-weight: 300;
+}
+
+.ant-modal-title {
+  font-family: "Brockmann", serif;
+  font-weight: 400;
 }

@@ -3,6 +3,7 @@ import { SideNavigation } from "./SideNavigation";
 import styled from "@emotion/styled";
 import { Header } from "./Header";
 import { useBreadcrumbItems } from "../../lib/hooks/useBreadcrumbItems";
+import { colors } from "../../lib/theme/colors";
 
 const StyledContent = styled(Layout.Content)`
   padding: 18px;
@@ -39,7 +40,12 @@ export const LayoutWrapper = ({
 
   return (
     <Layout
-      style={{ height: "100vh", maxHeight: "100vh", flexDirection: "column" }}
+      style={{
+        height: "100vh",
+        maxHeight: "100vh",
+        flexDirection: "column",
+        background: "rgb(13, 13, 13)",
+      }}
     >
       {withHeader && <Header />}
       <div style={{ display: "flex", flexDirection: "row", height: "100%" }}>
