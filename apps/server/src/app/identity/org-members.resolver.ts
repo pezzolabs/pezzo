@@ -20,7 +20,7 @@ import { PinoLogger } from "../logger/pino-logger";
 export class OrganizationMembersResolver {
   constructor(
     private logger: PinoLogger,
-    private readonly organizationService: OrganizationsService
+    private readonly organizationsService: OrganizationsService
   ) {}
 
   @Query(() => OrganizationMember)
@@ -33,7 +33,7 @@ export class OrganizationMembersResolver {
 
     try {
       this.logger.info({ data }, "Getting user org membership");
-      member = await this.organizationService.getOrgMemberByOrgId(
+      member = await this.organizationsService.getOrgMemberByOrgId(
         data.organizationId,
         user.id
       );
@@ -59,7 +59,7 @@ export class OrganizationMembersResolver {
 
     try {
       this.logger.info("Getting user org membership");
-      member = await this.organizationService.getOrganizationMemberById(
+      member = await this.organizationsService.getOrganizationMemberById(
         data.id
       );
     } catch (error) {
@@ -80,7 +80,7 @@ export class OrganizationMembersResolver {
 
     try {
       this.logger.info("Deleting org member");
-      return await this.organizationService.deleteOrgMember(data.id);
+      return await this.organizationsService.deleteOrgMember(data.id);
     } catch (error) {
       this.logger.error({ error }, "Failed to delete org member");
     }
@@ -99,7 +99,7 @@ export class OrganizationMembersResolver {
     let member: OrganizationMember;
 
     try {
-      member = await this.organizationService.getOrganizationMemberById(
+      member = await this.organizationsService.getOrganizationMemberById(
         data.id
       );
     } catch (error) {
@@ -115,7 +115,7 @@ export class OrganizationMembersResolver {
     let updatedMember: OrganizationMember;
     try {
       this.logger.info("Updating org member role");
-      updatedMember = await this.organizationService.updateMember(
+      updatedMember = await this.organizationsService.updateMember(
         data.id,
         data.role
       );
