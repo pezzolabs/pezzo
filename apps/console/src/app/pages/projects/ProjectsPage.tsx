@@ -6,6 +6,7 @@ import styled from "@emotion/styled";
 import { ProjectCard } from "../../components/projects";
 import { PlusOutlined } from "@ant-design/icons";
 import { CreateNewProjectModal } from "../../components/projects/CreateNewProjectModal";
+import { useCurrentOrgMembership } from "../../lib/hooks/useCurrentOrgMembership";
 
 const Spinner = styled(Row)`
   height: 100%;
