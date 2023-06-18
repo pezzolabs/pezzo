@@ -84,13 +84,13 @@ docker-compose -f docker-compose.dev.yaml up
 Generate the Prisma client:
 
 ```
-npx nx prisma:generate server
+npx nx prisma:generate prisma-server
 ```
 
 Deploy Prisma migrations:
 
 ```
-npx dotenv-cli -e apps/server/.env -- npx prisma migrate deploy --schema apps/server/prisma/schema.prisma
+npx dotenv-cli -e apps/server/.env -- npx prisma migrate deploy --schema libs/prisma-server/prisma/schema.prisma
 ```
 
 Run the server:
