@@ -23,7 +23,11 @@ export class UsersResolver {
   @Query(() => ExtendedUser)
   async me(@CurrentUser() userInfo: RequestUser) {
     this.logger.info(
-      { userId: userInfo.id, email: userInfo.email, supertokensUserId: userInfo.supertokensUserId },
+      {
+        userId: userInfo.id,
+        email: userInfo.email,
+        supertokensUserId: userInfo.supertokensUserId,
+      },
       "Getting user"
     );
 
