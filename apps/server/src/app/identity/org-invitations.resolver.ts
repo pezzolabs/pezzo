@@ -37,7 +37,7 @@ export class OrgInvitationsResolver {
     private usersService: UsersService,
     private kafkaProducer: KafkaProducerService,
     private organizationService: OrganizationsService,
-    private invitationService: InvitationsService,
+    private invitationsService: InvitationsService,
     private logger: PinoLogger,
     private config: ConfigService
   ) {}
@@ -68,7 +68,7 @@ export class OrgInvitationsResolver {
     let exists: boolean;
     try {
       this.logger.info("Checking if invitation exists");
-      exists = !!(await this.invitationService.getInvitationByEmail(
+      exists = !!(await this.invitationsService.getInvitationByEmail(
         email,
         organizationId
       ));
@@ -84,7 +84,7 @@ export class OrgInvitationsResolver {
     let invitation: Invitation;
     try {
       this.logger.info("Creating invitation");
-      invitation = await this.invitationService.createInvitation(
+      invitation = await this.invitationsService.createInvitation(
         email,
         organizationId,
         user.id
@@ -129,7 +129,7 @@ export class OrgInvitationsResolver {
       .info("Updating org invitation");
     let invitation: Invitation;
     try {
-      invitation = await this.invitationService.getInvitationById(invitationId);
+      invitation = await this.invitationsService.getInvitationById(invitationId);
     } catch (error) {
       this.logger.error({ error }, "Error getting invitation");
       throw new InternalServerErrorException();
@@ -142,7 +142,7 @@ export class OrgInvitationsResolver {
 
     let updatedInvitation: Invitation;
     try {
-      updatedInvitation = await this.invitationService.upsertRoleById(
+      updatedInvitation = await this.invitationsService.upsertRoleById(
         invitationId,
         role
       );
@@ -180,7 +180,7 @@ export class OrgInvitationsResolver {
     let invitations: Invitation[];
     try {
       this.logger.info("Getting invitations for organization");
-      invitations = await this.invitationService.getAllByOrgId(organizationId);
+      invitations = await this.invitationsService.getAllByOrgId(organizationId);
     } catch (error) {
       this.logger.error({ error }, "Error getting invitations");
       throw new InternalServerErrorException();
@@ -201,7 +201,7 @@ export class OrgInvitationsResolver {
     let invitation: Invitation;
     try {
       this.logger.info("Getting invitation");
-      invitation = await this.invitationService.getInvitationById(id);
+      invitation = await this.invitationsService.getInvitationById(id);
     } catch (error) {
       this.logger.error({ error }, "Error getting invitation");
       throw new InternalServerErrorException();
@@ -215,7 +215,7 @@ export class OrgInvitationsResolver {
 
     try {
       this.logger.info("Deleting invitation");
-      await this.invitationService.deleteInvitationById(id);
+      await this.invitationsService.deleteInvitationById(id);
     } catch (error) {
       this.logger.error({ error }, "Error deleting invitation");
       throw new InternalServerErrorException();
@@ -233,7 +233,7 @@ export class OrgInvitationsResolver {
 
     let invitation: Invitation;
     try {
-      invitation = await this.invitationService.getInvitationById(id);
+      invitation = await this.invitationsService.getInvitationById(id);
     } catch (error) {
       this.logger.error({ error }, "Error getting invitation");
       throw new InternalServerErrorException();
@@ -277,7 +277,7 @@ export class OrgInvitationsResolver {
     }
 
     try {
-      await this.invitationService.deleteInvitationById(id);
+      await this.invitationsService.deleteInvitationById(id);
     } catch (error) {
       this.logger.error({ error }, "Error deleting invitation");
       throw new InternalServerErrorException();
