@@ -1,26 +1,17 @@
 <p align="center">
-<img src="https://github.com/pezzolabs/pezzo/actions/workflows/ci.yaml/badge.svg" />
-<a href="CODE_OF_CONDUCT.md">
-  <img src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg" alt="Contributor Covenant">
-</a>
-<a href="https://opensource.org/licenses/Apache-2.0">
-  <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License">
-</a>
-  <img src="https://img.shields.io/discord/1105803596475404358?label=Discord"/>
-
-<p align="center">
-  <img src=".github/assets/logo-dark.svg" width="300px">
+  <img src=".github/assets/logo-square.svg" width="250px">
   <br />
   <strong>
   <br />
-  Pezzo is an open-source AI development toolkit designed to streamline prompt design, version management, publishing, collaboration, troubleshooting, observability and more. Our mission is to empower individuals and teams to harness the power of AI with maximum productivity and visibility.
+  Pezzo is an open-source AI development toolkit designed to streamline prompt design, version management, publishing, collaboration, troubleshooting, observability and more. Our mission is to empower individuals and teams to harness the power of AI with confidence.
   </strong>
   <br />
 </p>
+
 <br />
 <p align="center">
   <a href="https://bit.ly/pezzo-demo-github" target="_blank">
-  <img src=".github/assets/banner-video.png" width="700px">
+  <img src=".github/assets/banner.png" width="900px">
 </p>
 
 <p align="center">
@@ -31,6 +22,17 @@
 
 <p align="center">
   <a href="https://forms.gle/dg7fXnG5WKkeAUb59"><strong>Click here to sign up for early access to Pezzo Cloud! 🌩️</strong></a>
+</p>
+
+<p align="center">
+<img src="https://github.com/pezzolabs/pezzo/actions/workflows/ci.yaml/badge.svg" />
+<a href="CODE_OF_CONDUCT.md">
+  <img src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg" alt="Contributor Covenant">
+</a>
+<a href="https://opensource.org/licenses/Apache-2.0">
+  <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License">
+</a>
+  <img src="https://img.shields.io/discord/1105803596475404358?label=Discord"/>
 </p>
 
 # Features
