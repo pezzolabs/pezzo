@@ -12,7 +12,6 @@ import styled from "@emotion/styled";
 import LogoSquare from "../../../assets/logo-square.svg";
 import { colors } from "../../lib/theme/colors";
 import { useAuthContext } from "../../lib/providers/AuthProvider";
-import { DownOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import {
   ArrowRightOnRectangleIcon,
@@ -109,7 +108,17 @@ export const Header = () => {
           justifyContent: "flex-end",
         }}
       >
+        <div
+          style={{
+            marginRight: 19,
+            borderRight: `1px solid ${colors.neutral["800"]}`,
+          }}
+        >
+          <OrgSelector />
+        </div>
+
         <Dropdown
+          arrow={false}
           menu={{
             items: menuItems,
             onClick: async (info) => {
@@ -134,10 +143,6 @@ export const Header = () => {
                 <Typography.Text type="secondary">
                   {currentUser.name}
                 </Typography.Text>
-                <DownOutlined
-                  style={{ color: colors.neutral[300], width: 12, height: 12 }}
-                  rotate={open ? 180 : 0}
-                />
               </Space>
             </UserProfileButton>
           )}

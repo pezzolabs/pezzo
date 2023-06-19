@@ -1,4 +1,3 @@
-import { CaretDownOutlined } from "@ant-design/icons";
 import { Button, Popover, Typography } from "antd";
 import styled from "@emotion/styled";
 import { useOrganizations } from "../../lib/hooks/useOrganizations";
@@ -46,7 +45,6 @@ export const OrgSelector = () => {
       >
         <Button type="link" style={{ color: "white" }}>
           {currentOrg.name}
-          <CaretDownOutlined />
         </Button>
       </Popover>
     )
