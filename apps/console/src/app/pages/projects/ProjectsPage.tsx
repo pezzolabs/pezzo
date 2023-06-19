@@ -46,20 +46,19 @@ export const ProjectsPage = () => {
         onClose={() => setIsCreateNewProjectModalOpen(false)}
         onCreated={() => setIsCreateNewProjectModalOpen(false)}
       />
-      {isOrgAdmin && (
-        <Row justify="end">
-          <Button
-            icon={<PlusOutlined />}
-            onClick={() => setIsCreateNewProjectModalOpen(true)}
-            style={{
-              marginBottom: token.marginLG,
-            }}
-            size="large"
-          >
-            Create project
-          </Button>
-        </Row>
-      )}
+
+      <Row justify="end">
+        <Button
+          icon={<PlusOutlined />}
+          onClick={() => setIsCreateNewProjectModalOpen(true)}
+          style={{
+            marginBottom: token.marginLG,
+          }}
+          size="large"
+        >
+          Create project
+        </Button>
+      </Row>
 
       <Row gutter={16}>
         {projects?.map((project, index) => (

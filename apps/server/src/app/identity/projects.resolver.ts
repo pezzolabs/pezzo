@@ -82,7 +82,7 @@ export class ProjectsResolver {
     @CurrentUser() user: RequestUser
   ) {
     const { organizationId, name } = data;
-    isOrgAdminOrThrow(user, organizationId);
+
     this.logger.assign({ organizationId, name }).info("Creating project");
 
     const slug = slugify(data.name);
