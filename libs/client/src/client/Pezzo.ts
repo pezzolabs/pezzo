@@ -1,6 +1,10 @@
 import axios, { AxiosInstance } from "axios";
 import { IntegrationBaseSettings, PromptExecutionStatus } from "../types";
 import type { CreatePromptExecutionDto } from "./create-prompt-execution.dto";
+import { ProviderType, Prompt, getPromptSettings } from "../types/prompts";
+import { PromptVersion } from "../@generated/graphql/graphql";
+import { interpolateVariables } from "../utils";
+import { PezzoOpenAIApi } from "./PezzoOpenAI";
 
 export interface PezzoClientOptions {
   serverUrl?: string;
@@ -8,11 +12,17 @@ export interface PezzoClientOptions {
   environment: string;
 }
 
+export interface GetPromptOptions {
+  variables?: Record<string, boolean | number | string>;
+}
+
 const defaultOptions: Partial<PezzoClientOptions> = {
   serverUrl: "https://api.pezzo.ai",
 };
 
 export class Pezzo {
+  OpenAIApi: PezzoOpenAIApi;
+
   options: PezzoClientOptions;
   private readonly axios: AxiosInstance;
 
@@ -28,6 +38,12 @@ export class Pezzo {
         "x-api-key": this.options.apiKey,
       },
     });
+
+    this.OpenAIApi = function(...args: ConstructorParameters<typeof PezzoOpenAIApi>) {
+      const pezzoOpenAIApi = new PezzoOpenAIApi(...args);
+      pezzoOpenAIApi.reportFn = (duration) => console.log("oxel ugiyot", duration)
+      return pezzoOpenAIApi;
+    } as unknown as PezzoOpenAIApi;
   }
 
   async reportPromptExecution<T>(
@@ -75,5 +91,33 @@ export class Pezzo {
         settings: data.settings as IntegrationBaseSettings<T>,
       },
     };
+  }
+
+  async getPrompt<TProviderType extends ProviderType>(
+    promptName: string,
+    // TODO: define a type for this
+    options?: GetPromptOptions,
+  ): Promise<Prompt<TProviderType>> {
+    const url = new URL(`${this.options.serverUrl}/api/prompts/deployment`);
+    url.searchParams.append("name", promptName);
+    url.searchParams.append("environmentName", this.options.environment);
+
+    const { data } = await this.axios.get<PromptVersion>(url.toString());
+
+    let content = data.content;
+
+    if (options?.variables) {
+      content = interpolateVariables(data.content, options.variables);
+    }
+
+    return {
+      id: data.promptId,
+      deployedVersion: data.sha,
+      ...getPromptSettings({ settings: data.settings as Record<string, unknown>, content }),
+    };
+  }
+
+  async getOpenAiPrompt(promptName: string) {
+    return this.getPrompt<ProviderType.OpenAI>(promptName);
   }
 }

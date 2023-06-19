@@ -1,5 +1,3 @@
-import { PromptExecutionStatus } from "../types";
-
 export class CreatePromptExecutionDto {
   promptVersionSha: string;
 
