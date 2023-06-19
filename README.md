@@ -1,5 +1,5 @@
 <p align="center">
-  <img src=".github/assets/logo-square.svg" width="180px">
+  <img src=".github/assets/logo-square.svg" width="250px">
   <br />
   <strong>
   <br />
