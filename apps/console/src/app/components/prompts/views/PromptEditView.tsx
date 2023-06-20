@@ -173,7 +173,10 @@ export const PromptEditView = () => {
                 size="middle"
               >
                 <Card title="Settings">
-                  <PromptSettings integrationId={prompt.integrationId} />
+                  <PromptSettings
+                    integrationId={prompt.integrationId}
+                    model={form.getFieldsValue().settings?.model}
+                  />
                 </Card>
 
                 <Card title="Variables">
