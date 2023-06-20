@@ -9,6 +9,7 @@ export const settingsSchema: FormSchema = [
     defaultValue: "gpt-3.5-turbo",
     options: [
       { value: "gpt-3.5-turbo", label: "gpt-3.5-turbo" },
+      { value: "gpt-3.5-turbo-16k", label: "gpt-3.5-turbo-16k" },
       { value: "gpt-4", label: "gpt-4" },
     ],
   },
@@ -17,7 +18,7 @@ export const settingsSchema: FormSchema = [
     name: ["settings", "modelSettings", "temperature"],
     type: "slider",
     min: 0,
-    max: 1,
+    max: 2,
     step: 0.1,
   },
   {
