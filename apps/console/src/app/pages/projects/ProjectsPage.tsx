@@ -6,7 +6,6 @@ import styled from "@emotion/styled";
 import { ProjectCard } from "../../components/projects";
 import { PlusOutlined } from "@ant-design/icons";
 import { CreateNewProjectModal } from "../../components/projects/CreateNewProjectModal";
-import { useCurrentOrgMembership } from "../../lib/hooks/useCurrentOrgMembership";
 
 const Spinner = styled(Row)`
   height: 100%;
@@ -25,7 +24,6 @@ const Paper = styled.div`
 const isOdd = (number: number) => number % 2 === 0;
 
 export const ProjectsPage = () => {
-  const { isOrgAdmin } = useCurrentOrgMembership();
   const { projects, isLoading } = useGetProjects();
   const [isCreateNewProjectModalOpen, setIsCreateNewProjectModalOpen] =
     useState(false);
