@@ -79,6 +79,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
       playground: false,
       autoSchemaFile: GQL_SCHEMA_PATH,
       sortSchema: true,
+
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       context: (ctx) => {
         ctx.requestId = ctx.req.headers["x-request-id"] || randomUUID();
