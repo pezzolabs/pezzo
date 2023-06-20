@@ -5,7 +5,7 @@ export interface IntegrationDefinition {
   name: string;
   provider: string;
   iconBase64: string;
-  settingsSchema: FormSchema;
+  generateSchema: (modelName: string) => FormSchema;
   defaultSettings: any;
   consumeInstructionsFn: (
     promptName: string,
