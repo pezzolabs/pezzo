@@ -65,7 +65,9 @@ export class OrgInvitationsResolver {
       throw new NotFoundException("Organization not found");
     }
 
-    const isMemberAlready = isOrgMember(user, organizationId);
+    const isMemberAlready = organization.members?.some(
+      (member) => member.user?.email === email
+    );
 
     if (isMemberAlready) {
       throw new ConflictException(
