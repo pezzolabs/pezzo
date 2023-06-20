@@ -77,14 +77,7 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
         <Form.Item
           label="Prompt name"
           name="name"
-          rules={[
-            { required: true, message: "Prompt name is required" },
-            {
-              pattern: new RegExp("^(?:[A-Z][a-z0-9]*)+$"),
-              message:
-                "Prompt name must be pascal case (e.g. RecommendProduct)",
-            },
-          ]}
+          rules={[{ required: true, message: "Prompt name is required" }]}
         >
           <Input placeholder="e.g. RecommendProduct" />
         </Form.Item>
