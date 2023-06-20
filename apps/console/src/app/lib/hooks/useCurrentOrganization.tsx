@@ -24,7 +24,7 @@ export const useCurrentOrganization = ({
     }
   }, [currentOrgId, organizations, setCurrentOrgId]);
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: [
       "currentOrganization",
       currentOrgId,
