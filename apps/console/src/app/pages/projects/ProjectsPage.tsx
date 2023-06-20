@@ -44,6 +44,7 @@ export const ProjectsPage = () => {
         onClose={() => setIsCreateNewProjectModalOpen(false)}
         onCreated={() => setIsCreateNewProjectModalOpen(false)}
       />
+
       <Row justify="end">
         <Button
           icon={<PlusOutlined />}
