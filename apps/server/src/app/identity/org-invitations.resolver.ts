@@ -65,6 +65,14 @@ export class OrgInvitationsResolver {
       throw new NotFoundException("Organization not found");
     }
 
+    const isMemberAlready = isOrgMember(user, organizationId);
+
+    if (isMemberAlready) {
+      throw new ConflictException(
+        "User is already a member of this organization"
+      );
+    }
+
     let exists: boolean;
     try {
       this.logger.info("Checking if invitation exists");

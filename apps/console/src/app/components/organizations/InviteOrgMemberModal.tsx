@@ -15,7 +15,10 @@ type Inputs = {
 };
 
 export const InviteOrgMemberModal = ({ open, onClose }: Props) => {
-  const { organization } = useCurrentOrganization();
+  const { organization } = useCurrentOrganization({
+    includeMembers: true,
+    includeInvitations: false,
+  });
   const [form] = Form.useForm<Inputs>();
   const { mutateAsync: createInvitation } = useCreateOrgInvitationMutation();
   const [error, setError] = useState<string>(null);
@@ -66,6 +69,20 @@ export const InviteOrgMemberModal = ({ open, onClose }: Props) => {
               validateTrigger: "onSubmit",
               message: "Must be a valid email",
             },
+            () => ({
+              validator(_, value) {
+                if (
+                  organization.members?.find(
+                    (member) => member.user.email === value
+                  )
+                ) {
+                  return Promise.reject(
+                    new Error("User is already a member of this organization")
+                  );
+                }
+                return Promise.resolve();
+              },
+            }),
           ]}
         >
           <Input placeholder="johndoe@yourdomain.com" />

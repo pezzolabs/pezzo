@@ -103,7 +103,6 @@ export const OrgInvitationsList = ({ invitations }: Props) => {
                     </Button>
                   </Col>
                   <Col>
-                    <Typography.Text type="secondary">Role: </Typography.Text>
                     <OrgRoleSelector
                       onChange={(role) =>
                         handleUpdateRoleForInvitation(invitation, role)
