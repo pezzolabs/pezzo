@@ -14,6 +14,7 @@ export const PromptEditor = ({ value, onChange }: Props) => {
     <Form.Item name="content">
       <CodeMirror
         onChange={onChange}
+        placeholder="Start typing your prompt here..."
         className={css`
           .cm-content {
             white-space: pre-wrap !important;

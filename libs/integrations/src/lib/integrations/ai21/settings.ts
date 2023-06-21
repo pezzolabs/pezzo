@@ -1,7 +1,7 @@
 import { FormSchema } from "../form.types";
 import { AI21IntegrationSettings } from "./types";
 
-export const settingsSchema: FormSchema = [
+const settingsSchema: FormSchema = [
   {
     label: "Model",
     name: ["settings", "model"],
@@ -61,6 +61,8 @@ export const settingsSchema: FormSchema = [
     step: 1,
   },
 ];
+
+export const generateSchema = (_: string): FormSchema => settingsSchema;
 
 export const defaultSettings: AI21IntegrationSettings = {
   model: "j2-jumbo-instruct",

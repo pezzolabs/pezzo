@@ -1,4 +1,4 @@
-import { FormSchema, SliderFormField } from "../form.types";
+import { FormField, FormSchema, SliderFormField } from "../form.types";
 import { OpenAIIntegrationSettings } from "./types";
 
 const settingsSchema: FormSchema = [
@@ -59,7 +59,7 @@ export const generateSchema = (modelName: string): FormSchema => {
   const settings = [...settingsSchema];
 
   // check if type is slider (with typescript "is" operator)
-  const isSlider = (setting: any): setting is SliderFormField =>
+  const isSlider = (setting: FormField): setting is SliderFormField =>
     setting.type === "slider";
 
   const sliders = settings.filter(isSlider);
