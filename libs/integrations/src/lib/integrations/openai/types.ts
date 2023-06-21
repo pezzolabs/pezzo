@@ -15,5 +15,5 @@ export type OpenAIIntegrationSettings = IntegrationBaseSettings<{
   frequency_penalty: number;
   presence_penalty: number;
 }> & {
-  model: "gpt-3.5-turbo" | "gpt-4";
+  model: "gpt-3.5-turbo" | "gpt-4" | "gpt-3.5-turbo-16k";
 };

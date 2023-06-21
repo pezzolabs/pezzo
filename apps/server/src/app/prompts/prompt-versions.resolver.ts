@@ -18,7 +18,7 @@ import {
   NotFoundException,
   UseGuards,
 } from "@nestjs/common";
-import { isProjectMemberOrThrow } from "../identity/identity.utils";
+import { isOrgMemberOrThrow } from "../identity/identity.utils";
 import { PromptsService } from "./prompts.service";
 import { AuthGuard } from "../auth/auth.guard";
 import { ExtendedUser } from "../identity/models/extended-user.model";
@@ -54,7 +54,13 @@ export class PromptVersionsResolver {
       throw new NotFoundException();
     }
 
-    isProjectMemberOrThrow(user, prompt.projectId);
+    const project = await this.prismaService.project.findUnique({
+      where: {
+        id: prompt.projectId,
+      },
+    });
+
+    isOrgMemberOrThrow(user, project.organizationId);
 
     try {
       const promptVersion = await this.promptsService.createPromptVersion(

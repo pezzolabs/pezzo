@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { Modal, Form, Input, Button, Alert } from "antd";
-import { CREATE_PROMPT } from "../../graphql/mutations/prompts";
+import { CREATE_PROMPT } from "../../graphql/definitions/mutations/prompts";
 import { gqlClient, queryClient } from "../../lib/graphql";
 import { css } from "@emotion/css";
 import { PromptIntegrationSelector } from "./PromptIntegrationSelector";
@@ -77,14 +77,7 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
         <Form.Item
           label="Prompt name"
           name="name"
-          rules={[
-            { required: true, message: "Prompt name is required" },
-            {
-              pattern: new RegExp("^(?:[A-Z][a-z0-9]*)+$"),
-              message:
-                "Prompt name must be pascal case (e.g. RecommendProduct)",
-            },
-          ]}
+          rules={[{ required: true, message: "Prompt name is required" }]}
         >
           <Input placeholder="e.g. RecommendProduct" />
         </Form.Item>

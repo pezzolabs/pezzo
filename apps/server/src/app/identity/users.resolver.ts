@@ -23,7 +23,11 @@ export class UsersResolver {
   @Query(() => ExtendedUser)
   async me(@CurrentUser() userInfo: RequestUser) {
     this.logger.info(
-      { userId: userInfo.id, email: userInfo.email },
+      {
+        userId: userInfo.id,
+        email: userInfo.email,
+        supertokensUserId: userInfo.supertokensUserId,
+      },
       "Getting user"
     );
 
@@ -38,7 +42,7 @@ export class UsersResolver {
     );
 
     const { metadata } = (await UserMetadata.getUserMetadata(
-      userInfo.id
+      userInfo.supertokensUserId
     )) as SupertokensMetadata;
 
     if (metadata) {

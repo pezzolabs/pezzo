@@ -11,7 +11,6 @@ import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpass
 import { UsersService } from "../identity/users.service";
 import { RequestUser } from "../identity/users.types";
 import Session, { SessionContainer } from "supertokens-node/recipe/session";
-import { ProjectsService } from "../identity/projects.service";
 import { PinoLogger } from "../logger/pino-logger";
 
 export enum AuthMethod {
@@ -23,7 +22,6 @@ export enum AuthMethod {
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly usersService: UsersService,
-    private readonly projectsService: ProjectsService,
     private readonly logger: PinoLogger
   ) {}
 
@@ -58,18 +56,21 @@ export class AuthGuard implements CanActivate {
 
     req["supertokensUser"] = supertokensUser;
 
+    const user = await this.usersService.getUser(supertokensUser.email);
+
+    if (!user) {
+      throw new UnauthorizedException("User not found");
+    }
+
     try {
-      const projects = await this.projectsService.getProjectsByUser(
-        supertokensUser.email
-      );
       const memberships = await this.usersService.getUserOrgMemberships(
         supertokensUser.email
       );
 
       const reqUser: RequestUser = {
-        id: supertokensUser.id,
-        email: supertokensUser.email,
-        projects: projects.map((p) => ({ id: p.id })),
+        id: user.id,
+        supertokensUserId: supertokensUser.id,
+        email: user.email,
         orgMemberships: memberships.map((m) => ({
           organizationId: m.organizationId,
           memberSince: m.createdAt,

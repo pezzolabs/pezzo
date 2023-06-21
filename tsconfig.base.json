@@ -19,7 +19,8 @@
       "@pezzo/common": ["libs/common/src/index.ts"],
       "@pezzo/common/components": ["libs/common/src/components"],
       "@pezzo/integrations": ["libs/integrations/src/index.ts"],
-      "@pezzo/integrations/*": ["libs/integrations/src/*"]
+      "@pezzo/integrations/*": ["libs/integrations/src/*"],
+      "@pezzo/kafka": ["libs/kafka/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

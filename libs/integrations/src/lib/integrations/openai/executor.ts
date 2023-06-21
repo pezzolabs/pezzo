@@ -1,6 +1,6 @@
 import { BaseExecutor, ExecuteProps, ExecuteResult } from "../base-executor";
 import { Pezzo } from "@pezzo/client";
-import { OpenAIIntegrationSettings, ExecutorOptions } from "./types";
+import { OpenAIIntegrationSettings } from "./types";
 import { ConfigurationParameters, OpenAIApi } from "openai";
 import { initSdk } from "./sdk";
 
@@ -80,9 +80,23 @@ export class OpenAIExecutor extends BaseExecutor {
     promptTokens: number,
     completionTokens: number
   ) {
-    const costPer1000TokensPrompt = model === "gpt-4" ? 0.03 : 0.002;
-    const costPer1000TokensCompletions =
-      model === "gpt-3.5-turbo" ? 0.06 : 0.002;
+    let costPer1000TokensPrompt = 0;
+    let costPer1000TokensCompletions = 0;
+
+    switch (model) {
+      case "gpt-3.5-turbo":
+        costPer1000TokensPrompt = 0.0015;
+        costPer1000TokensCompletions = 0.002;
+        break;
+      case "gpt-4":
+        costPer1000TokensPrompt = 0.03;
+        costPer1000TokensCompletions = 0.06;
+        break;
+      case "gpt-3.5-turbo-16k":
+        costPer1000TokensPrompt = 0.003;
+        costPer1000TokensCompletions = 0.004;
+        break;
+    }
 
     const promptCost = (promptTokens / 1000) * costPer1000TokensPrompt;
     const completionCost =

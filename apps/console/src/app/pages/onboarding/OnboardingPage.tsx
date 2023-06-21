@@ -1,23 +1,13 @@
-import { InfoCircleFilled, LoadingOutlined } from "@ant-design/icons";
-import {
-  Button,
-  Col,
-  Input,
-  Row,
-  Space,
-  Tooltip,
-  Typography,
-  Card,
-  theme,
-} from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Button, Col, Input, Row, Space, Typography, Card, theme } from "antd";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
-import { useGetProjects } from "../../lib/hooks/queries";
+import { useGetProjects } from "../../graphql/hooks/queries";
 import {
   useCreateProjectMutation,
   useUpdateCurrentUserMutation,
-} from "../../lib/hooks/mutations";
+} from "../../graphql/hooks/mutations";
 import { useCallback, useEffect } from "react";
 import { Form } from "antd";
 import {
@@ -25,6 +15,7 @@ import {
   UpdateProfileMutation,
 } from "../../../@generated/graphql/graphql";
 import { useAuthContext } from "../../lib/providers/AuthProvider";
+import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
 
 const StyledButton = styled(Button)<{ spacing: number }>`
   margin-top: ${(props) => props.spacing}px;
@@ -43,12 +34,13 @@ interface FormValues {
 }
 export const OnboardingPage = () => {
   const [form] = Form.useForm<FormValues>();
+  const { organization } = useCurrentOrganization();
   const { mutateAsync: updateCurrentUser, isLoading: isUpdatingUserLoading } =
     useUpdateCurrentUserMutation();
   const { mutateAsync: createProject, isLoading: isProjectCreationLoading } =
     useCreateProjectMutation();
 
-  const { data: projectsData, isLoading: isProjectsLoading } = useGetProjects();
+  const { projects, isLoading: isProjectsLoading } = useGetProjects();
 
   const { currentUser } = useAuthContext();
 
@@ -66,7 +58,7 @@ export const OnboardingPage = () => {
       ] = [
         createProject({
           name: values.projectName,
-          organizationId: currentUser.organizationIds[0],
+          organizationId: organization?.id,
         }),
         null,
       ];
@@ -82,14 +74,14 @@ export const OnboardingPage = () => {
       await Promise.all(actions.filter(Boolean));
       return navigate("/projects");
     },
-    [updateCurrentUser, createProject, currentUser, hasName, navigate]
+    [updateCurrentUser, createProject, organization?.id, hasName, navigate]
   );
 
   useEffect(() => {
-    if (projectsData?.projects && projectsData?.projects.length > 0) {
+    if (projects && projects.length > 0) {
       navigate("/projects", { replace: true });
     }
-  }, [projectsData, navigate]);
+  }, [projects, navigate]);
 
   if (isProjectsLoading) {
     return <LoadingOutlined />;
@@ -128,14 +120,9 @@ export const OnboardingPage = () => {
               <Row gutter={4} align="middle">
                 <Col>
                   <Typography.Text>
-                    How do you wanna call your first project?
+                    How do you want to call your first project?
                   </Typography.Text>
                 </Col>
-                <Tooltip title="A project is a collection of prompts">
-                  <Col flex="grow">
-                    <Button type="text" icon={<InfoCircleFilled />} />
-                  </Col>
-                </Tooltip>
               </Row>
 
               <Form.Item
@@ -143,11 +130,11 @@ export const OnboardingPage = () => {
                 rules={[
                   {
                     required: true,
-                    message: "Please set a name to your project",
+                    message: "You must enter a valid project name",
                   },
                 ]}
               >
-                <Input placeholder="Content Creation" />
+                <Input placeholder="e.g. Content Creation" />
               </Form.Item>
             </VerticalSpace>
 
@@ -157,7 +144,7 @@ export const OnboardingPage = () => {
                 htmlType="submit"
                 loading={isCreatingProject}
               >
-                Create a project <ArrowRightOutlined />
+                Create Project <ArrowRightOutlined />
               </StyledButton>
             </Row>
           </Form>

@@ -29,13 +29,13 @@ jobs:
     permissions:
       packages: write
     steps:
+      - name: Set variables
+        id: variables
+        run: echo "::set-output name=short_sha::$(echo ${{ github.sha }} | cut -c1-7)"
+
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
-      - uses: nrwl/nx-set-shas@v3
-        with:
-          main-branch-name: ${{ env.BASE }}
 
       - name: Cache node modules
         id: cache
@@ -74,6 +74,17 @@ jobs:
           name: dist-artifact
           path: ./dist
 
+      - name: "Dispatch CI"
+        uses: octokit/request-action@v2.x
+        with:
+          route: POST /repos/{owner}/{repo}/dispatches
+          owner: pezzolabs
+          repo: pezzo-private
+          event_type: "CI (Dispatched)"
+          client_payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "shortSha": "${{ steps.variables.outputs.short_sha }}"}'
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_DISPATCH_TOKEN }}
+
   dockerize:
     name: Dockerize
     needs: ci
@@ -82,7 +93,7 @@ jobs:
       matrix:
         project: ["server", "console"]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 

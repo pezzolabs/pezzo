@@ -3,26 +3,24 @@ import {
   Col,
   Dropdown,
   Layout,
-  Menu,
   MenuProps,
   Row,
   Space,
-  Tag,
   Typography,
 } from "antd";
 import styled from "@emotion/styled";
-import LogoSquare from "../../../assets/logo.svg";
+import LogoSquare from "../../../assets/logo-square.svg";
 import { colors } from "../../lib/theme/colors";
 import { useAuthContext } from "../../lib/providers/AuthProvider";
-import { DownOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import {
   ArrowRightOnRectangleIcon,
   QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";
-import { signOut } from "supertokens-auth-react/recipe/session";
+import { signOut } from "../../lib/utils/sign-out";
 import { useNavigate } from "react-router-dom";
 import { Avatar } from "../common/Avatar";
+import { OrgSelector } from "../organizations/OrgSelector";
 
 const Logo = styled.img`
   height: 40px;
@@ -82,7 +80,7 @@ export const Header = () => {
         display: "flex",
         alignItems: "center",
         background: "#141414",
-        borderBottom: `1px solid ${colors.neutral["700"]}`,
+        borderBottom: `1px solid ${colors.neutral["800"]}`,
       }}
     >
       <div style={{ display: "flex", alignItems: "center" }}>
@@ -90,10 +88,16 @@ export const Header = () => {
           <a href="/">
             <Logo src={LogoSquare} alt="Logo" />
           </a>
-          <Tag color={colors.indigo[500]} style={{ fontSize: 10 }}>
-            BETA
-          </Tag>
         </Space>
+      </div>
+
+      <div
+        style={{
+          marginLeft: 19,
+          borderLeft: `1px solid ${colors.neutral["800"]}`,
+        }}
+      >
+        <span style={{ visibility: "hidden" }}>Pezzo</span>
       </div>
 
       <div
@@ -104,13 +108,22 @@ export const Header = () => {
           justifyContent: "flex-end",
         }}
       >
+        <div
+          style={{
+            marginRight: 19,
+            borderRight: `1px solid ${colors.neutral["800"]}`,
+          }}
+        >
+          <OrgSelector />
+        </div>
+
         <Dropdown
+          arrow={false}
           menu={{
             items: menuItems,
             onClick: async (info) => {
               if (info.key === "signout") {
                 await signOut();
-                window.location.href = "/login";
               }
 
               if (info.key === "info") {
@@ -130,17 +143,11 @@ export const Header = () => {
                 <Typography.Text type="secondary">
                   {currentUser.name}
                 </Typography.Text>
-                <DownOutlined
-                  style={{ color: colors.neutral[300], width: 12, height: 12 }}
-                  rotate={open ? 180 : 0}
-                />
               </Space>
             </UserProfileButton>
           )}
         </Dropdown>
       </div>
-
-      <Menu theme="dark" mode="horizontal" />
     </Layout.Header>
   );
 };

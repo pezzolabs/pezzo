@@ -1,4 +1,11 @@
-import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from "@nestjs/graphql";
 import { Project } from "../../@generated/project/project.model";
 import { CreateProjectInput } from "./inputs/create-project.input";
 import { ProjectsService } from "./projects.service";
@@ -16,6 +23,8 @@ import { slugify } from "@pezzo/common";
 import { ProjectWhereUniqueInput } from "../../@generated/project/project-where-unique.input";
 import { PinoLogger } from "../logger/pino-logger";
 import { AnalyticsService } from "../analytics/analytics.service";
+import { Organization } from "../../@generated/organization/organization.model";
+import { GetProjectsInput } from "./inputs/get-projects.input";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Project)
@@ -51,12 +60,16 @@ export class ProjectsResolver {
   }
 
   @Query(() => [Project])
-  async projects(@CurrentUser() user: RequestUser) {
-    const orgId = user.orgMemberships[0].organizationId;
-    this.logger.assign({ orgId }).info("Getting projects");
+  async projects(
+    @Args("data") data: GetProjectsInput,
+    @CurrentUser() user: RequestUser
+  ) {
+    const { organizationId } = data;
+    isOrgMemberOrThrow(user, organizationId);
+    this.logger.assign({ organizationId }).info("Getting projects");
 
     try {
-      return this.projectsService.getProjectsByOrgId(orgId);
+      return this.projectsService.getProjectsByOrgId(organizationId);
     } catch (error) {
       this.logger.error({ error }, "Error getting projects");
       throw new InternalServerErrorException();
@@ -69,7 +82,7 @@ export class ProjectsResolver {
     @CurrentUser() user: RequestUser
   ) {
     const { organizationId, name } = data;
-    isOrgAdminOrThrow(user, organizationId);
+
     this.logger.assign({ organizationId, name }).info("Creating project");
 
     const slug = slugify(data.name);
@@ -93,8 +106,7 @@ export class ProjectsResolver {
       const project = await this.projectsService.createProject(
         data.name,
         slug,
-        data.organizationId,
-        user.id
+        data.organizationId
       );
 
       this.analytics.track("PROJECT:CREATED", user.id, {
@@ -107,5 +119,10 @@ export class ProjectsResolver {
       this.logger.error({ error }, "Error creating project");
       throw new InternalServerErrorException();
     }
+  }
+
+  @ResolveField(() => Organization)
+  async oganization(@Parent() project: Project) {
+    return project.organization;
   }
 }

@@ -1,0 +1,3 @@
+[submodule "pezzo-private"]
+	path = pezzo-private
+	url = git@github.com:pezzolabs/pezzo-private.git

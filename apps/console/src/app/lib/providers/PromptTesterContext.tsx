@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { TEST_PROMPT } from "../../graphql/mutations/prompts";
+import { TEST_PROMPT } from "../../graphql/definitions/mutations/prompts";
 import { gqlClient } from "../graphql";
 import {
   GetPromptExecutionQuery,

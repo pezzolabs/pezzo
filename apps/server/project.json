@@ -18,17 +18,13 @@
         "assets": [
           "apps/server/src/assets",
           {
-            "glob": "entrypoint.sh",
-            "input": "apps/server",
-            "output": "."
-          },
-          {
             "glob": "prisma",
             "input": "apps/server",
             "output": "prisma"
           }
         ],
-        "isolatedConfig": true,
+        "isolatedConfig": false,
+        "sourceMap": true,
         "webpackConfig": "apps/server/webpack.config.js"
       },
       "configurations": {
@@ -110,7 +106,7 @@
       "options": {},
       "configurations": {
         "local": {
-          "tags": ["pezzolabs/pezzo/server"],
+          "tags": ["pezzolabs/pezzo-private/notifications-service"],
           "push": false
         }
       }

@@ -1,11 +1,11 @@
 import { Avatar as AntdAvatar, AvatarProps } from "antd";
-import { GetMeQuery } from "../../../@generated/graphql/graphql";
-
-type User = GetMeQuery["me"];
+import { ExtendedUser } from "../../../@generated/graphql/graphql";
+import { useMemo } from "react";
 
 interface Props {
-  user: User;
+  user: Partial<ExtendedUser>;
   size: AvatarProps["size"];
+  style?: AvatarProps["style"];
 }
 
 const buildInitials = (name: string) => {
@@ -15,12 +15,11 @@ const buildInitials = (name: string) => {
   return `${firstName[0]}${lastName[0]}`;
 };
 
-export const Avatar = ({ user, size }: Props) => {
+export const Avatar = ({ user, size, style }: Props) => {
+  const photoUrl = useMemo(() => user.photoUrl || undefined, [user.photoUrl]);
+
   return (
-    <AntdAvatar
-      size={size}
-      src={user.photoUrl ? <img src={user.photoUrl} alt="avatar" /> : undefined}
-    >
+    <AntdAvatar size={size} src={photoUrl} style={style}>
       {buildInitials(user.name || "")}
     </AntdAvatar>
   );

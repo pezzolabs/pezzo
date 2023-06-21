@@ -1,0 +1,28 @@
+{
+  "name": "kafka",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/kafka/src",
+  "projectType": "library",
+  "implicitDependencies": ["server"],
+  "targets": {
+    "build": {
+      "dependsOn": ["^build"],
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/kafka",
+        "main": "libs/kafka/src/index.ts",
+        "tsConfig": "libs/kafka/tsconfig.lib.json",
+        "assets": ["libs/kafka/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/kafka/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}
