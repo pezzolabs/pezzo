@@ -9,7 +9,6 @@ interface Props {
 
 export const PromptSettings = ({ integrationId, model }: Props) => {
   const integration = getIntegration(integrationId);
-
   const settings = integration.generateSchema(model);
 
   const commonStyle = {

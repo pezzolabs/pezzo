@@ -24,7 +24,7 @@ function findVariables(text: string): Record<string, null> {
 
 export const getDraftPromptData = (integrationId: string) => {
   return {
-    content: "Start typing your prompt here...",
+    content: "",
     settings: getIntegration(integrationId).defaultSettings,
   };
 };
