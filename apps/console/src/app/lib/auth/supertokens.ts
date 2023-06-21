@@ -67,7 +67,7 @@ export const initSuperTokens = () => {
                     --palette-textTitle: 255, 255, 255;
                     --palette-textLabel: 255, 255, 255;
                     --palette-textPrimary: 255, 255, 255;
-                    --palette-primary: ${toRgba(colors.indigo[400])};
+                    --palette-primary: ${toRgba("#5FDD97")};
                     --palette-error: 173, 46, 46;
                     --palette-textInput: 169, 169, 169;
                     --palette-textLink: 169, 169, 169;
@@ -78,6 +78,7 @@ export const initSuperTokens = () => {
                     justify-content: center;
                     flex-direction: column;
                     border-radius: 0;
+                    font-family: "Brockmann" !important;
                 }
                 [data-supertokens~=divider] {
                   border-bottom: 0.3px solid ${colors.neutral[600]};
@@ -95,7 +96,7 @@ export const initSuperTokens = () => {
                   border: none;
                 }
                  [data-supertokens=button] {
-                    background-color: ${colors.indigo[400]};
+                    background-color: ${"#5FDD97"};
                     border: 0px;
                     width: 100%;
                     margin: 0 auto;

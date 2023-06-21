@@ -4,16 +4,17 @@ import {
   HistoryOutlined,
   DashboardOutlined,
   BranchesOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import { PromptHistoryView } from "../../../components/prompts/views/PromptHistoryView";
 import { PromptEditView } from "../../../components/prompts/views/PromptEditView";
-import { DeletePromptConfirmationModal } from "../../../components/prompts/DeletePromptConfirmationModal";
 import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
 import { DashboardView } from "../../../components/prompts/views/DashboardView";
 import { useParams } from "react-router-dom";
 import { PromptVersionsView } from "../../../components/prompts/views/PromptVersionsView";
+import { PromptSettingsView } from "../../../components/prompts/views/PromptSettingsView";
 
 const TabLabel = styled.div`
   display: inline-block;
@@ -25,8 +26,6 @@ export const PromptPage = () => {
   const params = useParams();
   const { setCurrentPromptId, prompt, isLoading } = useCurrentPrompt();
   const [activeView, setActiveView] = useState("dashboard");
-  const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] =
-    useState(false);
 
   useEffect(() => {
     if (params.promptId) {
@@ -67,16 +66,18 @@ export const PromptPage = () => {
       ),
       key: "history",
     },
+    {
+      label: (
+        <TabLabel>
+          <SettingOutlined /> Settings
+        </TabLabel>
+      ),
+      key: "settings",
+    },
   ];
 
   return (
     <Spin size="large" spinning={isLoading}>
-      <DeletePromptConfirmationModal
-        open={isDeleteConfirmationModalOpen}
-        onClose={() => setIsDeleteConfirmationModalOpen(false)}
-        onConfirm={() => setIsDeleteConfirmationModalOpen(false)}
-      />
-
       <Tabs
         items={tabs}
         onChange={(selectedView) => setActiveView(selectedView)}
@@ -88,6 +89,7 @@ export const PromptPage = () => {
           {activeView === "edit" && <PromptEditView />}
           {activeView === "versions" && <PromptVersionsView />}
           {activeView === "dashboard" && <DashboardView />}
+          {activeView === "settings" && <PromptSettingsView />}
         </>
       )}
     </Spin>

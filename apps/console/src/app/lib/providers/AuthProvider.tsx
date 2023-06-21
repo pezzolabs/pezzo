@@ -2,11 +2,12 @@ import styled from "@emotion/styled";
 import { hotjar } from "react-hotjar";
 import { Col, Empty, Row } from "antd";
 import { createContext, useContext, useEffect, useMemo } from "react";
-import { useGetCurrentUser } from "../hooks/queries";
+import { useGetCurrentUser } from "../../graphql/hooks/queries";
 import { GetMeQuery } from "../../../@generated/graphql/graphql";
 import { LayoutWrapper } from "../../components/layout/LayoutWrapper";
 import { Loading3QuartersOutlined } from "@ant-design/icons";
 import { colors } from "../theme/colors";
+import { Loader } from "../../components/common/Loader";
 
 const SpinnerOverlay = styled(Row)`
   height: 100%;
@@ -54,10 +55,7 @@ export const AuthProvider = ({ children }) => {
           <Row justify="center" align="middle" style={{ height: "100%" }}>
             <Col>
               {isLoading ? (
-                <Loading3QuartersOutlined
-                  style={{ fontSize: 102, color: colors.indigo[400] }}
-                  spin
-                />
+                <Loader />
               ) : (
                 <Empty description="Something went wrong" />
               )}

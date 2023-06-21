@@ -1,5 +1,5 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Card, Space, Spin, Table, Typography, theme } from "antd";
+import { Button, Card, Spin, Typography, theme } from "antd";
 import { CreateEnvironmentModal } from "../../components/environments/CreateEnvironmentModal";
 import { useState } from "react";
 import { useEnvironments } from "../../lib/hooks/useEnvironments";
@@ -31,7 +31,11 @@ export const EnvironmentsPage = () => {
 
         {environments &&
           environments.map((e) => (
-            <Card style={{ marginBottom: 10, maxWidth: 600 }} size="small">
+            <Card
+              key={e.id}
+              style={{ marginBottom: 10, maxWidth: 600 }}
+              size="small"
+            >
               {e.name}
             </Card>
           ))}

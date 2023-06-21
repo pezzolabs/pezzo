@@ -11,38 +11,37 @@ interface Props {
 
 export const PromptEditor = ({ value, onChange }: Props) => {
   return (
-    <>
-      <Form.Item name="content">
-        <CodeMirror
-          onChange={onChange}
-          className={css`
-            .cm-content {
-              white-space: pre-wrap !important;
-            }
-            .cm-selectionBackground {
-              background: ${colors.slate["400"]} !important;
-            }
-          `}
-          basicSetup={{
-            lineNumbers: false,
-            foldGutter: false,
-            autocompletion: false,
-            crosshairCursor: false,
-            highlightActiveLine: false,
-            highlightSelectionMatches: false,
-          }}
-          extensions={[]}
-          theme={materialInit({
-            settings: {
-              fontFamily: "Roboto Mono",
-              lineHighlight: "red",
-              background: "transaprent",
-            },
-          })}
-          value={value}
-          height="400px"
-        />
-      </Form.Item>
-    </>
+    <Form.Item name="content">
+      <CodeMirror
+        onChange={onChange}
+        placeholder="Start typing your prompt here..."
+        className={css`
+          .cm-content {
+            white-space: pre-wrap !important;
+          }
+          .cm-selectionBackground {
+            background: ${colors.slate["400"]} !important;
+          }
+        `}
+        basicSetup={{
+          lineNumbers: false,
+          foldGutter: false,
+          autocompletion: false,
+          crosshairCursor: false,
+          highlightActiveLine: false,
+          highlightSelectionMatches: false,
+        }}
+        extensions={[]}
+        theme={materialInit({
+          settings: {
+            fontFamily: "Roboto Mono",
+            lineHighlight: "red",
+            background: "transparent",
+          },
+        })}
+        value={value}
+        height="400px"
+      />
+    </Form.Item>
   );
 };

@@ -5,17 +5,18 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "dependsOn": ["^graphql:codegen:offline", "^prebuild", "prebuild"],
+      "dependsOn": ["^graphql:codegen:offline", "^prebuild", "^build"],
       "executor": "@nrwl/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "compiler": "swc",
+        "compiler": "babel",
         "outputPath": "dist/apps/console",
         "index": "apps/console/src/index.html",
         "baseHref": "/",
         "main": "apps/console/src/main.tsx",
         "tsConfig": "apps/console/tsconfig.app.json",
+        "sourceMap": true,
         "assets": [
           "apps/console/src/favicon.ico",
           "apps/console/src/assets",
@@ -32,14 +33,14 @@
         ],
         "styles": [],
         "scripts": [],
-        "isolatedConfig": true,
-        "webpackConfig": "apps/console/webpack.config.js"
+        "isolatedConfig": false,
+        "webpackConfig": "apps/console/webpack.config.js",
+        "buildLibsFromSource": true
       },
       "configurations": {
         "development": {
           "extractLicenses": false,
           "optimization": false,
-          "sourceMap": true,
           "vendorChunk": true
         },
         "production": {
@@ -51,7 +52,6 @@
           ],
           "optimization": true,
           "outputHashing": "all",
-          "sourceMap": false,
           "namedChunks": false,
           "extractLicenses": true,
           "vendorChunk": false

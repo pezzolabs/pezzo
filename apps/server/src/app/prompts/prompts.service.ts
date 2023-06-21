@@ -40,6 +40,14 @@ export class PromptsService {
     return prompt;
   }
 
+  async deletePrompt(id: string) {
+    return this.prisma.prompt.delete({
+      where: {
+        id,
+      },
+    });
+  }
+
   async createPromptVersion(
     data: CreatePromptVersionInput,
     createdByUserId: string

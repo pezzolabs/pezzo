@@ -22,7 +22,7 @@ import { PromptVersionSelector } from "../PromptVersionSelector";
 import { CommitPromptModal } from "../CommitPromptModal";
 import { PublishPromptModal } from "../PublishPromptModal";
 import { ConsumePromptModal } from "../ConsumePromptModal";
-import { useProviderApiKeys } from "../../../lib/hooks/queries";
+import { useProviderApiKeys } from "../../../graphql/hooks/queries";
 
 export const PromptEditView = () => {
   const {
@@ -173,7 +173,10 @@ export const PromptEditView = () => {
                 size="middle"
               >
                 <Card title="Settings">
-                  <PromptSettings integrationId={prompt.integrationId} />
+                  <PromptSettings
+                    integrationId={prompt.integrationId}
+                    model={form.getFieldsValue().settings?.model}
+                  />
                 </Card>
 
                 <Card title="Variables">

@@ -8,6 +8,7 @@ import {
   YAxis,
 } from "recharts";
 import { useMetric } from "../../../lib/providers/MetricContext";
+import { colors } from "../../../lib/theme/colors";
 
 interface Props {
   tooltipFormatter?: (value: string) => string;
@@ -36,7 +37,7 @@ export const SimpleChart = ({ tooltipFormatter, lineLabel }: Props) => {
           type="monotone"
           dataKey="value"
           name={lineLabel}
-          stroke="#8884d8"
+          stroke={colors.zinc["500"]}
         />
       </LineChart>
     </ResponsiveContainer>

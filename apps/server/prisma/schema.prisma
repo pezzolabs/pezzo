@@ -31,7 +31,7 @@ model PromptVersion {
   content            String
   settings           Json
   promptId           String
-  prompt             Prompt              @relation(fields: [promptId], references: [id])
+  prompt             Prompt              @relation(fields: [promptId], references: [id], onDelete: Cascade)
   createdAt          DateTime            @default(now())
   promptEnvironments PromptEnvironment[]
   message            String?
@@ -47,30 +47,19 @@ model User {
   createdAt             DateTime?            @default(now())
   updatedAt             DateTime?            @updatedAt
   orgMemberships        OrganizationMember[]
-  projectMemberships    ProjectMember[]
   publishedPrompts      PromptEnvironment[]
   createdPromptVersions PromptVersion[]
+  sentInvitations       Invitation[]
 }
 
 model Project {
-  id              String           @id @default(cuid())
-  slug            String
-  name            String
-  organization    Organization     @relation(fields: [organizationId], references: [id])
-  organizationId  String
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  members         ProjectMember[]
-}
-
-model ProjectMember {
-  id        String   @id @default(cuid())
-  projectId String
-  userId    String
-  project   Project  @relation(fields: [projectId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String       @id @default(cuid())
+  slug           String
+  name           String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }
 
 model Organization {
@@ -82,6 +71,7 @@ model Organization {
   projects        Project[]
   apiKeys         ApiKey[]
   providerApiKeys ProviderApiKey[]
+  invitations     Invitation[]
 }
 
 model OrganizationMember {
@@ -90,13 +80,35 @@ model OrganizationMember {
   userId         String
   role           OrgRole      @default(Admin)
   organization   Organization @relation(fields: [organizationId], references: [id])
+  /// @FieldType('ExtendedUser')
+  /// @PropertyType('ExtendedUser')
   user           User         @relation(fields: [userId], references: [id])
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 }
 
+model Invitation {
+  id             String           @id @default(cuid())
+  email          String
+  role           OrgRole
+  status         InvitationStatus
+  createdAt      DateTime         @default(now())
+  organizationId String
+  organization   Organization     @relation(fields: [organizationId], references: [id])
+  invitedById    String
+  /// @FieldType('ExtendedUser')
+  /// @PropertyType('ExtendedUser')
+  invitedBy      User             @relation(fields: [invitedById], references: [id])
+}
+
+enum InvitationStatus {
+  Pending
+  Accepted
+}
+
 enum OrgRole {
   Admin
+  Member
 }
 
 model Environment {
@@ -109,11 +121,11 @@ model Environment {
 }
 
 model ApiKey {
-  id             String        @id
-  name           String        @default("Default")
+  id             String       @id
+  name           String       @default("Default")
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
-  createdAt      DateTime      @default(now())
+  createdAt      DateTime     @default(now())
 }
 
 model Prompt {
@@ -133,7 +145,7 @@ model PromptEnvironment {
   promptId         String
   environmentId    String
   createdAt        DateTime       @default(now())
-  prompt           Prompt         @relation(fields: [promptId], references: [id])
+  prompt           Prompt         @relation(fields: [promptId], references: [id], onDelete: Cascade)
   promptVersionSha String
   promptVersion    PromptVersion? @relation(fields: [promptVersionSha], references: [sha])
   environment      Environment    @relation(fields: [environmentId], references: [id])
@@ -143,7 +155,7 @@ model PromptEnvironment {
 
 model PromptExecution {
   id                  String                @id @default(cuid())
-  prompt              Prompt                @relation(fields: [promptId], references: [id])
+  prompt              Prompt                @relation(fields: [promptId], references: [id], onDelete: Cascade)
   promptId            String
   promptVersionSha    String
   environmentId       String

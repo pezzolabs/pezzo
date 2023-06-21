@@ -6,7 +6,8 @@
     "allowSyntheticDefaultImports": true,
     "strict": false,
     "jsxImportSource": "@emotion/react",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "sourceMap": true
   },
   "files": [],
   "include": [],

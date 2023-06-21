@@ -3,7 +3,7 @@ interface BaseFormField {
   name: string[];
 }
 
-interface SelectFormField extends BaseFormField {
+export interface SelectFormField extends BaseFormField {
   type: "select";
   defaultValue: string;
   options: {
@@ -12,13 +12,13 @@ interface SelectFormField extends BaseFormField {
   }[];
 }
 
-interface SliderFormField extends BaseFormField {
+export interface SliderFormField extends BaseFormField {
   type: "slider";
   min: number;
   max: number;
   step: number;
 }
 
-type FormField = SelectFormField | SliderFormField;
+export type FormField = SelectFormField | SliderFormField;
 
 export type FormSchema = FormField[];

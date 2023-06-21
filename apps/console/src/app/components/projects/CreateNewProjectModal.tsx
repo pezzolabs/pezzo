@@ -1,7 +1,7 @@
 import { Alert, Form, Input, Modal, Space, Typography, theme } from "antd";
 import { useCallback } from "react";
-import { useCreateProjectMutation } from "../../lib/hooks/mutations";
-import { useAuthContext } from "../../lib/providers/AuthProvider";
+import { useCreateProjectMutation } from "../../graphql/hooks/mutations";
+import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
 
 interface Props {
   open: boolean;
@@ -11,6 +11,7 @@ interface Props {
 
 export const CreateNewProjectModal = ({ open, onClose, onCreated }: Props) => {
   const [form] = Form.useForm<{ projectName: string }>();
+  const { organization } = useCurrentOrganization();
   const {
     mutateAsync: createProject,
     error,
@@ -21,17 +22,16 @@ export const CreateNewProjectModal = ({ open, onClose, onCreated }: Props) => {
       onCreated();
     },
   });
-  const { currentUser } = useAuthContext();
   const { token } = theme.useToken();
 
   const handleCreateProject = useCallback(async () => {
     void createProject({
       name: form.getFieldValue("projectName"),
-      organizationId: currentUser.organizationIds[0],
+      organizationId: organization.id,
     }).catch(() => {
       form.resetFields();
     });
-  }, [currentUser, createProject, form]);
+  }, [createProject, form, organization.id]);
 
   return (
     <Modal
