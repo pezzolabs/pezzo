@@ -1,6 +1,6 @@
 import { BaseExecutor, ExecuteProps, ExecuteResult } from "../base-executor";
 import { Pezzo } from "@pezzo/client";
-import { OpenAIIntegrationSettings, ExecutorOptions } from "./types";
+import { OpenAIIntegrationSettings } from "./types";
 import { ConfigurationParameters, OpenAIApi } from "openai";
 import { initSdk } from "./sdk";
 
@@ -93,8 +93,8 @@ export class OpenAIExecutor extends BaseExecutor {
         costPer1000TokensCompletions = 0.06;
         break;
       case "gpt-3.5-turbo-16k":
-        costPer1000TokensCompletions = 0.004;
         costPer1000TokensPrompt = 0.003;
+        costPer1000TokensCompletions = 0.004;
         break;
     }
 
