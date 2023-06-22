@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { IntegrationBaseSettings, PromptExecutionStatus } from "../types";
+import { IntegrationBaseSettings } from "../types";
 import type { CreatePromptExecutionDto } from "./create-prompt-execution.dto";
 import {
   ProviderType,
@@ -43,18 +43,9 @@ export class Pezzo {
         "x-api-key": this.options.apiKey,
       },
     });
-
-    this.OpenAIApi = function (
-      ...args: ConstructorParameters<typeof PezzoOpenAIApi>
-    ) {
-      const pezzoOpenAIApi = new PezzoOpenAIApi(...args);
-      pezzoOpenAIApi.reportFn = (duration) =>
-        console.log("oxel ugiyot", duration);
-      return pezzoOpenAIApi;
-    } as unknown as PezzoOpenAIApi;
   }
 
-  async reportPromptExecution<TResult extends unknown>(
+  async reportPromptExecution<TResult>(
     dto: CreatePromptExecutionDto,
     autoParseJSON?: boolean
   ): Promise<ReportPromptExecutionResult<TResult>> {
@@ -66,8 +57,8 @@ export class Pezzo {
       const report = {
         ...data,
         result: autoParseJSON
-          ? (JSON.parse(data.result) as T)
-          : (data.result as T),
+          ? (JSON.parse(data.result) as TResult)
+          : (data.result as TResult),
       };
 
       return report;
@@ -95,7 +86,6 @@ export class Pezzo {
 
   async getPrompt<TProviderType extends ProviderType>(
     promptName: string,
-    // TODO: define a type for this
     options?: GetPromptOptions
   ): Promise<Prompt<TProviderType>> {
     const url = new URL(`${this.options.serverUrl}/api/prompts/deployment`);
@@ -104,10 +94,11 @@ export class Pezzo {
 
     const { data } = await this.axios.get<PromptVersion>(url.toString());
 
-    let content = data.content;
+    const content = data.content;
+    let interpolatedContent = data.content;
 
     if (options?.variables) {
-      content = interpolateVariables(data.content, options.variables);
+      interpolatedContent = interpolateVariables(data.content, options.variables);
     }
 
     return {
@@ -116,6 +107,15 @@ export class Pezzo {
       ...getPromptSettings({
         settings: data.settings as Record<string, unknown>,
         content,
+        _pezzo: {
+          environmentName: this.options.environment,
+          promptId: data.promptId,
+          promptVersionSha: data.sha,
+          variables: options?.variables,
+          content,
+          interpolatedContent,
+        },
+        interpolatedContent,
       }),
     };
   }
