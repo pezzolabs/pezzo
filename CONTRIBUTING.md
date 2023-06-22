@@ -39,16 +39,16 @@ If you want to help out with a code contribution, our project uses the following
 - [TypeScript](https://www.typescriptlang.org/docs)
 - [Apollo Client](https://www.apollographql.com/docs/react/)
 
-If you don't feel ready to make a code contribution yet, no problem! You can also check out the [documentation issues](https://github.com/amplication/amplication/labels/type%3A%20docs).
+If you don't feel ready to make a code contribution yet, no problem! You can also check out the [documentation issues](https://github.com/pezzolabs/pezzo/labels/type%3A%20docs).
 
-# <a name="submit-pr"></a> How do I make a code contribution?
+# How do I make a code contribution?
 
 ## Good first issues
 
 Are you new to open source contribution? Wondering how contributions work in our project? Here's a quick rundown.
 
 Find an issue that you're interested in addressing, or a feature that you'd like to add.
-You can use [this view](https://github.com/amplication/amplication/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) which helps new contributors find easy gateways into our project.
+You can use [this view](https://github.com/pezzolabs/pezzo/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) which helps new contributors find easy gateways into our project.
 
 ## Step 1: Make a fork
 
