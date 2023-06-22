@@ -1,4 +1,6 @@
 import { OpenAIApi } from "openai";
+import { extractPezzoFromArgs } from "../utils/helpers";
+import { PezzoExtendedArgs } from "../types/helpers";
 
 export interface ExecuteResult {
   status: "Success" | "Error";
@@ -22,13 +24,17 @@ export class PezzoOpenAIApi extends OpenAIApi {
     super(...args);
   }
 
-  override async createChatCompletion(...args) {
+  override async createChatCompletion(
+    ...args: PezzoExtendedArgs<Parameters<OpenAIApi["createChatCompletion"]>>
+  ) {
+    // Parameters<OpenAIApi["createChatCompletion"]>
+    const { pezzo, trimmedArgs } = extractPezzoFromArgs(args);
     const start = performance.now();
-    const result = await super.createChatCompletion.call(this, ...args);
+    const result = await super.createChatCompletion.call(this, ...trimmedArgs);
 
     const end = performance.now();
     const duration = end - start;
-    
+
     this.reportFn(duration);
 
     const { usage } = result.data;
