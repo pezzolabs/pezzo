@@ -7,7 +7,7 @@ import { UPDATE_PROVIDER_API_KEY } from "../../graphql/definitions/mutations/api
 import { gqlClient, queryClient } from "../../lib/graphql";
 import { CreateProviderApiKeyInput } from "../../../@generated/graphql/graphql";
 import { useEffect } from "react";
-import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
+import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
 
 const APIKeyContainer = styled.div`
   display: flex;
@@ -26,7 +26,7 @@ export const ProviderApiKeyListItem = ({
   value,
   iconBase64,
 }: Props) => {
-  const { project } = useCurrentProject();
+  const { currentOrgId } = useCurrentOrganization();
   const updateKeyMutation = useMutation({
     mutationFn: (data: CreateProviderApiKeyInput) =>
       gqlClient.request(UPDATE_PROVIDER_API_KEY, {
@@ -58,7 +58,7 @@ export const ProviderApiKeyListItem = ({
     await updateKeyMutation.mutateAsync({
       provider,
       value: editValue,
-      organizationId: project.organizationId,
+      organizationId: currentOrgId,
     });
     setIsEditing(false);
   };
