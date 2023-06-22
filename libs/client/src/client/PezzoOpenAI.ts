@@ -1,6 +1,8 @@
 import { OpenAIApi } from "openai";
 import { extractPezzoFromArgs } from "../utils/helpers";
 import { PezzoExtendedArgs } from "../types/helpers";
+import { CreatePromptExecutionDto } from "./create-prompt-execution.dto";
+import { ReportPromptExecutionResult } from "../types/prompts";
 
 export interface ExecuteResult {
   status: "Success" | "Error";
@@ -18,7 +20,10 @@ export interface ExecuteResult {
 }
 
 export class PezzoOpenAIApi extends OpenAIApi {
-  public reportFn: (smth: any) => any = () => "";
+  public reportFn: <TResult extends unknown>(
+    dto: CreatePromptExecutionDto,
+    autoParseJSON?: boolean
+  ) => ReportPromptExecutionResult<TResult> = () => null;
 
   constructor(...args) {
     super(...args);
@@ -35,7 +40,28 @@ export class PezzoOpenAIApi extends OpenAIApi {
     const end = performance.now();
     const duration = end - start;
 
-    this.reportFn(duration);
+    const settings = trimmedArgs[0];
+
+    this.reportFn(
+      {
+        promptVersionSha: pezzo.prompt.sha,
+        status: "Error",
+        settings: trimmedArgs[0],
+        variables: pezzo.prompt.variables,
+        content: pezzo.prompt.content,
+        interpolatedContent: pezzo.prompt.interpolatedContent,
+        result: null,
+        error: null,
+        duration,
+        completionCost: 0,
+        completionTokens: 0,
+        promptCost: 0,
+        promptTokens: 0,
+        totalTokens: 0,
+        totalCost: 0,
+      },
+      false
+    );
 
     const { usage } = result.data;
 

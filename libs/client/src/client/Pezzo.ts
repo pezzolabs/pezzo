@@ -1,7 +1,12 @@
 import axios, { AxiosInstance } from "axios";
 import { IntegrationBaseSettings, PromptExecutionStatus } from "../types";
 import type { CreatePromptExecutionDto } from "./create-prompt-execution.dto";
-import { ProviderType, Prompt, getPromptSettings } from "../types/prompts";
+import {
+  ProviderType,
+  Prompt,
+  getPromptSettings,
+  ReportPromptExecutionResult,
+} from "../types/prompts";
 import { PromptVersion } from "../@generated/graphql/graphql";
 import { interpolateVariables } from "../utils";
 import { PezzoOpenAIApi } from "./PezzoOpenAI";
@@ -39,25 +44,20 @@ export class Pezzo {
       },
     });
 
-    this.OpenAIApi = function(...args: ConstructorParameters<typeof PezzoOpenAIApi>) {
+    this.OpenAIApi = function (
+      ...args: ConstructorParameters<typeof PezzoOpenAIApi>
+    ) {
       const pezzoOpenAIApi = new PezzoOpenAIApi(...args);
-      pezzoOpenAIApi.reportFn = (duration) => console.log("oxel ugiyot", duration)
+      pezzoOpenAIApi.reportFn = (duration) =>
+        console.log("oxel ugiyot", duration);
       return pezzoOpenAIApi;
     } as unknown as PezzoOpenAIApi;
   }
 
-  async reportPromptExecution<T>(
+  async reportPromptExecution<TResult extends unknown>(
     dto: CreatePromptExecutionDto,
     autoParseJSON?: boolean
-  ): Promise<{
-    id: string;
-    promptId: string;
-    status: PromptExecutionStatus;
-    result?: T;
-    totalCost: number;
-    totalTokens: number;
-    duration: number;
-  }> {
+  ): Promise<ReportPromptExecutionResult<TResult>> {
     const { data } = await this.axios.post(`prompts/execution`, {
       ...dto,
     });
@@ -96,7 +96,7 @@ export class Pezzo {
   async getPrompt<TProviderType extends ProviderType>(
     promptName: string,
     // TODO: define a type for this
-    options?: GetPromptOptions,
+    options?: GetPromptOptions
   ): Promise<Prompt<TProviderType>> {
     const url = new URL(`${this.options.serverUrl}/api/prompts/deployment`);
     url.searchParams.append("name", promptName);
@@ -113,7 +113,10 @@ export class Pezzo {
     return {
       id: data.promptId,
       deployedVersion: data.sha,
-      ...getPromptSettings({ settings: data.settings as Record<string, unknown>, content }),
+      ...getPromptSettings({
+        settings: data.settings as Record<string, unknown>,
+        content,
+      }),
     };
   }
 

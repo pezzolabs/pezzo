@@ -2,6 +2,7 @@ import {
   CreateChatCompletionRequest as OpenAICreateChatCompletionRequest,
   CreateCompletionRequest as OpenAICreateCompletionRequest,
 } from "openai";
+import { PromptExecutionStatus } from "@pezzo/client";
 
 export enum PromptExecutionType {
   ChatCompletion = "ChatCompletion",
@@ -53,7 +54,7 @@ function chatCompletion(options: {
   const { settings, content } = options;
   return {
     model: settings["model"] as string,
-    ...settings["modelSettings"] as Record<string, unknown>,
+    ...(settings["modelSettings"] as Record<string, unknown>),
     messages: [
       {
         role: "user",
@@ -77,8 +78,18 @@ export function getPromptSettings(options: {
 }): Omit<Prompt, "id" | "deployedVersion"> {
   return {
     getChatCompletionSettings: (overrides) =>
-      chatCompletion({ ...options, ...overrides}),
+      chatCompletion({ ...options, ...overrides }),
     getCompletionSettings: (overrides) =>
       completion({ ...options, ...overrides }),
   };
+}
+
+export interface ReportPromptExecutionResult<TResult extends unknown> {
+  id: string;
+  promptId: string;
+  status: PromptExecutionStatus;
+  result?: TResult;
+  totalCost: number;
+  totalTokens: number;
+  duration: number;
 }

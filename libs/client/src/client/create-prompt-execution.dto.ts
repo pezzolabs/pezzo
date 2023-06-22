@@ -3,7 +3,7 @@ export class CreatePromptExecutionDto {
 
   status: "Success" | "Error";
 
-  settings: Record<string, unknown>;
+  settings: unknown;
 
   variables: Record<string, unknown>;
 
