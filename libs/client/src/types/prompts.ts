@@ -2,7 +2,9 @@ import {
   CreateChatCompletionRequest as OpenAICreateChatCompletionRequest,
   CreateCompletionRequest as OpenAICreateCompletionRequest,
 } from "openai";
-import { PromptExecutionStatus } from "@pezzo/client";
+import { PromptExecutionStatus } from "../types";
+import { PromptVersion } from "../@generated/graphql/graphql";
+import { PezzoInjectedContext } from "./helpers";
 
 export enum PromptExecutionType {
   ChatCompletion = "ChatCompletion",
@@ -32,6 +34,8 @@ type getSettingsFn<
   overrides?: Partial<PromptSettings<TProviderType, TExecutionType>>
 ) => PromptSettings<TProviderType, TExecutionType>;
 
+export type PromptVariables = Record<string, string | number | boolean>;
+
 export interface Prompt<
   TProviderType extends ProviderType = ProviderType.OpenAI
 > {
@@ -50,9 +54,11 @@ export interface Prompt<
 function chatCompletion(options: {
   settings: Record<string, unknown>;
   content: unknown;
-}): OpenAICreateChatCompletionRequest {
-  const { settings, content } = options;
+  _pezzo: PezzoInjectedContext;
+}): OpenAICreateChatCompletionRequest & { _pezzo: PezzoInjectedContext } {
+  const { settings, content, _pezzo } = options;
   return {
+    _pezzo,
     model: settings["model"] as string,
     ...(settings["modelSettings"] as Record<string, unknown>),
     messages: [
@@ -67,24 +73,38 @@ function chatCompletion(options: {
 function completion(options: {
   settings: Record<string, unknown>;
   content: unknown;
-}): OpenAICreateChatCompletionRequest {
-  const { settings } = options;
-  return settings as unknown as OpenAICreateChatCompletionRequest;
+  _pezzo: PezzoInjectedContext;
+}): OpenAICreateCompletionRequest & { _pezzo: PezzoInjectedContext } {
+  const { settings, _pezzo } = options;
+
+  return {
+    model: settings["model"] as string,
+    _pezzo,
+    ...settings,
+  };
 }
 
 export function getPromptSettings(options: {
   settings: Record<string, unknown>;
-  content: unknown;
+  content: string;
+  interpolatedContent: string;
+  _pezzo: PezzoInjectedContext;
 }): Omit<Prompt, "id" | "deployedVersion"> {
+  const obj = {
+    settings: options.settings,
+    content: options.interpolatedContent,
+    _pezzo: options._pezzo,
+  };
+
   return {
-    getChatCompletionSettings: (overrides) =>
-      chatCompletion({ ...options, ...overrides }),
-    getCompletionSettings: (overrides) =>
-      completion({ ...options, ...overrides }),
+    getChatCompletionSettings: () =>
+      chatCompletion(obj),
+    getCompletionSettings: () =>
+      completion(obj),
   };
 }
 
-export interface ReportPromptExecutionResult<TResult extends unknown> {
+export interface ReportPromptExecutionResult<TResult> {
   id: string;
   promptId: string;
   status: PromptExecutionStatus;

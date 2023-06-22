@@ -1,4 +1,8 @@
 export class CreatePromptExecutionDto {
+  environmentName: string;
+
+  promptId: string;
+
   promptVersionSha: string;
 
   status: "Success" | "Error";

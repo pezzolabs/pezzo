@@ -148,6 +148,8 @@ export class PromptsController {
 
     let execution: PromptExecution;
 
+    console.log("before create xaxa")
+
     try {
       execution = await this.prisma.promptExecution.create({
         data: {
@@ -160,7 +162,7 @@ export class PromptsController {
           interpolatedContent: data.interpolatedContent,
           settings: data.settings as any,
           result: data.result,
-          duration: data.duration,
+          duration: Math.ceil(data.duration),
           promptTokens: data.promptTokens,
           completionTokens: data.completionTokens,
           totalTokens: data.totalTokens,
@@ -172,7 +174,8 @@ export class PromptsController {
         },
       });
     } catch (error) {
-      this.logger.error({ error }, "Error reporting prompt execution");
+      console.log("error", error)
+      // this.logger.error({ error }, "Error reporting prompt execution");
       return { success: false };
     }
 
