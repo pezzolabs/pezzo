@@ -8,6 +8,9 @@ export interface PezzoArgInTappedFn {
   prompt: {
     id: string;
     sha: string;
+    variables?: Record<string, unknown>;
+    content: string;
+    interpolatedContent: string;
   };
 }
 
