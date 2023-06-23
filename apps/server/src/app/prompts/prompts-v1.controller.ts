@@ -26,6 +26,10 @@ import { Point } from "@influxdata/influxdb-client";
 import { ApiKeyOrgId } from "../identity/api-key-org-id.decoator";
 import { GetPromptDeploymentDto } from "./dto/get-prompt-deployment.dto";
 
+/**
+ * @deprecated
+ * @description Backwards compatibility for @pezzo/integrations
+ */
 @UseGuards(ApiKeyAuthGuard)
 @Controller("prompts")
 export class PromptsV1Controller {
