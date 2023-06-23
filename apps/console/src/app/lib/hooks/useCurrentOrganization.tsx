@@ -4,6 +4,7 @@ import { GET_ORGANIZATION } from "../../graphql/definitions/queries/organization
 import { useLocalStorage } from "usehooks-ts";
 import { useEffect } from "react";
 import { useOrganizations } from "./useOrganizations";
+import { useParams } from "react-router-dom";
 
 const defaultProps = {
   includeMembers: false,
@@ -15,8 +16,13 @@ export const useCurrentOrganization = ({
   includeInvitations,
 } = defaultProps) => {
   const { organizations } = useOrganizations();
+  const { orgId } = useParams<{ orgId: string }>();
+
   // TODO: currentOrgId in local storage might be different than the actual org if customer has multiple orgs for multiple users
-  const [currentOrgId, setCurrentOrgId] = useLocalStorage("currentOrgId", null);
+  const [currentOrgId, setCurrentOrgId] = useLocalStorage(
+    "currentOrgId",
+    orgId
+  );
 
   useEffect(() => {
     if (organizations && !currentOrgId) {
@@ -24,7 +30,7 @@ export const useCurrentOrganization = ({
     }
   }, [currentOrgId, organizations, setCurrentOrgId]);
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: [
       "currentOrganization",
       currentOrgId,

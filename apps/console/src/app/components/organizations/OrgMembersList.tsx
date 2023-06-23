@@ -97,7 +97,6 @@ export const OrgMembersList = ({ members }: Props) => {
                 </Col>
                 <Space size="large">
                   <Col>
-                    <Typography.Text type="secondary">Role: </Typography.Text>
                     <OrgRoleSelector
                       disabled={
                         !isOrgAdmin || member.user.id === currentUser.id
