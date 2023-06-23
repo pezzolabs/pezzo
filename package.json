@@ -35,6 +35,7 @@
     "@uiw/codemirror-extensions-classname": "^4.21.3",
     "@uiw/codemirror-theme-material": "^4.19.16",
     "@uiw/react-codemirror": "^4.19.16",
+    "ai": "^2.1.7",
     "antd": "^5.4.5",
     "apollo-server-errors": "^3.3.1",
     "apollo-server-express": "^3.12.0",
