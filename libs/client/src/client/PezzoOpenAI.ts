@@ -89,7 +89,7 @@ export class PezzoOpenAIApi extends OpenAIApi {
       );
 
     } catch (error) {
-      console.error("Failed to report prompt execution", error.response.data);
+      console.error("Failed to report prompt execution", error);
     }
 
     if (originalError) {
