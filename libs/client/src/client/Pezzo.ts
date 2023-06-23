@@ -95,12 +95,21 @@ export class Pezzo {
     url.searchParams.append("name", promptName);
     url.searchParams.append("environmentName", this.options.environment);
 
-    const { data } = await this.axios.get<PromptVersion>(url.toString());
+    const response = await fetch(url.toString(), {
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": this.options.apiKey,
+      }
+    });
+    const data = await response.json();
     const content = data.content;
     let interpolatedContent = data.content;
 
     if (options?.variables) {
-      interpolatedContent = interpolateVariables(data.content, options.variables);
+      interpolatedContent = interpolateVariables(
+        data.content,
+        options.variables
+      );
     }
 
     return {
@@ -126,9 +135,15 @@ export class Pezzo {
     dto: CreatePromptExecutionDto,
     autoParseJSON?: boolean
   ): Promise<ReportPromptExecutionResult<TResult>> {
-    const { data } = await this.axios.post(`v2/prompts/execution`, {
-      ...dto,
+    const response = await fetch(`${this.options.serverUrl}/api/v2/prompts/execution`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": this.options.apiKey,
+      },
+      body: JSON.stringify(dto),
     });
+    const data = await response.json();
 
     if (data.result) {
       const report = {
