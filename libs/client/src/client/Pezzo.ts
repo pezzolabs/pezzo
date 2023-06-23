@@ -95,16 +95,15 @@ export class Pezzo {
     url.searchParams.append("name", promptName);
     url.searchParams.append("environmentName", this.options.environment);
 
-    const result = await this.axios.get<PromptVersion>(url.toString());
-    const { data } = result;
+    const { data } = await this.axios.get<PromptVersion>(url.toString());
     const content = data.content;
     let interpolatedContent = data.content;
 
     if (options?.variables) {
       interpolatedContent = interpolateVariables(data.content, options.variables);
     }
-    
-    const prompt = {
+
+    return {
       id: data.promptId,
       deployedVersion: data.sha,
       ...getPromptSettings({
@@ -121,8 +120,6 @@ export class Pezzo {
         interpolatedContent,
       }),
     };
-
-    return prompt;
   }
 
   async reportPromptExecutionV2<TResult>(
