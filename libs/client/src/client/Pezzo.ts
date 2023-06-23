@@ -67,6 +67,9 @@ export class Pezzo {
     }
   }
 
+  /**
+   * @deprecated Use `getPrompt` instead
+   */
   async getDeployedPromptVersion<T>(promptName: string) {
     const url = new URL(`${this.options.serverUrl}/api/prompts/deployment`);
     url.searchParams.append("name", promptName);
@@ -88,12 +91,11 @@ export class Pezzo {
     promptName: string,
     options?: GetPromptOptions
   ): Promise<Prompt<TProviderType>> {
-    const url = new URL(`${this.options.serverUrl}/api/prompts/deployment`);
+    const url = new URL(`${this.options.serverUrl}/api/v2/prompts/deployment`);
     url.searchParams.append("name", promptName);
     url.searchParams.append("environmentName", this.options.environment);
 
     const { data } = await this.axios.get<PromptVersion>(url.toString());
-
     const content = data.content;
     let interpolatedContent = data.content;
 
@@ -118,6 +120,28 @@ export class Pezzo {
         interpolatedContent,
       }),
     };
+  }
+
+  async reportPromptExecutionV2<TResult>(
+    dto: CreatePromptExecutionDto,
+    autoParseJSON?: boolean
+  ): Promise<ReportPromptExecutionResult<TResult>> {
+    const { data } = await this.axios.post(`v2/prompts/execution`, {
+      ...dto,
+    });
+
+    if (data.result) {
+      const report = {
+        ...data,
+        result: autoParseJSON
+          ? (JSON.parse(data.result) as TResult)
+          : (data.result as TResult),
+      };
+
+      return report;
+    } else {
+      return data;
+    }
   }
 
   async getOpenAiPrompt(promptName: string) {

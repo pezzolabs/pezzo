@@ -32,6 +32,7 @@ export type AnalyticsPayloads = {
     projectId: string;
   };
   "PROMPT:FIND_WITH_API_KEY": {
+    apiVersion: "v1" | "v2";
     organizationId: string;
     projectId: string;
     promptId: string;
