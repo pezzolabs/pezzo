@@ -6,7 +6,8 @@ import { PromptsService } from "./prompts.service";
 import { PromptTesterService } from "./prompt-tester.service";
 import { CredentialsModule } from "../credentials/credentials.module";
 import { IdentityModule } from "../identity/identity.module";
-import { PromptsController } from "./prompts.controller";
+import { PromptsV1Controller } from "./prompts-v1.controller";
+import { PromptsV2Controller } from "./prompts-v2.controller";
 import { PromptVersionsResolver } from "./prompt-versions.resolver";
 
 @Module({
@@ -20,6 +21,6 @@ import { PromptVersionsResolver } from "./prompt-versions.resolver";
     PromptExecutionsResolver,
     PromptVersionsResolver,
   ],
-  controllers: [PromptsController],
+  controllers: [PromptsV1Controller,PromptsV2Controller],
 })
 export class PromptsModule {}

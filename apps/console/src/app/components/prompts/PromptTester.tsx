@@ -157,7 +157,11 @@ export const PromptTester = () => {
                   ) : (
                     <>
                       <Typography.Title level={3}>Error</Typography.Title>
-                      <StyledPre>{result.error}</StyledPre>
+                      <StyledPre>
+                        {isJson(result.error)
+                          ? JSON.stringify(JSON.parse(result.error), null, 2)
+                          : result.error}
+                      </StyledPre>{" "}
                     </>
                   )}
                 </Col>

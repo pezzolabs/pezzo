@@ -1,4 +1,4 @@
-import { CreateChatCompletionRequest, OpenAIApi } from "openai";
+import { OpenAIApi } from "openai";
 import { extractPezzoFromArgs } from "../utils/helpers";
 import { PezzoExtendedArgs } from "../types/helpers";
 import { CreatePromptExecutionDto } from "./create-prompt-execution.dto";
@@ -31,36 +31,59 @@ export class PezzoOpenAIApi extends OpenAIApi {
     ...args: PezzoExtendedArgs<Parameters<OpenAIApi["createChatCompletion"]>>
   ) {
     const { _pezzo, originalArgs } = extractPezzoFromArgs(args);
-    
-    const start = performance.now();
-    const result = await super.createChatCompletion.call(this, ...originalArgs);
 
-    const end = performance.now();
-    const duration = end - start;
+    const baseReportPayload = {
+      environmentName: _pezzo.environmentName,
+      promptId: _pezzo.promptId,
+      promptVersionSha: _pezzo.promptVersionSha,
+      settings: originalArgs[0],
+      variables: _pezzo.variables,
+      content: _pezzo.content,
+      interpolatedContent: _pezzo.interpolatedContent,
+      promptCost: 0,
+      completionCost: 0,
+      totalCost: 0,
+      result: null,
+      error: null,
+    };
 
-    const reportPayload: CreatePromptExecutionDto = 
-      {
-        environmentName: _pezzo.environmentName,
-        promptId: _pezzo.promptId,
-        promptVersionSha: _pezzo.promptVersionSha,
-        status: "Success",
-        settings: originalArgs[0],
-        variables: _pezzo.variables,
-        content: _pezzo.content,
-        interpolatedContent: _pezzo.interpolatedContent,
-        result: null,
-        error: null,
-        duration,
-        completionCost: 0,
-        completionTokens: 0,
-        promptCost: 0,
-        promptTokens: 0,
-        totalTokens: 0,
-        totalCost: 0,
-      };
+    let reportPayload: CreatePromptExecutionDto;
+    let originalResult;
+    let originalError: unknown;
 
     try {
-      await this.pezzo.reportPromptExecution(
+      const start = performance.now();
+      originalResult = await super.createChatCompletion.call(this, ...originalArgs);
+      const { usage } = originalResult.data;
+      const end = performance.now();
+      const duration = end - start;
+
+      reportPayload = {
+        ...baseReportPayload,
+        status: "Success",
+        result: JSON.stringify(originalResult.data.choices),
+        promptTokens: usage.prompt_tokens,
+        completionTokens: usage.completion_tokens,
+        totalTokens: usage.prompt_tokens + usage.completion_tokens,
+        duration,
+      };
+    } catch (error) {
+      originalError = error;
+      const errorData = error.response.data;
+
+      reportPayload = {
+        ...baseReportPayload,
+        status: "Error",
+        error: JSON.stringify(errorData),
+        promptTokens: 0,
+        completionTokens: 0,
+        totalTokens: 0,
+        duration: 0,
+      };
+    }
+
+    try {
+      await this.pezzo.reportPromptExecutionV2(
         reportPayload,
         false
       );
@@ -69,6 +92,10 @@ export class PezzoOpenAIApi extends OpenAIApi {
       console.error("Failed to report prompt execution", error.response.data);
     }
 
-    return result;
+    if (originalError) {
+      throw originalError;
+    }
+
+    return originalResult;
   }
 }

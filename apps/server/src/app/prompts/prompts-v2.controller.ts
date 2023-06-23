@@ -27,15 +27,17 @@ import { ApiKeyOrgId } from "../identity/api-key-org-id.decoator";
 import { GetPromptDeploymentDto } from "./dto/get-prompt-deployment.dto";
 
 @UseGuards(ApiKeyAuthGuard)
-@Controller("prompts")
-export class PromptsController {
+@Controller("/v2/prompts")
+export class PromptsV2Controller {
   constructor(
     private logger: PinoLogger,
     private prisma: PrismaService,
     private promptsService: PromptsService,
     private influxService: InfluxDbService,
     private analytics: AnalyticsService
-  ) {}
+  ) {
+    logger.assign({ context: "PromptsV2Controller" });
+  }
 
   @Get("/deployment")
   async getPromptDeployment(
@@ -79,6 +81,7 @@ export class PromptsController {
     }
 
     this.analytics.track("PROMPT:FIND_WITH_API_KEY", "api", {
+      apiVersion: "v2",
       organizationId,
       projectId,
       promptId: prompt.id,
@@ -120,7 +123,7 @@ export class PromptsController {
     return promptVersion;
   }
 
-  @Post("execution")
+  @Post("/execution")
   async createPromptExecution(
     @Body() data: CreatePromptExecutionDto,
     @ApiKeyOrgId() organizationId: string
@@ -148,8 +151,6 @@ export class PromptsController {
 
     let execution: PromptExecution;
 
-    console.log("before create xaxa")
-
     try {
       execution = await this.prisma.promptExecution.create({
         data: {
@@ -174,8 +175,6 @@ export class PromptsController {
         },
       });
     } catch (error) {
-      console.log("error", error)
-      // this.logger.error({ error }, "Error reporting prompt execution");
       return { success: false };
     }
 
