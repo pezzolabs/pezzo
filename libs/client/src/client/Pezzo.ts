@@ -111,8 +111,8 @@ export class Pezzo {
         options.variables
       );
     }
-
-    return {
+    
+    const prompt = {
       id: data.promptId,
       deployedVersion: data.sha,
       ...getPromptSettings({
@@ -129,6 +129,8 @@ export class Pezzo {
         interpolatedContent,
       }),
     };
+
+    return prompt;
   }
 
   async reportPromptExecutionV2<TResult>(
