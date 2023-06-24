@@ -28,7 +28,7 @@ datasource db {
 
 model PromptVersion {
   sha                String              @id
-  content            String
+  content            String?
   settings           Json
   promptId           String
   prompt             Prompt              @relation(fields: [promptId], references: [id], onDelete: Cascade)

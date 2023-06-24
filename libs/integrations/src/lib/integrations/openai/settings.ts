@@ -1,3 +1,4 @@
+import { CreateChatCompletionRequest } from "openai";
 import { FormField, FormSchema, SliderFormField } from "../form.types";
 import { OpenAIIntegrationSettings } from "./types";
 
@@ -78,13 +79,12 @@ export const generateSchema = (modelName: string): FormSchema => {
   return settingsSchema;
 };
 
-export const defaultSettings: OpenAIIntegrationSettings = {
+export const defaultSettings: CreateChatCompletionRequest = {
   model: "gpt-3.5-turbo",
-  modelSettings: {
-    temperature: 0.7,
-    max_tokens: 256,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
-  },
+  temperature: 0.7,
+  max_tokens: 256,
+  top_p: 1,
+  frequency_penalty: 0,
+  presence_penalty: 0,
+  messages: [],
 };
