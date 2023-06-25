@@ -17,8 +17,7 @@ import { IdentityModule } from "./identity/identity.module";
 import { InfluxDbModule } from "./influxdb/influxdb.module";
 import { InfluxModuleOptions } from "./influxdb/types";
 import { MetricsModule } from "./metrics/metrics.module";
-import { LoggerModule } from "./logger/logger.module";
-import { PinoLogger } from "./logger/pino-logger";
+import { LoggerModule, PinoLogger } from "@pezzo/logger";
 import { AnalyticsModule } from "./analytics/analytics.module";
 import { KafkaModule } from "@pezzo/kafka";
 

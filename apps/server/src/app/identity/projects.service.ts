@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
-import { PinoLogger } from "../logger/pino-logger";
+import { PinoLogger } from "@pezzo/logger";
 import { EnvironmentsService } from "./environments.service";
 
 @Injectable()

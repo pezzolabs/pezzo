@@ -10,7 +10,7 @@ import {
 } from "@nestjs/common";
 import { UseGuards } from "@nestjs/common";
 import { ApiKeyAuthGuard } from "../auth/api-key-auth.guard";
-import { PinoLogger } from "../logger/pino-logger";
+import { PinoLogger } from "@pezzo/logger";
 import { CreatePromptExecutionDto } from "@pezzo/common";
 import { PromptsService } from "./prompts.service";
 import {

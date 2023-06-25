@@ -13,7 +13,7 @@ import { AuthGuard } from "../auth/auth.guard";
 import { GetUserOrgMembershipInput } from "./inputs/get-user-org-membership.input";
 import { UpdateOrgMemberRoleInput } from "./inputs/update-org-member-role.input";
 import { OrganizationsService } from "./organizations.service";
-import { PinoLogger } from "../logger/pino-logger";
+import { PinoLogger } from "@pezzo/logger";
 
 @UseGuards(AuthGuard)
 @Resolver(OrganizationMember)

@@ -23,7 +23,7 @@ import { OrganizationMember } from "../../@generated/organization-member/organiz
 import { UsersService } from "./users.service";
 import { Invitation } from "../../@generated/invitation/invitation.model";
 import { UpdateOrgSettingsInput } from "./inputs/update-org-settings.input";
-import { PinoLogger } from "../logger/pino-logger";
+import { PinoLogger } from "@pezzo/logger";
 import { OrganizationsService } from "./organizations.service";
 
 @UseGuards(AuthGuard)

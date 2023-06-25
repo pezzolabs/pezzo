@@ -12,7 +12,7 @@ import { google } from "googleapis";
 import { UsersService } from "../identity/users.service";
 import { UserCreateRequest } from "../identity/users.types";
 import { AnalyticsService } from "../analytics/analytics.service";
-import { PinoLogger } from "../logger/pino-logger";
+import { PinoLogger } from "@pezzo/logger";
 
 @Injectable()
 export class SupertokensService {

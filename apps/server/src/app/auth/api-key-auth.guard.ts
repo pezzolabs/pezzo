@@ -6,7 +6,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { ApiKeysService } from "../identity/api-keys.service";
-import { PinoLogger } from "../logger/pino-logger";
+import { PinoLogger } from "@pezzo/logger";
 
 export enum AuthMethod {
   ApiKey = "ApiKey",

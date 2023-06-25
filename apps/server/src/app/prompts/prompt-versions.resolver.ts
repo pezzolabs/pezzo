@@ -10,7 +10,7 @@ import { PromptVersion } from "../../@generated/prompt-version/prompt-version.mo
 import { CurrentUser } from "../identity/current-user.decorator";
 import { CreatePromptVersionInput } from "./inputs/create-prompt-version.input";
 import { RequestUser } from "../identity/users.types";
-import { PinoLogger } from "../logger/pino-logger";
+import { PinoLogger } from "@pezzo/logger";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { Prompt } from "../../@generated/prompt/prompt.model";
 import {

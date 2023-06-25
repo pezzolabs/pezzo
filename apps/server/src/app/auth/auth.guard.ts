@@ -11,7 +11,7 @@ import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpass
 import { UsersService } from "../identity/users.service";
 import { RequestUser } from "../identity/users.types";
 import Session, { SessionContainer } from "supertokens-node/recipe/session";
-import { PinoLogger } from "../logger/pino-logger";
+import { PinoLogger } from "@pezzo/logger";
 
 export enum AuthMethod {
   ApiKey = "ApiKey",
