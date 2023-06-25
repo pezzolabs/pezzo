@@ -1,44 +1,30 @@
 "use client";
 
-import {
-  Alert,
-  Button,
-  Card,
-  Checkbox,
-  Form,
-  Input,
-  InputNumber,
-  Layout,
-  List,
-  Typography,
-} from "antd";
+import { Alert, Button, Card, Form, Input, Layout, Typography } from "antd";
 const { Content } = Layout;
-import * as apiClient from "./lib/apiClient";
 import { useState } from "react";
 import { Footer } from "antd/es/layout/layout";
+import { useCompletion } from "ai/react";
 
 interface FormInputs {
-  goal: string;
-  numTasks: number;
+  document: string;
+  question: string;
 }
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [tasks, setTasks] = useState<apiClient.TasksResult["tasks"] | null>(
-    null
-  );
+
+  const { completion, complete, input, stop, handleInputChange, handleSubmit } =
+    useCompletion({ api: "/api/research" });
+  // const { messages, append } = useChat({ api: "/api/research" });
 
   const handleFormFinish = async (values: FormInputs) => {
     setError(null);
-    setTasks(null);
     setIsLoading(true);
     try {
-      const { tasks } = await apiClient.generateTasks(
-        values.goal,
-        values.numTasks
-      );
-      setTasks(tasks);
+      // append({ role: "user", content: values.question });
+      complete(values.question);
     } catch (error) {
       setError((error as any).response.data.message);
     }
@@ -63,13 +49,13 @@ export default function Home() {
         >
           <div style={{ textAlign: "center" }}>
             <Typography.Title level={1} style={{ marginBottom: 0 }}>
-              Taskly 🦾
+              AI Researcher 🔎
             </Typography.Title>
             <Typography.Title
               level={2}
               style={{ marginTop: 20, fontSize: 20, fontWeight: 400 }}
             >
-              The limitless AI task generator
+              The limitless AI researcher
             </Typography.Title>
           </div>
 
@@ -86,8 +72,7 @@ export default function Home() {
           )}
 
           <Typography.Paragraph style={{ textAlign: "center" }}>
-            Let me know your goal and I'll generate you some tasks, so you can
-            get started right away!
+            Provide a document, ask a question, and I'll find the answer!
           </Typography.Paragraph>
 
           <Form
@@ -97,56 +82,30 @@ export default function Home() {
             onFinish={handleFormFinish}
           >
             <Form.Item
-              name="goal"
-              label="Goal"
-              rules={[
-                { required: true, message: "This field is required" },
-                { max: 250, message: "Maximum 250 characters" },
-              ]}
-            >
-              <Input placeholder="e.g. Bathroom Renovation Project" />
-            </Form.Item>
-            <Form.Item
-              name="numTasks"
-              label="Number of tasks"
-              initialValue={5}
+              name="document"
+              label="Document"
               rules={[{ required: true, message: "This field is required" }]}
             >
-              <InputNumber min={1} max={8} placeholder="1-4" />
+              <Input placeholder="Paste a chunk of text here" />
+            </Form.Item>
+            <Form.Item
+              name="question"
+              label="Question"
+              rules={[{ required: true, message: "This field is required" }]}
+            >
+              <Input placeholder="Question about your text here" />
             </Form.Item>
             <Form.Item style={{ display: "flex", justifyContent: "flex-end" }}>
               <Button loading={isLoading} type="primary" htmlType="submit">
-                Generate Tasks ⚡️
+                Ask Question
               </Button>
             </Form.Item>
           </Form>
 
-          {tasks && (
-            <>
-              <hr style={{ marginTop: 20, marginBottom: 20, opacity: 0.2 }} />
-              <>
-                <Typography.Title level={3} style={{ textAlign: "center" }}>
-                  Your Tasks
-                </Typography.Title>
-                <List
-                  itemLayout="horizontal"
-                  dataSource={tasks.map((task: string) => ({ task }))}
-                  renderItem={(item, index) => (
-                    <List.Item key={index}>
-                      <List.Item.Meta
-                        avatar={
-                          <>
-                            <Checkbox />
-                          </>
-                        }
-                        description={item.task}
-                      />
-                    </List.Item>
-                  )}
-                />
-              </>
-            </>
-          )}
+          {completion}
+          {/* {messages.map((m) => (
+            <div key={m.id}>{m.content}</div>
+          ))} */}
         </Card>
         <Footer>
           <Typography.Paragraph style={{ opacity: 0.5, textAlign: "center" }}>

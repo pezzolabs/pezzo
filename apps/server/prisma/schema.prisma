@@ -26,8 +26,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Providers {
+  openai
+}
+
+enum PromptTypes {
+  openai_chatCompletion
+}
+
 model PromptVersion {
   sha                String              @id
+  provider           Providers           @default(openai)
+  type               PromptTypes         @default(openai_chatCompletion)
   content            String?
   settings           Json
   promptId           String

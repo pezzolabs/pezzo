@@ -66,7 +66,7 @@ export const NewPromptEditView = () => {
   const initialValues = {
     settings: isDraft
       ? JSON.stringify(getDraftPromptData(prompt.integrationId).settings, null, 2)
-      : currentPromptVersion.settings,
+      : JSON.stringify(currentPromptVersion.settings, null, 2),
     content: isDraft
       ? getDraftPromptData(prompt.integrationId).content
       : currentPromptVersion.content,

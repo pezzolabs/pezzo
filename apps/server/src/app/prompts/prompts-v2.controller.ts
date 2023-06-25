@@ -120,6 +120,8 @@ export class PromptsV2Controller {
       throw new InternalServerErrorException();
     }
 
+    console.log("promptVersion", promptVersion);
+
     return promptVersion;
   }
 

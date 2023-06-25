@@ -4,7 +4,7 @@ import { Configuration } from "openai";
 // Initialize the Pezzo client
 export const pezzo = new Pezzo({
   serverUrl: process.env.PEZZO_SERVER_URL || "https://api.pezzo.ai",
-  apiKey: process.env.PEZZO_API_KEY,
+  apiKey: process.env.PEZZO_API_KEY as string,
   environment: "Production",
 });
 

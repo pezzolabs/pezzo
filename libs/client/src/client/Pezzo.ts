@@ -103,6 +103,13 @@ export class Pezzo {
     });
     const data = await response.json();
     const content = data.content;
+
+    // TODO: make dynamic
+    // if data.provider === "openai" && data.type === "chat
+    if (true) {
+      
+    }
+
     let interpolatedContent = data.content;
 
     if (options?.variables) {
