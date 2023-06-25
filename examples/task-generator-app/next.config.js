@@ -3,6 +3,14 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { composePlugins, withNx } = require("@nx/next");
 
+if (!process.env.OPENAI_API_KEY) {
+  throw new Error('OPENAI_API_KEY environment variable is not defined')
+}
+
+if (!process.env.PEZZO_API_KEY) {
+  throw new Error('PEZZO_API_KEY environment variable is not defined')
+}
+
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
  **/

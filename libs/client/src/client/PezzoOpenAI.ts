@@ -1,4 +1,4 @@
-import { OpenAIApi } from "openai-edge";
+import { OpenAIApi } from "openai";
 import { extractPezzoFromArgs } from "../utils/helpers";
 import { PezzoExtendedArgs } from "../types/helpers";
 import { CreatePromptExecutionDto } from "./create-prompt-execution.dto";
@@ -34,14 +34,9 @@ export class PezzoOpenAIApi extends OpenAIApi {
     const { _pezzo, originalArgs } = extractPezzoFromArgs(args);
     const settings = originalArgs[0];
 
-    try {
+    const originalResult = await super.createCompletion.call(this, ...originalArgs);
 
-      console.log("originalArgs", originalArgs);
-      const originalResult = await super.createCompletion.call(this, ...originalArgs);
-      return originalResult;
-    } catch (error) {
-      console.error("Failed to createCompletion", error);
-    }
+    return originalResult;
   }
 
   override async createChatCompletion(
@@ -69,54 +64,54 @@ export class PezzoOpenAIApi extends OpenAIApi {
     let originalResult;
     let originalError: unknown;
     
-    // const start = performance.now();
+    const start = performance.now();
 
     
     try {
       originalResult = await super.createChatCompletion.call(this, ...originalArgs);
       
       // if (settings.stream === true) {
-      //   console.log("STREAMING");
+        // console.log("STREAMING");
 
-      //   const stream = OpenAIStream(originalResult);
+        // const stream = OpenAIStream(originalResult);
 
       // }
 
-    //   console.log("originalResult is here");
+      console.log("originalResult is here");
 
-    //   const { usage } = originalResult.data;
-    //   const end = performance.now();
-    //   const duration = end - start;
+      const { usage } = originalResult.data;
+      const end = performance.now();
+      const duration = end - start;
 
-    //   reportPayload = {
-    //     ...baseReportPayload,
-    //     status: "Success",
-    //     result: JSON.stringify(originalResult.data.choices),
-    //     promptTokens: usage.prompt_tokens,
-    //     completionTokens: usage.completion_tokens,
-    //     totalTokens: usage.prompt_tokens + usage.completion_tokens,
-    //     duration,
-    //   };
-    // } catch (error) {
-    //   originalError = error;
-    //   const errorData = error.response.data;
+      reportPayload = {
+        ...baseReportPayload,
+        status: "Success",
+        result: JSON.stringify(originalResult.data.choices),
+        promptTokens: usage.prompt_tokens,
+        completionTokens: usage.completion_tokens,
+        totalTokens: usage.prompt_tokens + usage.completion_tokens,
+        duration,
+      };
+    } catch (error) {
+      originalError = error;
+      const errorData = error.response.data;
 
-    //   reportPayload = {
-    //     ...baseReportPayload,
-    //     status: "Error",
-    //     error: JSON.stringify(errorData),
-    //     promptTokens: 0,
-    //     completionTokens: 0,
-    //     totalTokens: 0,
-    //     duration: 0,
-    //   };
-    // }
+      reportPayload = {
+        ...baseReportPayload,
+        status: "Error",
+        error: JSON.stringify(errorData),
+        promptTokens: 0,
+        completionTokens: 0,
+        totalTokens: 0,
+        duration: 0,
+      };
+    }
 
-    // try {
-    //   await this.pezzo.reportPromptExecutionV2(
-    //     reportPayload,
-    //     false
-    //   );
+    try {
+      await this.pezzo.reportPromptExecutionV2(
+        reportPayload,
+        false
+      );
 
     } catch (error) {
       console.error("Failed to report prompt execution", error);

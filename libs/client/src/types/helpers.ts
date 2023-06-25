@@ -16,7 +16,7 @@ export interface PezzoInjectedContext {
 }
 
 export type PezzoExtendedArg<TArgs extends unknown[]> = TArgs[0] & {
-  _pezzo: PezzoInjectedContext;
+  _pezzo?: PezzoInjectedContext;
 };
 
 export type PezzoExtendedArgs<TArgs extends unknown[]> = [
