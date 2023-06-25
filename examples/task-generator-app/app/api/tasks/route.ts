@@ -36,19 +36,27 @@ export async function POST(request: Request) {
       temperature: 0,
       max_tokens: 1000,
       messages: [
-        {
-          role: "user",
-          content: `
+				{
+					role: "system",
+					content: `
 You are a talented task generator.
 
-You'll help me generate tasks to achieve the following goal: "${goal}".
-You must generate exactly ${numTasks} tasks.
+You'll help the user generate tasks to achieve their goal. You will create exactly ${numTasks} tasks.
 
 You must respond in valid JSON, strictly adhering to the following schema:
 
 {
   tasks: string[];
-}`
+}
+`
+				},
+				{
+					role: "assistant",
+					content: "What do you want to achieve?"
+				},
+        {
+          role: "user",
+          content: `I want to become a chef`
         }
       ]
     });
