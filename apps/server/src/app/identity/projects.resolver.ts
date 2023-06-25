@@ -21,7 +21,7 @@ import { CurrentUser } from "./current-user.decorator";
 import { RequestUser } from "./users.types";
 import { slugify } from "@pezzo/common";
 import { ProjectWhereUniqueInput } from "../../@generated/project/project-where-unique.input";
-import { PinoLogger } from "../logger/pino-logger";
+import { PinoLogger } from "@pezzo/logger";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { Organization } from "../../@generated/organization/organization.model";
 import { GetProjectsInput } from "./inputs/get-projects.input";

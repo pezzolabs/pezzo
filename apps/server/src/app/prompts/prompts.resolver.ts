@@ -26,7 +26,7 @@ import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
 import { isOrgMemberOrThrow } from "../identity/identity.utils";
 import { GetProjectPromptsInput } from "./inputs/get-project-prompts.input";
-import { PinoLogger } from "../logger/pino-logger";
+import { PinoLogger } from "@pezzo/logger";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { PromptVersion } from "../../@generated/prompt-version/prompt-version.model";
 import { OrganizationsService } from "../identity/organizations.service";

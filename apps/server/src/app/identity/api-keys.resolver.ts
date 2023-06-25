@@ -3,7 +3,7 @@ import { ApiKey } from "../../@generated/api-key/api-key.model";
 import { ApiKeysService } from "./api-keys.service";
 import { UseGuards } from "@nestjs/common";
 import { AuthGuard } from "../auth/auth.guard";
-import { PinoLogger } from "../logger/pino-logger";
+import { PinoLogger } from "@pezzo/logger";
 import { GetApiKeysInput } from "./inputs/get-api-keys.input";
 import { isOrgMemberOrThrow } from "./identity.utils";
 import { CurrentUser } from "./current-user.decorator";

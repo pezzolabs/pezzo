@@ -26,7 +26,7 @@ import { Organization } from "../../@generated/organization/organization.model";
 import { KafkaProducerService } from "@pezzo/kafka";
 import { UpdateOrgInvitationInput } from "./inputs/update-org-invitation.input";
 import { ConfigService } from "@nestjs/config";
-import { PinoLogger } from "../logger/pino-logger";
+import { PinoLogger } from "@pezzo/logger";
 import { OrganizationsService } from "./organizations.service";
 import { InvitationsService } from "./invitations.service";
 

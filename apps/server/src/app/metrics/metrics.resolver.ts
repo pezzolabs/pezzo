@@ -9,7 +9,7 @@ import {
   NotFoundException,
   UseGuards,
 } from "@nestjs/common";
-import { PinoLogger } from "../logger/pino-logger";
+import { PinoLogger } from "@pezzo/logger";
 import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
 import { isOrgMemberOrThrow } from "../identity/identity.utils";

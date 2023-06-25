@@ -18,7 +18,7 @@ import {
 } from "@nestjs/common";
 import { isOrgMemberOrThrow } from "../identity/identity.utils";
 import { AnalyticsService } from "../analytics/analytics.service";
-import { PinoLogger } from "../logger/pino-logger";
+import { PinoLogger } from "@pezzo/logger";
 import { TestPromptResult } from "@pezzo/client";
 
 @UseGuards(AuthGuard)

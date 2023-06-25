@@ -6,7 +6,7 @@ import { CurrentUser } from "./current-user.decorator";
 import { RequestUser } from "./users.types";
 import { UsersService } from "./users.service";
 import { UpdateProfileInput } from "./inputs/update-profile.input";
-import { PinoLogger } from "../logger/pino-logger";
+import { PinoLogger } from "@pezzo/logger";
 import { ExtendedUser } from "./models/extended-user.model";
 
 type SupertokensMetadata = {

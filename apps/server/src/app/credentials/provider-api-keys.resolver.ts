@@ -8,7 +8,7 @@ import { InternalServerErrorException, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "../auth/auth.guard";
 import { GetProviderApiKeysInput } from "./inputs/get-provider-api-keys.input";
 import { isOrgMemberOrThrow } from "../identity/identity.utils";
-import { PinoLogger } from "../logger/pino-logger";
+import { PinoLogger } from "@pezzo/logger";
 import { AnalyticsService } from "../analytics/analytics.service";
 
 @UseGuards(AuthGuard)

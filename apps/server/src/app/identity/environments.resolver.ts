@@ -12,7 +12,7 @@ import { AuthGuard } from "../auth/auth.guard";
 import { EnvironmentsService } from "./environments.service";
 import { GetEnvironmentsInput } from "./inputs/get-environments.input";
 import { isOrgMemberOrThrow } from "../identity/identity.utils";
-import { PinoLogger } from "../logger/pino-logger";
+import { PinoLogger } from "@pezzo/logger";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { PrismaService } from "../prisma.service";
 
