@@ -6,30 +6,9 @@ export async function POST(request: Request) {
   const { goal, numTasks } = body;
 
   let prompt, settings;
-
-  try {
-    prompt = await pezzo.getPrompt("GenerateTasks", {
-      variables: {
-        goal,
-        numTasks,
-      },
-    });
-  } catch (error) {
-    return NextResponse.json(
-      {
-        message: "Could not get prompt from Pezzo",
-      },
-      {
-        status: 500,
-      }
-    );
-  }
-
   let result;
 
   try {
-    // settings = prompt.getChatCompletionSettings();
-    // result = await openai.createChatCompletion(settings);
 
     result = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
@@ -37,29 +16,23 @@ export async function POST(request: Request) {
       max_tokens: 1000,
       messages: [
 				{
-					role: "system",
-					content: `
-You are a talented task generator.
-
-You'll help the user generate tasks to achieve their goal. You will create exactly ${numTasks} tasks.
-
-You must respond in valid JSON, strictly adhering to the following schema:
-
-{
-  tasks: string[];
-}
-`
-				},
-				{
 					role: "assistant",
-					content: "What do you want to achieve?"
+					content: `
+          You'll help me generate tasks to achieve my goal. You will create exactly ${numTasks} tasks.
+
+          My goal is: ${goal}
+
+          You must respond in valid JSON, strictly adhering to the following schema:
+          
+          {
+            tasks: string[];
+          }
+          `
 				},
-        {
-          role: "user",
-          content: `I want to become a chef`
-        }
       ]
     });
+
+    console.log("result.data", JSON.stringify(result.data, null, 2));
 
     const parsed = JSON.parse(result.data.choices[0].message.content);
     return NextResponse.json(parsed, {
