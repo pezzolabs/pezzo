@@ -46,3 +46,4 @@ Thumbs.db
 
 .env.local
 schema.graphql
+**/generated/prisma
