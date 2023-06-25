@@ -7,7 +7,6 @@ import {
   getPromptSettings,
   ReportPromptExecutionResult,
 } from "../types/prompts";
-import { PromptVersion } from "../@generated/graphql/graphql";
 import { interpolateVariables } from "../utils";
 import { PezzoOpenAIApi } from "./PezzoOpenAI";
 
@@ -40,7 +39,7 @@ export class Pezzo {
     this.axios = axios.create({
       baseURL: `${this.options.serverUrl}/api`,
       headers: {
-        "x-api-key": this.options.apiKey,
+        "x-pezzo-api-key": this.options.apiKey,
       },
     });
   }
