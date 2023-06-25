@@ -23,7 +23,7 @@ export class ApiKeyAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
 
-    if (!req.headers["x-api-key"]) {
+    if (!req.headers["x-pezzo-api-key"]) {
       throw new UnauthorizedException("Invalid Pezzo API Key");
     }
 
@@ -32,7 +32,7 @@ export class ApiKeyAuthGuard implements CanActivate {
 
   private async authorizeApiKey(req) {
     this.logger.assign({ method: AuthMethod.ApiKey });
-    const keyValue = req.headers["x-api-key"];
+    const keyValue = req.headers["x-pezzo-api-key"];
     const apiKey = await this.apiKeysService.getApiKey(keyValue);
 
     if (!apiKey) {

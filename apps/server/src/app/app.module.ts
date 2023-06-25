@@ -20,6 +20,7 @@ import { MetricsModule } from "./metrics/metrics.module";
 import { LoggerModule, PinoLogger } from "@pezzo/logger";
 import { AnalyticsModule } from "./analytics/analytics.module";
 import { KafkaModule } from "@pezzo/kafka";
+import { ReportingModule } from "./reporting/reporting.module";
 
 const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
 
@@ -112,6 +113,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
     CredentialsModule,
     IdentityModule,
     MetricsModule,
+    ReportingModule
   ],
   controllers: [HealthController],
 })
