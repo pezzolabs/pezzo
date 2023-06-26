@@ -2,23 +2,12 @@ import {
   CreateChatCompletionRequest as OpenAICreateChatCompletionRequest,
   CreateCompletionRequest as OpenAICreateCompletionRequest,
 } from "openai";
-import { PromptExecutionStatus } from "../types";
-import { PromptVersion } from "../@generated/graphql/graphql";
-import { PezzoInjectedContext } from "./helpers";
-
-export enum PromptExecutionType {
-  ChatCompletion = "ChatCompletion",
-  Completion = "Completion",
-}
-
-export type OpenAIProviderSettings = {
-  [PromptExecutionType.Completion]: OpenAICreateCompletionRequest;
-  [PromptExecutionType.ChatCompletion]: OpenAICreateChatCompletionRequest;
-};
-
-export enum ProviderType {
-  OpenAI = "OpenAI",
-}
+import { PezzoInjectedContext } from "./function-extension";
+import {
+  OpenAIProviderSettings,
+  PromptExecutionType,
+  ProviderType,
+} from "./providers";
 
 export type PromptSettings<
   TProviderType extends ProviderType = ProviderType.OpenAI,
@@ -110,4 +99,31 @@ export interface ReportPromptExecutionResult<TResult> {
   totalCost: number;
   totalTokens: number;
   duration: number;
+}
+
+export interface TestPromptResult {
+  success: boolean;
+  result?: string;
+  error: string | null;
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
+  promptCost: number;
+  completionCost: number;
+  totalCost: number;
+  duration: number;
+  content: string;
+  interpolatedContent: string;
+  settings: any;
+  variables: Record<string, boolean | number | string>;
+}
+
+export interface IntegrationBaseSettings<T> {
+  model: string;
+  modelSettings: T;
+}
+
+export enum PromptExecutionStatus {
+  Success = "Success",
+  Error = "Error",
 }
