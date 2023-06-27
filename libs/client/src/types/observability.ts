@@ -1,10 +1,10 @@
 import { PromptExecutionType, ProviderType } from "./providers";
-import { ValueType } from "../types";
+import { AllPrimitiveTypes, Primitive, RecursiveObject } from "../types";
 
-export type ObservabilityReportProperties = Record<string, ValueType>;
+export type ObservabilityReportProperties = RecursiveObject<Primitive>;
 export type ObservabilityReportMetadata = {
   conversationId?: string;
-  [key: string]: ValueType;
+  [key: string]: AllPrimitiveTypes;
 };
 
 export interface ReportData {

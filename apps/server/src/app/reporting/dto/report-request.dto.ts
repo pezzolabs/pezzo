@@ -1,30 +1,99 @@
 import { IsEnum, IsObject } from "class-validator";
+import {
+  AllPrimitiveTypes,
+  Primitive,
+  RecursiveObject,
+} from "../../../utils/ts-helpers";
+import { Type } from "class-transformer";
+import { OpenAIToolkit } from "@pezzo/llm-toolkit";
 
-enum Providers {
-  openai = "openai",
+export enum ProviderType {
+  OpenAI = "OpenAI",
 }
 
-enum Types {
-  chat = "chat",
-  completion = "completion",
+export enum PromptExecutionType {
+  ChatCompletion = "ChatCompletion",
+  Completion = "Completion",
 }
 
-export class ReportRequestDto {
-  @IsEnum(Providers)
-  provider: Providers;
+type ExtractModelNames<T> = T extends { model: infer M } ? M : never;
+export type AcceptedModels = ExtractModelNames<
+  Parameters<typeof OpenAIToolkit.calculateGptCost>[0]["model"]
+>;
 
-  @IsEnum(Types)
-  type: Types;
+export type ObservabilityReportProperties = RecursiveObject<Primitive>;
+export type ObservabilityReportMetadata = {
+  conversationId?: string;
+  [key: string]: AllPrimitiveTypes;
+};
+
+export class GenericObservabilityRequestResponseBody {
+  [key: string]: AllPrimitiveTypes;
+}
+
+export class OpenAIObservabilityRequestBody extends GenericObservabilityRequestResponseBody {
+  model: AcceptedModels;
+}
+
+export class OpenAIObservabilityResponseBody extends GenericObservabilityRequestResponseBody {
+  usage: {
+    prompt_tokens: number;
+    completion_tokens: number;
+  };
+}
+
+export class ObservabilityRequestDto<
+  TProviderType extends ProviderType | unknown = unknown
+> {
+  timestamp: string;
+  @Type((opts) =>
+    opts.object.provider === ProviderType.OpenAI
+      ? OpenAIObservabilityRequestBody
+      : GenericObservabilityRequestResponseBody
+  )
+  body: TProviderType extends ProviderType.OpenAI
+    ? OpenAIObservabilityRequestBody
+    : GenericObservabilityRequestResponseBody;
+}
+
+export class ObservabilityResponseDto<
+  TProviderType extends ProviderType | unknown = unknown
+> {
+  timestamp: string;
+  @Type((opts) =>
+    opts.object.provider === ProviderType.OpenAI
+      ? OpenAIObservabilityResponseBody
+      : GenericObservabilityRequestResponseBody
+  )
+  body: TProviderType extends ProviderType.OpenAI
+    ? OpenAIObservabilityResponseBody
+    : GenericObservabilityRequestResponseBody;
+  status: number;
+}
+
+export interface ObservabilityResponseBody {
+  usage?: string;
+  [key: string]: AllPrimitiveTypes;
+}
+
+export class ReportRequestDto<
+  TProviderType extends ProviderType | unknown = unknown
+> {
+  @IsEnum(ProviderType)
+  provider: ProviderType;
+
+  @IsEnum(PromptExecutionType)
+  type: PromptExecutionType;
 
   @IsObject()
-  properties: Record<string, unknown>;
+  properties: ObservabilityReportProperties;
 
   @IsObject()
-  metadata: Record<string, unknown>;
+  metadata: ObservabilityReportMetadata;
 
   @IsObject()
-  request: unknown;
+  request: ObservabilityRequestDto<TProviderType>;
 
   @IsObject()
-  response: unknown;
+  response: ObservabilityResponseDto<TProviderType>;
 }

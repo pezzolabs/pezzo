@@ -1,9 +1,13 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { Client } from "@opensearch-project/opensearch";
-import { ReportRequestDto } from "./dto/report-request.dto";
+import { ProviderType, ReportRequestDto } from "./dto/report-request.dto";
 import * as LLMToolkit from "@pezzo/llm-toolkit";
 import { randomUUID } from "crypto";
 import { ConfigService } from "@nestjs/config";
+
+export enum OpenSearchIndex {
+  Requests = "requests",
+}
 
 @Injectable()
 export class OpenSearchService {
@@ -24,13 +28,19 @@ export class OpenSearchService {
   ) {
     const reportId = randomUUID();
 
-    const { provider, type, properties, metadata, request, response } = dto;
+    if (dto.provider !== ProviderType.OpenAI) {
+      throw new InternalServerErrorException("Unsupported provider");
+    }
+
+    const { provider, type, properties, metadata, request, response } =
+      dto as ReportRequestDto<ProviderType.OpenAI>;
 
     // TODO: split calculate costs logic
-    const responseBody = (response as any).body;
+    const responseBody = response.body;
     const usage = responseBody.usage;
-    const requestBody = (request as any).body;
+    const requestBody = request.body;
     const model = requestBody.model;
+
     const { promptCost, completionCost } =
       LLMToolkit.OpenAIToolkit.calculateGptCost({
         model,
@@ -43,8 +53,8 @@ export class OpenSearchService {
       totalCost: parseFloat((promptCost + completionCost).toFixed(6)),
     };
 
-    const result = await this.os.index({
-      index: "requests",
+    return this.os.index({
+      index: OpenSearchIndex.Requests,
       body: {
         ownership,
         reportId,
@@ -57,7 +67,5 @@ export class OpenSearchService {
         response,
       },
     });
-
-    return result;
   }
 }
