@@ -34,7 +34,10 @@ export class PezzoOpenAIApi extends OpenAIApi {
     const { _pezzo, originalArgs } = extractPezzoFromArgs(args);
     const settings = originalArgs[0];
 
-    const originalResult = await super.createCompletion.call(this, ...originalArgs);
+    const originalResult = await super.createCompletion.call(
+      this,
+      ...originalArgs
+    );
 
     return originalResult;
   }
@@ -63,17 +66,19 @@ export class PezzoOpenAIApi extends OpenAIApi {
     let reportPayload: CreatePromptExecutionDto;
     let originalResult;
     let originalError: unknown;
-    
+
     const start = performance.now();
 
-    
     try {
-      originalResult = await super.createChatCompletion.call(this, ...originalArgs);
-      
-      // if (settings.stream === true) {
-        // console.log("STREAMING");
+      originalResult = await super.createChatCompletion.call(
+        this,
+        ...originalArgs
+      );
 
-        // const stream = OpenAIStream(originalResult);
+      // if (settings.stream === true) {
+      // console.log("STREAMING");
+
+      // const stream = OpenAIStream(originalResult);
 
       // }
 
@@ -108,11 +113,7 @@ export class PezzoOpenAIApi extends OpenAIApi {
     }
 
     try {
-      await this.pezzo.reportPromptExecutionV2(
-        reportPayload,
-        false
-      );
-
+      await this.pezzo.reportPromptExecutionV2(reportPayload, false);
     } catch (error) {
       console.error("Failed to report prompt execution", error);
     }

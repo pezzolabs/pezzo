@@ -8,6 +8,6 @@ import { OpenSearchService } from "./opensearch.service";
 @Module({
   imports: [LoggerModule, AuthModule, IdentityModule],
   controllers: [ReportingController],
-  providers: [OpenSearchService]
+  providers: [OpenSearchService],
 })
 export class ReportingModule {}

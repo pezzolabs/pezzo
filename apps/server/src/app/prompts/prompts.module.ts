@@ -21,6 +21,6 @@ import { PromptVersionsResolver } from "./prompt-versions.resolver";
     PromptExecutionsResolver,
     PromptVersionsResolver,
   ],
-  controllers: [PromptsV1Controller,PromptsV2Controller],
+  controllers: [PromptsV1Controller, PromptsV2Controller],
 })
 export class PromptsModule {}

@@ -39,7 +39,7 @@ export async function POST(request: Request) {
       // stream: true,
       messages: [
         { role: "user", content: "What year was Israel established?" },
-      ]
+      ],
     });
 
     console.log("response", response);

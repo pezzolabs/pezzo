@@ -2,7 +2,7 @@ import { openai } from "../../lib/pezzo";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 
 async function readStreamAndReport(reader, messages) {
-  let fullContent = '';
+  let fullContent = "";
   const textDecoder = new TextDecoder("utf-8");
 
   while (true) {

@@ -97,10 +97,8 @@ export function getPromptSettings(options: {
   };
 
   return {
-    getChatCompletionSettings: () =>
-      chatCompletion(obj),
-    getCompletionSettings: () =>
-      completion(obj),
+    getChatCompletionSettings: () => chatCompletion(obj),
+    getCompletionSettings: () => completion(obj),
   };
 }
 

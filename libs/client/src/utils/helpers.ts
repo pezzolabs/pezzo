@@ -1,7 +1,4 @@
-import {
-  PezzoInjectedContext,
-  PezzoExtendedArgs,
-} from "../types/helpers";
+import { PezzoInjectedContext, PezzoExtendedArgs } from "../types/helpers";
 
 interface ExtractedPezzoFromArgsResult<TArgs extends unknown[]> {
   _pezzo: PezzoInjectedContext;

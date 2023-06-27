@@ -34,7 +34,7 @@ async function report(reportData: ReportData) {
     {
       headers: {
         "x-pezzo-api-key": "pez_94468bd338413d30832f19f91c4f9d08",
-        "x-pezzo-project-id": "cliuaizl60100jepmcj33pdq3"
+        "x-pezzo-project-id": "cliuaizl60100jepmcj33pdq3",
       },
     }
   );

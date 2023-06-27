@@ -98,7 +98,7 @@ export class Pezzo {
       headers: {
         "Content-Type": "application/json",
         "x-api-key": this.options.apiKey,
-      }
+      },
     });
     const data = await response.json();
     const content = data.content;
@@ -106,7 +106,6 @@ export class Pezzo {
     // TODO: make dynamic
     // if data.provider === "openai" && data.type === "chat
     if (true) {
-      
     }
 
     let interpolatedContent = data.content;
@@ -117,7 +116,7 @@ export class Pezzo {
         options.variables
       );
     }
-    
+
     const prompt = {
       id: data.promptId,
       deployedVersion: data.sha,
@@ -143,14 +142,17 @@ export class Pezzo {
     dto: CreatePromptExecutionDto,
     autoParseJSON?: boolean
   ): Promise<ReportPromptExecutionResult<TResult>> {
-    const response = await fetch(`${this.options.serverUrl}/api/v2/prompts/execution`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": this.options.apiKey,
-      },
-      body: JSON.stringify(dto),
-    });
+    const response = await fetch(
+      `${this.options.serverUrl}/api/v2/prompts/execution`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": this.options.apiKey,
+        },
+        body: JSON.stringify(dto),
+      }
+    );
     const data = await response.json();
 
     if (data.result) {
