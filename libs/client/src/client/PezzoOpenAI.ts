@@ -33,6 +33,7 @@ export class PezzoOpenAIApi extends OpenAIApi {
       ...originalArgs
     );
     const { request, ...response } = createChatCompletionResult;
+
     const responseTimestamp = new Date().toISOString();
 
     const reportPayload: ReportData = {

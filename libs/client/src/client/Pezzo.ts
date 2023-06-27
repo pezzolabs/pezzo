@@ -1,10 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import {
-  IntegrationBaseSettings,
-  PromptExecutionType,
-  ProviderType,
-  ReportData,
-} from "../types";
+import { IntegrationBaseSettings, ProviderType, ReportData } from "../types";
 import type { CreatePromptExecutionDto } from "./create-prompt-execution.dto";
 import {
   Prompt,
@@ -108,11 +103,6 @@ export class Pezzo {
     const data = await response.json();
     const content = data.content;
 
-    // TODO: make dynamic
-    // if data.provider === "openai" && data.type === "chat
-    if (true) {
-    }
-
     let interpolatedContent = data.content;
 
     if (options?.variables) {
@@ -143,12 +133,9 @@ export class Pezzo {
     return prompt;
   }
 
-  async reportPromptExecutionV2<
-    TProvider extends ProviderType,
-    TExecutionType extends PromptExecutionType
-  >(dto: ReportData) {
+  async reportPromptExecutionV2(dto: ReportData) {
     await axios.post(
-      "http://localhost:3000/api/reporting/v2/request",
+      `${this.options.serverUrl}/api/reporting/v2/request`,
       {
         provider: "openai",
         type: "chat",

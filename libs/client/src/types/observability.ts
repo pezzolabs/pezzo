@@ -1,5 +1,5 @@
 import { PromptExecutionType, ProviderType } from "./providers";
-import { ValueType } from "@pezzo/client";
+import { ValueType } from "../types";
 
 export type ObservabilityReportProperties = Record<string, ValueType>;
 export type ObservabilityReportMetadata = {
