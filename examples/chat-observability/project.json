@@ -61,9 +61,7 @@
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "examples/task-generator-app/**/*.{ts,tsx,js,jsx}"
-        ]
+        "lintFilePatterns": ["examples/task-generator-app/**/*.{ts,tsx,js,jsx}"]
       }
     }
   },

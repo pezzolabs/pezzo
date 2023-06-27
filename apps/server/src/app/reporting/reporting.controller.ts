@@ -16,10 +16,10 @@ export class ReportingController {
   async reportRequest(
     @Body() dto: ReportRequestDto,
     @ApiKeyOrgId() organizationId: string,
-    @ProjectId() projectId: string,
+    @ProjectId() projectId: string
   ) {
-    console.log("Report from org id ", organizationId)
-    console.log("Report from project id ", projectId)
+    console.log("Report from org id ", organizationId);
+    console.log("Report from project id ", projectId);
     const report = await this.openSearchService.saveReport(dto, {
       organizationId,
       projectId,

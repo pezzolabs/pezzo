@@ -33,7 +33,6 @@ export class ProjectIdAuthGuard implements CanActivate {
       throw new UnauthorizedException("Invalid Pezzo Project ID");
     }
 
-
     req.projectId = projectId;
 
     this.logger.assign({

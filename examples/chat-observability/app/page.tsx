@@ -14,8 +14,9 @@ interface FormInputs {
 }
 
 export default function Home() {
-  const { messages, isLoading, append } =
-    useChat({ body: { chatId: "12233" }});
+  const { messages, isLoading, append } = useChat({
+    body: { chatId: "12233" },
+  });
 
   const handleFormFinish = async (values: FormInputs) => {
     const { userMessage } = values;

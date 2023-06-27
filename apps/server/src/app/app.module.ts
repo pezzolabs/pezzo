@@ -114,7 +114,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
     CredentialsModule,
     IdentityModule,
     MetricsModule,
-    ReportingModule
+    ReportingModule,
   ],
   controllers: [HealthController],
 })
