@@ -1,5 +1,5 @@
-import { Pezzo, PezzoOpenAIApi } from "@pezzo/client";
-import { Configuration, OpenAI, OpenAIApi } from "openai";
+import { Pezzo } from "@pezzo/client";
+import { Configuration, OpenAIApi } from "openai";
 
 // Initialize the Pezzo client
 export const pezzo = new Pezzo({
