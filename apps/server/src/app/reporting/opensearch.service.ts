@@ -3,18 +3,16 @@ import { Client } from "@opensearch-project/opensearch";
 import { ReportRequestDto } from "./dto/report-request.dto";
 import * as LLMToolkit from "@pezzo/llm-toolkit";
 import { randomUUID } from "crypto";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class OpenSearchService {
   private readonly os: Client;
 
-  constructor() {
+  constructor(private config: ConfigService) {
     this.os = new Client({
-      node: "http://localhost:9200",
-      ssl: {},
+      node: this.config.get("OPENSEARCH_URL"),
     });
-
-    this.createIndexes();
   }
 
   async saveReport(
@@ -61,83 +59,5 @@ export class OpenSearchService {
     });
 
     return result;
-  }
-
-  async createIndexes() {
-    console.log("Creating indices");
-
-    const index = "requests";
-
-    try {
-      await this.os.indices.create({
-        index,
-        body: {
-          mappings: {
-            properties: {
-              ownership: {
-                properties: {
-                  organizationId: {
-                    type: "keyword",
-                  },
-                  projectId: {
-                    type: "keyword",
-                  },
-                }
-              },
-              reportId: {
-                type: "keyword",
-              },
-              provider: {
-                type: "keyword",
-              },
-              type: {
-                type: "keyword",
-              },
-              properties: {
-                type: "object",
-              },
-              metadata: {
-                type: "object",
-              },
-              calculated: {
-                type: "object",
-              },
-              request: {
-                properties: {
-                  timestamp: {
-                    type: "date",
-                  },
-                  body: {
-                    type: "object",
-                  },
-                },
-              },
-              response: {
-                properties: {
-                  timestamp: {
-                    type: "date",
-                  },
-                  body: {
-                    type: "object",
-                  },
-                  status: {
-                    type: "integer",
-                  },
-                },
-              },
-            },
-          },
-        },
-      });
-    } catch (error) {
-      const type = error.meta.body.error.type;
-
-      if (type === "resource_already_exists_exception") {
-        console.log("Index already exists");
-        return;
-      }
-
-      console.error("Could not create index", error.meta.body);
-    }
   }
 }
