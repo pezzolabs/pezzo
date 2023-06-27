@@ -1,47 +1,6 @@
 import { NextResponse } from "next/server";
 import { openai } from "../../lib/pezzo";
-import axios from "axios";
-import { CreateChatCompletionRequest } from "openai";
-
-interface ReportData {
-  provider: "openai";
-  type: "chat";
-  metadata?: Record<string, string | boolean | number>;
-  properties?: Record<string, string | boolean | number>;
-  request: {
-    timestamp: string;
-    body: unknown;
-  };
-  response: {
-    timestamp: string;
-    body: unknown;
-    status: number;
-  };
-}
-
-async function report(reportData: ReportData) {
-  console.log("Reporting...");
-  const result = await axios.post(
-    "http://localhost:3000/api/reporting/v2/request",
-    {
-      provider: "openai",
-      type: "chat",
-      metadata: reportData.metadata || {},
-      properties: reportData.properties || {},
-      request: reportData.request,
-      response: reportData.response,
-    },
-    {
-      headers: {
-        "x-pezzo-api-key": "pez_94468bd338413d30832f19f91c4f9d08",
-        "x-pezzo-project-id": "cliuaizl60100jepmcj33pdq3",
-      },
-    }
-  );
-
-  const { data } = result;
-  console.log("Reported", data);
-}
+import { CreatePezzoChatCompletionRequest } from "@pezzo/client";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -50,7 +9,15 @@ export async function POST(request: Request) {
   let result;
 
   try {
-    const reqBody: CreateChatCompletionRequest = {
+    const reqBody: CreatePezzoChatCompletionRequest = {
+      pezzo: {
+        metadata: {
+          conversationId: "task-generator",
+        },
+        properties: {
+          userId: "user-uuid123",
+        },
+      },
       model: "gpt-3.5-turbo",
       temperature: 0,
       max_tokens: 1000,
@@ -63,7 +30,7 @@ export async function POST(request: Request) {
           My goal is: ${goal}
 
           You must respond in valid JSON, strictly adhering to the following schema:
-          
+
           {
             tasks: string[];
           }
@@ -72,30 +39,7 @@ export async function POST(request: Request) {
       ],
     };
 
-    const requestTimestamp = new Date().toISOString();
-
     result = await openai.createChatCompletion(reqBody);
-
-    const responseTimestamp = new Date().toISOString();
-
-    const { request, ...response } = result;
-
-    report({
-      provider: "openai",
-      type: "chat",
-      request: {
-        timestamp: requestTimestamp,
-        body: reqBody,
-      },
-      response: {
-        timestamp: responseTimestamp,
-        body: response.data,
-        status: response.status,
-      },
-      metadata: {
-        conversationId: "1234",
-      },
-    });
 
     const parsed = JSON.parse(result.data.choices[0].message.content);
     return NextResponse.json(parsed, {

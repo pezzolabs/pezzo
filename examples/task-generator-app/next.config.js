@@ -11,6 +11,10 @@ if (!process.env.PEZZO_API_KEY) {
   throw new Error("PEZZO_API_KEY environment variable is not defined");
 }
 
+if (!process.env.PEZZO_PROJECT_ID) {
+  throw new Error("PEZZO_PROJECT_ID environment variable is not defined");
+}
+
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
  **/
