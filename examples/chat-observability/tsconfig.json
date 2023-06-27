@@ -26,7 +26,8 @@
     "../../apps/examples/task-generator-app/.next/types/**/*.ts",
     "../../dist/apps/examples/task-generator-app/.next/types/**/*.ts",
     "next-env.d.ts",
-    "../../examples/task-generator-app/.next/types/**/*.ts"
+    "../../examples/task-generator-app/.next/types/**/*.ts",
+    "../../dist/examples/task-generator-app/.next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
