@@ -26,20 +26,4 @@ export class ReportingController {
     });
     return report;
   }
-
-  @Post("/requests/search")
-  async getRequests(
-    @Body() body: any
-  ) {
-    const index = "requests";
-
-    // const result = await this.os.search({
-    //   index,
-    //   body: {
-    //     query: body.query,
-    //   },
-    // });
-
-    // return result.body.hits.hits;
-  }
 }
