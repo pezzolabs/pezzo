@@ -1,8 +1,7 @@
 import axios, { AxiosInstance } from "axios";
-import { IntegrationBaseSettings } from "../types";
+import { IntegrationBaseSettings, ProviderType, ReportData } from "../types";
 import type { CreatePromptExecutionDto } from "./create-prompt-execution.dto";
 import {
-  ProviderType,
   Prompt,
   getPromptSettings,
   ReportPromptExecutionResult,
@@ -14,6 +13,7 @@ export interface PezzoClientOptions {
   serverUrl?: string;
   apiKey: string;
   environment: string;
+  projectId: string;
 }
 
 export interface GetPromptOptions {
@@ -103,11 +103,6 @@ export class Pezzo {
     const data = await response.json();
     const content = data.content;
 
-    // TODO: make dynamic
-    // if data.provider === "openai" && data.type === "chat
-    if (true) {
-    }
-
     let interpolatedContent = data.content;
 
     if (options?.variables) {
@@ -138,35 +133,17 @@ export class Pezzo {
     return prompt;
   }
 
-  async reportPromptExecutionV2<TResult>(
-    dto: CreatePromptExecutionDto,
-    autoParseJSON?: boolean
-  ): Promise<ReportPromptExecutionResult<TResult>> {
-    const response = await fetch(
-      `${this.options.serverUrl}/api/v2/prompts/execution`,
+  async reportPromptExecutionV2(dto: ReportData) {
+    await axios.post(
+      `${this.options.serverUrl}/api/reporting/v2/request`,
+      dto,
       {
-        method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "x-api-key": this.options.apiKey,
+          "x-pezzo-api-key": this.options.apiKey,
+          "x-pezzo-project-id": this.options.projectId,
         },
-        body: JSON.stringify(dto),
       }
     );
-    const data = await response.json();
-
-    if (data.result) {
-      const report = {
-        ...data,
-        result: autoParseJSON
-          ? (JSON.parse(data.result) as TResult)
-          : (data.result as TResult),
-      };
-
-      return report;
-    } else {
-      return data;
-    }
   }
 
   async getOpenAiPrompt(promptName: string) {
