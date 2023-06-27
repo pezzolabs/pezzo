@@ -136,14 +136,7 @@ export class Pezzo {
   async reportPromptExecutionV2(dto: ReportData) {
     await axios.post(
       `${this.options.serverUrl}/api/reporting/v2/request`,
-      {
-        provider: "openai",
-        type: "chat",
-        metadata: dto.metadata ?? {},
-        properties: dto.properties ?? {},
-        request: dto.request,
-        response: dto.response,
-      },
+      dto,
       {
         headers: {
           "x-pezzo-api-key": this.options.apiKey,

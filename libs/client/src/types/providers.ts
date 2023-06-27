@@ -1,7 +1,7 @@
 import {
   CreateChatCompletionRequest as OpenAICreateChatCompletionRequest,
   CreateCompletionRequest as OpenAICreateCompletionRequest,
-} from "openai/dist/api";
+} from "openai";
 
 export enum ProviderType {
   OpenAI = "OpenAI",
