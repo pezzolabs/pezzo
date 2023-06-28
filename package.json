@@ -29,6 +29,8 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nrwl/nest": "^15.9.2",
     "@nrwl/next": "^15.9.4",
+    "@opensearch-project/opensearch": "^1.2.0",
+    "@pezzo/llm-toolkit": "^0.1.0",
     "@prisma/client": "^3.14.0",
     "@segment/analytics-node": "^1.0.0-beta.26",
     "@sentry/react": "^7.53.1",
