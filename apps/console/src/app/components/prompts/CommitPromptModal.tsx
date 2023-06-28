@@ -66,7 +66,7 @@ export const CommitPromptModal = ({
     mutate({
       message: form.getFieldValue("message"),
       content: editPromptValues.content,
-      settings: editPromptValues.settings,
+      settings: JSON.parse(editPromptValues.settings),
       promptId: prompt.id,
     });
 
