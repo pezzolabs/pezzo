@@ -4,6 +4,7 @@ import { Injectable } from "@nestjs/common";
 import { ReportRequestDto } from "./dto/report-request.dto";
 import { randomUUID } from "crypto";
 import { buildRequestReport } from "./utils/build-request-report";
+import { RequestReport } from "./object-types/request-report.model";
 
 
 
@@ -42,5 +43,16 @@ export class ReportingService {
     });
 
     return result;
+  }
+
+  async getReports() {
+    return await this.openSearchService.client.search<{ hits: { hits: Array<{ _source: RequestReport }> } }>({
+      index: OpenSearchIndex.Requests,
+      body: {
+        query: {
+          match_all: {},
+        },
+      },
+    });
   }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, InternalServerErrorException, Post, UseGuards } from "@nestjs/common";
 import { ReportRequestDto } from "./dto/report-request.dto";
 import { ApiKeyAuthGuard } from "../auth/api-key-auth.guard";
 import { ApiKeyOrgId } from "../identity/api-key-org-id.decoator";
@@ -26,14 +26,14 @@ export class ReportingController {
     }).info("Saving report to OpenSearch")
 
     try {
-      const report = await this.reportingService.saveReport(dto, {
+      return await this.reportingService.saveReport(dto, {
         organizationId,
         projectId,
       });
 
-      return report;
     } catch (error) {
-      this.logger.error({ error }, "Error saving report to OpenSearch");
+      this.logger.error(error, "Error saving report to OpenSearch");
+      throw new InternalServerErrorException();
     }
   }
 }
