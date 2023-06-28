@@ -2,13 +2,14 @@ import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { ReportRequestDto } from "./dto/report-request.dto";
 import { ApiKeyAuthGuard } from "../auth/api-key-auth.guard";
 import { ApiKeyOrgId } from "../identity/api-key-org-id.decoator";
-import { ReportingService } from "./reporting.service";
 import { ProjectIdAuthGuard } from "../auth/project-id-auth.guard";
 import { ProjectId } from "../identity/project-id.decorator";
+import { PinoLogger } from "../logger/pino-logger";
+import { ReportingService } from "./reporting.service";
 
 @Controller("/reporting/v2")
 export class ReportingController {
-  constructor(private openSearchService: ReportingService) {}
+  constructor(private reportingService: ReportingService, private readonly logger: PinoLogger) { }
 
   @UseGuards(ApiKeyAuthGuard)
   @UseGuards(ProjectIdAuthGuard)
@@ -18,12 +19,21 @@ export class ReportingController {
     @ApiKeyOrgId() organizationId: string,
     @ProjectId() projectId: string
   ) {
-    console.log("Report from org id ", organizationId);
-    console.log("Report from project id ", projectId);
-    const report = await this.openSearchService.saveReport(dto, {
+
+    this.logger.assign({
       organizationId,
       projectId,
-    });
-    return report;
+    }).info("Saving report to OpenSearch")
+
+    try {
+      const report = await this.reportingService.saveReport(dto, {
+        organizationId,
+        projectId,
+      });
+
+      return report;
+    } catch (error) {
+      this.logger.error({ error }, "Error saving report to OpenSearch");
+    }
   }
 }

@@ -9,6 +9,7 @@ import { OpenAIToolkit } from "@pezzo/llm-toolkit";
 
 export enum ProviderType {
   OpenAI = "OpenAI",
+  AI21 = "AI21",
 }
 
 export enum PromptExecutionType {
@@ -18,7 +19,7 @@ export enum PromptExecutionType {
 
 type ExtractModelNames<T> = T extends { model: infer M } ? M : never;
 export type AcceptedModels = ExtractModelNames<
-  Parameters<typeof OpenAIToolkit.calculateGptCost>[0]["model"]
+  Parameters<typeof OpenAIToolkit.calculateGptCost>[0]
 >;
 
 export type ObservabilityReportProperties = RecursiveObject<Primitive>;
