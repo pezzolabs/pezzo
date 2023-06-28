@@ -1,11 +1,10 @@
 import {
   BoltIcon,
-  ChartBarIcon,
   QueueListIcon,
   ServerStackIcon,
 } from "@heroicons/react/24/solid";
-import { Menu } from "antd";
-import { useMemo } from "react";
+import { Layout, Menu } from "antd";
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
 
@@ -75,13 +74,16 @@ export const SideNavigation = () => {
   ).filter(Boolean);
 
   return (
-    <SidebarContainer>
-      <TopMenu
-        onClick={handleTopMenuClick}
-        defaultSelectedKeys={["overview"]}
-        selectedKeys={selectedKeys.length ? selectedKeys : ["overview"]}
-        items={topMenuItems}
-      />
-    </SidebarContainer>
+    <Layout.Sider style={{ overflow: "hidden" }} collapsed={false}>
+      <SidebarContainer>
+        <TopMenu
+          onClick={handleTopMenuClick}
+          defaultSelectedKeys={["prompts"]}
+          selectedKeys={[location.pathname.replace("/", "")]}
+          items={topMenuItems}
+          mode="inline"
+        />
+      </SidebarContainer>
+    </Layout.Sider>
   );
 };
