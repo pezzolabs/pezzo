@@ -22,6 +22,7 @@ import { LoggerModule } from "./logger/logger.module";
 import { PinoLogger } from "./logger/pino-logger";
 import { AnalyticsModule } from "./analytics/analytics.module";
 import { ReportingModule } from "./reporting/reporting.module";
+import { OpenSearchModule } from "./opensearch/opensearch.module";
 
 const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
 
@@ -59,6 +60,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
       validate:
         process.env.SKIP_CONFIG_VALIDATION === "true" ? () => ({}) : undefined,
     }),
+    OpenSearchModule,
     KafkaModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => ({
