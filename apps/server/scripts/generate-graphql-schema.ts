@@ -12,12 +12,15 @@ if (process.env.GITHUB_ACTIONS !== "true") {
   process.exit(0);
 }
 
+/**
+ * When generating the GraphQL schema in offline mode (CI), we don't want to connect to all
+ * external services, and we also don't want to serve the server. Therefore, we need to generate
+ * a static `schenma.gql` file to be used by `graphql-codegen`. To achieve this, we need to mock
+ * all external-facing services to prevent them from trying to establish connections.
+ */
 export default async function generateGraphQLSchema(): Promise<void> {
-  // Override PrismaClient $connect to prevent connections to the database
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   PrismaClient.prototype.$connect = async () => {};
-
-  // Prevent SuperTokens init
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   supertokens.init = async () => {};
   // eslint-disable-next-line @typescript-eslint/no-empty-function
