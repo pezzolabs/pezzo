@@ -5,7 +5,8 @@ import { GetMetricsInput } from "../../../@generated/graphql/graphql";
 
 export const useGetPromptExecutionMetric = (
   queryKey: string[],
-  data: GetMetricsInput
+  data: GetMetricsInput,
+  enabled = true,
 ) =>
   useQuery({
     queryKey,
@@ -13,4 +14,5 @@ export const useGetPromptExecutionMetric = (
       gqlClient.request(GET_PROMPT_EXECUTION_METRICS, {
         data,
       }),
+    enabled,
   });

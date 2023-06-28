@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useCurrentPrompt } from "./CurrentPromptContext";
 import {
   Aggregation,
@@ -10,6 +10,7 @@ import { useGetPromptExecutionMetric } from "../hooks/useGetPromptExecutionMetri
 import { format } from "date-fns";
 import { Card, Col, Empty, Radio, Row, Select, Typography, theme } from "antd";
 import { Loading3QuartersOutlined } from "@ant-design/icons";
+import ms from "ms";
 
 interface MetricContextValue {
   data: GetMetricsQuery["metrics"];
@@ -26,37 +27,43 @@ export const useMetric = () => useContext(MetricContext);
 interface Props {
   children: React.ReactNode;
   title: string;
-  field: PromptExecutionMetricField;
-  fillEmpty?: string;
+  field?: PromptExecutionMetricField;
   aggregation: Aggregation;
 }
 
 export const MetricProvider = ({
   children,
   title,
-  field,
-  fillEmpty,
+  field = null,
   aggregation,
 }: Props) => {
   const { token } = theme.useToken();
   const { prompt } = useCurrentPrompt();
   const [granularity, setGranularity] = useState<Granularity>(Granularity.Day);
-  const [start, setStart] = useState<string>("-7d");
+  const [start, setStart] = useState<string>("-7 days");
+  const [startDate, setStartDate] = useState<Date>(null);
+  
+  useEffect(() => {
+    const newStartDate = new Date();
+    const subtractMs = ms(start);
+    newStartDate.setMilliseconds(newStartDate.getMilliseconds() + subtractMs);
+    setStartDate(newStartDate);
+  }, [start]);
 
   const { data: metricsData, isLoading } = useGetPromptExecutionMetric(
     [prompt.id, "metrics", title, granularity, start],
     {
       promptId: prompt.id,
-      start,
-      stop: "now()",
+      start: startDate?.toISOString(),
+      stop: new Date().toISOString(),
       field,
       granularity,
       aggregation,
-      fillEmpty,
-    }
+    },
+    !!startDate
   );
 
-  if (isLoading || !metricsData) {
+  if (!startDate || isLoading || !metricsData) {
     return <Loading3QuartersOutlined spin />;
   }
 
@@ -94,7 +101,7 @@ export const MetricProvider = ({
               >
                 <Select.Option value="-1h">Past Hour</Select.Option>
                 <Select.Option value="-1d">Past Day</Select.Option>
-                <Select.Option value="-7d">Past 7 days</Select.Option>
+                <Select.Option value="-7 days">Past 7 days</Select.Option>
                 <Select.Option value="-30d">Past 30 days</Select.Option>
                 <Select.Option value="-1y">Past year</Select.Option>
               </Select>
