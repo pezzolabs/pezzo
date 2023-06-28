@@ -9,7 +9,7 @@ import {
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import { PromptHistoryView } from "../../../components/prompts/views/PromptHistoryView";
-import { PromptEditView } from "../../../components/prompts/views/PromptEditView";
+import { NewPromptEditView } from "../../../components/prompts/views/NewPromptEditView";
 import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
 import { DashboardView } from "../../../components/prompts/views/DashboardView";
 import { useParams } from "react-router-dom";
@@ -25,7 +25,7 @@ const TabLabel = styled.div`
 export const PromptPage = () => {
   const params = useParams();
   const { setCurrentPromptId, prompt, isLoading } = useCurrentPrompt();
-  const [activeView, setActiveView] = useState("dashboard");
+  const [activeView, setActiveView] = useState("edit");
 
   useEffect(() => {
     if (params.promptId) {
@@ -37,18 +37,18 @@ export const PromptPage = () => {
     {
       label: (
         <TabLabel>
-          <DashboardOutlined /> Dashboard
-        </TabLabel>
-      ),
-      key: "dashboard",
-    },
-    {
-      label: (
-        <TabLabel>
           <EditOutlined /> Edit
         </TabLabel>
       ),
       key: "edit",
+    },
+    {
+      label: (
+        <TabLabel>
+          <DashboardOutlined /> Metrics
+        </TabLabel>
+      ),
+      key: "metrics",
     },
     {
       label: (
@@ -85,10 +85,10 @@ export const PromptPage = () => {
 
       {prompt && (
         <>
-          {activeView === "history" && <PromptHistoryView />}
-          {activeView === "edit" && <PromptEditView />}
+          {activeView === "edit" && <NewPromptEditView />}
+          {activeView === "metrics" && <DashboardView />}
           {activeView === "versions" && <PromptVersionsView />}
-          {activeView === "dashboard" && <DashboardView />}
+          {activeView === "history" && <PromptHistoryView />}
           {activeView === "settings" && <PromptSettingsView />}
         </>
       )}
