@@ -75,7 +75,9 @@ npm install
 
 ### Spin up development dependencies via Docker Compose
 
-Pezzo relies on Postgres, [InfluxDB](https://github.com/influxdata/influxdb) and [Supertokens](https://supertokens.com/). You can spin it up using Docker Compose:
+Pezzo is entirely cloud-native and relies solely on open-source technologies such as [OpenSearch](https://github.com/opensearch-project/OpenSearch), and [Supertokens](https://supertokens.com/).
+
+Spin these dependencies up via Docker Compose:
 
 ```
 docker-compose -f docker-compose.dev.yaml up
