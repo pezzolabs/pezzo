@@ -30,10 +30,6 @@ export const useBreadcrumbItems = () => {
         title: "Environments",
         link: `/projects/${project?.id}/environments`,
       },
-      requests: {
-        title: "Requests",
-        link: `/projects/${project?.id}/requests`,
-      },
       prompts: {
         title: "Prompts",
         link: `/projects/${project?.id}/prompts`,

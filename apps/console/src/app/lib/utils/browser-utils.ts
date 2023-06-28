@@ -5,4 +5,4 @@ export const copyToClipboard = (text: string) => {
   textarea.select();
   document.execCommand("copy");
   document.body.removeChild(textarea);
-};
+}

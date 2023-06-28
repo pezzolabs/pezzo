@@ -1,5 +1,6 @@
 import {
   BoltIcon,
+  ChartBarIcon,
   QueueListIcon,
   ServerStackIcon,
 } from "@heroicons/react/24/solid";
