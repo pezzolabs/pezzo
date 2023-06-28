@@ -86,8 +86,8 @@ export default function Home() {
           )}
 
           <Typography.Paragraph style={{ textAlign: "center" }}>
-            Let me know your goal and {`I'll`} generate you some tasks, so you can
-            get started right away!
+            Let me know your goal and {`I'll`} generate you some tasks, so you
+            can get started right away!
           </Typography.Paragraph>
 
           <Form

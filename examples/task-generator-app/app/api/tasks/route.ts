@@ -9,35 +9,35 @@ export async function POST(request: Request) {
   let result;
 
   try {
-  //   const reqBody: CreatePezzoChatCompletionRequest = {
-  //     pezzo: {
-  //       metadata: {
-  //         conversationId: "task-generator",
-  //       },
-  //       properties: {
-  //         userId: "user-uuid123",
-  //       },
-  //     },
-  //     model: "gpt-3.5-turbo",
-  //     temperature: 0,
-  //     max_tokens: 1000,
-  //     messages: [
-  //       {
-  //         role: "assistant",
-  //         content: `
-  //         You'll help me generate tasks to achieve my goal. You will create exactly ${numTasks} tasks.
+    //   const reqBody: CreatePezzoChatCompletionRequest = {
+    //     pezzo: {
+    //       metadata: {
+    //         conversationId: "task-generator",
+    //       },
+    //       properties: {
+    //         userId: "user-uuid123",
+    //       },
+    //     },
+    //     model: "gpt-3.5-turbo",
+    //     temperature: 0,
+    //     max_tokens: 1000,
+    //     messages: [
+    //       {
+    //         role: "assistant",
+    //         content: `
+    //         You'll help me generate tasks to achieve my goal. You will create exactly ${numTasks} tasks.
 
-  //         My goal is: ${goal}
+    //         My goal is: ${goal}
 
-  //         You must respond in valid JSON, strictly adhering to the following schema:
+    //         You must respond in valid JSON, strictly adhering to the following schema:
 
-  //         {
-  //           tasks: string[];
-  //         }
-  //         `,
-  //       },
-  //     ],
-  //   };
+    //         {
+    //           tasks: string[];
+    //         }
+    //         `,
+    //       },
+    //     ],
+    //   };
 
     // result = await openai.createChatCompletion(reqBody);
 

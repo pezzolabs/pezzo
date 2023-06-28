@@ -18,4 +18,4 @@
 // export const openai = new PezzoOpenAIApi(pezzo, configuration);
 
 // TODO: remove
-export {}
+export {};
