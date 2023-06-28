@@ -8,13 +8,13 @@ import { createIndexes } from "./create-indexes";
 export class OpenSearchService implements OnModuleInit {
   public client: Client;
 
-  constructor(private config: ConfigService) {
+  constructor(private config: ConfigService) {}
+
+  async onModuleInit() {
     this.client = new Client({
       node: this.config.get("OPENSEARCH_URL"),
     });
-  }
 
-  async onModuleInit() {
     const logger = createLogger({
       scope: "OpenSearchService.onModuleInit",
     });

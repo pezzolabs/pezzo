@@ -5,6 +5,7 @@ import { PrismaClient } from "@prisma/client";
 import supertokens from "supertokens-node";
 import { AppModule } from "../src/app/app.module";
 import { KafkaConsumerService, KafkaProducerService } from "@pezzo/kafka";
+import { OpenSearchService } from "../src/app/opensearch/opensearch.service";
 
 // This script only runs in GitHub Actions
 if (process.env.GITHUB_ACTIONS !== "true") {
@@ -19,11 +20,12 @@ export default async function generateGraphQLSchema(): Promise<void> {
   // Prevent SuperTokens init
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   supertokens.init = async () => {};
-
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   KafkaConsumerService.prototype.connect = async () => {};
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   KafkaProducerService.prototype.connect = async () => {};
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  OpenSearchService.prototype.onModuleInit = async () => {};
 
   // Use the side effect of initializing the nest application for generating
   // the Nest.js schema
