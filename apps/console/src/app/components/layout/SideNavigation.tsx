@@ -1,5 +1,6 @@
 import {
   BoltIcon,
+  ChartBarIcon,
   QueueListIcon,
   ServerStackIcon,
 } from "@heroicons/react/24/solid";
@@ -12,6 +13,11 @@ import { colors } from "../../lib/theme/colors";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 
 const topMenuItems = [
+  {
+    key: "overview",
+    label: "Overview",
+    icon: <ChartBarIcon height={18} />,
+  },
   {
     key: "prompts",
     label: "Prompts",

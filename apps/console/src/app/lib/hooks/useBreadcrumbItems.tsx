@@ -20,7 +20,15 @@ export const useBreadcrumbItems = () => {
       },
       ":projectId": {
         title: project?.name,
-        link: `/projects/${project?.id}/prompts`,
+        link: `/projects/${project?.id}`,
+      },
+      overview: {
+        title: "Overview",
+        link: `/projects/${project?.id}/overview`,
+      },
+      environments: {
+        title: "Environments",
+        link: `/projects/${project?.id}/environments`,
       },
       prompts: {
         title: "Prompts",
