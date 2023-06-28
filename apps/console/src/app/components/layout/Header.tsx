@@ -66,7 +66,7 @@ const menuItems: MenuProps["items"] = [
 
 export const Header = () => {
   const { currentUser } = useAuthContext();
-  const [open, setOpen] = useState(false);
+  const [_, setOpen] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -94,7 +94,6 @@ export const Header = () => {
       <div
         style={{
           marginLeft: 19,
-          borderLeft: `1px solid ${colors.neutral["800"]}`,
         }}
       >
         <span style={{ visibility: "hidden" }}>Pezzo</span>

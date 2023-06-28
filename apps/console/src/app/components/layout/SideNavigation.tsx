@@ -1,4 +1,8 @@
-import { BoltIcon, ServerStackIcon } from "@heroicons/react/24/solid";
+import {
+  BoltIcon,
+  QueueListIcon,
+  ServerStackIcon,
+} from "@heroicons/react/24/solid";
 import { Layout, Menu } from "antd";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -12,6 +16,11 @@ const topMenuItems = [
     key: "prompts",
     label: "Prompts",
     icon: <BoltIcon height={18} />,
+  },
+  {
+    key: "requests",
+    label: "Requests",
+    icon: <QueueListIcon height={18} width={18} />,
   },
   {
     key: "environments",
@@ -38,8 +47,6 @@ const TopMenu = styled(BaseMenu)`
   flex: 100%;
 `;
 
-const BottomMenu = styled(BaseMenu)``;
-
 export const SideNavigation = () => {
   const { project } = useCurrentProject();
   const location = useLocation();
@@ -51,7 +58,7 @@ export const SideNavigation = () => {
   };
 
   return (
-    <Layout.Sider style={{ overflow: "hidden" }} collapsed={isCollapsed}>
+    <Layout.Sider style={{ overflow: "hidden" }} collapsed={false}>
       <SidebarContainer>
         <TopMenu
           onClick={handleTopMenuClick}
