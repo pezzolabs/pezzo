@@ -1,7 +1,3 @@
-import CodeMirror from "@uiw/react-codemirror";
-import { materialInit } from "@uiw/codemirror-theme-material";
-import { css } from "@emotion/css";
-import { colors } from "../../lib/theme/colors";
 import { Form } from "antd";
 import Editor from "@monaco-editor/react";
 
