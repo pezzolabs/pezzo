@@ -4,21 +4,6 @@
   "sourceRoot": "examples/task-generator-app",
   "projectType": "application",
   "targets": {
-    "build": {
-      "executor": "@nrwl/next:build",
-      "outputs": ["{options.outputPath}"],
-      "defaultConfiguration": "production",
-      "options": {
-        "outputPath": "dist/examples/task-generator-app",
-        "root": "examples/task-generator-app"
-      },
-      "configurations": {
-        "development": {
-          "outputPath": "examples/task-generator-app"
-        },
-        "production": {}
-      }
-    },
     "serve": {
       "executor": "@nrwl/next:server",
       "defaultConfiguration": "development",
