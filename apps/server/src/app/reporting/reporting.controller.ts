@@ -8,7 +8,7 @@ import { ProjectId } from "../identity/project-id.decorator";
 
 @Controller("/reporting/v2")
 export class ReportingController {
-  constructor(private openSearchService: OpenSearchService) {}
+  constructor(private openSearchService: OpenSearchService) { }
 
   @UseGuards(ApiKeyAuthGuard)
   @UseGuards(ProjectIdAuthGuard)
@@ -18,8 +18,6 @@ export class ReportingController {
     @ApiKeyOrgId() organizationId: string,
     @ProjectId() projectId: string
   ) {
-    console.log("Report from org id ", organizationId);
-    console.log("Report from project id ", projectId);
     const report = await this.openSearchService.saveReport(dto, {
       organizationId,
       projectId,
