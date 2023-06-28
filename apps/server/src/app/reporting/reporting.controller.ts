@@ -2,13 +2,13 @@ import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { ReportRequestDto } from "./dto/report-request.dto";
 import { ApiKeyAuthGuard } from "../auth/api-key-auth.guard";
 import { ApiKeyOrgId } from "../identity/api-key-org-id.decoator";
-import { OpenSearchService } from "./opensearch.service";
+import { ReportingService } from "./reporting.service";
 import { ProjectIdAuthGuard } from "../auth/project-id-auth.guard";
 import { ProjectId } from "../identity/project-id.decorator";
 
 @Controller("/reporting/v2")
 export class ReportingController {
-  constructor(private openSearchService: OpenSearchService) {}
+  constructor(private openSearchService: ReportingService) {}
 
   @UseGuards(ApiKeyAuthGuard)
   @UseGuards(ProjectIdAuthGuard)

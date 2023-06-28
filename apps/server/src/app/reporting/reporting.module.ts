@@ -3,11 +3,12 @@ import { ReportingController } from "./reporting.controller";
 import { AuthModule } from "../auth/auth.module";
 import { LoggerModule } from "../logger/logger.module";
 import { IdentityModule } from "../identity/identity.module";
-import { OpenSearchService } from "./opensearch.service";
+import { ReportingService } from "./reporting.service";
+import { OpenSearchModule } from "../opensearch/opensearch.module";
 
 @Module({
-  imports: [LoggerModule, AuthModule, IdentityModule],
+  imports: [OpenSearchModule, LoggerModule, AuthModule, IdentityModule],
   controllers: [ReportingController],
-  providers: [OpenSearchService],
+  providers: [ReportingService],
 })
 export class ReportingModule {}

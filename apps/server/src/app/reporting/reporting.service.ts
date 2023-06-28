@@ -1,19 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { Client } from "@opensearch-project/opensearch";
 import { ReportRequestDto } from "./dto/report-request.dto";
 import * as LLMToolkit from "@pezzo/llm-toolkit";
 import { randomUUID } from "crypto";
-import { ConfigService } from "@nestjs/config";
+import { OpenSearchService } from "../opensearch/opensearch.service";
 
 @Injectable()
-export class OpenSearchService {
-  private readonly os: Client;
-
-  constructor(private config: ConfigService) {
-    this.os = new Client({
-      node: this.config.get("OPENSEARCH_URL"),
-    });
-  }
+export class ReportingService {
+  constructor(private openSearchService: OpenSearchService) {}
 
   async saveReport(
     dto: ReportRequestDto,
@@ -43,7 +36,7 @@ export class OpenSearchService {
       totalCost: parseFloat((promptCost + completionCost).toFixed(6)),
     };
 
-    const result = await this.os.index({
+    const result = await this.openSearchService.client.index({
       index: "requests",
       body: {
         ownership,
