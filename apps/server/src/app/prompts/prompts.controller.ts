@@ -19,10 +19,8 @@ import {
   PromptExecution,
   PromptVersion,
 } from "@prisma/client";
-import { InfluxDbService } from "../influxdb/influxdb.service";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { PrismaService } from "../prisma.service";
-import { Point } from "@influxdata/influxdb-client";
 import { ApiKeyOrgId } from "../identity/api-key-org-id.decoator";
 import { GetPromptDeploymentDto } from "./dto/get-prompt-deployment.dto";
 
@@ -33,7 +31,6 @@ export class PromptsController {
     private logger: PinoLogger,
     private prisma: PrismaService,
     private promptsService: PromptsService,
-    private influxService: InfluxDbService,
     private analytics: AnalyticsService
   ) {}
 
@@ -186,33 +183,6 @@ export class PromptsController {
         duration: execution.duration / 1000,
       },
     });
-
-    try {
-      const writeClient = this.influxService.getWriteApi("primary", "primary");
-      const point = new Point("prompt_execution")
-        .tag("prompt_id", execution.promptId)
-        .tag("prompt_version_sha", execution.promptVersionSha)
-        .tag("project_id", prompt.projectId)
-        .tag("prompt_name", prompt.name)
-        .tag("prompt_integration_id", prompt.integrationId)
-        .stringField("status", execution.status)
-        .floatField("duration", execution.duration / 1000)
-        .floatField("prompt_cost", execution.promptCost)
-        .floatField("completion_cost", execution.completionCost)
-        .floatField("total_cost", execution.totalCost)
-        .intField("prompt_tokens", execution.promptTokens)
-        .intField("completion_tokens", execution.completionTokens)
-        .intField("total_tokens", execution.totalTokens);
-
-      writeClient.writePoint(point);
-      writeClient.flush();
-    } catch (error) {
-      this.logger.error(
-        { error },
-        "Error reporting prompt execution to influxdb"
-      );
-      return { success: false };
-    }
 
     return { success: true };
   }

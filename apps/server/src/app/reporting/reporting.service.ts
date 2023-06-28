@@ -31,10 +31,15 @@ export class ReportingService {
         promptTokens: usage.prompt_tokens,
         completionTokens: usage.completion_tokens,
       });
+    const requestTimestamp = new Date(request.timestamp);
+    const responseTimestamp = new Date(response.timestamp);
+    const duration = Math.ceil(responseTimestamp.getTime() - requestTimestamp.getTime());
     const calculated = {
       promptCost: parseFloat(promptCost.toFixed(6)),
       completionCost: parseFloat(completionCost.toFixed(6)),
       totalCost: parseFloat((promptCost + completionCost).toFixed(6)),
+      totalTokens: parseInt(usage.prompt_tokens + usage.completion_tokens),
+      duration,
     };
 
     const result = await this.openSearchService.client.index({

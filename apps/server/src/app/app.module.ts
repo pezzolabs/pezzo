@@ -15,8 +15,6 @@ import { PromptEnvironmentsModule } from "./prompt-environments/prompt-environme
 import { CredentialsModule } from "./credentials/credentials.module";
 import { AuthModule } from "./auth/auth.module";
 import { IdentityModule } from "./identity/identity.module";
-import { InfluxDbModule } from "./influxdb/influxdb.module";
-import { InfluxModuleOptions } from "./influxdb/types";
 import { MetricsModule } from "./metrics/metrics.module";
 import { LoggerModule } from "./logger/logger.module";
 import { PinoLogger } from "./logger/pino-logger";
@@ -45,8 +43,6 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
         ),
         GOOGLE_OAUTH_CLIENT_ID: Joi.string().optional().default(null),
         GOOGLE_OAUTH_CLIENT_SECRET: Joi.string().optional().default(null),
-        INFLUXDB_URL: Joi.string().required(),
-        INFLUXDB_TOKEN: Joi.string().required(),
         CONSOLE_HOST: Joi.string().required(),
         KAFKA_BROKERS: Joi.string().required(),
         KAFKA_GROUP_ID: Joi.string().default("pezzo"),
@@ -98,17 +94,6 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
         MetricsModule,
       ],
       formatError,
-    }),
-    InfluxDbModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: async (
-        config: ConfigService
-      ): Promise<InfluxModuleOptions> => {
-        return {
-          url: config.get("INFLUXDB_URL"),
-          token: config.get("INFLUXDB_TOKEN"),
-        };
-      },
     }),
     AuthModule.forRoot(),
     AnalyticsModule,
