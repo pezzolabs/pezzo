@@ -42,7 +42,7 @@ export const MetricProvider = ({
   const [granularity, setGranularity] = useState<Granularity>(Granularity.Day);
   const [start, setStart] = useState<string>("-7 days");
   const [startDate, setStartDate] = useState<Date>(null);
-  
+
   useEffect(() => {
     const newStartDate = new Date();
     const subtractMs = ms(start);

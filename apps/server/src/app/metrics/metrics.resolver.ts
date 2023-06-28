@@ -68,14 +68,7 @@ export class MetricsResolver {
 
     isOrgMemberOrThrow(user, project.organizationId);
 
-    const {
-      start,
-      stop,
-      field,
-      aggregation,
-      granularity,
-      promptId,
-    } = data;
+    const { start, stop, field, aggregation, granularity, promptId } = data;
 
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - 7);

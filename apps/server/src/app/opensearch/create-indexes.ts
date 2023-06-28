@@ -74,7 +74,7 @@ export async function createRequestsIndex(
             },
             duration: {
               type: "integer",
-            }
+            },
           },
         },
         provider: {
@@ -97,7 +97,7 @@ export async function createRequestsIndex(
             conversationId: {
               type: "keyword",
             },
-          }
+          },
         },
         request: {
           properties: {

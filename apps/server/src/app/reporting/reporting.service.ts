@@ -33,7 +33,9 @@ export class ReportingService {
       });
     const requestTimestamp = new Date(request.timestamp);
     const responseTimestamp = new Date(response.timestamp);
-    const duration = Math.ceil(responseTimestamp.getTime() - requestTimestamp.getTime());
+    const duration = Math.ceil(
+      responseTimestamp.getTime() - requestTimestamp.getTime()
+    );
     const calculated = {
       promptCost: parseFloat(promptCost.toFixed(6)),
       completionCost: parseFloat(completionCost.toFixed(6)),
