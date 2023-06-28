@@ -1,23 +1,13 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { Client } from "@opensearch-project/opensearch";
-import { ProviderType, ReportRequestDto } from "./dto/report-request.dto";
 import * as LLMToolkit from "@pezzo/llm-toolkit";
+import { Injectable } from "@nestjs/common";
+import { ReportRequestDto } from "./dto/report-request.dto";
 import { randomUUID } from "crypto";
-import { ConfigService } from "@nestjs/config";
-
-export enum OpenSearchIndex {
-  Requests = "requests",
-}
+import { OpenSearchService } from "../opensearch/opensearch.service";
+import { OpenSearchIndex } from "../opensearch/types";
 
 @Injectable()
-export class OpenSearchService {
-  private readonly os: Client;
-
-  constructor(private config: ConfigService) {
-    this.os = new Client({
-      node: this.config.get("OPENSEARCH_URL"),
-    });
-  }
+export class ReportingService {
+  constructor(private openSearchService: OpenSearchService) {}
 
   async saveReport(
     dto: ReportRequestDto,
@@ -28,20 +18,13 @@ export class OpenSearchService {
   ) {
     const reportId = randomUUID();
 
-    //TODO: add AI21 support
-    if (dto.provider !== ProviderType.OpenAI) {
-      throw new InternalServerErrorException("Unsupported provider");
-    }
-
-    const { provider, type, properties, metadata, request, response } =
-      dto as ReportRequestDto<ProviderType.OpenAI>;
+    const { provider, type, properties, metadata, request, response } = dto;
 
     // TODO: split calculate costs logic
-    const responseBody = response.body;
+    const responseBody = (response as any).body;
     const usage = responseBody.usage;
-    const requestBody = request.body;
+    const requestBody = (request as any).body;
     const model = requestBody.model;
-
     const { promptCost, completionCost } =
       LLMToolkit.OpenAIToolkit.calculateGptCost({
         model,
@@ -54,7 +37,7 @@ export class OpenSearchService {
       totalCost: parseFloat((promptCost + completionCost).toFixed(6)),
     };
 
-    return await this.os.index({
+    const result = await this.openSearchService.client.index({
       index: OpenSearchIndex.Requests,
       body: {
         ownership,
@@ -68,5 +51,7 @@ export class OpenSearchService {
         response,
       },
     });
+
+    return result;
   }
 }
