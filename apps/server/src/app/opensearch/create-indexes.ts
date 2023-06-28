@@ -1,5 +1,6 @@
 import { Client } from "@opensearch-project/opensearch";
 import { pino } from "pino";
+import { OpenSearchIndex } from "./types";
 
 export async function createIndexes(client: Client, _logger: pino.Logger) {
   const logger = _logger.child({ step: "createIndexes" });
@@ -12,7 +13,7 @@ export async function createRequestsIndex(
   _logger: pino.Logger
 ) {
   const logger = _logger.child({ index: "createRequestsIndex" });
-  const index = "requests";
+  const index = OpenSearchIndex.Requests;
 
   const indexExists = await client.indices.exists({
     index,

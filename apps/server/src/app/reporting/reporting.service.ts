@@ -1,8 +1,9 @@
+import * as LLMToolkit from "@pezzo/llm-toolkit";
 import { Injectable } from "@nestjs/common";
 import { ReportRequestDto } from "./dto/report-request.dto";
-import * as LLMToolkit from "@pezzo/llm-toolkit";
 import { randomUUID } from "crypto";
 import { OpenSearchService } from "../opensearch/opensearch.service";
+import { OpenSearchIndex } from "../opensearch/types";
 
 @Injectable()
 export class ReportingService {
@@ -37,7 +38,7 @@ export class ReportingService {
     };
 
     const result = await this.openSearchService.client.index({
-      index: "requests",
+      index: OpenSearchIndex.Requests,
       body: {
         ownership,
         reportId,
