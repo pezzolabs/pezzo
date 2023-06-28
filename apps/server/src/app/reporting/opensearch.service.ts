@@ -28,7 +28,6 @@ export class OpenSearchService {
   ) {
     const reportId = randomUUID();
 
-
     //TODO: add AI21 support
     if (dto.provider !== ProviderType.OpenAI) {
       throw new InternalServerErrorException("Unsupported provider");

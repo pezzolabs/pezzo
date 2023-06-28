@@ -3,7 +3,7 @@ import {
   AllPrimitiveTypes,
   Primitive,
   RecursiveObject,
-} from "../../../lib/ts-helpers"
+} from "../../../lib/ts-helpers";
 import { Type } from "class-transformer";
 import { OpenAIToolkit } from "@pezzo/llm-toolkit";
 

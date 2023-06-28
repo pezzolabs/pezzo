@@ -8,7 +8,7 @@ import { ProjectId } from "../identity/project-id.decorator";
 
 @Controller("/reporting/v2")
 export class ReportingController {
-  constructor(private openSearchService: OpenSearchService) { }
+  constructor(private openSearchService: OpenSearchService) {}
 
   @UseGuards(ApiKeyAuthGuard)
   @UseGuards(ProjectIdAuthGuard)
