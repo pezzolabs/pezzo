@@ -5,8 +5,9 @@ import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import Joi from "joi";
 import { randomUUID } from "crypto";
-
+import { KafkaModule } from "@pezzo/kafka";
 import { ApolloServerPluginLandingPageLocalDefault } from "@apollo/server/plugin/landingPage/default";
+
 import { PromptsModule } from "./prompts/prompts.module";
 import { HealthController } from "./health.controller";
 import { formatError } from "../lib/gql-format-error";
@@ -20,7 +21,7 @@ import { MetricsModule } from "./metrics/metrics.module";
 import { LoggerModule } from "./logger/logger.module";
 import { PinoLogger } from "./logger/pino-logger";
 import { AnalyticsModule } from "./analytics/analytics.module";
-import { KafkaModule } from "@pezzo/kafka";
+import { ReportingModule } from "./reporting/reporting.module";
 
 const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
 
@@ -51,6 +52,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
         KAFKA_REBALANCE_TIMEOUT: Joi.number().default(10000),
         KAFKA_HEARTBEAT_INTERVAL: Joi.number().default(3000),
         KAFKA_SESSION_TIMEOUT: Joi.number().default(10000),
+        OPENSEARCH_URL: Joi.string().required(),
       }),
       // In CI, we need to skip validation because we don't have a .env file
       // This is consumed by the graphql:schema-generate Nx target
@@ -113,6 +115,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
     CredentialsModule,
     IdentityModule,
     MetricsModule,
+    ReportingModule,
   ],
   controllers: [HealthController],
 })
