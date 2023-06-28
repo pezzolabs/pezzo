@@ -45,12 +45,15 @@ export class ReportingService {
     return result;
   }
 
-  async getReports() {
-    return await this.openSearchService.client.search<{ hits: { hits: Array<{ _source: RequestReport }> } }>({
+  async getReports({ projectId }: { projectId: string }) {
+
+    return await this.os.search<{ hits: { hits: Array<{ _source: RequestReport }> } }>({
       index: OpenSearchIndex.Requests,
       body: {
         query: {
-          match_all: {},
+          match: {
+            "ownership.projectId": projectId,
+          },
         },
       },
     });
