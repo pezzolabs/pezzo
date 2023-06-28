@@ -23,7 +23,6 @@ import { LayoutWrapper } from "./components/layout/LayoutWrapper";
 import { OnboardingPage } from "./pages/onboarding";
 import { AuthProvider } from "./lib/providers/AuthProvider";
 import { ThirdpartyEmailPasswordComponentsOverrideProvider } from "supertokens-auth-react/recipe/thirdpartyemailpassword";
-import LogoSquare from "../assets/logo.svg";
 import LogoVertical from "../assets/logo-vertical.svg";
 import { OptionalIntercomProvider } from "./lib/providers/OptionalIntercomProvider";
 import { HOTJAR_SITE_ID, HOTJAR_VERSION } from "../env";
