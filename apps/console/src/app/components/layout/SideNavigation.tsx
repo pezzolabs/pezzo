@@ -57,14 +57,13 @@ export const SideNavigation = () => {
   const { project } = useCurrentProject();
   const location = useLocation();
   const navigate = useNavigate();
-  const [isCollapsed] = useState(true);
 
   const handleTopMenuClick = (item) => {
     navigate(`/projects/${project.id}/${item.key}`);
   };
 
   return (
-    <Layout.Sider style={{ overflow: "hidden" }} collapsed={false}>
+    <Layout.Sider style={{ overflow: "hidden" }}>
       <SidebarContainer>
         <TopMenu
           onClick={handleTopMenuClick}
