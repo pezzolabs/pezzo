@@ -86,7 +86,6 @@
       }
     },
     "graphql:codegen": {
-      "dependsOn": ["graphql:schema-generate"],
       "executor": "nx:run-commands",
       "options": {
         "command": "npx graphql-codegen"
