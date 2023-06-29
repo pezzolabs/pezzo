@@ -9,10 +9,6 @@ import { GET_ALL_PROJECTS } from "../definitions/queries/projects";
 import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 import { GET_ALL_REQUESTS } from "../definitions/queries/requests";
-import { Pagination, RequestReport } from "../../../@generated/graphql/graphql";
-import { ReportRequestResponse } from "../types";
-import { ProviderType } from "@pezzo/types";
-import { useFiltersAndSortParams } from "./filters";
 
 export const useProviderApiKeys = () => {
   const { organization } = useCurrentOrganization();
@@ -59,53 +55,19 @@ export const useGetProjects = () => {
   };
 };
 
-const buildTypedRequestReportObject = (requestReport: RequestReport) => {
-  switch (requestReport.provider) {
-    case ProviderType.OpenAi:
-      return requestReport as ReportRequestResponse<ProviderType.OpenAi>;
-    default:
-      return requestReport as ReportRequestResponse<ProviderType.OpenAi>;
-  }
-};
 
-export const useGetRequestReports = ({
-  size = 10,
-  page = 1,
-}: {
-  size: number;
-  page: number;
-}) => {
+export const useGetRequestReports = () => {
   const { project } = useCurrentProject();
-  const { filters, sort } = useFiltersAndSortParams();
+  const { organization } = useCurrentOrganization();
 
-  const response = useQuery({
-    queryKey: ["requestReports", project?.id, page, size],
+  return useQuery({
+    queryKey: ["requestReports", project?.id],
     queryFn: () =>
-      gqlClient.request<{
-        paginatedRequests: { pagination: Pagination; data: RequestReport[] };
-      }>(GET_ALL_REQUESTS, {
-        data: {
-          projectId: project?.id,
-          filters,
-          sort,
-          size,
-          page,
-        },
+      gqlClient.request(GET_ALL_REQUESTS, {
+        data: { projectId: project?.id, organizationId: organization?.id },
       }),
-    enabled: !!project,
+    enabled: !!project && !!organization,
   });
-  const typedData =
-    response.data?.paginatedRequests.data?.map(buildTypedRequestReportObject) ??
-    [];
 
-  return {
-    ...response,
-    data: {
-      ...response.data,
-      paginatedRequests: {
-        ...response.data?.paginatedRequests,
-        data: typedData,
-      },
-    },
-  };
-};
+
+}
