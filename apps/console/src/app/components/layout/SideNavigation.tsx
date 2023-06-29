@@ -75,7 +75,7 @@ export const SideNavigation = () => {
   ).filter(Boolean);
 
   return (
-    <Layout.Sider style={{ overflow: "hidden" }} collapsed={false}>
+    <Layout.Sider style={{ overflow: "hidden" }}>
       <SidebarContainer>
         <TopMenu
           onClick={handleTopMenuClick}
