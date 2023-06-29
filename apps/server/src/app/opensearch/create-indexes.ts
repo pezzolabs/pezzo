@@ -36,9 +36,6 @@ export async function createRequestsIndex(
     index,
     body: {
       properties: {
-        duration: {
-          type: "integer",
-        },
         ownership: {
           properties: {
             organizationId: {
