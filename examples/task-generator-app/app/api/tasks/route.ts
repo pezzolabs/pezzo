@@ -43,12 +43,12 @@ export async function POST(request: Request) {
 
     // const parsed = JSON.parse(result.data.choices[0].message.content);
     // TODO: this is a temporary place holder for as long as we fix the git state issues
-    const parsed = JSON.parse(result.data.choices[0].text);
+    const parsed = JSON.parse(result.data.choices[0].message.content);
     return NextResponse.json(parsed, {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.log("Error parsing response", error);
+
     let message;
 
     if (error.response?.errors) {

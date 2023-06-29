@@ -1,24 +1,29 @@
-import { Space, Table, Typography } from "antd";
+import { Space, Table, Tag, Typography } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
 import { useGetRequestReports } from "../../graphql/hooks/queries";
 import { RequestReport } from "../../../@generated/graphql/graphql";
+import ms from "ms";
 
 interface DataType {
   key: React.Key;
   timestamp: string;
-  status: string;
+  status: JSX.Element;
   request: string;
-  response: string;
+  response: JSX.Element;
   latency: string;
   totalTokens?: number;
   cost?: string;
 }
 
+const toDollars = (amount: number) => {
+  return `$${amount.toFixed(4)}`;
+};
+
 const columns: ColumnsType<DataType> = [
   {
     title: "Timestamp",
     dataIndex: "timestamp",
-    width: "15%",
+    width: "20%",
   },
   {
     title: "Status",
@@ -63,17 +68,29 @@ const onChange: TableProps<DataType>["onChange"] = (
 export const RequestsPage = () => {
   const { data } = useGetRequestReports();
 
-  const tableData = data?.requestReports.map((report) => ({
-    key: report.reportId,
-    timestamp: report.request.timstamp,
-    status: "Success",
-    request: report.request.body?.messages?.[0]?.content ?? "N/A",
-    response: report.response.body.result?.data?.choices?.[0].message ?? "N/A",
-    latency: report.calculated.duration,
-    totalTokens: report.calculated.totalTokens,
-    cost: report.calculated.totalcost,
-  }));
+  const tableData = data?.requestReports.map((report) => {
+    const isError = report.response.status >= 400;
+    const response = isError
+      ? JSON.stringify(report.response.body.error ?? {})
+      : report.response.body?.choices?.[0].message.content;
 
+    return {
+      key: report.reportId,
+      timestamp: report.request.timestamp,
+      status: isError ? (
+        <Tag color="red">{report.response.status} Error</Tag>
+      ) : (
+        <Tag color="green">Success</Tag>
+      ),
+      request: report.request.body?.messages?.[0]?.content ?? "N/A",
+      response: <code>{response}</code>,
+      latency: ms(report.calculated.duration),
+      totalTokens: report.calculated.totalTokens ?? 0,
+      cost: report.calculated.totalCost
+        ? toDollars(report.calculated.totalCost)
+        : "$0.0000",
+    };
+  });
   console.log(data);
 
   return (

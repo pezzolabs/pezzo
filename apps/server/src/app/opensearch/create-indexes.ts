@@ -102,7 +102,7 @@ export async function createRequestsIndex(
               type: "date",
             },
             body: {
-              type: "object",
+              type: "nested",
             },
           },
         },
@@ -115,7 +115,7 @@ export async function createRequestsIndex(
               type: "long",
             },
             body: {
-              type: "object",
+              type: "nested",
             },
           },
         },

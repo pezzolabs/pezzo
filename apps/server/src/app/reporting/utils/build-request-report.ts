@@ -26,6 +26,14 @@ const buildOpenAIReport = (
   const requestBody = request.body;
   const model = requestBody.model;
 
+  if (!usage || !requestBody || !model)
+    return {
+      report: dto,
+      calculated: {
+        duration: requestDuration,
+      },
+    }
+
   const { promptCost, completionCost } = OpenAIToolkit.calculateGptCost({
     model,
     promptTokens: usage.prompt_tokens,

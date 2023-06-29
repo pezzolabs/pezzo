@@ -41,6 +41,7 @@ export class ReportingService {
   }
 
   async getReports({ projectId }: { projectId: string }) {
+
     return await this.openSearchService.client.search<{
       hits: { hits: Array<{ _source: RequestReport }> };
     }>({
@@ -51,6 +52,8 @@ export class ReportingService {
             "ownership.projectId": projectId,
           },
         },
+
+        size: 100,
       },
     });
   }

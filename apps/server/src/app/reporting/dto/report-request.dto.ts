@@ -1,4 +1,4 @@
-import { IsEnum, IsObject } from "class-validator";
+import { IsEnum, IsObject, IsOptional } from "class-validator";
 import {
   AllPrimitiveTypes,
   Primitive,
@@ -87,10 +87,12 @@ export class ReportRequestDto<
   type: PromptExecutionType;
 
   @IsObject()
-  properties: ObservabilityReportProperties;
+  @IsOptional()
+  properties?: ObservabilityReportProperties;
 
   @IsObject()
-  metadata: ObservabilityReportMetadata;
+  @IsOptional()
+  metadata?: ObservabilityReportMetadata;
 
   @IsObject()
   request: ObservabilityRequestDto<TProviderType>;
