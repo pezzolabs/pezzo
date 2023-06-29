@@ -50,6 +50,9 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
         KAFKA_HEARTBEAT_INTERVAL: Joi.number().default(3000),
         KAFKA_SESSION_TIMEOUT: Joi.number().default(10000),
         OPENSEARCH_URL: Joi.string().required(),
+        OPENSEARCH_AUTH: Joi.string()
+          .valid("insecure", "aws")
+          .default("insecure"),
       }),
       // In CI, we need to skip validation because we don't have a .env file
       // This is consumed by the graphql:schema-generate Nx target
