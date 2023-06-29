@@ -64,7 +64,7 @@ export const useGetRequestReports = () => {
     queryKey: ["requestReports", project?.id],
     queryFn: () =>
       gqlClient.request(GET_ALL_REQUESTS, {
-        data: { projectId: project?.id, organizationId: organization?.id },
+        data: { projectId: project?.id, organizationId: organization?.id, size: 10, page: 1 },
       }),
     enabled: !!project && !!organization,
   });

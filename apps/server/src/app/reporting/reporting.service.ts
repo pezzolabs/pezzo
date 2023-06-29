@@ -40,8 +40,10 @@ export class ReportingService {
     return result;
   }
 
-  async getReports({ projectId }: { projectId: string }) {
+  async getReports({ projectId, page, size: pageSize }: { projectId: string, page: number, size: number }) {
 
+    const from = (page - 1) * pageSize;
+    const size = pageSize;
     return await this.openSearchService.client.search<{
       hits: { hits: Array<{ _source: RequestReport }> };
     }>({
@@ -53,8 +55,9 @@ export class ReportingService {
           },
         },
 
-        size: 100,
       },
+      size,
+      from
     });
   }
 }

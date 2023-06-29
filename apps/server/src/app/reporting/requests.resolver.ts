@@ -21,7 +21,7 @@ export class RequestReportsResolver {
     private readonly reportingService: ReportingService,
     private readonly projectsService: ProjectsService,
     private readonly logger: PinoLogger
-  ) {}
+  ) { }
 
   @Query(() => [RequestReport])
   async requestReports(
@@ -48,6 +48,8 @@ export class RequestReportsResolver {
     try {
       const response = await this.reportingService.getReports({
         projectId: data.projectId,
+        page: data.page,
+        size: data.size,
       });
 
       return response.body.hits.hits.map((hit) => hit._source);
