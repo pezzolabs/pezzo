@@ -47,7 +47,7 @@ export const MetricProvider = ({
   const { token } = theme.useToken();
   const { prompt } = useCurrentPrompt();
   const [granularity, setGranularity] = useState<Granularity>(Granularity.Day);
-  const [start, setStart] = useState<string>("-7 days");
+  const [start, setStart] = useState<string>("-7d");
   const startDate = calculateStartDate(start);
 
   const { data: metricsData, isLoading } = useGetPromptExecutionMetric(
@@ -100,7 +100,7 @@ export const MetricProvider = ({
               >
                 <Select.Option value="-1h">Past Hour</Select.Option>
                 <Select.Option value="-1d">Past Day</Select.Option>
-                <Select.Option value="-7 days">Past 7 days</Select.Option>
+                <Select.Option value="-7d">Past 7 days</Select.Option>
                 <Select.Option value="-30d">Past 30 days</Select.Option>
                 <Select.Option value="-1y">Past year</Select.Option>
               </Select>
