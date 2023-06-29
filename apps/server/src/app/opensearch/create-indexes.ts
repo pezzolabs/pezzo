@@ -25,7 +25,6 @@ export async function createRequestsIndex(
     await client.indices.create({
       index,
     });
-    return;
   } else {
     logger.info("Index already exists, skipping creation");
   }
@@ -61,6 +60,18 @@ export async function createRequestsIndex(
             totalCost: {
               type: "float",
             },
+            promptTokens: {
+              type: "integer",
+            },
+            completionTokens: {
+              type: "integer",
+            },
+            totalTokens: {
+              type: "integer",
+            },
+            duration: {
+              type: "integer",
+            },
           },
         },
         provider: {
@@ -73,7 +84,17 @@ export async function createRequestsIndex(
           type: "object",
         },
         metadata: {
-          type: "object",
+          properties: {
+            promptId: {
+              type: "keyword",
+            },
+            promptVersionSha: {
+              type: "keyword",
+            },
+            conversationId: {
+              type: "keyword",
+            },
+          },
         },
         request: {
           properties: {
@@ -91,7 +112,7 @@ export async function createRequestsIndex(
               type: "date",
             },
             status: {
-              type: "integer",
+              type: "long",
             },
             body: {
               type: "object",

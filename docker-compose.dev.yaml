@@ -20,19 +20,6 @@ services:
     environment:
       POSTGRES_CONNECTION_URI: postgres://postgres:postgres@postgres:5432/supertokens
 
-  influxdb:
-    image: bitnami/influxdb:2.7.1
-    restart: always
-    environment:
-      INFLUXDB_ADMIN_USER_TOKEN: "token123"
-      INFLUXDB_ADMIN_USER_PASSWORD: "influxdb-admin"
-      INFLUXDB_USER: "admin"
-      INFLUXDB_USER_PASSWORD: "influxdb-admin"
-    ports:
-      - "8086:8086"
-    volumes:
-      - influxdb_data:/bitnami/influxdb
-
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.1
     environment:
@@ -121,7 +108,6 @@ services:
 
 volumes:
   postgres_data: ~
-  influxdb_data: ~
   opensearch-data1:
 
 networks:

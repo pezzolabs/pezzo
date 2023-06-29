@@ -6,7 +6,7 @@ import { Col, Row, theme } from "antd";
 import { MetricProvider } from "../../../lib/providers/MetricContext";
 import { SimpleChart } from "../metrics/SimpleChart";
 
-export const DashboardView = () => {
+export const MetricsView = () => {
   const { token } = theme.useToken();
 
   return (
@@ -17,7 +17,6 @@ export const DashboardView = () => {
             aggregation={Aggregation.Sum}
             title="Total Cost"
             field={PromptExecutionMetricField.TotalCost}
-            fillEmpty="0.0"
           >
             <SimpleChart
               lineLabel="Cost"
@@ -30,7 +29,6 @@ export const DashboardView = () => {
             aggregation={Aggregation.Sum}
             title="Total Tokens"
             field={PromptExecutionMetricField.TotalTokens}
-            fillEmpty="0"
           >
             <SimpleChart lineLabel="Tokens" />
           </MetricProvider>
@@ -39,22 +37,19 @@ export const DashboardView = () => {
           <MetricProvider
             aggregation={Aggregation.Count}
             title="Total Executions"
-            fillEmpty={"0"}
-            field={PromptExecutionMetricField.Status}
           >
             <SimpleChart lineLabel="Executions" />
           </MetricProvider>
         </Col>
         <Col span={12}>
           <MetricProvider
-            aggregation={Aggregation.Mean}
+            aggregation={Aggregation.Avg}
             title="Avg. Execution Duration"
-            fillEmpty={"0.0"}
             field={PromptExecutionMetricField.Duration}
           >
             <SimpleChart
               lineLabel="Duration"
-              tooltipFormatter={(v) => `${Number(v).toFixed(2)}s`}
+              tooltipFormatter={(v) => `${(Number(v) / 1000).toFixed(2)}s`}
             />
           </MetricProvider>
         </Col>

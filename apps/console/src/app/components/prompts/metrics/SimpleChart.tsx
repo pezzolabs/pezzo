@@ -31,7 +31,7 @@ export const SimpleChart = ({ tooltipFormatter, lineLabel }: Props) => {
       >
         <CartesianGrid strokeDasharray="3 3" opacity="0.2" />
         <XAxis dataKey="timestamp" />
-        <YAxis />
+        <YAxis tickFormatter={tooltipFormatter} />
         <Tooltip formatter={tooltipFormatter || ((v) => v)} />
         <Line
           type="monotone"
