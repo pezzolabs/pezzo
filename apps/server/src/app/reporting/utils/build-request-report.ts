@@ -15,14 +15,16 @@ export const buildRequestReport = (dto: ReportRequestDto) => {
   }
 };
 
-const buildOpenAIReport = (dto: ReportRequestDto<ProviderType.OpenAI>, requestDuration: number) => {
+const buildOpenAIReport = (
+  dto: ReportRequestDto<ProviderType.OpenAI>,
+  requestDuration: number
+) => {
   const { response, request } = dto;
 
   const responseBody = response.body;
   const usage = responseBody.usage;
   const requestBody = request.body;
   const model = requestBody.model;
-
 
   const { promptCost, completionCost } = OpenAIToolkit.calculateGptCost({
     model,
@@ -46,12 +48,14 @@ const buildOpenAIReport = (dto: ReportRequestDto<ProviderType.OpenAI>, requestDu
   };
 };
 
-const buildAI21Report = (dto: ReportRequestDto<ProviderType.AI21>, requestDuration: number) => {
+const buildAI21Report = (
+  dto: ReportRequestDto<ProviderType.AI21>,
+  requestDuration: number
+) => {
   return {
     report: dto,
     calculated: {
       duration: requestDuration,
-    }
-
+    },
   };
 };

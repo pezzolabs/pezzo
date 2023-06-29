@@ -8,7 +8,7 @@ import { RequestReport } from "./object-types/request-report.model";
 
 @Injectable()
 export class ReportingService {
-  constructor(private openSearchService: OpenSearchService) { }
+  constructor(private openSearchService: OpenSearchService) {}
 
   async saveReport(
     dto: ReportRequestDto,
