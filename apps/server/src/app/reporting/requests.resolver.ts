@@ -1,4 +1,4 @@
-import { Request, InternalServerErrorException, UseGuards, ForbiddenException } from "@nestjs/common";
+import { InternalServerErrorException, UseGuards, ForbiddenException } from "@nestjs/common";
 import { Args, Query, Resolver } from "@nestjs/graphql";
 import { AuthGuard } from "../auth/auth.guard";
 import { OpenSearchService } from "./opensearch.service";
@@ -34,7 +34,9 @@ export class RequestReportsResolver {
     try {
       const userProjects = await this.projectsService.getProjectsByOrgId(data.organizationId);
 
-      if (!userProjects.find((p) => p.id === data.projectId)) {
+      const project = userProjects.find((p) => p.id === data.projectId);
+
+      if (!project) {
         throw new ForbiddenException();
       }
 
