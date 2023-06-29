@@ -22,7 +22,7 @@ export class RequestReportsResolver {
     private readonly reportingService: ReportingService,
     private readonly projectsService: ProjectsService,
     private readonly logger: PinoLogger
-  ) {}
+  ) { }
 
   @Query(() => RequestReportResult)
   async paginatedRequests(
@@ -47,11 +47,8 @@ export class RequestReportsResolver {
     try {
       const response = await this.reportingService.getReports({
         projectId: data.projectId,
-        organizationId,
         page: data.page,
         size: data.size,
-        filters: data.filters,
-        sort: data.sort,
       });
 
       return {

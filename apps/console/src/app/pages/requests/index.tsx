@@ -91,7 +91,6 @@ export const RequestsPage = () => {
         : "$0.0000",
     };
   });
-  console.log(data);
 
   return (
     <div>
