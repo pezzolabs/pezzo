@@ -5,7 +5,7 @@ import {
   ServerStackIcon,
 } from "@heroicons/react/24/solid";
 import { Layout, Menu } from "antd";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
 
@@ -62,12 +62,23 @@ export const SideNavigation = () => {
     navigate(`/projects/${project.id}/${item.key}`);
   };
 
+  const paths = location.pathname.replace("/", "")?.split("/");
+
+  const selectedKeys = useMemo(
+    () =>
+      paths?.map((path) => {
+        const item = topMenuItems.find((item) => item.key === path);
+        return item?.key;
+      }),
+    [paths]
+  ).filter(Boolean);
+
   return (
     <SidebarContainer>
       <TopMenu
         onClick={handleTopMenuClick}
-        defaultSelectedKeys={["prompts"]}
-        selectedKeys={[location.pathname.replace("/", "")]}
+        defaultSelectedKeys={["overview"]}
+        selectedKeys={selectedKeys.length ? selectedKeys : ["overview"]}
         items={topMenuItems}
       />
     </SidebarContainer>
