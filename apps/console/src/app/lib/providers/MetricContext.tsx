@@ -59,8 +59,7 @@ export const MetricProvider = ({
       start: startDate.toISOString(),
       stop: new Date().toISOString(),
       granularity,
-    },
-    !!startDate
+    }
   );
 
   if (!startDate || isLoading || !metricsData) {
