@@ -15,7 +15,7 @@ import {
   UpdateProfileInput,
 } from "../../../@generated/graphql/graphql";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { gqlClient, queryClient } from "../../lib/graphql";
+import { gqlClient } from "../../lib/graphql";
 import { UPDATE_PROFILE } from "../definitions/queries/users";
 import { CREATE_PROJECT } from "../definitions/queries/projects";
 import {
@@ -190,3 +190,4 @@ export const useUpdateOrgSettingsMutation = () => {
     },
   });
 };
+

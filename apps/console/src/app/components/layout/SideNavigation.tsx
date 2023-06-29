@@ -4,8 +4,8 @@ import {
   QueueListIcon,
   ServerStackIcon,
 } from "@heroicons/react/24/solid";
-import { Layout, Menu } from "antd";
-import { useMemo, useState } from "react";
+import { Menu } from "antd";
+import { useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
 
@@ -38,6 +38,7 @@ const topMenuItems = [
 const BaseMenu = styled(Menu)`
   border-inline-end: none !important;
   padding: 12px;
+
   border-right: 1px solid red;
 `;
 const SidebarContainer = styled.div`

@@ -7,6 +7,8 @@ import {
 import { GET_ME } from "../definitions/queries/users";
 import { GET_ALL_PROJECTS } from "../definitions/queries/projects";
 import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
+import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
+import { GET_ALL_REQUESTS } from "../definitions/queries/requests";
 
 export const useProviderApiKeys = () => {
   const { organization } = useCurrentOrganization();
@@ -52,3 +54,20 @@ export const useGetProjects = () => {
     isLoading,
   };
 };
+
+
+export const useGetRequestReports = () => {
+  const { project } = useCurrentProject();
+  const { organization } = useCurrentOrganization();
+
+  return useQuery({
+    queryKey: ["requestReports", project?.id],
+    queryFn: () =>
+      gqlClient.request(GET_ALL_REQUESTS, {
+        data: { projectId: project?.id, organizationId: organization?.id },
+      }),
+    enabled: !!project && !!organization,
+  });
+
+
+}

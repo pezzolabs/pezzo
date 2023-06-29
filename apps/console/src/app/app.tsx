@@ -30,6 +30,7 @@ import { OrgPage } from "./pages/organizations/OrgPage";
 import { AcceptInvitationPage } from "./pages/invitations/AcceptInvitationPage";
 import { LogoutPage } from "./pages/LogoutPage";
 import { ProjectPage } from "./pages/projects/[projectId]";
+import { RequestsPage } from "./pages/requests";
 
 initSuperTokens();
 
@@ -48,6 +49,7 @@ export const paths = {
   "/orgs/:orgId": "/orgs/:orgId",
   "/projects/:projectId": "/projects/:projectId",
   "/projects/:projectId/overview": "/projects/:projectId/overview",
+  "/projects/:projectId/requests": "/projects/:projectId/reqeusts",
   "/projects/:projectId/prompts": "/projects/:projectId/prompts",
   "/projects/:projectId/prompts/:promptId":
     "/projects/:projectId/prompts/:promptId",
@@ -183,6 +185,10 @@ export function App() {
                     <Route
                       path={"/projects/:projectId/overview"}
                       element={<ProjectPage />}
+                    />
+                    <Route
+                      path={"/projects/:projectId/requests"}
+                      element={<RequestsPage />}
                     />
                     <Route
                       path={paths["/projects/:projectId/prompts"]}
