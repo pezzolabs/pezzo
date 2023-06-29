@@ -71,7 +71,6 @@ export const SideNavigation = () => {
           defaultSelectedKeys={["prompts"]}
           selectedKeys={[location.pathname.replace("/", "")]}
           items={topMenuItems}
-          mode="inline"
         />
       </SidebarContainer>
     </Layout.Sider>
