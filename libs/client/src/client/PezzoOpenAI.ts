@@ -28,16 +28,10 @@ export class PezzoOpenAIApi extends OpenAIApi {
     const requestBody = originalArgs[0];
 
     const requestTimestamp = new Date().toISOString();
-
-    let createChatCompletionResult;
-    try {
-      createChatCompletionResult = await super.createChatCompletion.call(
-        this,
-        ...originalArgs
-      );
-    } catch (error) {
-      createChatCompletionResult = error;
-    }
+    const createChatCompletionResult = await super.createChatCompletion.call(
+      this,
+      ...originalArgs
+    );
     const { request, ...response } = createChatCompletionResult;
 
     const responseTimestamp = new Date().toISOString();
@@ -52,8 +46,8 @@ export class PezzoOpenAIApi extends OpenAIApi {
       },
       response: {
         timestamp: responseTimestamp,
-        body: response.data ?? response.response.data,
-        status: response.status ?? response.response.status,
+        body: response.data,
+        status: response.status,
       },
     };
 
