@@ -50,22 +50,15 @@ export const MetricProvider = ({
   const [start, setStart] = useState<string>("-7 days");
   const startDate = calculateStartDate(start);
 
-  const filters = {
-    start: startDate?.toISOString(),
-    stop: new Date().toISOString(),
-    granularity,
-  };
-
-  console.log("filters", filters);
-
-  console.log({});
   const { data: metricsData, isLoading } = useGetPromptExecutionMetric(
     [prompt.id, "metrics", title, granularity, start],
     {
       promptId: prompt.id,
       field,
       aggregation,
-      ...filters,
+      start: startDate?.toISOString(),
+      stop: new Date().toISOString(),
+      granularity,
     },
     !!startDate
   );
