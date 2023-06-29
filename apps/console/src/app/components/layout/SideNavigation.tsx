@@ -35,18 +35,18 @@ const topMenuItems = [
   },
 ];
 
+const BaseMenu = styled(Menu)`
+  border-inline-end: none !important;
+  padding: 12px;
+  border-right: 1px solid red;
+`;
 const SidebarContainer = styled.div`
-  background: #141414;
   border-inline-end: 1px solid ${colors.neutral["800"]};
   height: 100%;
 
   display: flex;
   flex-direction: column;
   overflow: hidden;
-`;
-
-const BaseMenu = styled(Menu)`
-  border-inline-end: none !important;
 `;
 
 const TopMenu = styled(BaseMenu)`
@@ -63,15 +63,13 @@ export const SideNavigation = () => {
   };
 
   return (
-    <Layout.Sider style={{ overflow: "hidden" }}>
-      <SidebarContainer>
-        <TopMenu
-          onClick={handleTopMenuClick}
-          defaultSelectedKeys={["prompts"]}
-          selectedKeys={[location.pathname.replace("/", "")]}
-          items={topMenuItems}
-        />
-      </SidebarContainer>
-    </Layout.Sider>
+    <SidebarContainer>
+      <TopMenu
+        onClick={handleTopMenuClick}
+        defaultSelectedKeys={["prompts"]}
+        selectedKeys={[location.pathname.replace("/", "")]}
+        items={topMenuItems}
+      />
+    </SidebarContainer>
   );
 };

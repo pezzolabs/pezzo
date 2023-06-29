@@ -79,7 +79,6 @@ export const Header = () => {
         width: "100%",
         display: "flex",
         alignItems: "center",
-        background: "#141414",
         borderBottom: `1px solid ${colors.neutral["800"]}`,
       }}
     >
