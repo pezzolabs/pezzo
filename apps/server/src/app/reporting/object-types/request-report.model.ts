@@ -1,8 +1,7 @@
 import { Field, ObjectType } from "@nestjs/graphql";
-import { AllPrimitiveTypes } from "../../../lib/ts-helpers"
+import { AllPrimitiveTypes } from "../../../lib/ts-helpers";
 import { ProviderType } from "../dto/report-request.dto";
 import { GraphQLJSONObject } from "graphql-type-json";
-
 
 @ObjectType()
 export class RequestReport {
@@ -32,6 +31,4 @@ export class RequestReport {
 
   @Field(() => GraphQLJSONObject, { nullable: false })
   response!: Record<string, AllPrimitiveTypes>;
-
-
 }

@@ -6,11 +6,9 @@ import { randomUUID } from "crypto";
 import { buildRequestReport } from "./utils/build-request-report";
 import { RequestReport } from "./object-types/request-report.model";
 
-
-
 @Injectable()
 export class ReportingService {
-  constructor(private openSearchService: OpenSearchService) { }
+  constructor(private openSearchService: OpenSearchService) {}
 
   async saveReport(
     dto: ReportRequestDto,
@@ -19,13 +17,10 @@ export class ReportingService {
       projectId: string;
     }
   ) {
-
     const reportId = randomUUID();
-    const { report, calculated } =
-      buildRequestReport(dto);
+    const { report, calculated } = buildRequestReport(dto);
 
     const { provider, type, properties, metadata, request, response } = report;
-
 
     const result = await this.openSearchService.client.index({
       index: OpenSearchIndex.Requests,
@@ -46,8 +41,9 @@ export class ReportingService {
   }
 
   async getReports({ projectId }: { projectId: string }) {
-
-    return await this.os.search<{ hits: { hits: Array<{ _source: RequestReport }> } }>({
+    return await this.openSearchService.client.search<{
+      hits: { hits: Array<{ _source: RequestReport }> };
+    }>({
       index: OpenSearchIndex.Requests,
       body: {
         query: {

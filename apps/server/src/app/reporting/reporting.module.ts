@@ -12,4 +12,4 @@ import { RequestReportsResolver } from "./requests.resolver";
   controllers: [ReportingController],
   providers: [ReportingService, RequestReportsResolver],
 })
-export class ReportingModule { }
+export class ReportingModule {}

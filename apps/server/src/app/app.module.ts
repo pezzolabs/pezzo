@@ -122,4 +122,4 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
   ],
   controllers: [HealthController],
 })
-export class AppModule { }
+export class AppModule {}
