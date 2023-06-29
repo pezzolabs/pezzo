@@ -5,7 +5,7 @@ import { Configuration } from "openai";
 export const pezzo = new Pezzo({
   serverUrl: process.env.PEZZO_SERVER_URL || "https://api.pezzo.ai",
   apiKey: process.env.PEZZO_API_KEY as string,
-  projectId: process.env.PEZZO_PROJECT_ID as string,
+  projectId: "cljh8ibei0066nyph2sj0xerd",
   environment: "Production",
 });
 

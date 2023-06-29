@@ -28,13 +28,20 @@ export class PezzoOpenAIApi extends OpenAIApi {
     const requestBody = originalArgs[0];
 
     const requestTimestamp = new Date().toISOString();
-    const createChatCompletionResult = await super.createChatCompletion.call(
-      this,
-      ...originalArgs
-    );
+
+    let createChatCompletionResult;
+    try {
+      createChatCompletionResult = await super.createChatCompletion.call(
+        this,
+        ...originalArgs,
+      );
+    } catch (error) {
+      createChatCompletionResult = error;
+    }
     const { request, ...response } = createChatCompletionResult;
 
     const responseTimestamp = new Date().toISOString();
+
 
     const reportPayload: ReportData = {
       provider: ProviderType.OpenAI,
@@ -46,8 +53,8 @@ export class PezzoOpenAIApi extends OpenAIApi {
       },
       response: {
         timestamp: responseTimestamp,
-        body: response.data,
-        status: response.status,
+        body: response.data ?? response.response.data,
+        status: response.status ?? response.response.status,
       },
     };
 

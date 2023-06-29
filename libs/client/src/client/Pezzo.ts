@@ -94,6 +94,7 @@ export class Pezzo {
     url.searchParams.append("name", promptName);
     url.searchParams.append("environmentName", this.options.environment);
 
+
     const response = await fetch(url.toString(), {
       headers: {
         "Content-Type": "application/json",
@@ -134,6 +135,8 @@ export class Pezzo {
   }
 
   async reportPromptExecutionV2(dto: ReportData) {
+
+
     await axios.post(
       `${this.options.serverUrl}/api/reporting/v2/request`,
       dto,

@@ -42,37 +42,21 @@ export class ReportingService {
     });
   }
 
-  async getReports({
-    projectId,
-    organizationId,
-    page,
-    size: pageSize,
-    filters,
-    sort,
-  }: {
-    projectId: string;
-    organizationId: string;
-    page: number;
-    size: number;
-    filters?: FilterInput[];
-    sort?: SortInput;
-  }) {
-    const size = pageSize > MAX_PAGE_SIZE ? MAX_PAGE_SIZE : pageSize;
-    const from = (page - 1) * size;
+  async getReports({ projectId }: { projectId: string }) {
 
-    const dql = mapFiltersToDql({ projectId, organizationId, filters, sort });
-
-    return this.openSearchService.client.search<{
-      hits: {
-        hits: Array<{ _source: RequestReport }>;
-        total: { value: number };
-      };
+    return await this.openSearchService.client.search<{
+      hits: { hits: Array<{ _source: RequestReport }> };
     }>({
       index: OpenSearchIndex.Requests,
-      body: dql,
-      size,
-      from,
-      track_total_hits: true,
+      body: {
+        query: {
+          match: {
+            "ownership.projectId": projectId,
+          },
+        },
+
+        size: 100,
+      },
     });
   }
 }

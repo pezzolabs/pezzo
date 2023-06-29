@@ -31,7 +31,7 @@ const buildOpenAIReport = (
       calculated: {
         duration: requestDuration,
       },
-    };
+    }
 
   const { promptCost, completionCost } = OpenAIToolkit.calculateGptCost({
     model,
