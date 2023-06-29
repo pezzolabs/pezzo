@@ -24,7 +24,7 @@ export const MetricsView = () => {
             />
           </MetricProvider>
         </Col>
-        <Col span={12}>
+        {/* <Col span={12}>
           <MetricProvider
             aggregation={Aggregation.Sum}
             title="Total Tokens"
@@ -52,7 +52,7 @@ export const MetricsView = () => {
               tooltipFormatter={(v) => `${(Number(v) / 1000).toFixed(2)}s`}
             />
           </MetricProvider>
-        </Col>
+        </Col> */}
       </Row>
     </div>
   );

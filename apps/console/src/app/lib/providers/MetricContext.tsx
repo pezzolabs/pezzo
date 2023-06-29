@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { useCurrentPrompt } from "./CurrentPromptContext";
 import {
   Aggregation,
@@ -24,6 +24,13 @@ export const MetricContext = createContext<MetricContextValue>({
 
 export const useMetric = () => useContext(MetricContext);
 
+const calculateStartDate = (start: string): Date => {
+  const startDate = new Date();
+  const subtractMs = ms(start);
+  startDate.setMilliseconds(startDate.getMilliseconds() + subtractMs);
+  return startDate;
+};
+
 interface Props {
   children: React.ReactNode;
   title: string;
@@ -41,24 +48,24 @@ export const MetricProvider = ({
   const { prompt } = useCurrentPrompt();
   const [granularity, setGranularity] = useState<Granularity>(Granularity.Day);
   const [start, setStart] = useState<string>("-7 days");
-  const [startDate, setStartDate] = useState<Date>(null);
+  const startDate = calculateStartDate(start);
 
-  useEffect(() => {
-    const newStartDate = new Date();
-    const subtractMs = ms(start);
-    newStartDate.setMilliseconds(newStartDate.getMilliseconds() + subtractMs);
-    setStartDate(newStartDate);
-  }, [start]);
+  const filters = {
+    start: startDate?.toISOString(),
+    stop: new Date().toISOString(),
+    granularity,
+  };
 
+  console.log("filters", filters);
+
+  console.log({});
   const { data: metricsData, isLoading } = useGetPromptExecutionMetric(
     [prompt.id, "metrics", title, granularity, start],
     {
       promptId: prompt.id,
-      start: startDate?.toISOString(),
-      stop: new Date().toISOString(),
       field,
-      granularity,
       aggregation,
+      ...filters,
     },
     !!startDate
   );
