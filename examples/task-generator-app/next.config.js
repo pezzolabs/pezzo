@@ -6,18 +6,6 @@ const { withNx } = require("@nrwl/next/plugins/with-nx");
 // https://github.com/vercel/next.js/issues/49169
 process.env.__NEXT_PRIVATE_PREBUNDLED_REACT = "next";
 
-if (!process.env.OPENAI_API_KEY) {
-  throw new Error("OPENAI_API_KEY environment variable is not defined");
-}
-
-if (!process.env.PEZZO_API_KEY) {
-  throw new Error("PEZZO_API_KEY environment variable is not defined");
-}
-
-if (!process.env.PEZZO_PROJECT_ID) {
-  throw new Error("PEZZO_PROJECT_ID environment variable is not defined");
-}
-
 /**
  * @type {import('@nrwl/next/plugins/with-nx').WithNxOptions}
  **/
@@ -26,6 +14,12 @@ const nextConfig = {
     // Set this to true if you would like to use SVGR
     // See: https://github.com/gregberge/svgr
     svgr: false,
+  },
+  env: {
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    PEZZO_API_KEY: process.env.PEZZO_API_KEY,
+    PEZZO_PROJECT_ID: process.env.PEZZO_PROJECT_ID,
+    PEZZO_SERVER_URL: process.env.PEZZO_SERVER_URL,
   },
 };
 
