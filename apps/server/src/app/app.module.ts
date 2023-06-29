@@ -88,6 +88,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
       },
       include: [
         PromptsModule,
+        ReportingModule,
         PromptEnvironmentsModule,
         CredentialsModule,
         IdentityModule,

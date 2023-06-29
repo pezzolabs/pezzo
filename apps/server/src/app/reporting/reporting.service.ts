@@ -1,13 +1,14 @@
-import * as LLMToolkit from "@pezzo/llm-toolkit";
+import { OpenSearchService } from "../opensearch/opensearch.service";
+import { OpenSearchIndex } from "../opensearch/types";
 import { Injectable } from "@nestjs/common";
 import { ReportRequestDto } from "./dto/report-request.dto";
 import { randomUUID } from "crypto";
-import { OpenSearchService } from "../opensearch/opensearch.service";
-import { OpenSearchIndex } from "../opensearch/types";
+import { buildRequestReport } from "./utils/build-request-report";
+import { RequestReport } from "./object-types/request-report.model";
 
 @Injectable()
 export class ReportingService {
-  constructor(private openSearchService: OpenSearchService) {}
+  constructor(private openSearchService: OpenSearchService) { }
 
   async saveReport(
     dto: ReportRequestDto,
@@ -17,32 +18,9 @@ export class ReportingService {
     }
   ) {
     const reportId = randomUUID();
+    const { report, calculated } = buildRequestReport(dto);
 
-    const { provider, type, properties, metadata, request, response } = dto;
-
-    // TODO: split calculate costs logic
-    const responseBody = (response as any).body;
-    const usage = responseBody.usage;
-    const requestBody = (request as any).body;
-    const model = requestBody.model;
-    const { promptCost, completionCost } =
-      LLMToolkit.OpenAIToolkit.calculateGptCost({
-        model,
-        promptTokens: usage.prompt_tokens,
-        completionTokens: usage.completion_tokens,
-      });
-    const requestTimestamp = new Date(request.timestamp);
-    const responseTimestamp = new Date(response.timestamp);
-    const duration = Math.ceil(
-      responseTimestamp.getTime() - requestTimestamp.getTime()
-    );
-    const calculated = {
-      promptCost: parseFloat(promptCost.toFixed(6)),
-      completionCost: parseFloat(completionCost.toFixed(6)),
-      totalCost: parseFloat((promptCost + completionCost).toFixed(6)),
-      totalTokens: parseInt(usage.prompt_tokens + usage.completion_tokens),
-      duration,
-    };
+    const { provider, type, properties, metadata, request, response } = report;
 
     const result = await this.openSearchService.client.index({
       index: OpenSearchIndex.Requests,
@@ -60,5 +38,20 @@ export class ReportingService {
     });
 
     return result;
+  }
+
+  async getReports({ projectId }: { projectId: string }) {
+    return await this.openSearchService.client.search<{
+      hits: { hits: Array<{ _source: RequestReport }> };
+    }>({
+      index: OpenSearchIndex.Requests,
+      body: {
+        query: {
+          match: {
+            "ownership.projectId": projectId,
+          },
+        },
+      },
+    });
   }
 }
