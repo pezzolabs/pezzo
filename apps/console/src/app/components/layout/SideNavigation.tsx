@@ -38,7 +38,6 @@ const topMenuItems = [
 const BaseMenu = styled(Menu)`
   border-inline-end: none !important;
   padding: 12px;
-
   border-right: 1px solid red;
 `;
 const SidebarContainer = styled.div`
@@ -75,15 +74,13 @@ export const SideNavigation = () => {
   ).filter(Boolean);
 
   return (
-    <Layout.Sider style={{ overflow: "hidden" }}>
-      <SidebarContainer>
-        <TopMenu
-          onClick={handleTopMenuClick}
-          defaultSelectedKeys={["prompts"]}
-          selectedKeys={[location.pathname.replace("/", "")]}
-          items={topMenuItems}
-        />
-      </SidebarContainer>
-    </Layout.Sider>
+    <SidebarContainer>
+      <TopMenu
+        onClick={handleTopMenuClick}
+        defaultSelectedKeys={["prompts"]}
+        selectedKeys={[location.pathname.replace("/", "")]}
+        items={topMenuItems}
+      />
+    </SidebarContainer>
   );
 };
