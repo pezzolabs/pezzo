@@ -5,7 +5,7 @@ import {
   ServerStackIcon,
 } from "@heroicons/react/24/solid";
 import { Layout, Menu } from "antd";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
 
@@ -77,8 +77,8 @@ export const SideNavigation = () => {
     <SidebarContainer>
       <TopMenu
         onClick={handleTopMenuClick}
-        defaultSelectedKeys={["prompts"]}
-        selectedKeys={[location.pathname.replace("/", "")]}
+        defaultSelectedKeys={["overview"]}
+        selectedKeys={selectedKeys.length ? selectedKeys : ["overview"]}
         items={topMenuItems}
       />
     </SidebarContainer>
