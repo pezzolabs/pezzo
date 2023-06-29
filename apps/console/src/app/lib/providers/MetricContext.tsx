@@ -56,7 +56,7 @@ export const MetricProvider = ({
       promptId: prompt.id,
       field,
       aggregation,
-      start: startDate?.toISOString(),
+      start: startDate.toISOString(),
       stop: new Date().toISOString(),
       granularity,
     },
