@@ -4,6 +4,10 @@ import { useGetRequestReports } from "../../graphql/hooks/queries";
 import ms from "ms";
 import { useState } from "react";
 import { Loading3QuartersOutlined } from "@ant-design/icons";
+import {
+  DEFAULT_PAGE_SIZE,
+  PAGE_SIZE_OPTIONS,
+} from "../../lib/constants/pagination";
 
 interface DataType {
   key: React.Key;
@@ -67,7 +71,7 @@ const onChange: TableProps<DataType>["onChange"] = (
 };
 
 export const RequestsPage = () => {
-  const [size, setSize] = useState(10);
+  const [size, setSize] = useState(DEFAULT_PAGE_SIZE);
   const [page, setPage] = useState(1);
 
   const { data: reports, isLoading } = useGetRequestReports({ size, page });
@@ -109,13 +113,23 @@ export const RequestsPage = () => {
           columns={columns}
           dataSource={tableData}
           onChange={onChange}
+          onRow={(record) => {
+            return {
+              onClick: () => {
+                console.log(record);
+              },
+            };
+          }}
           pagination={{
+            showSizeChanger: true,
+            pageSizeOptions: PAGE_SIZE_OPTIONS,
             pageSize: pagination.size,
             current: pagination.page,
             total: pagination.total,
+
             onChange: (page, size) => {
               setPage(page);
-              setSize(size ?? 10);
+              setSize(size ?? DEFAULT_PAGE_SIZE);
             },
           }}
         />
