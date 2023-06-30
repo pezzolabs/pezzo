@@ -5,6 +5,7 @@ import { ReportRequestDto } from "./dto/report-request.dto";
 import { randomUUID } from "crypto";
 import { buildRequestReport } from "./utils/build-request-report";
 import { RequestReport } from "./object-types/request-report.model";
+import { MAX_PAGE_SIZE } from "../../lib/pagination";
 
 @Injectable()
 export class ReportingService {
@@ -42,8 +43,8 @@ export class ReportingService {
 
   async getReports({ projectId, page, size: pageSize }: { projectId: string, page: number, size: number }) {
 
-    const from = (page - 1) * pageSize;
-    const size = pageSize;
+    const size = pageSize > MAX_PAGE_SIZE ? MAX_PAGE_SIZE : pageSize;
+    const from = (page - 1) * size;
 
     return await this.openSearchService.client.search<{
       hits: {

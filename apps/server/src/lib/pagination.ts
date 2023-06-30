@@ -11,3 +11,5 @@ export class Pagination {
   @Field(() => Number, { nullable: false })
   size: number;
 }
+
+export const MAX_PAGE_SIZE = 100;
