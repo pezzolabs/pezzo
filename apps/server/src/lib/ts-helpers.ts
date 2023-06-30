@@ -10,3 +10,17 @@ export type AllPrimitiveTypes =
   | Primitive
   | RecursiveObject<Primitive>
   | RecursiveArray<Primitive>;
+
+export interface Pagination {
+  page: number;
+  size: number;
+}
+
+export interface PaginationResult<T> {
+  data: T[];
+  pagination: {
+    page: number;
+    size: number;
+    total: number;
+  };
+}

@@ -5,9 +5,6 @@ export class GetRequestsInput {
   @Field(() => String, { nullable: false })
   projectId: string;
 
-  @Field(() => String, { nullable: false })
-  organizationId: string;
-
   @Field(() => Number, { nullable: false })
   page: number;
 

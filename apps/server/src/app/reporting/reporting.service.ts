@@ -44,8 +44,12 @@ export class ReportingService {
 
     const from = (page - 1) * pageSize;
     const size = pageSize;
+
     return await this.openSearchService.client.search<{
-      hits: { hits: Array<{ _source: RequestReport }> };
+      hits: {
+        hits: Array<{ _source: RequestReport; }>
+        total: { value: number };
+      };
     }>({
       index: OpenSearchIndex.Requests,
       body: {
@@ -56,8 +60,10 @@ export class ReportingService {
         },
 
       },
+      sort: ["request.timestamp:desc"],
       size,
-      from
+      from,
+      track_total_hits: true,
     });
   }
 }
