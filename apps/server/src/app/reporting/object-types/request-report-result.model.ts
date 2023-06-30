@@ -10,4 +10,5 @@ export class RequestReportResult implements PaginationResult<RequestReport> {
 
   @Field(() => Pagination, { nullable: false })
   pagination: Pagination;
+
 }

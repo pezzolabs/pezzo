@@ -1,8 +1,9 @@
 import { Space, Table, Tag, Typography } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
 import { useGetRequestReports } from "../../graphql/hooks/queries";
-import { RequestReport } from "../../../@generated/graphql/graphql";
 import ms from "ms";
+import { useState } from "react";
+import { Loading3QuartersOutlined } from "@ant-design/icons";
 
 interface DataType {
   key: React.Key;
@@ -66,9 +67,16 @@ const onChange: TableProps<DataType>["onChange"] = (
 };
 
 export const RequestsPage = () => {
-  const { data } = useGetRequestReports();
+  const [size, setSize] = useState(10);
+  const [page, setPage] = useState(1);
 
-  const tableData = data?.requestReports.map((report) => {
+  const { data: reports, isLoading } = useGetRequestReports({ size, page });
+
+  if (!reports || isLoading) return <Loading3QuartersOutlined />;
+
+  const { data, pagination } = reports.paginatedRequests;
+
+  const tableData = data?.map((report) => {
     const isError = report.response.status >= 400;
     const response = isError
       ? JSON.stringify(report.response.body.error ?? {})
@@ -97,7 +105,20 @@ export const RequestsPage = () => {
       <Space direction="vertical" style={{ width: "100%" }}>
         <Typography.Title level={4}>Requests</Typography.Title>
 
-        <Table columns={columns} dataSource={tableData} onChange={onChange} />
+        <Table
+          columns={columns}
+          dataSource={tableData}
+          onChange={onChange}
+          pagination={{
+            pageSize: pagination.size,
+            current: pagination.page,
+            total: pagination.total,
+            onChange: (page, size) => {
+              setPage(page);
+              setSize(size ?? 10);
+            },
+          }}
+        />
       </Space>
     </div>
   );
