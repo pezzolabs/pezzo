@@ -11,6 +11,7 @@
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
     "@apollo/server": "^4.7.0",
+    "@aws-sdk/credential-provider-node": "^3.362.0",
     "@codemirror/state": "^6.2.1",
     "@codemirror/view": "^6.13.2",
     "@dqbd/tiktoken": "^1.0.6",
