@@ -1,4 +1,5 @@
-import { ProviderType, ReportRequestDto } from "../dto/report-request.dto";
+import { ReportRequestDto } from "../dto/report-request.dto";
+import { ProviderType } from "@pezzo/types";
 import { OpenAIToolkit } from "@pezzo/llm-toolkit";
 
 export const buildRequestReport = (dto: ReportRequestDto) => {
@@ -6,17 +7,15 @@ export const buildRequestReport = (dto: ReportRequestDto) => {
   const responseTimestamp = new Date(dto.response.timestamp);
   const duration = responseTimestamp.getTime() - requestTimestamp.getTime();
   switch (dto.provider) {
-    case ProviderType.OpenAI:
+    case ProviderType.OpenAi:
       return buildOpenAIReport(dto, duration);
-    case ProviderType.AI21:
-      return buildAI21Report(dto, duration);
     default:
       throw new Error("Unsupported provider");
   }
 };
 
 const buildOpenAIReport = (
-  dto: ReportRequestDto<ProviderType.OpenAI>,
+  dto: ReportRequestDto<ProviderType.OpenAi>,
   requestDuration: number
 ) => {
   const { response, request } = dto;
@@ -53,17 +52,5 @@ const buildOpenAIReport = (
   return {
     report: dto,
     calculated,
-  };
-};
-
-const buildAI21Report = (
-  dto: ReportRequestDto<ProviderType.AI21>,
-  requestDuration: number
-) => {
-  return {
-    report: dto,
-    calculated: {
-      duration: requestDuration,
-    },
   };
 };
