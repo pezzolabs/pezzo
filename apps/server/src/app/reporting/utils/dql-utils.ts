@@ -2,62 +2,39 @@ import { FilterInput, FilterOperator } from "../../common/filters/filter.input";
 import { SortInput } from "../../common/filters/sort.input";
 import bodybuilder from "bodybuilder";
 
-const exampleReport = {
-  ownership: {
-    organizationId: "cljdau1v50005e7a28awk3o6n",
-    projectId: "cljizf1or0253q1a2rhq197uz",
-  },
-  reportId: "7e639915-54d1-4a6e-9a7e-98f94e270876",
-  calculated: {
-    promptCost: 0.000098,
-    completionCost: 0.000124,
-    totalCost: 0.000222,
-    totalTokens: 127,
-    duration: 2600,
-  },
-  provider: "OpenAI",
-  type: "ChatCompletion",
-  metadata: { conversationId: "task-generator" },
-  request: {
-    timestamp: "2023-06-30T20:00:59.437Z",
-    body: {
-      model: "gpt-3.5-turbo",
-      temperature: 0,
-      max_tokens: 1000,
-      messages: [],
-    },
-  },
-  response: {
-    timestamp: "2023-06-30T20:01:02.037Z",
-    body: {
-      id: "chatcmpl-7XEaZV94h0bdNGr9p5FaMGj2MWiZ0",
-      object: "chat.completion",
-      created: 1688155259,
-      model: "gpt-3.5-turbo-0613",
-      choices: [],
-      usage: {},
-    },
-    status: 200,
-  },
-};
-
-export function validateKey(obj, key) {
-  const keys = key.split(".");
-  let currentObj = obj;
-
-  for (let i = 0; i < keys.length; i++) {
-    const currentKey = keys[i];
-
-    // eslint-disable-next-line no-prototype-builtins
-    if (!currentObj.hasOwnProperty(currentKey)) {
-      return false;
-    }
-
-    currentObj = currentObj[currentKey];
-  }
-
-  return true;
-}
+const validFields = new Set([
+  "ownership",
+  "ownership.organizationId",
+  "ownership.projectId",
+  "reportId",
+  "calculated",
+  "calculated.promptCost",
+  "calculated.completionCost",
+  "calculated.totalCost",
+  "calculated.totalTokens",
+  "calculated.duration",
+  "provider",
+  "type",
+  "properties",
+  "metadata",
+  "request",
+  "request.timestamp",
+  "request.body",
+  "request.body.model",
+  "request.body.temperature",
+  "request.body.max_tokens",
+  "request.body.messages",
+  "response",
+  "response.timestamp",
+  "response.body",
+  "response.body.id",
+  "response.body.object",
+  "response.body.created",
+  "response.body.model",
+  "response.body.choices",
+  "response.body.usage",
+  "response.status",
+]);
 
 export const mapFiltersToDql = ({
   projectId,
@@ -74,14 +51,14 @@ export const mapFiltersToDql = ({
     .query("match", "ownership.projectId", projectId)
     .query("match", "ownership.organizationId", organizationId);
 
-  if (sort) {
+  if (sort != null) {
     body = body.sort(sort.field, sort.direction);
   } else {
     body = body.sort("request.timestamp", "desc");
   }
 
   filters.forEach((filter) => {
-    if (!validateKey(exampleReport, filter.field)) return;
+    if (!validFields.has(filter.field)) return;
 
     switch (filter.operator) {
       case FilterOperator.eq:
