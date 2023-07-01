@@ -1,10 +1,12 @@
 import { Field, ObjectType } from "@nestjs/graphql";
 import { AllPrimitiveTypes } from "../../../lib/ts-helpers";
-import { ProviderType } from "../dto/report-request.dto";
+import { ObservabilityRequestDto, ProviderType, ObservabilityResponseDto, ObservabilityReportMetadata, ObservabilityReportProperties } from "../dto/report-request.dto";
 import { GraphQLJSONObject } from "graphql-type-json";
 
 @ObjectType()
-export class RequestReport {
+export class RequestReport<
+  TProviderType extends ProviderType | unknown = unknown
+> {
   @Field(() => String, { nullable: false })
   ownership!: string;
 
@@ -21,14 +23,14 @@ export class RequestReport {
   type!: string;
 
   @Field(() => GraphQLJSONObject, { nullable: true })
-  properties!: Record<string, AllPrimitiveTypes>;
+  properties!: ObservabilityReportProperties;
 
-  @Field(() => GraphQLJSONObject, { nullable: true })
-  metadata!: Record<string, AllPrimitiveTypes>;
-
-  @Field(() => GraphQLJSONObject, { nullable: false })
-  request!: Record<string, AllPrimitiveTypes>;
+  @Field(() => ObservabilityRequestDto, { nullable: true })
+  metadata!: ObservabilityReportMetadata;
 
   @Field(() => GraphQLJSONObject, { nullable: false })
-  response!: Record<string, AllPrimitiveTypes>;
+  request!: ObservabilityRequestDto<TProviderType>
+
+  @Field(() => ObservabilityResponseDto, { nullable: false })
+  response!: ObservabilityResponseDto<TProviderType>;
 }

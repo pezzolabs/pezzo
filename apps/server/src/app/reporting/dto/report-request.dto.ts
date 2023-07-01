@@ -24,7 +24,7 @@ export type AcceptedModels = ExtractModelNames<
 
 export type ObservabilityReportProperties = RecursiveObject<Primitive>;
 export type ObservabilityReportMetadata = {
-  conversationId?: string;
+  conversationId: string;
   [key: string]: AllPrimitiveTypes;
 };
 
@@ -48,7 +48,7 @@ export class ObservabilityRequestDto<
 > {
   timestamp: string;
   @Type((opts) =>
-    opts.object.provider === ProviderType.OpenAI
+    opts?.object.provider === ProviderType.OpenAI
       ? OpenAIObservabilityRequestBody
       : GenericObservabilityRequestResponseBody
   )
@@ -57,12 +57,13 @@ export class ObservabilityRequestDto<
     : GenericObservabilityRequestResponseBody;
 }
 
+
 export class ObservabilityResponseDto<
   TProviderType extends ProviderType | unknown = unknown
 > {
   timestamp: string;
   @Type((opts) =>
-    opts.object.provider === ProviderType.OpenAI
+    opts?.object.provider === ProviderType.OpenAI
       ? OpenAIObservabilityResponseBody
       : GenericObservabilityRequestResponseBody
   )
@@ -73,7 +74,7 @@ export class ObservabilityResponseDto<
 }
 
 export interface ObservabilityResponseBody {
-  usage?: string;
+  usage: string;
   [key: string]: AllPrimitiveTypes;
 }
 

@@ -69,7 +69,7 @@ export const useBreadcrumbItems = () => {
     if (!matchingPath) return [];
 
     const matchingSplit = matchingPath.split("/").filter((i) => i);
-    const parts = [];
+    const parts: { title: string | React.ReactNode; key: string }[] = [];
 
     for (const [idx, item] of matchingSplit.entries()) {
       const resolvedBreadcrumb = resolvers[item];
