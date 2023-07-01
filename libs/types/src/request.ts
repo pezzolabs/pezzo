@@ -2,11 +2,8 @@ import { OpenAIToolkit } from "@pezzo/llm-toolkit";
 import { ProviderType } from "./provider-type";
 import { Type } from "class-transformer";
 import { AllPrimitiveTypes, Primitive, RecursiveObject } from "./ts-helpers";
-import {
-  CreateChatCompletionResponse,
-  CreateChatCompletionResponseChoicesInner,
-  CreateCompletionResponseUsage,
-} from "openai";
+import { CreateChatCompletionResponse, CreateChatCompletionResponseChoicesInner, CreateCompletionResponseUsage } from "openai";
+
 
 type ExtractModelNames<T> = T extends { model: infer M } ? M : never;
 export type AcceptedModels = ExtractModelNames<
@@ -27,9 +24,7 @@ export class OpenAIObservabilityRequestBody extends GenericObservabilityRequestR
   model: AcceptedModels;
 }
 
-export class OpenAIObservabilityResponseBody
-  implements CreateChatCompletionResponse
-{
+export class OpenAIObservabilityResponseBody implements CreateChatCompletionResponse {
   id: string;
   object: string;
   created: number;
@@ -41,6 +36,8 @@ export class OpenAIObservabilityResponseBody
   usage?: CreateCompletionResponseUsage;
   error?: AllPrimitiveTypes;
 }
+
+
 
 export class ObservabilityRequest<
   TProviderType extends ProviderType | unknown = unknown
@@ -55,6 +52,7 @@ export class ObservabilityRequest<
     ? OpenAIObservabilityRequestBody
     : GenericObservabilityRequestResponseBody;
 }
+
 
 export class ObservabilityResponse<
   TProviderType extends ProviderType | unknown = unknown

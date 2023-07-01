@@ -8,7 +8,7 @@
     "jsxImportSource": "@emotion/react",
     "resolveJsonModule": true,
     "sourceMap": true,
-    "strictNullChecks": false //change to true and migrate code
+    "strictNullChecks": false, //change to true and migrate code
   },
   "files": [],
   "include": [],

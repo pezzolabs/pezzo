@@ -8,7 +8,6 @@ import {
   DEFAULT_PAGE_SIZE,
   PAGE_SIZE_OPTIONS,
 } from "../../lib/constants/pagination";
-import { RequestReport } from "../../../@generated/graphql/graphql";
 import { RequestDetails } from "../../components/requests/RequestDetails";
 
 interface DataType {
@@ -82,7 +81,7 @@ export const RequestsPage = () => {
     () =>
       reports?.paginatedRequests.data.find(
         (r) => r.reportId === currentReportId
-      ) as RequestReport | undefined,
+      ),
     [reports?.paginatedRequests.data, currentReportId]
   );
 
@@ -91,6 +90,7 @@ export const RequestsPage = () => {
   const { data, pagination } = reports.paginatedRequests;
 
   const tableData = data?.map((report) => {
+    const type = report.provider;
     const isError = report.response.status >= 400;
     const response = isError
       ? JSON.stringify(report.response.body.error ?? {})
@@ -137,6 +137,8 @@ export const RequestsPage = () => {
               response={currentReport.response}
               provider={currentReport.provider}
               calculated={currentReport.calculated}
+              metadata={currentReport.metadata}
+              properties={currentReport.properties}
             />
           ) : (
             <Typography.Text>No report selected</Typography.Text>
@@ -155,9 +157,9 @@ export const RequestsPage = () => {
           pagination={{
             showSizeChanger: true,
             pageSizeOptions: PAGE_SIZE_OPTIONS,
-            pageSize: pagination.size,
-            current: pagination.page,
-            total: pagination.total,
+            pageSize: pagination?.size,
+            current: pagination?.page,
+            total: pagination?.total,
 
             onChange: (page, size) => {
               setPage(page);

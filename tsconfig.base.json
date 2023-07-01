@@ -7,7 +7,6 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "strictNullChecks": true,
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
@@ -16,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@pezzo/types": ["libs/types/src/index.ts"],
       "@pezzo/client": ["libs/client/src/index.ts"],
       "@pezzo/common": ["libs/common/src/index.ts"],
       "@pezzo/common/components": ["libs/common/src/components"],
