@@ -1,16 +1,18 @@
-import { Space, Table, Tag, Typography } from "antd";
+import { Drawer, Space, Table, Tag, Typography } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
 import { useGetRequestReports } from "../../graphql/hooks/queries";
 import ms from "ms";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Loading3QuartersOutlined } from "@ant-design/icons";
 import {
   DEFAULT_PAGE_SIZE,
   PAGE_SIZE_OPTIONS,
 } from "../../lib/constants/pagination";
+import { RequestReport } from "../../../@generated/graphql/graphql";
+import { RequestDetails } from "../../components/requests/RequestDetails";
 
 interface DataType {
-  key: React.Key;
+  key: string;
   timestamp: string;
   status: JSX.Element;
   request: string;
@@ -73,8 +75,16 @@ const onChange: TableProps<DataType>["onChange"] = (
 export const RequestsPage = () => {
   const [size, setSize] = useState(DEFAULT_PAGE_SIZE);
   const [page, setPage] = useState(1);
-
+  const [currentReportId, setCurrentReportId] = useState<string | null>(null);
   const { data: reports, isLoading } = useGetRequestReports({ size, page });
+
+  const currentReport = useMemo(
+    () =>
+      reports?.paginatedRequests.data.find(
+        (r) => r.reportId === currentReportId
+      ) as RequestReport | undefined,
+    [reports?.paginatedRequests.data, currentReportId]
+  );
 
   if (!reports || isLoading) return <Loading3QuartersOutlined />;
 
@@ -104,20 +114,42 @@ export const RequestsPage = () => {
     };
   });
 
+  const handleShowDetails = (record: DataType) => () =>
+    setCurrentReportId(record.key);
+
   return (
     <div>
       <Space direction="vertical" style={{ width: "100%" }}>
         <Typography.Title level={4}>Requests</Typography.Title>
 
+        <Drawer
+          title="Request Details"
+          placement="right"
+          closable={true}
+          onClose={() => setCurrentReportId(null)}
+          open={!!currentReportId}
+          width="50%"
+        >
+          {currentReport != null ? (
+            <RequestDetails
+              id={currentReportId}
+              request={currentReport.request}
+              response={currentReport.response}
+              provider={currentReport.provider}
+              calculated={currentReport.calculated}
+            />
+          ) : (
+            <Typography.Text>No report selected</Typography.Text>
+          )}
+        </Drawer>
         <Table
           columns={columns}
           dataSource={tableData}
           onChange={onChange}
           onRow={(record) => {
             return {
-              onClick: () => {
-                console.log(record);
-              },
+              onClick: handleShowDetails(record),
+              style: { cursor: "pointer" },
             };
           }}
           pagination={{
