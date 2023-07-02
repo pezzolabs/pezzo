@@ -13,7 +13,7 @@ export const ProjectCard = ({ name, slug, id }: ProjectCardProps) => {
   return (
     <Card
       hoverable
-      onClick={() => navigate(`/projects/${id}/prompts`)}
+      onClick={() => navigate(`/projects/${id}`)}
       style={{ marginBottom: 16, height: 122 }}
     >
       <Row justify="space-between" align="middle">

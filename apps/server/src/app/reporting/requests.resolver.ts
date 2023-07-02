@@ -1,7 +1,7 @@
 import {
   InternalServerErrorException,
   UseGuards,
-  ForbiddenException,
+  NotFoundException,
 } from "@nestjs/common";
 import { Args, Query, Resolver } from "@nestjs/graphql";
 import { AuthGuard } from "../auth/auth.guard";
@@ -13,6 +13,7 @@ import { RequestUser } from "../identity/users.types";
 import { isOrgMemberOrThrow } from "../identity/identity.utils";
 import { GetRequestsInput } from "./inputs/get-requests.input";
 import { ProjectsService } from "../identity/projects.service";
+import { RequestReportResult } from "./object-types/request-report-result.model";
 
 @UseGuards(AuthGuard)
 @Resolver(() => RequestReport)
@@ -23,23 +24,21 @@ export class RequestReportsResolver {
     private readonly logger: PinoLogger
   ) {}
 
-  @Query(() => [RequestReport])
-  async requestReports(
+  @Query(() => RequestReportResult)
+  async paginatedRequests(
     @Args("data") data: GetRequestsInput,
     @CurrentUser() user: RequestUser
-  ) {
-    isOrgMemberOrThrow(user, data.organizationId);
-
+  ): Promise<RequestReportResult> {
+    let organizationId;
     try {
-      const userProjects = await this.projectsService.getProjectsByOrgId(
-        data.organizationId
-      );
-
-      const project = userProjects.find((p) => p.id === data.projectId);
+      const project = await this.projectsService.getProjectById(data.projectId);
 
       if (!project) {
-        throw new ForbiddenException();
+        throw new NotFoundException();
       }
+
+      organizationId = project.organizationId;
+      isOrgMemberOrThrow(user, organizationId);
     } catch (error) {
       this.logger.error(error, "Error getting projects");
       throw new InternalServerErrorException();
@@ -48,9 +47,21 @@ export class RequestReportsResolver {
     try {
       const response = await this.reportingService.getReports({
         projectId: data.projectId,
+        organizationId,
+        page: data.page,
+        size: data.size,
+        filters: data.filters,
+        sort: data.sort,
       });
 
-      return response.body.hits.hits.map((hit) => hit._source);
+      return {
+        data: response.body.hits.hits.map((hit) => hit._source),
+        pagination: {
+          page: data.page,
+          size: data.size,
+          total: response.body.hits.total.value,
+        },
+      };
     } catch (error) {
       this.logger.error(error, "Error getting reports from OpenSearch");
       throw new InternalServerErrorException();

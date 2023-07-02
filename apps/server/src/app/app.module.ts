@@ -67,7 +67,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
           brokers: config.get("KAFKA_BROKERS").split(","),
         },
         consumer: {
-          groupId: config.get("KAFKA_GROUP_ID"),
+          groupId: config.get("KAFKA_GROUP_ID") as string,
           rebalanceTimeout: config.get("KAFKA_REBALANCE_TIMEOUT"),
           heartbeatInterval: config.get("KAFKA_HEARTBEAT_INTERVAL"),
           sessionTimeout: config.get("KAFKA_SESSION_TIMEOUT"),

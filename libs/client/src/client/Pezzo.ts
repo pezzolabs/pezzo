@@ -1,11 +1,23 @@
 import axios, { AxiosInstance } from "axios";
-import { IntegrationBaseSettings, PromptExecutionStatus } from "../types";
+import { IntegrationBaseSettings, ProviderType, ReportData } from "../types";
 import type { CreatePromptExecutionDto } from "./create-prompt-execution.dto";
+import {
+  Prompt,
+  getPromptSettings,
+  ReportPromptExecutionResult,
+} from "../types/prompts";
+import { interpolateVariables } from "../utils";
+import { PezzoOpenAIApi } from "./PezzoOpenAI";
 
 export interface PezzoClientOptions {
   serverUrl?: string;
   apiKey: string;
   environment: string;
+  projectId: string;
+}
+
+export interface GetPromptOptions {
+  variables?: Record<string, boolean | number | string>;
 }
 
 const defaultOptions: Partial<PezzoClientOptions> = {
@@ -13,6 +25,8 @@ const defaultOptions: Partial<PezzoClientOptions> = {
 };
 
 export class Pezzo {
+  OpenAIApi: PezzoOpenAIApi;
+
   options: PezzoClientOptions;
   private readonly axios: AxiosInstance;
 
@@ -25,23 +39,15 @@ export class Pezzo {
     this.axios = axios.create({
       baseURL: `${this.options.serverUrl}/api`,
       headers: {
-        "x-api-key": this.options.apiKey,
+        "x-pezzo-api-key": this.options.apiKey,
       },
     });
   }
 
-  async reportPromptExecution<T>(
+  async reportPromptExecution<TResult>(
     dto: CreatePromptExecutionDto,
     autoParseJSON?: boolean
-  ): Promise<{
-    id: string;
-    promptId: string;
-    status: PromptExecutionStatus;
-    result?: T;
-    totalCost: number;
-    totalTokens: number;
-    duration: number;
-  }> {
+  ): Promise<ReportPromptExecutionResult<TResult>> {
     const { data } = await this.axios.post(`prompts/execution`, {
       ...dto,
     });
@@ -50,8 +56,8 @@ export class Pezzo {
       const report = {
         ...data,
         result: autoParseJSON
-          ? (JSON.parse(data.result) as T)
-          : (data.result as T),
+          ? (JSON.parse(data.result) as TResult)
+          : (data.result as TResult),
       };
 
       return report;
@@ -60,6 +66,9 @@ export class Pezzo {
     }
   }
 
+  /**
+   * @deprecated Use `getPrompt` instead
+   */
   async getDeployedPromptVersion<T>(promptName: string) {
     const url = new URL(`${this.options.serverUrl}/api/prompts/deployment`);
     url.searchParams.append("name", promptName);
@@ -75,5 +84,69 @@ export class Pezzo {
         settings: data.settings as IntegrationBaseSettings<T>,
       },
     };
+  }
+
+  async getPrompt<TProviderType extends ProviderType>(
+    promptName: string,
+    options?: GetPromptOptions
+  ): Promise<Prompt<TProviderType>> {
+    const url = new URL(`${this.options.serverUrl}/api/v2/prompts/deployment`);
+    url.searchParams.append("name", promptName);
+    url.searchParams.append("environmentName", this.options.environment);
+
+    const response = await fetch(url.toString(), {
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": this.options.apiKey,
+      },
+    });
+    const data = await response.json();
+    const content = data.content;
+
+    let interpolatedContent = data.content;
+
+    if (options?.variables) {
+      interpolatedContent = interpolateVariables(
+        data.content,
+        options.variables
+      );
+    }
+
+    const prompt = {
+      id: data.promptId,
+      deployedVersion: data.sha,
+      ...getPromptSettings({
+        settings: data.settings as Record<string, unknown>,
+        content,
+        _pezzo: {
+          environmentName: this.options.environment,
+          promptId: data.promptId,
+          promptVersionSha: data.sha,
+          variables: options?.variables,
+          content,
+          interpolatedContent,
+        },
+        interpolatedContent,
+      }),
+    };
+
+    return prompt;
+  }
+
+  async reportPromptExecutionV2(dto: ReportData) {
+    await axios.post(
+      `${this.options.serverUrl}/api/reporting/v2/request`,
+      dto,
+      {
+        headers: {
+          "x-pezzo-api-key": this.options.apiKey,
+          "x-pezzo-project-id": this.options.projectId,
+        },
+      }
+    );
+  }
+
+  async getOpenAiPrompt(promptName: string) {
+    return this.getPrompt<ProviderType.OpenAI>(promptName);
   }
 }

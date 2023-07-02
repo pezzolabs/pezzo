@@ -1,13 +1,9 @@
-import { Field, ObjectType } from "@nestjs/graphql";
+import { ObjectType, Field } from "@nestjs/graphql";
 import { AllPrimitiveTypes } from "../../../lib/ts-helpers";
-import { ProviderType } from "../dto/report-request.dto";
 import { GraphQLJSONObject } from "graphql-type-json";
 
 @ObjectType()
 export class RequestReport {
-  @Field(() => String, { nullable: false })
-  ownership!: string;
-
   @Field(() => String, { nullable: false })
   reportId!: string;
 
@@ -15,7 +11,7 @@ export class RequestReport {
   calculated!: Record<string, AllPrimitiveTypes>;
 
   @Field(() => String, { nullable: false })
-  provider!: ProviderType;
+  provider!: string;
 
   @Field(() => String, { nullable: false })
   type!: string;

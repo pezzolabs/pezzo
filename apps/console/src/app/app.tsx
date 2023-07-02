@@ -23,13 +23,14 @@ import { LayoutWrapper } from "./components/layout/LayoutWrapper";
 import { OnboardingPage } from "./pages/onboarding";
 import { AuthProvider } from "./lib/providers/AuthProvider";
 import { ThirdpartyEmailPasswordComponentsOverrideProvider } from "supertokens-auth-react/recipe/thirdpartyemailpassword";
-import LogoSquare from "../assets/logo.svg";
 import LogoVertical from "../assets/logo-vertical.svg";
 import { OptionalIntercomProvider } from "./lib/providers/OptionalIntercomProvider";
 import { HOTJAR_SITE_ID, HOTJAR_VERSION } from "../env";
 import { OrgPage } from "./pages/organizations/OrgPage";
 import { AcceptInvitationPage } from "./pages/invitations/AcceptInvitationPage";
 import { LogoutPage } from "./pages/LogoutPage";
+import { ProjectPage } from "./pages/projects/[projectId]";
+import { RequestsPage } from "./pages/requests";
 
 initSuperTokens();
 
@@ -47,6 +48,8 @@ export const paths = {
   "/info": "/info",
   "/orgs/:orgId": "/orgs/:orgId",
   "/projects/:projectId": "/projects/:projectId",
+  "/projects/:projectId/overview": "/projects/:projectId/overview",
+  "/projects/:projectId/requests": "/projects/:projectId/reqeusts",
   "/projects/:projectId/prompts": "/projects/:projectId/prompts",
   "/projects/:projectId/prompts/:promptId":
     "/projects/:projectId/prompts/:promptId",
@@ -176,6 +179,18 @@ export function App() {
                   >
                     <Route
                       index
+                      path={paths["/projects/:projectId/"]}
+                      element={<ProjectPage />}
+                    />
+                    <Route
+                      path={"/projects/:projectId/overview"}
+                      element={<ProjectPage />}
+                    />
+                    <Route
+                      path={"/projects/:projectId/requests"}
+                      element={<RequestsPage />}
+                    />
+                    <Route
                       path={paths["/projects/:projectId/prompts"]}
                       element={<PromptsPage />}
                     />

@@ -20,7 +20,19 @@ export const useBreadcrumbItems = () => {
       },
       ":projectId": {
         title: project?.name,
-        link: `/projects/${project?.id}/prompts`,
+        link: `/projects/${project?.id}`,
+      },
+      overview: {
+        title: "Overview",
+        link: `/projects/${project?.id}/overview`,
+      },
+      environments: {
+        title: "Environments",
+        link: `/projects/${project?.id}/environments`,
+      },
+      requests: {
+        title: "Requests",
+        link: `/projects/${project?.id}/requests`,
       },
       prompts: {
         title: "Prompts",
@@ -57,7 +69,7 @@ export const useBreadcrumbItems = () => {
     if (!matchingPath) return [];
 
     const matchingSplit = matchingPath.split("/").filter((i) => i);
-    const parts = [];
+    const parts: { title: string | React.ReactNode; key: string }[] = [];
 
     for (const [idx, item] of matchingSplit.entries()) {
       const resolvedBreadcrumb = resolvers[item];

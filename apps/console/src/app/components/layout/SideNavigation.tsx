@@ -1,6 +1,11 @@
-import { BoltIcon, ServerStackIcon } from "@heroicons/react/24/solid";
-import { Layout, Menu } from "antd";
-import { useState } from "react";
+import {
+  BoltIcon,
+  ChartBarIcon,
+  QueueListIcon,
+  ServerStackIcon,
+} from "@heroicons/react/24/solid";
+import { Menu } from "antd";
+import { useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
 
@@ -9,9 +14,19 @@ import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 
 const topMenuItems = [
   {
+    key: "overview",
+    label: "Overview",
+    icon: <ChartBarIcon height={18} />,
+  },
+  {
     key: "prompts",
     label: "Prompts",
     icon: <BoltIcon height={18} />,
+  },
+  {
+    key: "requests",
+    label: "Requests",
+    icon: <QueueListIcon height={18} width={18} />,
   },
   {
     key: "environments",
@@ -20,8 +35,13 @@ const topMenuItems = [
   },
 ];
 
+const BaseMenu = styled(Menu)`
+  border-inline-end: none !important;
+  padding: 12px;
+
+  border-right: 1px solid red;
+`;
 const SidebarContainer = styled.div`
-  background: #141414;
   border-inline-end: 1px solid ${colors.neutral["800"]};
   height: 100%;
 
@@ -30,37 +50,38 @@ const SidebarContainer = styled.div`
   overflow: hidden;
 `;
 
-const BaseMenu = styled(Menu)`
-  border-inline-end: none !important;
-`;
-
 const TopMenu = styled(BaseMenu)`
   flex: 100%;
 `;
-
-const BottomMenu = styled(BaseMenu)``;
 
 export const SideNavigation = () => {
   const { project } = useCurrentProject();
   const location = useLocation();
   const navigate = useNavigate();
-  const [isCollapsed] = useState(true);
 
   const handleTopMenuClick = (item) => {
     navigate(`/projects/${project.id}/${item.key}`);
   };
 
+  const paths = location.pathname.replace("/", "")?.split("/");
+
+  const selectedKeys = useMemo(
+    () =>
+      paths?.map((path) => {
+        const item = topMenuItems.find((item) => item.key === path);
+        return item?.key;
+      }),
+    [paths]
+  ).filter(Boolean);
+
   return (
-    <Layout.Sider style={{ overflow: "hidden" }} collapsed={isCollapsed}>
-      <SidebarContainer>
-        <TopMenu
-          onClick={handleTopMenuClick}
-          defaultSelectedKeys={["prompts"]}
-          selectedKeys={[location.pathname.replace("/", "")]}
-          items={topMenuItems}
-          mode="inline"
-        />
-      </SidebarContainer>
-    </Layout.Sider>
+    <SidebarContainer>
+      <TopMenu
+        onClick={handleTopMenuClick}
+        defaultSelectedKeys={["overview"]}
+        selectedKeys={selectedKeys.length ? selectedKeys : ["overview"]}
+        items={topMenuItems}
+      />
+    </SidebarContainer>
   );
 };

@@ -83,20 +83,18 @@ export const OrgPage = () => {
     [tabsItems, isOrgAdmin]
   );
 
-  return (
-    organization && (
-      <>
-        <Typography.Title level={1} style={{ marginTop: 0 }}>
-          {organization.name}
-        </Typography.Title>
+  return organization ? (
+    <>
+      <Typography.Title level={1} style={{ marginTop: 0 }}>
+        {organization.name}
+      </Typography.Title>
 
-        <Tabs items={availableTabItems} onChange={setActiveView} />
+      <Tabs items={availableTabItems} onChange={setActiveView} />
 
-        {activeView === TabItemKey.Projects && <ProjectsPage />}
-        {activeView === TabItemKey.Members && <MembersView />}
-        {activeView === TabItemKey.ApiKeys && <ApiKeysView />}
-        {activeView === TabItemKey.Settings && isOrgAdmin && <SettingsView />}
-      </>
-    )
-  );
+      {activeView === TabItemKey.Projects && <ProjectsPage />}
+      {activeView === TabItemKey.Members && <MembersView />}
+      {activeView === TabItemKey.ApiKeys && <ApiKeysView />}
+      {activeView === TabItemKey.Settings && isOrgAdmin && <SettingsView />}
+    </>
+  ) : null;
 };
