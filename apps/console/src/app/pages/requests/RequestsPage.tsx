@@ -1,4 +1,4 @@
-import { Drawer, Space, Table, Tag, Typography } from "antd";
+import { Divider, Drawer, Space, Table, Tag, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useGetRequestReports } from "../../graphql/hooks/queries";
 import ms from "ms";
@@ -10,19 +10,10 @@ import {
 } from "../../lib/constants/pagination";
 import { RequestDetails } from "../../components/requests/RequestDetails";
 import { toDollarSign } from "../../lib/utils/currency-utils";
+import { RequestFilters } from "../../components/requests/RequestFilters";
+import { RequestReportItem } from "./types";
 
-interface DataType {
-  key: string;
-  timestamp: string;
-  status: JSX.Element;
-  request: string;
-  response: JSX.Element;
-  latency: string;
-  totalTokens?: number;
-  cost?: string;
-}
-
-const columns: ColumnsType<DataType> = [
+const columns: ColumnsType<RequestReportItem> = [
   {
     title: "Timestamp",
     dataIndex: "timestamp",
@@ -102,14 +93,15 @@ export const RequestsPage = () => {
     };
   });
 
-  const handleShowDetails = (record: DataType) => () =>
+  const handleShowDetails = (record: RequestReportItem) => () =>
     setCurrentReportId(record.key);
 
   return (
     <div>
       <Space direction="vertical" style={{ width: "100%" }}>
         <Typography.Title level={4}>Requests</Typography.Title>
-
+        <Divider style={{ margin: 0 }} />
+        <RequestFilters requests={tableData} />
         <Drawer
           title="Request Details"
           placement="right"

@@ -1,19 +1,21 @@
 import { useSearchParams } from "react-router-dom";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
+import {
+  FilterInput,
+  FilterOperator,
+  SortOrder,
+} from "../../lib/types/filters";
 
 const extractSortAndFiltersFromSearchParams = (
   searchParams: URLSearchParams
 ) => {
   const filterParams: (string | null)[] | null = searchParams.getAll("f");
   const filters = filterParams?.map((filterParam) => {
-    const [field, operator, value, secondValue] = (filterParam ?? ":").split(
-      ":"
-    );
+    const [field, operator, value] = (filterParam ?? ":").split(":");
     return {
       field,
-      operator: operator as any,
+      operator: operator as FilterOperator,
       value,
-      secondValue,
     };
   });
 
@@ -26,7 +28,7 @@ const extractSortAndFiltersFromSearchParams = (
     sort: sortField &&
       sortOrder && {
         field: sortField,
-        order: (sortOrder as any) ?? "desc",
+        order: (sortOrder as SortOrder) ?? SortOrder.Desc,
       },
   };
 };
@@ -43,8 +45,44 @@ export const useFiltersAndSortParams = () => {
     if (!sort) setSearchParams({ sort: "request.timestamp:desc" });
   }, [setSearchParams, sort]);
 
+  const addFilter = useCallback(
+    ({ field, operator, value }: FilterInput) => {
+      searchParams.append("f", `${field}:${operator}:${value}`);
+      setSearchParams(searchParams);
+    },
+    [searchParams, setSearchParams]
+  );
+
+  const removeFilter = useCallback(
+    (filterToRemove: FilterInput) => {
+      // Get all instances of the parameter
+      const allParams = searchParams.getAll("f");
+
+      // Remove the specified instance
+      const newParams = allParams.filter(
+        (filter) =>
+          filter !==
+          `${filterToRemove.field}:${filterToRemove.operator}:${filterToRemove.value}`
+      );
+
+      // Delete all instances of the parameter from searchParams
+      searchParams.delete("f");
+
+      // Append the remaining instances to searchParams
+      for (const newValue of newParams) {
+        searchParams.append("f", newValue);
+      }
+
+      // Update the search parameters in the URL
+      setSearchParams(searchParams);
+    },
+    [searchParams, setSearchParams]
+  );
+
   return {
     filters,
     sort,
+    removeFilter,
+    addFilter,
   };
 };

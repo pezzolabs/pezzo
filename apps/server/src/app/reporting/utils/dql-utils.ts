@@ -65,7 +65,7 @@ export const mapFiltersToDql = ({
   filters?.forEach((filter) => {
     if (!isValidFilterField(filter.field)) return;
 
-    switch (filter.operator) {
+    switch (filter.operator.toLowerCase()) {
       case FilterOperator.eq:
         body = body.filter("term", filter.field, filter.value);
         break;
