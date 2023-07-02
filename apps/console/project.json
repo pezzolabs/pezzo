@@ -59,7 +59,7 @@
       }
     },
     "serve": {
-      "dependsOn": ["^graphql:codegen", "^prebuild", "prebuild"],
+      "dependsOn": ["^graphql:codegen:offline", "^prebuild", "prebuild"],
       "executor": "@nrwl/webpack:dev-server",
       "defaultConfiguration": "development",
       "options": {

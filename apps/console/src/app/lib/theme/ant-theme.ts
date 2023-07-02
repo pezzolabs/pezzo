@@ -1,7 +1,6 @@
 import { ThemeConfig, theme } from "antd";
 import { colors } from "./colors";
 
-
 export const antTheme: ThemeConfig = {
   algorithm: theme.darkAlgorithm,
   token: {
@@ -22,7 +21,7 @@ export const antTheme: ThemeConfig = {
       fontFamily: "Brockmann",
     },
     Layout: {
-      colorBgHeader: "#141414"
-    }
+      colorBgHeader: "#141414",
+    },
   },
 };

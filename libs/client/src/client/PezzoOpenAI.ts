@@ -33,7 +33,7 @@ export class PezzoOpenAIApi extends OpenAIApi {
     try {
       createChatCompletionResult = await super.createChatCompletion.call(
         this,
-        ...originalArgs,
+        ...originalArgs
       );
     } catch (error) {
       createChatCompletionResult = error;
@@ -41,7 +41,6 @@ export class PezzoOpenAIApi extends OpenAIApi {
     const { request, ...response } = createChatCompletionResult;
 
     const responseTimestamp = new Date().toISOString();
-
 
     const reportPayload: ReportData = {
       provider: ProviderType.OpenAI,
