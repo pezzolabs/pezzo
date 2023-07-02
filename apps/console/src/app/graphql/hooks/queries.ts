@@ -12,6 +12,7 @@ import { GET_ALL_REQUESTS } from "../definitions/queries/requests";
 import { Pagination, RequestReport } from "../../../@generated/graphql/graphql";
 import { ReportRequestResponse } from "../types";
 import { ProviderType } from "@pezzo/types";
+import { useFiltersAndSortParams } from "./filters";
 
 export const useProviderApiKeys = () => {
   const { organization } = useCurrentOrganization();
@@ -67,18 +68,30 @@ const buildTypedRequestReportObject = (requestReport: RequestReport) => {
   }
 }
 
-export const useGetRequestReports = ({ size = 10, page = 1 }: { size: number; page: number }) => {
+export const useGetRequestReports = ({
+  size = 10,
+  page = 1,
+}: {
+  size: number;
+  page: number;
+}) => {
   const { project } = useCurrentProject();
+  const { filters, sort } = useFiltersAndSortParams();
 
   const response = useQuery({
     queryKey: ["requestReports", project?.id, page, size],
     queryFn: () =>
       gqlClient.request<{ paginatedRequests: { pagination: Pagination; data: RequestReport[] } }>(GET_ALL_REQUESTS, {
-        data: { projectId: project?.id, size, page },
+        data: {
+          projectId: project?.id,
+          filters,
+          sort,
+          size,
+          page,
+        },
       }),
     enabled: !!project,
   });
-
   const typedData = response.data?.paginatedRequests.data?.map(buildTypedRequestReportObject) ?? [];
 
   return {
@@ -91,6 +104,4 @@ export const useGetRequestReports = ({ size = 10, page = 1 }: { size: number; pa
       },
     },
   };
-
-
-}
+};
