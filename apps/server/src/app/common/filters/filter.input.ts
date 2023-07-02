@@ -1,5 +1,5 @@
 import { Field, InputType, registerEnumType } from "@nestjs/graphql";
-import { FilterType, RequestReportFilterFields } from "./shared";
+import { RequestReportFilterFields } from "./shared";
 
 export enum FilterOperator {
   eq = "eq",
@@ -18,9 +18,6 @@ registerEnumType(FilterOperator, {
 
 @InputType()
 export class FilterInput {
-  @Field(() => FilterType, { nullable: false })
-  type: FilterType.Filter;
-
   @Field(() => String, { nullable: false })
   field: RequestReportFilterFields;
 

@@ -1,10 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useMemo } from "react";
-import {
-  FilterOperator,
-  FilterType,
-  SortDirection,
-} from "../../../@generated/graphql/graphql";
+import { FilterOperator, SortOrder } from "../../../@generated/graphql/graphql";
 
 const extractSortAndFiltersFromSearchParams = (
   searchParams: URLSearchParams
@@ -15,7 +11,6 @@ const extractSortAndFiltersFromSearchParams = (
       ":"
     );
     return {
-      type: FilterType.Filter,
       field,
       operator: operator as FilterOperator,
       value,
@@ -25,15 +20,14 @@ const extractSortAndFiltersFromSearchParams = (
 
   const sortParam = searchParams.get("sort");
   // eslint-disable-next-line no-unsafe-optional-chaining
-  const [sortField, sortDirection] = sortParam?.split(":") ?? [];
+  const [sortField, sortOrder] = sortParam?.split(":") ?? [];
 
   return {
     filters,
     sort: sortField &&
-      sortDirection && {
-        type: FilterType.Sort,
+      sortOrder && {
         field: sortField,
-        direction: (sortDirection as SortDirection) ?? SortDirection.Desc,
+        order: (sortOrder as SortOrder) ?? SortOrder.Desc,
       },
   };
 };

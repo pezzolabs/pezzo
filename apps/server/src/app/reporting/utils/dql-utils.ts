@@ -2,39 +2,44 @@ import { FilterInput, FilterOperator } from "../../common/filters/filter.input";
 import { SortInput } from "../../common/filters/sort.input";
 import bodybuilder from "bodybuilder";
 
-const validFields = new Set([
-  "ownership",
-  "ownership.organizationId",
-  "ownership.projectId",
+const FILTER_FIELDS_ALLOW_LIST = new Set([
   "reportId",
-  "calculated",
-  "calculated.promptCost",
-  "calculated.completionCost",
-  "calculated.totalCost",
-  "calculated.totalTokens",
-  "calculated.duration",
+  "calculated.*",
   "provider",
   "type",
-  "properties",
-  "metadata",
-  "request",
+  "properties.*",
+  "metadata.*",
   "request.timestamp",
-  "request.body",
-  "request.body.model",
-  "request.body.temperature",
-  "request.body.max_tokens",
-  "request.body.messages",
-  "response",
   "response.timestamp",
-  "response.body",
-  "response.body.id",
-  "response.body.object",
-  "response.body.created",
-  "response.body.model",
-  "response.body.choices",
-  "response.body.usage",
   "response.status",
 ]);
+
+function isValidFilterField(field: string): boolean {
+  // Check if the field is directly in the allow list
+  if (FILTER_FIELDS_ALLOW_LIST.has(field)) {
+    return true;
+  }
+
+  // If the field is not directly in the allow list, check for wildcard matches
+  const fieldParts = field.split(".");
+
+  // Build a filter field to check against the allow list, starting with the first part of the field
+  let checkField = fieldParts[0];
+
+  for (let i = 1; i < fieldParts.length; i++) {
+    // Add a wildcard to the checkField and see if it's in the allow list
+    checkField += ".*";
+    if (FILTER_FIELDS_ALLOW_LIST.has(checkField)) {
+      return true;
+    }
+
+    // If we didn't find a match with the wildcard, add the next part of the field to checkField and continue
+    checkField = `${checkField.slice(0, -1)}.${fieldParts[i]}`;
+  }
+
+  // If we've gone through all parts of the field and didn't find a match in the allow list, the field is not allowed
+  return false;
+}
 
 export const mapFiltersToDql = ({
   projectId,
@@ -52,13 +57,13 @@ export const mapFiltersToDql = ({
     .query("match", "ownership.organizationId", organizationId);
 
   if (sort != null) {
-    body = body.sort(sort.field, sort.direction);
+    body = body.sort(sort.field, sort.order);
   } else {
     body = body.sort("request.timestamp", "desc");
   }
 
-  filters.forEach((filter) => {
-    if (!validFields.has(filter.field)) return;
+  filters?.forEach((filter) => {
+    if (!isValidFilterField(filter.field)) return;
 
     switch (filter.operator) {
       case FilterOperator.eq:
