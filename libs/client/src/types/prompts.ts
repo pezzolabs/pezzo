@@ -1,7 +1,7 @@
 import {
   ChatCompletionRequestMessage,
   CreateChatCompletionRequest as OpenAICreateChatCompletionRequest,
-  CreateCompletionRequest as OpenAICreateCompletionRequest,
+
 } from "openai";
 import { PezzoInjectedContext } from "./function-extension";
 import {
@@ -12,14 +12,14 @@ import {
 
 export type PromptSettings<
   TProviderType extends ProviderType = ProviderType.OpenAI,
-  TExecutionType extends PromptExecutionType = PromptExecutionType.Completion
+  TExecutionType extends PromptExecutionType = PromptExecutionType.ChatCompletion
 > = TProviderType extends ProviderType.OpenAI
   ? OpenAIProviderSettings[TExecutionType]
   : unknown;
 
 type getSettingsFn<
   TProviderType extends ProviderType = ProviderType.OpenAI,
-  TExecutionType extends PromptExecutionType = PromptExecutionType.Completion
+  TExecutionType extends PromptExecutionType = PromptExecutionType.ChatCompletion
 > = (
   overrides?: Partial<PromptSettings<TProviderType, TExecutionType>>
 ) => PromptSettings<TProviderType, TExecutionType>;
@@ -35,37 +35,19 @@ export interface Prompt<
     TProviderType,
     PromptExecutionType.ChatCompletion
   >;
-  getCompletionSettings: getSettingsFn<
-    TProviderType,
-    PromptExecutionType.Completion
-  >;
 }
 
 function chatCompletion(options: {
   settings: Record<string, unknown>;
   messages: ChatCompletionRequestMessage[];
   _pezzo: PezzoInjectedContext;
-}): OpenAICreateChatCompletionRequest & { _pezzo: PezzoInjectedContext } {
+}): OpenAICreateChatCompletionRequest & { pezzo: PezzoInjectedContext } {
   const { settings, messages, _pezzo } = options;
   return {
-    _pezzo,
+    pezzo: _pezzo,
     model: settings["model"] as string,
     ...settings["modelSettings"] as OpenAICreateChatCompletionRequest,
     messages,
-  };
-}
-
-function completion(options: {
-  settings: Record<string, unknown>;
-  content: unknown;
-  _pezzo: PezzoInjectedContext;
-}): OpenAICreateCompletionRequest & { _pezzo: PezzoInjectedContext } {
-  const { settings, _pezzo } = options;
-
-  return {
-    model: settings["model"] as string,
-    _pezzo,
-    ...settings,
   };
 }
 
@@ -83,12 +65,8 @@ export function getPromptSettings(options: {
   };
 
   return {
-    getChatCompletionSettings: () => {
-      const { _pezzo, ...rest } = chatCompletion(obj);
+    getChatCompletionSettings: () => chatCompletion(obj)
 
-      return rest;
-    },
-    getCompletionSettings: () => completion(obj),
   };
 }
 

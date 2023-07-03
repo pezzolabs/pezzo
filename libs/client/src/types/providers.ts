@@ -1,7 +1,4 @@
-import {
-  CreateChatCompletionRequest as OpenAICreateChatCompletionRequest,
-  CreateCompletionRequest as OpenAICreateCompletionRequest,
-} from "openai";
+import { CreateChatCompletionRequest as OpenAICreateChatCompletionRequest } from "openai";
 
 export enum ProviderType {
   OpenAI = "OpenAI",
@@ -9,10 +6,8 @@ export enum ProviderType {
 
 export enum PromptExecutionType {
   ChatCompletion = "ChatCompletion",
-  Completion = "Completion",
 }
 
 export type OpenAIProviderSettings = {
-  [PromptExecutionType.Completion]: OpenAICreateCompletionRequest;
   [PromptExecutionType.ChatCompletion]: OpenAICreateChatCompletionRequest;
 };

@@ -112,6 +112,11 @@ export class Pezzo {
     }
 
 
+    if (!response.ok) {
+      throw new Error(
+        `Error while fetching prompt "${promptName}" in environment "${this.options.environment}"`
+      );
+    }
 
     const content = data.settings.modelSettings.messages[0].content;
 
@@ -119,6 +124,10 @@ export class Pezzo {
 
     if (options?.variables) {
       interpolatedMessages = data.settings.modelSettings.messages.map((message) => ({ ...message, content: interpolateVariables(message.content, options.variables) }))
+    }
+
+    if (interpolatedMessages.some((message) => /{\s*(\w+)\s*}/g.test(message.content))) {
+      throw new Error(`Invalid or missing variables provided for prompt "${promptName}"`)
     }
 
     const prompt = {
