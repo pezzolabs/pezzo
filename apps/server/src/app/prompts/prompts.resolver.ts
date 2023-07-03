@@ -40,7 +40,7 @@ export class PromptsResolver {
     private organizationsService: OrganizationsService,
     private logger: PinoLogger,
     private analytics: AnalyticsService
-  ) {}
+  ) { }
 
   @Query(() => [Prompt])
   async prompts(

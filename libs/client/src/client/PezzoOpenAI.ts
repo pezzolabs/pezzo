@@ -46,7 +46,7 @@ export class PezzoOpenAIApi extends OpenAIApi {
     const reportPayload: ReportData = {
       provider: ProviderType.OpenAI,
       type: PromptExecutionType.ChatCompletion,
-      metadata: pezzo.metadata,
+      metadata: pezzo?.metadata ?? {},
       request: {
         timestamp: requestTimestamp,
         body: requestBody,
@@ -58,6 +58,8 @@ export class PezzoOpenAIApi extends OpenAIApi {
       },
     };
 
+
+    console.log(reportPayload)
     try {
       await this.pezzo.reportPromptExecutionV2(reportPayload);
     } catch (error) {

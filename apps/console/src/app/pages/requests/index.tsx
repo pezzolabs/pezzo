@@ -9,6 +9,7 @@ import {
   PAGE_SIZE_OPTIONS,
 } from "../../lib/constants/pagination";
 import { RequestDetails } from "../../components/requests/RequestDetails";
+import { toDollarSign } from "../../lib/utils/currency-utils";
 
 interface DataType {
   key: string;
@@ -20,10 +21,6 @@ interface DataType {
   totalTokens?: number;
   cost?: string;
 }
-
-const toDollars = (amount: number) => {
-  return `$${amount.toFixed(4)}`;
-};
 
 const columns: ColumnsType<DataType> = [
   {
@@ -109,7 +106,7 @@ export const RequestsPage = () => {
       latency: ms(report.calculated.duration),
       totalTokens: report.calculated.totalTokens ?? 0,
       cost: report.calculated.totalCost
-        ? toDollars(report.calculated.totalCost)
+        ? toDollarSign(report.calculated.totalCost)
         : "$0.0000",
     };
   });
@@ -127,10 +124,10 @@ export const RequestsPage = () => {
           placement="right"
           closable={true}
           onClose={() => setCurrentReportId(null)}
-          open={!!currentReportId}
-          width="50%"
+          open={!!currentReport}
+          width="30%"
         >
-          {currentReport != null ? (
+          {currentReport != null && (
             <RequestDetails
               id={currentReportId}
               request={currentReport.request}
@@ -140,8 +137,6 @@ export const RequestsPage = () => {
               metadata={currentReport.metadata}
               properties={currentReport.properties}
             />
-          ) : (
-            <Typography.Text>No report selected</Typography.Text>
           )}
         </Drawer>
         <Table

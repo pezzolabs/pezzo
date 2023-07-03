@@ -4,6 +4,7 @@ import {
   ObservabilityReportMetadata,
   ObservabilityReportProperties,
 } from "./observability";
+import { ChatCompletionRequestMessage } from "openai";
 
 // Types that helps extending functions with Pezzo context or args
 
@@ -13,7 +14,7 @@ export interface PezzoInjectedContext {
   promptVersionSha?: string;
   variables?: PromptVariables;
   content?: string;
-  interpolatedContent?: string;
+  interpolatedMessages?: ChatCompletionRequestMessage[];
   metadata?: ObservabilityReportMetadata;
   properties?: ObservabilityReportProperties;
 }

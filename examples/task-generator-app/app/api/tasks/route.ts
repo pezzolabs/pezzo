@@ -1,46 +1,28 @@
 import { NextResponse } from "next/server";
-import { openai } from "../../lib/pezzo";
-import { CreatePezzoChatCompletionRequest } from "@pezzo/client";
+import { openai, pezzo } from "../../lib/pezzo";
 
 export async function POST(request: Request) {
   const body = await request.json();
   const { goal, numTasks } = body;
 
+  const resulting = await pezzo.getOpenAiPrompt("TasksGenerator", {
+    variables: {
+      goal,
+      numTasks,
+    }
+  });
+
+
+
+  const settings = resulting.getChatCompletionSettings();
+
+  console.log(settings);
+
   let result;
 
   try {
-    const reqBody: CreatePezzoChatCompletionRequest = {
-      pezzo: {
-        metadata: {
-          conversationId: "task-generator",
-        },
-        properties: {
-          userId: "user-uuid123",
-        },
-      },
-      model: "gpt-3.5-turbo",
-      temperature: 0,
-      max_tokens: 1000,
-      messages: [
-        {
-          role: "assistant",
-          content: `
-            You'll help me generate tasks to achieve my goal. You will create exactly ${numTasks} tasks.
-
-            My goal is: ${goal}
-
-            You must respond in valid JSON, strictly adhering to the following schema:
-
-            {
-              tasks: string[];
-            }
-            `,
-        },
-      ],
-    };
-
-    result = await openai.createChatCompletion(reqBody);
-
+    result = await openai.createChatCompletion(settings);
+    // const parsed = JSON.parse(result.data.choices[0].message.content);
     // TODO: this is a temporary place holder for as long as we fix the git state issues
     const parsed = JSON.parse(result.data.choices[0].message.content);
     return NextResponse.json(parsed, {

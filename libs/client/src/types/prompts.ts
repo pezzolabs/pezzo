@@ -1,4 +1,5 @@
 import {
+  ChatCompletionRequestMessage,
   CreateChatCompletionRequest as OpenAICreateChatCompletionRequest,
   CreateCompletionRequest as OpenAICreateCompletionRequest,
 } from "openai";
@@ -42,20 +43,15 @@ export interface Prompt<
 
 function chatCompletion(options: {
   settings: Record<string, unknown>;
-  content: unknown;
+  messages: ChatCompletionRequestMessage[];
   _pezzo: PezzoInjectedContext;
 }): OpenAICreateChatCompletionRequest & { _pezzo: PezzoInjectedContext } {
-  const { settings, content, _pezzo } = options;
+  const { settings, messages, _pezzo } = options;
   return {
     _pezzo,
     model: settings["model"] as string,
-    ...(settings["modelSettings"] as Record<string, unknown>),
-    messages: [
-      {
-        role: "user",
-        content: content as string,
-      },
-    ],
+    ...settings["modelSettings"] as OpenAICreateChatCompletionRequest,
+    messages,
   };
 }
 
@@ -76,17 +72,22 @@ function completion(options: {
 export function getPromptSettings(options: {
   settings: Record<string, unknown>;
   content: string;
-  interpolatedContent: string;
+  interpolatedMessages: ChatCompletionRequestMessage[];
   _pezzo: PezzoInjectedContext;
 }): Omit<Prompt, "id" | "deployedVersion"> {
+
   const obj = {
     settings: options.settings,
-    content: options.interpolatedContent,
+    messages: options.interpolatedMessages,
     _pezzo: options._pezzo,
   };
 
   return {
-    getChatCompletionSettings: () => chatCompletion(obj),
+    getChatCompletionSettings: () => {
+      const { _pezzo, ...rest } = chatCompletion(obj);
+
+      return rest;
+    },
     getCompletionSettings: () => completion(obj),
   };
 }
