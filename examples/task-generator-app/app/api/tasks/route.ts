@@ -9,14 +9,12 @@ export async function POST(request: Request) {
     variables: {
       goal,
       numTasks,
+      maxLength: 10,
     }
   });
 
 
-
   const settings = resulting.getChatCompletionSettings();
-
-  console.log(settings);
 
   let result;
 

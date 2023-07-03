@@ -61,8 +61,6 @@ export const NewPromptEditView = () => {
     openTester();
   };
 
-  console.log("currentPromptVersion", currentPromptVersion);
-
   const initialValues = {
     settings: isDraft
       ? JSON.stringify(
