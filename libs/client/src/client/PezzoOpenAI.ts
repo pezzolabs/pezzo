@@ -29,6 +29,8 @@ export class PezzoOpenAIApi extends OpenAIApi {
 
     const requestBody = originalArgs[0];
 
+
+
     const requestTimestamp = new Date().toISOString();
 
     let createChatCompletionResult;

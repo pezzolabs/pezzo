@@ -43,10 +43,20 @@ function chatCompletion(options: {
   _pezzo: PezzoInjectedContext;
 }): OpenAICreateChatCompletionRequest & { pezzo: PezzoInjectedContext } {
   const { settings, messages, _pezzo } = options;
+
+  const { messages: _, ...rest } = settings as unknown as OpenAICreateChatCompletionRequest;
+
+
+  console.log({
+    model: settings["model"] as string,
+    ...rest,
+    messages,
+  })
+
   return {
     pezzo: _pezzo,
     model: settings["model"] as string,
-    ...settings["modelSettings"] as OpenAICreateChatCompletionRequest,
+    ...rest,
     messages,
   };
 }

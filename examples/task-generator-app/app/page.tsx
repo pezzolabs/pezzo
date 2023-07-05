@@ -37,6 +37,8 @@ export default function Home() {
         values.goal,
         values.numTasks
       );
+
+      console.log(tasks);
       setTasks(tasks);
     } catch (error) {
       setError((error as any).response.data.message);

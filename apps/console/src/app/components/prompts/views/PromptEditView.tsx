@@ -28,12 +28,13 @@ export const PromptEditView = () => {
   const {
     form,
     handleFormValuesChange,
-    isChangesToCommit,
+
     variables,
     setVariable,
   } = usePromptEdit();
   const { prompt, currentPromptVersion, integration, isDraft } =
     useCurrentPrompt();
+
   const { openTester, runTest, isTestInProgress, isTesterOpen } =
     usePromptTester();
   const [isCommitModalOpen, setIsCommitModalOpen] = useState(false);
@@ -53,7 +54,7 @@ export const PromptEditView = () => {
 
   const handleTest = async (values: PromptEditFormInputs) => {
     await runTest({
-      content: values.content,
+      content: "",
       settings: values.settings,
       variables,
     });
@@ -66,7 +67,7 @@ export const PromptEditView = () => {
       : currentPromptVersion.settings,
     content: isDraft
       ? getDraftPromptData(prompt.integrationId).content
-      : currentPromptVersion.content,
+      : currentPromptVersion.settings.modelSettings.messages?.[0].content,
   };
 
   return (
@@ -98,6 +99,7 @@ export const PromptEditView = () => {
         <Col span={12}>{!isDraft && <PromptVersionSelector />}</Col>
         <Col
           span={12}
+          style={{ display: "felx", justifyContent: "space-end" }}
           className={css`
             display: flex;
             justify-content: flex-end;
@@ -121,7 +123,6 @@ export const PromptEditView = () => {
               </Button>
             )}
             <Button
-              disabled={!isChangesToCommit}
               onClick={() => setIsCommitModalOpen(true)}
               icon={<SendOutlined />}
             >
@@ -160,9 +161,7 @@ export const PromptEditView = () => {
         <Row>
           <Col flex={"1"}>
             <div style={{ paddingRight: 8, height: "100%" }}>
-              <Card style={{}}>
-                <PromptEditor />
-              </Card>
+              <Card style={{}}></Card>
             </div>
           </Col>
           <Col flex="280px">
@@ -172,12 +171,7 @@ export const PromptEditView = () => {
                 direction="vertical"
                 size="middle"
               >
-                <Card title="Settings">
-                  <PromptSettings
-                    integrationId={prompt.integrationId}
-                    model={form.getFieldsValue().settings?.model}
-                  />
-                </Card>
+                <Card title="Settings"></Card>
 
                 <Card title="Variables">
                   <PromptVariables

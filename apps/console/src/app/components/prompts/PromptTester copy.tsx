@@ -141,7 +141,7 @@ export const PromptTester = () => {
                 <Col span={12}>
                   <Typography.Title level={3}>Request</Typography.Title>
                   <div style={{ background: "#000000", padding: 10 }}>
-                    <PromptEditor value={result.interpolatedContent} />
+                    {/* <PromptEditor value={result.interpolatedContent} /> */}
                   </div>
                 </Col>
                 <Col span={12}>

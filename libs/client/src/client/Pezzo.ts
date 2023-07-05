@@ -104,6 +104,7 @@ export class Pezzo {
     const data = await response.json();
 
 
+
     // TODO: handle errors
     if (data?.statusCode === 404) {
       throw new Error(
@@ -118,12 +119,12 @@ export class Pezzo {
       );
     }
 
-    const content = data.settings.modelSettings.messages[0].content;
+    const content = data.settings.messages[0].content;
 
-    let interpolatedMessages = data.settings.modelSettings.messages;
+    let interpolatedMessages = data.settings.messages;
 
     if (options?.variables) {
-      interpolatedMessages = data.settings.modelSettings.messages.map((message) => ({ ...message, content: interpolateVariables(message.content, options.variables) }))
+      interpolatedMessages = data.settings.messages.map((message) => ({ ...message, content: interpolateVariables(message.content, options.variables) }))
     }
 
     if (interpolatedMessages.some((message) => /{\s*(\w+)\s*}/g.test(message.content))) {
