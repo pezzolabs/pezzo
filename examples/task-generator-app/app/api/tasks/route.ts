@@ -5,23 +5,22 @@ export async function POST(request: Request) {
   const body = await request.json();
   const { goal, numTasks } = body;
 
-  const resulting = await pezzo.getOpenAiPrompt("TasksGenerator", {
+  const resulting = await pezzo.getOpenAiPrompt("without", {
     variables: {
       goal,
       numTasks,
-      maxLength: 10,
     }
   });
 
 
   const settings = resulting.getChatCompletionSettings();
-
   let result;
 
   try {
     result = await openai.createChatCompletion(settings);
     // const parsed = JSON.parse(result.data.choices[0].message.content);
     // TODO: this is a temporary place holder for as long as we fix the git state issues
+
     const parsed = JSON.parse(result.data.choices[0].message.content);
     return NextResponse.json(parsed, {
       headers: { "Content-Type": "application/json" },
@@ -37,6 +36,7 @@ export async function POST(request: Request) {
       message =
         "Prompt execution failed. Check the Pezzo History tab for more information.";
     }
+    console.log(error);
 
     return NextResponse.json(
       {

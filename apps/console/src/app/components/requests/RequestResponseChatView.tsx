@@ -15,6 +15,8 @@ interface Props {
 export const RequestResponseChatView = ({ request, response }: Props) => {
   const { token } = theme.useToken();
 
+  const choices = response.body.choices ?? [];
+
   return (
     <Space
       direction="vertical"
@@ -28,18 +30,29 @@ export const RequestResponseChatView = ({ request, response }: Props) => {
       <List
         dataSource={[
           ...request.body.messages,
-          ...response.body.choices.map((choice) => choice.message),
+          ...choices.map((choice) => choice.message),
         ]}
         renderItem={(item, index) =>
           item.role === "user" ? (
             <Row>
               <List.Item
                 style={{
-                  padding: 8,
+                  background: token.colorBorderBg,
+                  borderTop:
+                    index % 1 === 0 && index > 0
+                      ? `1px solid ${token.colorBorder}`
+                      : "none",
+
+                  borderTopLeftRadius: index > 0 ? 0 : 8,
+                  borderTopRightRadius: index > 0 ? 0 : 8,
+                  borderBottomLeftRadius: 8,
+                  borderBottomRightRadius: 8,
+                  padding: 12,
+                  width: "100%",
                 }}
               >
                 <Col span={3}>
-                  <UserCircleIcon width={32} />
+                  <Avatar shape="square" src={<UserCircleIcon />} />
                 </Col>
                 <Col>
                   <Typography.Text>{item.content}</Typography.Text>

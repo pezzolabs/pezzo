@@ -9,12 +9,12 @@ import {
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import { PromptHistoryView } from "../../../components/prompts/views/PromptHistoryView";
-import { NewPromptEditView } from "../../../components/prompts/views/NewPromptEditView";
 import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
 import { MetricsView } from "../../../components/prompts/views/MetricsView";
 import { useParams } from "react-router-dom";
 import { PromptVersionsView } from "../../../components/prompts/views/PromptVersionsView";
 import { PromptSettingsView } from "../../../components/prompts/views/PromptSettingsView";
+import { PromptPlaygroundView } from "../../../components/prompts/views/PromptPlaygroundView";
 
 const TabLabel = styled.div`
   display: inline-block;
@@ -85,7 +85,7 @@ export const PromptPage = () => {
 
       {prompt && (
         <>
-          {activeView === "edit" && <NewPromptEditView />}
+          {activeView === "edit" && <PromptPlaygroundView />}
           {activeView === "metrics" && <MetricsView />}
           {activeView === "versions" && <PromptVersionsView />}
           {activeView === "history" && <PromptHistoryView />}
