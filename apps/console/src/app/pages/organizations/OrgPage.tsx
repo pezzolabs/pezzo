@@ -9,7 +9,7 @@ import {
 import { useParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
-import { ProjectsPage } from "../projects";
+import { ProjectsPage } from "../projects/ProjectsPage";
 import { MembersView } from "./MembersView";
 import { SettingsView } from "./SettingsView";
 import { ApiKeysView } from "./ApiKeysView";

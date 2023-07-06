@@ -29,7 +29,7 @@ import { HOTJAR_SITE_ID, HOTJAR_VERSION } from "../env";
 import { OrgPage } from "./pages/organizations/OrgPage";
 import { AcceptInvitationPage } from "./pages/invitations/AcceptInvitationPage";
 import { LogoutPage } from "./pages/LogoutPage";
-import { ProjectPage } from "./pages/projects/[projectId]";
+import { ProjectPage } from "./pages/projects/ProjectPage";
 import { RequestsPage } from "./pages/requests";
 
 initSuperTokens();
