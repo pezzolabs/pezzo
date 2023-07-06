@@ -15,7 +15,7 @@ export async function POST(request: Request) {
         numTasks,
       },
     });
-  
+
     settings = prompt.getChatCompletionSettings();
   } catch (error) {
     return NextResponse.json(
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
         message: error.message,
       },
       {
-        status: 500
+        status: 500,
       }
     );
   }

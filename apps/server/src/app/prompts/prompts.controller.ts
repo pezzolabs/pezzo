@@ -41,11 +41,11 @@ export class PromptsController {
   ) {
     const { name, environmentName } = query;
     this.logger.assign({
-      name, organizationId, environmentName 
+      name,
+      organizationId,
+      environmentName,
     });
-    this.logger.info(
-      "Getting prompt deployment"
-    );
+    this.logger.info("Getting prompt deployment");
     let prompt: Prompt;
 
     const orgProjects = await this.prisma.project.findMany({
@@ -88,7 +88,9 @@ export class PromptsController {
     });
 
     if (!environment) {
-      throw new NotFoundException("Could not find environment matching the provided name and project ID");
+      throw new NotFoundException(
+        "Could not find environment matching the provided name and project ID"
+      );
     }
 
     let deployedPrompt: PromptEnvironment;

@@ -47,8 +47,8 @@ export class PinoLogger {
           ...obj,
           message: obj.error.message,
           stack: obj.error.stack,
-        }
-      };
+        };
+      }
 
       this.logger.error(obj, msg);
     }
