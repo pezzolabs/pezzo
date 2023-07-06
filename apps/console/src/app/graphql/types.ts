@@ -19,20 +19,5 @@ export interface ReportRequestResponse<
   request: ObservabilityRequest<TProviderType>;
   response: ObservabilityResponse<TProviderType>;
   reportId: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  calculated: Record<string, any>;
-}
-
-export interface ReportRequestResponse<
-  TProviderType extends ProviderType | unknown = unknown
-> {
-  provider: ProviderType;
-  type: PromptExecutionType;
-  properties?: ObservabilityReportProperties;
-  metadata?: ObservabilityReportMetadata;
-  request: ObservabilityRequest<TProviderType>;
-  response: ObservabilityResponse<TProviderType>;
-  reportId: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  calculated: Record<string, any>;
+  calculated: Record<string, number>;
 }

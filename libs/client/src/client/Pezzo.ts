@@ -104,8 +104,6 @@ export class Pezzo {
     const data = await response.json();
 
 
-
-    // TODO: handle errors
     if (data?.statusCode === 404) {
       throw new Error(
         `Prompt "${promptName}" not found in environment "${this.options.environment}"`

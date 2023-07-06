@@ -58,7 +58,6 @@ const settingsSchema: FormSchema = [
 export const generateSchema = (modelName: string): FormSchema => {
   const settings = [...settingsSchema];
 
-  // check if type is slider (with typescript "is" operator)
   const isSlider = (setting: FormField): setting is SliderFormField =>
     setting.type === "slider";
 

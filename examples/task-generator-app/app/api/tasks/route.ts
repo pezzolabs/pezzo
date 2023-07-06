@@ -18,8 +18,6 @@ export async function POST(request: Request) {
 
   try {
     result = await openai.createChatCompletion(settings);
-    // const parsed = JSON.parse(result.data.choices[0].message.content);
-    // TODO: this is a temporary place holder for as long as we fix the git state issues
 
     const parsed = JSON.parse(result.data.choices[0].message.content);
     return NextResponse.json(parsed, {

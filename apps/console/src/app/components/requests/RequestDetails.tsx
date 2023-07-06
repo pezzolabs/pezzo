@@ -80,7 +80,7 @@ export const RequestDetails = (props: Props) => {
               response.status >= 200 && response.status < 300 ? (
                 <Tag color="green">Success</Tag>
               ) : (
-                <Tag color="red">${response.status} Error</Tag>
+                <Tag color="red">{response.status} Error</Tag>
               ),
           },
           {

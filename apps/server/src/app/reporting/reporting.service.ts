@@ -57,7 +57,6 @@ export class ReportingService {
             "ownership.projectId": projectId,
           },
         },
-
       },
       sort: ["request.timestamp:desc"],
       size,

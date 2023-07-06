@@ -59,15 +59,6 @@ const columns: ColumnsType<DataType> = [
   },
 ];
 
-const onChange: TableProps<DataType>["onChange"] = (
-  pagination,
-  filters,
-  sorter,
-  extra
-) => {
-  console.log("params", pagination, filters, sorter, extra);
-};
-
 export const RequestsPage = () => {
   const [size, setSize] = useState(DEFAULT_PAGE_SIZE);
   const [page, setPage] = useState(1);
@@ -142,7 +133,6 @@ export const RequestsPage = () => {
         <Table
           columns={columns}
           dataSource={tableData}
-          onChange={onChange}
           onRow={(record) => {
             return {
               onClick: handleShowDetails(record),

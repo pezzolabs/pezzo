@@ -1,77 +1,126 @@
-import { Form, Space, Button, Row, Col, Card, Tooltip } from "antd";
-import { PromptEditor } from "../PromptEditor";
-import { PromptSettings } from "../PromptSettings";
-import {
-  CodeOutlined,
-  ExperimentOutlined,
-  PlayCircleOutlined,
-  SendOutlined,
-} from "@ant-design/icons";
-import { css } from "@emotion/css";
-import {
-  PromptEditFormInputs,
-  getDraftPromptData,
-  usePromptEdit,
-} from "../../../lib/hooks/usePromptEdit";
 import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
-import { useEffect, useState } from "react";
-import { PromptTester } from "../PromptTester";
-import { PromptVariables } from "../PromptVariables";
-import { usePromptTester } from "../../../lib/providers/PromptTesterContext";
-import { PromptVersionSelector } from "../PromptVersionSelector";
+import { Button, Card, Col, Form, Row, Tag, Typography } from "antd";
+import { defaultOpenAISettings } from "../../../lib/model-providers";
+import { usePromptEdit } from "../../../lib/hooks/usePromptEdit";
+import { PromptSettings } from "../PromptSettings";
+import { PromptEditor } from "../PromptEditor";
 import { CommitPromptModal } from "../CommitPromptModal";
 import { PublishPromptModal } from "../PublishPromptModal";
-import { ConsumePromptModal } from "../ConsumePromptModal";
-import { useProviderApiKeys } from "../../../graphql/hooks/queries";
+import { useEffect, useMemo, useState } from "react";
+import { PlayCircleOutlined, SendOutlined } from "@ant-design/icons";
+import { PromptVersionSelector } from "../PromptVersionSelector";
 
 export const PromptEditView = () => {
-  const {
-    form,
-    handleFormValuesChange,
+  const { prompt, currentPromptVersion, isDraft } = useCurrentPrompt();
+  const initialMessages = useMemo(
+    () =>
+      currentPromptVersion?.settings.messages.map((message) => ({
+        role: message.role,
+      })) || [
+        {
+          role: "user",
+        },
+      ],
+    [currentPromptVersion]
+  );
 
-    variables,
-    setVariable,
-  } = usePromptEdit();
-  const { prompt, currentPromptVersion, integration, isDraft } =
-    useCurrentPrompt();
+  const { form, handleFormValuesChange, hasChangesToCommit, variables } =
+    usePromptEdit();
 
-  const { openTester, runTest, isTestInProgress, isTesterOpen } =
-    usePromptTester();
   const [isCommitModalOpen, setIsCommitModalOpen] = useState(false);
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
-  const [isConsumePromptModalOpen, setIsConsumePromptModalOpen] =
-    useState(false);
-
-  const { data: providerApiKeysData } = useProviderApiKeys();
-
-  const isTestEnabled = !!providerApiKeysData?.providerApiKeys.find(
-    (apiKey) => apiKey.provider === integration.provider
+  const [messages, setMessages] = useState<{ role: "user" | "assistant" }[]>(
+    []
   );
 
   useEffect(() => {
+    if (messages.length) return;
+    setMessages(initialMessages);
+  }, [form, messages, initialMessages]);
+
+  const handleDeleteMessage = () => {
+    const updatedSettings = form.getFieldValue("settings");
+    setMessages((prev) => prev.slice(0, prev.length - 1));
+    form.setFieldValue(
+      ["settings", "messages"],
+      updatedSettings.messages.slice(0, updatedSettings.messages.length - 1)
+    );
+  };
+
+  useEffect(() => {
     form.resetFields();
-  }, [prompt.id, currentPromptVersion]);
+    setMessages(initialMessages);
+  }, [prompt.id, currentPromptVersion, form, initialMessages]);
 
-  const handleTest = async (values: PromptEditFormInputs) => {
-    await runTest({
-      content: "",
-      settings: values.settings,
-      variables,
-    });
-    openTester();
-  };
-
-  const initialValues = {
-    settings: isDraft
-      ? getDraftPromptData(prompt.integrationId).settings
-      : currentPromptVersion.settings,
-    content: isDraft
-      ? getDraftPromptData(prompt.integrationId).content
-      : currentPromptVersion.settings.modelSettings.messages?.[0].content,
-  };
+  const settings = isDraft
+    ? defaultOpenAISettings
+    : currentPromptVersion.settings;
 
   return (
-    <>
+    <Form
+      onValuesChange={handleFormValuesChange}
+      initialValues={{ settings }}
+      form={form}
+      layout="vertical"
+      name="prompt-form"
+      autoComplete="off"
+    >
+      <Row>
+        <Col span={17}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginBottom: 12,
+            }}
+          >
+            {!isDraft && <PromptVersionSelector />}
+            <div style={{ marginLeft: "auto", display: "flex", gap: 12 }}>
+              {currentPromptVersion && (
+                <Button
+                  onClick={() => setIsPublishModalOpen(true)}
+                  icon={<PlayCircleOutlined />}
+                  type="primary"
+                >
+                  Publish
+                </Button>
+              )}
+              <Button
+                disabled={!hasChangesToCommit}
+                onClick={() => setIsCommitModalOpen(true)}
+                icon={<SendOutlined />}
+              >
+                Commit
+              </Button>
+            </div>
+          </div>
+          <PromptEditor
+            form={form}
+            messages={messages}
+            onDeleteMessage={handleDeleteMessage}
+            onNewMessage={() =>
+              setMessages((prev) => [...prev, { role: "user" }])
+            }
+          />
+        </Col>
+        <Col span={6} offset={1}>
+          <Card title="Settings">
+            <PromptSettings model={settings.model} />
+          </Card>
+          <Card title="Variables" style={{ marginTop: 18 }}>
+            {Object.keys(variables).length === 0 && (
+              <Typography.Text type="secondary">
+                No variables found.
+              </Typography.Text>
+            )}
+
+            {Object.keys(variables).map((key) => (
+              <Tag key={key}>{key}</Tag>
+            ))}
+          </Card>
+        </Col>
+      </Row>
+
       <CommitPromptModal
         form={form}
         open={isCommitModalOpen}
@@ -87,103 +136,6 @@ export const PromptEditView = () => {
           open={isPublishModalOpen}
         />
       )}
-      {isTesterOpen && <PromptTester />}
-
-      <ConsumePromptModal
-        open={isConsumePromptModalOpen}
-        onClose={() => setIsConsumePromptModalOpen(false)}
-        variables={variables}
-      />
-
-      <Row gutter={[12, 12]}>
-        <Col span={12}>{!isDraft && <PromptVersionSelector />}</Col>
-        <Col
-          span={12}
-          style={{ display: "felx", justifyContent: "space-end" }}
-          className={css`
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 16px;
-          `}
-        >
-          <Space wrap>
-            <Button
-              onClick={() => setIsConsumePromptModalOpen(true)}
-              icon={<CodeOutlined />}
-            >
-              Consume
-            </Button>
-            {currentPromptVersion && (
-              <Button
-                onClick={() => setIsPublishModalOpen(true)}
-                icon={<PlayCircleOutlined />}
-                type="primary"
-              >
-                Publish
-              </Button>
-            )}
-            <Button
-              onClick={() => setIsCommitModalOpen(true)}
-              icon={<SendOutlined />}
-            >
-              Commit
-            </Button>
-
-            <Tooltip
-              title={
-                !isTestEnabled &&
-                `Configure an API key for the ${integration.provider} to use the Test feature.`
-              }
-            >
-              <Button
-                loading={isTestInProgress}
-                icon={<ExperimentOutlined />}
-                disabled={!isTestEnabled}
-                htmlType="submit"
-                form="prompt-form"
-              >
-                Test
-              </Button>
-            </Tooltip>
-          </Space>
-        </Col>
-      </Row>
-
-      <Form
-        onValuesChange={handleFormValuesChange}
-        onFinish={handleTest}
-        initialValues={initialValues}
-        form={form}
-        layout="vertical"
-        name="prompt-form"
-        autoComplete="off"
-      >
-        <Row>
-          <Col flex={"1"}>
-            <div style={{ paddingRight: 8, height: "100%" }}>
-              <Card style={{}}></Card>
-            </div>
-          </Col>
-          <Col flex="280px">
-            <div style={{ paddingLeft: 8, height: "100%" }}>
-              <Space
-                style={{ width: "100%" }}
-                direction="vertical"
-                size="middle"
-              >
-                <Card title="Settings"></Card>
-
-                <Card title="Variables">
-                  <PromptVariables
-                    variables={variables}
-                    onVariableChange={setVariable}
-                  />
-                </Card>
-              </Space>
-            </div>
-          </Col>
-        </Row>
-      </Form>
-    </>
+    </Form>
   );
 };

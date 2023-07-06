@@ -46,13 +46,6 @@ function chatCompletion(options: {
 
   const { messages: _, ...rest } = settings as unknown as OpenAICreateChatCompletionRequest;
 
-
-  console.log({
-    model: settings["model"] as string,
-    ...rest,
-    messages,
-  })
-
   return {
     pezzo: _pezzo,
     model: settings["model"] as string,
