@@ -41,7 +41,8 @@ export async function POST(request: Request) {
     console.error(error);
     return NextResponse.json(
       {
-        message: "Prompt execution failed. Check the Pezzo History tab for more information.",
+        message:
+          "Prompt execution failed. Check the Pezzo History tab for more information.",
       },
       {
         status: 500,
