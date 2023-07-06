@@ -7,12 +7,12 @@ import {
 } from "@ant-design/icons";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
-import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
-import { MetricsView } from "../../../components/prompts/views/MetricsView";
+import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
+import { MetricsView } from "../../components/prompts/views/MetricsView";
 import { useParams } from "react-router-dom";
-import { PromptVersionsView } from "../../../components/prompts/views/PromptVersionsView";
-import { PromptSettingsView } from "../../../components/prompts/views/PromptSettingsView";
-import { PromptEditView } from "../../../components/prompts/views/PromptEditView";
+import { PromptVersionsView } from "../../components/prompts/views/PromptVersionsView";
+import { PromptSettingsView } from "../../components/prompts/views/PromptSettingsView";
+import { PromptEditView } from "../../components/prompts/views/PromptEditView";
 
 const TabLabel = styled.div`
   display: inline-block;

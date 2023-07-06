@@ -191,9 +191,9 @@ export class PromptsResolver {
     @Args("data") data: CreatePromptInput,
     @CurrentUser() user: RequestUser
   ) {
-    const { name, integrationId, projectId } = data;
+    const { name, projectId } = data;
     this.logger
-      .assign({ name, integrationId, projectId })
+      .assign({ name, projectId })
       .info("Creating prompt");
 
     const project = await this.prisma.project.findUnique({
@@ -223,11 +223,7 @@ export class PromptsResolver {
     let prompt: Prompt;
 
     try {
-      prompt = await this.promptsService.createPrompt(
-        name,
-        integrationId,
-        projectId
-      );
+      prompt = await this.promptsService.createPrompt(data);
     } catch (error) {
       this.logger.error({ error }, "Error creating prompt");
       throw new InternalServerErrorException();

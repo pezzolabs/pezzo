@@ -130,7 +130,6 @@ model ApiKey {
 
 model Prompt {
   id                 String              @id @default(cuid())
-  integrationId      String
   projectId          String
   name               String
   executions         PromptExecution[]

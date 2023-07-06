@@ -1,5 +1,5 @@
 import { Drawer, Space, Table, Tag, Typography } from "antd";
-import type { ColumnsType, TableProps } from "antd/es/table";
+import type { ColumnsType } from "antd/es/table";
 import { useGetRequestReports } from "../../graphql/hooks/queries";
 import ms from "ms";
 import { useMemo, useState } from "react";

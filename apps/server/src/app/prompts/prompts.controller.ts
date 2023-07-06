@@ -185,7 +185,6 @@ export class PromptsController {
       projectId: project.id,
       promptId,
       executionId: execution.id,
-      integrationId: prompt.integrationId,
       data: {
         status: execution.status,
         duration: execution.duration / 1000,

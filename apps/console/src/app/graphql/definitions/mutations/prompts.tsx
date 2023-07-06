@@ -16,29 +16,6 @@ export const CREATE_PROMPT_VERSION = graphql(/* GraphQL */ `
   }
 `);
 
-export const TEST_PROMPT = graphql(/* GraphQL */ `
-  mutation testPrompt($data: TestPromptInput!) {
-    testPrompt(data: $data) {
-      id
-      timestamp
-      status
-      settings
-      result
-      duration
-      promptTokens
-      completionTokens
-      totalTokens
-      promptCost
-      completionCost
-      totalCost
-      error
-      content
-      interpolatedContent
-      variables
-    }
-  }
-`);
-
 export const DELETE_PROMPT = graphql(/* GraphQL */ `
   mutation deletePrompt($data: PromptWhereUniqueInput!) {
     deletePrompt(data: $data) {

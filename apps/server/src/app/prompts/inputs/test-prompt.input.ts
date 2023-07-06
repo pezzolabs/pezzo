@@ -7,9 +7,6 @@ export class TestPromptInput {
   projectId: string;
 
   @Field(() => String, { nullable: false })
-  integrationId: string;
-
-  @Field(() => String, { nullable: false })
   content: string;
 
   @Field(() => GraphQLJSON, { nullable: false })

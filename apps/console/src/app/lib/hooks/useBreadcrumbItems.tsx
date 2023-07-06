@@ -10,7 +10,7 @@ export const useBreadcrumbItems = () => {
   const location = useLocation();
   const { organization } = useCurrentOrganization();
   const { project } = useCurrentProject();
-  const { prompt, integration } = useCurrentPrompt();
+  const { prompt } = useCurrentPrompt();
 
   const resolvers = useMemo(
     () => ({
@@ -39,26 +39,11 @@ export const useBreadcrumbItems = () => {
         link: `/projects/${project?.id}/prompts`,
       },
       ":promptId": {
-        title: prompt && integration && (
-          <Row align="middle" gutter={8}>
-            <Col>
-              <img
-                src={integration.iconBase64}
-                width={20}
-                height={20}
-                style={{ borderRadius: 2 }}
-                alt="prompt-icon"
-              />
-            </Col>
-            <Col>
-              <Typography.Text>{prompt.name}</Typography.Text>
-            </Col>
-          </Row>
-        ),
+        title: prompt && prompt.name,
         link: `/projects/${project?.id}/prompts/${prompt?.id}`,
       },
     }),
-    [organization, project, prompt, integration]
+    [organization, project, prompt]
   );
 
   const getBreadcrumbParts = () => {
