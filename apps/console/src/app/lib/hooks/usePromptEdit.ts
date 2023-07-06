@@ -75,6 +75,8 @@ export const usePromptEdit = () => {
     setVariables(newVariables);
   }, [form]);
 
+
+
   const setVariable = (key: string, value: string) => {
     const newVariables = { ...variables };
     newVariables[key] = value;
@@ -90,5 +92,6 @@ export const usePromptEdit = () => {
     isSaving: false,
     variables,
     setVariable,
+
   };
 };
