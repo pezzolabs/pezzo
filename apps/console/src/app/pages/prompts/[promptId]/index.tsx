@@ -61,14 +61,6 @@ export const PromptPage = () => {
     {
       label: (
         <TabLabel>
-          <HistoryOutlined /> History
-        </TabLabel>
-      ),
-      key: "history",
-    },
-    {
-      label: (
-        <TabLabel>
           <SettingOutlined /> Settings
         </TabLabel>
       ),
