@@ -42,19 +42,19 @@ function isValidFilterField(field: string): boolean {
 }
 
 export const mapFiltersToDql = ({
-  projectId,
-  organizationId,
+  restrictions,
   filters,
   sort,
 }: {
-  projectId: string;
-  organizationId: string;
+  restrictions: Record<string, unknown>;
   filters?: FilterInput[];
   sort?: SortInput;
 }) => {
-  let body = bodybuilder()
-    .query("match", "ownership.projectId", projectId)
-    .query("match", "ownership.organizationId", organizationId);
+  let body = bodybuilder();
+
+  for (const key in restrictions) {
+    body = body.query("match", key, restrictions[key]);
+  }
 
   if (sort != null) {
     body = body.sort(sort.field, sort.order);

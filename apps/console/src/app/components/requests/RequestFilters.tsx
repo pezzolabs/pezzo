@@ -3,7 +3,7 @@ import { Card } from "antd";
 import styled from "@emotion/styled";
 import { AddFilterItem, FilterItem } from "./filters/FilterItem";
 import { Typography } from "antd";
-import { useFiltersAndSortParams } from "../../graphql/hooks/filters";
+import { useFiltersAndSortParams } from "../../lib/hooks/useFiltersAndSortParams";
 
 const { Title } = Typography;
 

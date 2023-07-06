@@ -13,7 +13,7 @@ import { Pagination, RequestReport } from "../../../@generated/graphql/graphql";
 import { ReportRequestResponse } from "../types";
 import { ProviderType } from "@pezzo/types";
 import { useEffect } from "react";
-import { useFiltersAndSortParams } from "./filters";
+import { useFiltersAndSortParams } from "../../lib/hooks/useFiltersAndSortParams";
 
 export const useProviderApiKeys = () => {
   const { organization } = useCurrentOrganization();

@@ -2,8 +2,11 @@ import styled from "@emotion/styled";
 import { Button, Form, Input, Select, Tag, Tooltip, Typography } from "antd";
 import { useCallback, useMemo, useState } from "react";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
-import { FilterInput, FilterOperator } from "../../../lib/types/filters";
 import { FILTER_FIELDS_ALLOW_LIST } from "../../../lib/constants/filters";
+import {
+  FilterInput,
+  FilterOperator,
+} from "../../../../@generated/graphql/graphql";
 
 const { Text } = Typography;
 
