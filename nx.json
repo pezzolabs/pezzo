@@ -9,8 +9,7 @@
           "build",
           "lint",
           "test",
-          "e2e",
-          "graphql:schema-generate"
+          "e2e"
         ],
         "accessToken": "ZDM4NGExYTItZDFiMy00ZmFlLWJiYTEtMGZmZjQ1NzIxMDQyfHJlYWQtd3JpdGU="
       }
