@@ -1,6 +1,4 @@
 import { Space, Tag, Tooltip, Typography } from "antd";
-import { PromptVariable } from "./PromptVariable";
-import { isJson } from "../../lib/utils/is-json";
 
 interface Props {
   variables: Record<string, string>;
@@ -26,16 +24,6 @@ export const PromptVariables = ({ variables, onVariableChange }: Props) => {
                 {variableName}
               </Tag>
             </Tooltip>
-            // <PromptVariable
-            //   key={variableName}
-            //   name={variableName}
-            //   value={
-            //     isJson(variables[variableName])
-            //       ? JSON.stringify(JSON.parse(variables[variableName]), null, 2)
-            //       : variables[variableName]
-            //   }
-            //   onChange={(value) => onVariableChange(variableName, value)}
-            // />
           ))}
       </Space>
     </div>
