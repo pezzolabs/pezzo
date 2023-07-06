@@ -30,14 +30,17 @@ interface Props {
 }
 
 export const RequestDetails = (props: Props) => {
-  const [selectedMode, setSelectedMode] = useState<Mode>("chat");
+  const request = props.request as ObservabilityRequest<ProviderType.OpenAi>;
+  const response = props.response as ObservabilityResponse<ProviderType.OpenAi>;
+  const isSuccess = response.status >= 200 && response.status < 300;
+
+  const [selectedMode, setSelectedMode] = useState<Mode>(
+    isSuccess ? "chat" : "json"
+  );
 
   if (props.provider !== ProviderType.OpenAi) {
     return null;
   }
-
-  const request = props.request as ObservabilityRequest<ProviderType.OpenAi>;
-  const response = props.response as ObservabilityResponse<ProviderType.OpenAi>;
 
   return (
     <div>
@@ -76,12 +79,11 @@ export const RequestDetails = (props: Props) => {
           },
           {
             title: "Status",
-            description:
-              response.status >= 200 && response.status < 300 ? (
-                <Tag color="green">Success</Tag>
-              ) : (
-                <Tag color="red">{response.status} Error</Tag>
-              ),
+            description: isSuccess ? (
+              <Tag color="green">Success</Tag>
+            ) : (
+              <Tag color="red">{response.status} Error</Tag>
+            ),
           },
           {
             title: "Latency",
