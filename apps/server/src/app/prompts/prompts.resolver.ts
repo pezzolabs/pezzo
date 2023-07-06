@@ -192,9 +192,7 @@ export class PromptsResolver {
     @CurrentUser() user: RequestUser
   ) {
     const { name, projectId } = data;
-    this.logger
-      .assign({ name, projectId })
-      .info("Creating prompt");
+    this.logger.assign({ name, projectId }).info("Creating prompt");
 
     const project = await this.prisma.project.findUnique({
       where: {

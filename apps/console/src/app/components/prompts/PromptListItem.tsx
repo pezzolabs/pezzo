@@ -1,7 +1,7 @@
 import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
 import { Card, Col, Row, Typography } from "antd";
 import { css } from "@emotion/css";
-import OpenAILogo from "../../../assets/openai-logo.svg"
+import OpenAILogo from "../../../assets/openai-logo.svg";
 
 interface Props {
   name: string;
