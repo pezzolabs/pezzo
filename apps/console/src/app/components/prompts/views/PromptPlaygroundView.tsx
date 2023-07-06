@@ -1,38 +1,60 @@
-import { getIntegration } from "@pezzo/integrations";
 import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
-import { usePromptTester } from "../../../lib/providers/PromptTesterContext";
-import { Button, Card, Col, Form, Row, Space, Spin, Tag, Tooltip } from "antd";
+import { Button, Card, Col, Form, Row, Tag, Typography } from "antd";
 import { defaultOpenAISettings } from "../../../lib/model-providers";
 import { usePromptEdit } from "../../../lib/hooks/usePromptEdit";
 import { PromptSettings } from "../PromptSettings";
 import { PromptEditor } from "../PromptEditor";
-import { PromptVariables } from "../PromptVariables";
 import { CommitPromptModal } from "../CommitPromptModal";
 import { PublishPromptModal } from "../PublishPromptModal";
-import { useEffect, useState } from "react";
-import {
-  Loading3QuartersOutlined,
-  PlayCircleOutlined,
-  SendOutlined,
-} from "@ant-design/icons";
+import { useEffect, useMemo, useState } from "react";
+import { PlayCircleOutlined, SendOutlined } from "@ant-design/icons";
 import { PromptVersionSelector } from "../PromptVersionSelector";
 
 export const PromptPlaygroundView = () => {
   const { prompt, currentPromptVersion, isDraft } = useCurrentPrompt();
-  const [_, setTrigger] = useState(0);
+  const initialMessages = useMemo(
+    () =>
+      currentPromptVersion?.settings.messages.map((message) => ({
+        role: message.role,
+      })) || [
+        {
+          role: "user",
+        },
+      ],
+    [currentPromptVersion]
+  );
 
   const { form, handleFormValuesChange, hasChangesToCommit, variables } =
     usePromptEdit();
 
   const [isCommitModalOpen, setIsCommitModalOpen] = useState(false);
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
+  const [messages, setMessages] = useState<{ role: "user" | "assistant" }[]>(
+    []
+  );
 
-  const { openTester, runTest, isTestInProgress, isTesterOpen } =
-    usePromptTester();
+  useEffect(() => {
+    if (messages.length) return;
+    setMessages(initialMessages);
+  }, [form, messages, initialMessages]);
+
+  const handleDeleteMessage = () => {
+    const updatedSettings = form.getFieldValue("settings");
+    setMessages((prev) => prev.slice(0, prev.length - 1));
+    form.setFieldValue(
+      ["settings", "messages"],
+      updatedSettings.messages.slice(0, updatedSettings.messages.length - 1)
+    );
+  };
+
+  // // TODO: add prompt tester to this page
+  // const { openTester, runTest, isTestInProgress, isTesterOpen } =
+  //   usePromptTester();
 
   useEffect(() => {
     form.resetFields();
-  }, [prompt.id, currentPromptVersion, form]);
+    setMessages(initialMessages);
+  }, [prompt.id, currentPromptVersion, form, initialMessages]);
 
   const settings = isDraft
     ? defaultOpenAISettings
@@ -41,7 +63,6 @@ export const PromptPlaygroundView = () => {
   return (
     <Form
       onValuesChange={handleFormValuesChange}
-      onFinish={() => console.log("okFinish")}
       initialValues={{ settings }}
       form={form}
       layout="vertical"
@@ -50,9 +71,15 @@ export const PromptPlaygroundView = () => {
     >
       <Row>
         <Col span={17}>
-          <Row gutter={[12, 12]} style={{ marginBottom: 12 }}>
-            <Col span={17}>{!isDraft && <PromptVersionSelector />}</Col>
-            <Col style={{ marginLeft: 24, display: "flex", gap: 12 }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginBottom: 12,
+            }}
+          >
+            {!isDraft && <PromptVersionSelector />}
+            <div style={{ marginLeft: "auto", display: "flex", gap: 12 }}>
               {currentPromptVersion && (
                 <Button
                   onClick={() => setIsPublishModalOpen(true)}
@@ -69,22 +96,31 @@ export const PromptPlaygroundView = () => {
               >
                 Commit
               </Button>
-            </Col>
-          </Row>
-
+            </div>
+          </div>
           <PromptEditor
             form={form}
-            onDeleteMessage={() => setTrigger((t) => t + 1)}
+            messages={messages}
+            onDeleteMessage={handleDeleteMessage}
+            onNewMessage={() =>
+              setMessages((prev) => [...prev, { role: "user" }])
+            }
           />
-          <Card title="Variables" style={{ marginTop: 18 }}>
-            {Object.keys(variables).map((key) => (
-              <Tag key={key}>{key}</Tag>
-            ))}
-          </Card>
         </Col>
         <Col span={6} offset={1}>
           <Card title="Settings">
             <PromptSettings model={settings.model} />
+          </Card>
+          <Card title="Variables" style={{ marginTop: 18 }}>
+            {Object.keys(variables).length === 0 && (
+              <Typography.Text type="secondary">
+                No variables found.
+              </Typography.Text>
+            )}
+
+            {Object.keys(variables).map((key) => (
+              <Tag key={key}>{key}</Tag>
+            ))}
           </Card>
         </Col>
       </Row>
