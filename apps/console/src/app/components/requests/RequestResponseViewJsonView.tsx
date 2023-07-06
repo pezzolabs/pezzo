@@ -6,8 +6,8 @@ import {
 import { Space, Typography, Card } from "antd";
 
 interface Props {
-  request: ObservabilityRequest<ProviderType.OpenAi>;
-  response: ObservabilityResponse<ProviderType.OpenAi>;
+  request: ObservabilityRequest<ProviderType.OpenAI>;
+  response: ObservabilityResponse<ProviderType.OpenAI>;
 }
 
 export const RequestResponseViewJsonView = ({ request, response }: Props) => {

@@ -8,8 +8,8 @@ import { Space, Typography, theme, List, Row, Col, Avatar } from "antd";
 import OpenAILogo from "../../../assets/openai-logo.svg";
 
 interface Props {
-  request: ObservabilityRequest<ProviderType.OpenAi>;
-  response: ObservabilityResponse<ProviderType.OpenAi>;
+  request: ObservabilityRequest<ProviderType.OpenAI>;
+  response: ObservabilityResponse<ProviderType.OpenAI>;
 }
 
 export const RequestResponseChatView = ({ request, response }: Props) => {

@@ -30,15 +30,15 @@ interface Props {
 }
 
 export const RequestDetails = (props: Props) => {
-  const request = props.request as ObservabilityRequest<ProviderType.OpenAi>;
-  const response = props.response as ObservabilityResponse<ProviderType.OpenAi>;
+  const request = props.request as ObservabilityRequest<ProviderType.OpenAI>;
+  const response = props.response as ObservabilityResponse<ProviderType.OpenAI>;
   const isSuccess = response.status >= 200 && response.status < 300;
 
   const [selectedMode, setSelectedMode] = useState<Mode>(
     isSuccess ? "chat" : "json"
   );
 
-  if (props.provider !== ProviderType.OpenAi) {
+  if (props.provider !== ProviderType.OpenAI) {
     return null;
   }
 

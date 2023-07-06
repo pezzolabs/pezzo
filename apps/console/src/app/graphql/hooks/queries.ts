@@ -60,10 +60,10 @@ export const useGetProjects = () => {
 
 const buildTypedRequestReportObject = (requestReport: RequestReport) => {
   switch (requestReport.provider) {
-    case ProviderType.OpenAi:
-      return requestReport as ReportRequestResponse<ProviderType.OpenAi>;
+    case ProviderType.OpenAI:
+      return requestReport as ReportRequestResponse<ProviderType.OpenAI>;
     default:
-      return requestReport as ReportRequestResponse<ProviderType.OpenAi>;
+      return requestReport as ReportRequestResponse<ProviderType.OpenAI>;
   }
 };
 

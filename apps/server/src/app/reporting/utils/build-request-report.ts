@@ -7,7 +7,7 @@ export const buildRequestReport = (dto: ReportRequestDto) => {
   const responseTimestamp = new Date(dto.response.timestamp);
   const duration = responseTimestamp.getTime() - requestTimestamp.getTime();
   switch (dto.provider) {
-    case ProviderType.OpenAi:
+    case ProviderType.OpenAI:
       return buildOpenAIReport(dto, duration);
     default:
       throw new Error("Unsupported provider");
@@ -15,7 +15,7 @@ export const buildRequestReport = (dto: ReportRequestDto) => {
 };
 
 const buildOpenAIReport = (
-  dto: ReportRequestDto<ProviderType.OpenAi>,
+  dto: ReportRequestDto<ProviderType.OpenAI>,
   requestDuration: number
 ) => {
   const { response, request } = dto;
