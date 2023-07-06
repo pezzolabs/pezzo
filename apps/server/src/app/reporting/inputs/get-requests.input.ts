@@ -1,6 +1,5 @@
 import { Field, InputType } from "@nestjs/graphql";
-import { FilterInput } from "../../common/filters/filter.input";
-import { SortInput } from "../../common/filters/sort.input";
+
 
 @InputType()
 export class GetRequestsInput {
