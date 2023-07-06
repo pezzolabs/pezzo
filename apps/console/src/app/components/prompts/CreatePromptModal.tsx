@@ -3,13 +3,9 @@ import { Modal, Form, Input, Button, Alert } from "antd";
 import { CREATE_PROMPT } from "../../graphql/definitions/mutations/prompts";
 import { gqlClient, queryClient } from "../../lib/graphql";
 import { css } from "@emotion/css";
-import { PromptIntegrationSelector } from "./PromptIntegrationSelector";
-import { integrations } from "@pezzo/integrations";
 import { CreatePromptMutation } from "../../../@generated/graphql/graphql";
 import { GraphQLErrorResponse } from "../../graphql/types";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
-
-const integrationsArray = Object.values(integrations);
 
 interface Props {
   open: boolean;
