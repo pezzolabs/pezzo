@@ -25,9 +25,9 @@ const extractSortAndFiltersFromSearchParams = (
     filters,
     sort: sortField &&
       sortOrder && {
-      field: sortField,
-      order: (sortOrder as any) ?? "desc",
-    },
+        field: sortField,
+        order: (sortOrder as any) ?? "desc",
+      },
   };
 };
 
