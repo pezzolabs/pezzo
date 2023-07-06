@@ -100,19 +100,15 @@ export class Pezzo {
         "x-pezzo-api-key": this.options.apiKey,
       },
     });
-
     const data = await response.json();
-
-    if (data?.statusCode === 404) {
-      throw new Error(
-        `Prompt "${promptName}" not found in environment "${this.options.environment}"`
-      );
-    }
-
     if (!response.ok) {
-      throw new Error(
-        `Error while fetching prompt "${promptName}" in environment "${this.options.environment}"`
-      );
+      if (data?.message) {
+        throw new Error(data.message);
+      } else {
+        throw new Error(
+          `Error fetching prompt "${promptName}" for environment "${this.options.environment}" (${data.statusCode}).`
+        );
+      }
     }
 
     const content = data.settings.messages[0].content;

@@ -42,6 +42,14 @@ export class PinoLogger {
     if (typeof obj === "string") {
       this.logger.error(obj);
     } else {
+      if (obj.error && obj.error instanceof Error) {
+        obj = {
+          ...obj,
+          message: obj.error.message,
+          stack: obj.error.stack,
+        }
+      };
+
       this.logger.error(obj, msg);
     }
   }

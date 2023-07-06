@@ -40,8 +40,10 @@ export class PromptsController {
     @ApiKeyOrgId() organizationId: string
   ) {
     const { name, environmentName } = query;
+    this.logger.assign({
+      name, organizationId, environmentName 
+    });
     this.logger.info(
-      { name, organizationId, environmentName },
       "Getting prompt deployment"
     );
     let prompt: Prompt;
@@ -85,6 +87,10 @@ export class PromptsController {
       where: { name: environmentName, projectId },
     });
 
+    if (!environment) {
+      throw new NotFoundException("Could not find environment matching the provided name and project ID");
+    }
+
     let deployedPrompt: PromptEnvironment;
 
     try {
@@ -93,7 +99,7 @@ export class PromptsController {
         orderBy: { createdAt: "desc" },
       });
     } catch (error) {
-      this.logger.error({ error }, "Error getting deployed prompt environment");
+      this.logger.error({ error }, "Error getting deployed prompt");
       throw new InternalServerErrorException();
     }
 
