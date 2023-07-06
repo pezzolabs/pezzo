@@ -5,14 +5,29 @@ export async function POST(request: Request) {
   const body = await request.json();
   const { goal, numTasks } = body;
 
-  const resulting = await pezzo.getOpenAiPrompt("without", {
-    variables: {
-      goal,
-      numTasks,
-    },
-  });
+  let prompt;
+  let settings;
 
-  const settings = resulting.getChatCompletionSettings();
+  try {
+    prompt = await pezzo.getOpenAiPrompt("GenerateTasks", {
+      variables: {
+        goal,
+        numTasks,
+      },
+    });
+
+    settings = prompt.getChatCompletionSettings();
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message: error.message,
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+
   let result;
 
   try {
