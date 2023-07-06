@@ -24,12 +24,9 @@ export class PezzoOpenAIApi extends OpenAIApi {
   override async createChatCompletion(
     ...args: PezzoExtendedArgs<Parameters<OpenAIApi["createChatCompletion"]>>
   ) {
-
     const { pezzo, originalArgs } = extractPezzoFromArgs(args);
 
     const requestBody = originalArgs[0];
-
-
 
     const requestTimestamp = new Date().toISOString();
 
@@ -37,7 +34,7 @@ export class PezzoOpenAIApi extends OpenAIApi {
     try {
       createChatCompletionResult = await super.createChatCompletion.call(
         this,
-        ...originalArgs,
+        ...originalArgs
       );
     } catch (error) {
       createChatCompletionResult = error;
@@ -45,7 +42,6 @@ export class PezzoOpenAIApi extends OpenAIApi {
     const { request, ...response } = createChatCompletionResult;
 
     const responseTimestamp = new Date().toISOString();
-
 
     const reportPayload: ReportData = {
       provider: ProviderType.OpenAI,

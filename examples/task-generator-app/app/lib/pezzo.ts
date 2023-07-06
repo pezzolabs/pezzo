@@ -16,4 +16,3 @@ const configuration = new Configuration({
 
 // Initialize the Pezzo OpenAI API
 export const openai = new PezzoOpenAIApi(pezzo, configuration);
-

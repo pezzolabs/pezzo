@@ -65,21 +65,31 @@ const buildTypedRequestReportObject = (requestReport: RequestReport) => {
     default:
       return requestReport as ReportRequestResponse<ProviderType.OpenAi>;
   }
-}
+};
 
-export const useGetRequestReports = ({ size = 10, page = 1 }: { size: number; page: number }) => {
+export const useGetRequestReports = ({
+  size = 10,
+  page = 1,
+}: {
+  size: number;
+  page: number;
+}) => {
   const { project } = useCurrentProject();
 
   const response = useQuery({
     queryKey: ["requestReports", project?.id, page, size],
     queryFn: () =>
-      gqlClient.request<{ paginatedRequests: { pagination: Pagination; data: RequestReport[] } }>(GET_ALL_REQUESTS, {
+      gqlClient.request<{
+        paginatedRequests: { pagination: Pagination; data: RequestReport[] };
+      }>(GET_ALL_REQUESTS, {
         data: { projectId: project?.id, size, page },
       }),
     enabled: !!project,
   });
 
-  const typedData = response.data?.paginatedRequests.data?.map(buildTypedRequestReportObject) ?? [];
+  const typedData =
+    response.data?.paginatedRequests.data?.map(buildTypedRequestReportObject) ??
+    [];
 
   return {
     ...response,
@@ -91,6 +101,4 @@ export const useGetRequestReports = ({ size = 10, page = 1 }: { size: number; pa
       },
     },
   };
-
-
-}
+};

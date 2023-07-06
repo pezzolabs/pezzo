@@ -44,9 +44,12 @@ export const usePromptEdit = () => {
     setIsFormTouched(touched);
     const messages = form.getFieldValue("settings").messages;
     setVariables((oldVarialbes) => {
-      const newVariables = messages.filter((message => message.content)).map(message => findVariables(message.content)).reduce((acc, curr) => {
-        return { ...acc, ...curr };
-      }, {});
+      const newVariables = messages
+        .filter((message) => message.content)
+        .map((message) => findVariables(message.content))
+        .reduce((acc, curr) => {
+          return { ...acc, ...curr };
+        }, {});
 
       const mappedVariables = Object.keys(newVariables).reduce<
         Record<string, string | null>
@@ -65,17 +68,16 @@ export const usePromptEdit = () => {
     if (!isFirstRunRef.current) return;
     isFirstRunRef.current = false;
     const messages = form.getFieldValue("settings").messages;
-    const newVariables = messages.map(message => findVariables(message.content)).reduce((acc, curr) => {
-      return { ...acc, ...curr };
-    }, {});
-
+    const newVariables = messages
+      .map((message) => findVariables(message.content))
+      .reduce((acc, curr) => {
+        return { ...acc, ...curr };
+      }, {});
 
     if (Object.keys(newVariables).length === 0) return;
 
     setVariables(newVariables);
   }, [form]);
-
-
 
   const setVariable = (key: string, value: string) => {
     const newVariables = { ...variables };
@@ -83,15 +85,15 @@ export const usePromptEdit = () => {
     setVariables(newVariables);
   };
 
-
   return {
     form,
     handleFormValuesChange,
     isSaveDisabled: !isFormTouched,
-    hasChangesToCommit: JSON.stringify(form.getFieldValue("settings")) !== JSON.stringify(versionInitialSnapshot),
+    hasChangesToCommit:
+      JSON.stringify(form.getFieldValue("settings")) !==
+      JSON.stringify(versionInitialSnapshot),
     isSaving: false,
     variables,
     setVariable,
-
   };
 };

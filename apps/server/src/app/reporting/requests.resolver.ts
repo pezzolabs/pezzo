@@ -22,16 +22,14 @@ export class RequestReportsResolver {
     private readonly reportingService: ReportingService,
     private readonly projectsService: ProjectsService,
     private readonly logger: PinoLogger
-  ) { }
+  ) {}
 
   @Query(() => RequestReportResult)
   async paginatedRequests(
     @Args("data") data: GetRequestsInput,
     @CurrentUser() user: RequestUser
   ): Promise<RequestReportResult> {
-
     try {
-
       const project = await this.projectsService.getProjectById(data.projectId);
 
       if (!project) {
@@ -39,7 +37,6 @@ export class RequestReportsResolver {
       }
 
       isOrgMemberOrThrow(user, project.organizationId);
-
     } catch (error) {
       this.logger.error(error, "Error getting projects");
       throw new InternalServerErrorException();
@@ -58,9 +55,8 @@ export class RequestReportsResolver {
           page: data.page,
           size: data.size,
           total: response.body.hits.total.value,
-        }
+        },
       };
-
     } catch (error) {
       this.logger.error(error, "Error getting reports from OpenSearch");
       throw new InternalServerErrorException();

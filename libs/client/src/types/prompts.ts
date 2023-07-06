@@ -1,7 +1,6 @@
 import {
   ChatCompletionRequestMessage,
   CreateChatCompletionRequest as OpenAICreateChatCompletionRequest,
-
 } from "openai";
 import { PezzoInjectedContext } from "./function-extension";
 import {
@@ -44,7 +43,8 @@ function chatCompletion(options: {
 }): OpenAICreateChatCompletionRequest & { pezzo: PezzoInjectedContext } {
   const { settings, messages, _pezzo } = options;
 
-  const { messages: _, ...rest } = settings as unknown as OpenAICreateChatCompletionRequest;
+  const { messages: _, ...rest } =
+    settings as unknown as OpenAICreateChatCompletionRequest;
 
   return {
     pezzo: _pezzo,
@@ -60,7 +60,6 @@ export function getPromptSettings(options: {
   interpolatedMessages: ChatCompletionRequestMessage[];
   _pezzo: PezzoInjectedContext;
 }): Omit<Prompt, "id" | "deployedVersion"> {
-
   const obj = {
     settings: options.settings,
     messages: options.interpolatedMessages,
@@ -68,8 +67,7 @@ export function getPromptSettings(options: {
   };
 
   return {
-    getChatCompletionSettings: () => chatCompletion(obj)
-
+    getChatCompletionSettings: () => chatCompletion(obj),
   };
 }
 

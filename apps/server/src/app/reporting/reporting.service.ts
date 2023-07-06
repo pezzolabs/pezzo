@@ -9,7 +9,7 @@ import { MAX_PAGE_SIZE } from "../../lib/pagination";
 
 @Injectable()
 export class ReportingService {
-  constructor(private openSearchService: OpenSearchService) { }
+  constructor(private openSearchService: OpenSearchService) {}
 
   async saveReport(
     dto: ReportRequestDto,
@@ -39,14 +39,21 @@ export class ReportingService {
     });
   }
 
-  async getReports({ projectId, page, size: pageSize }: { projectId: string, page: number, size: number }) {
-
+  async getReports({
+    projectId,
+    page,
+    size: pageSize,
+  }: {
+    projectId: string;
+    page: number;
+    size: number;
+  }) {
     const size = pageSize > MAX_PAGE_SIZE ? MAX_PAGE_SIZE : pageSize;
     const from = (page - 1) * size;
 
     return await this.openSearchService.client.search<{
       hits: {
-        hits: Array<{ _source: RequestReport; }>
+        hits: Array<{ _source: RequestReport }>;
         total: { value: number };
       };
     }>({

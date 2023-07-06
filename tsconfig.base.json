@@ -15,7 +15,6 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@pezzo/types": ["libs/types/src/index.ts"],
       "@pezzo/client": ["libs/client/src/index.ts"],
       "@pezzo/common": ["libs/common/src/index.ts"],
       "@pezzo/common/components": ["libs/common/src/components"],

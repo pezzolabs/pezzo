@@ -12,13 +12,14 @@ import { KafkaSchemas } from "../schemas";
 
 @Injectable()
 export class KafkaConsumerService
-  implements OnModuleInit, OnApplicationShutdown {
+  implements OnModuleInit, OnApplicationShutdown
+{
   private kafka: Kafka;
   private consumers: Consumer[] = [];
 
   constructor(
     @Inject(MODULE_OPTIONS_TOKEN) private kafkaConfig: KafkaModuleOptions
-  ) { }
+  ) {}
 
   async onModuleInit() {
     return this.connect();

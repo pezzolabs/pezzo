@@ -9,7 +9,7 @@ import { interpolateVariables } from "@pezzo/integrations/lib/utils/interpolate-
 const noop = {} as Pezzo;
 @Injectable()
 export class PromptTesterService {
-  constructor(private providerAPIKeysService: ProviderApiKeysService) { }
+  constructor(private providerAPIKeysService: ProviderApiKeysService) {}
 
   private async executorFactory(integrationId: string, organizationId: string) {
     const { provider } = getIntegration(integrationId);

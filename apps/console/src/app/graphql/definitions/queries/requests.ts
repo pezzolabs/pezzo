@@ -21,5 +21,3 @@ export const GET_ALL_REQUESTS = graphql(/* GraphQL */ `
     }
   }
 `);
-
-

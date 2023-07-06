@@ -103,13 +103,11 @@ export class Pezzo {
 
     const data = await response.json();
 
-
     if (data?.statusCode === 404) {
       throw new Error(
         `Prompt "${promptName}" not found in environment "${this.options.environment}"`
       );
     }
-
 
     if (!response.ok) {
       throw new Error(
@@ -122,11 +120,20 @@ export class Pezzo {
     let interpolatedMessages = data.settings.messages;
 
     if (options?.variables) {
-      interpolatedMessages = data.settings.messages.map((message) => ({ ...message, content: interpolateVariables(message.content, options.variables) }))
+      interpolatedMessages = data.settings.messages.map((message) => ({
+        ...message,
+        content: interpolateVariables(message.content, options.variables),
+      }));
     }
 
-    if (interpolatedMessages.some((message) => /{\s*(\w+)\s*}/g.test(message.content))) {
-      throw new Error(`Invalid or missing variables provided for prompt "${promptName}"`)
+    if (
+      interpolatedMessages.some((message) =>
+        /{\s*(\w+)\s*}/g.test(message.content)
+      )
+    ) {
+      throw new Error(
+        `Invalid or missing variables provided for prompt "${promptName}"`
+      );
     }
 
     const prompt = {
@@ -147,12 +154,10 @@ export class Pezzo {
       }),
     };
 
-
     return prompt;
   }
 
   async reportPromptExecutionV2(dto: ReportData) {
-
     await axios.post(
       `${this.options.serverUrl}/api/reporting/v2/request`,
       dto,

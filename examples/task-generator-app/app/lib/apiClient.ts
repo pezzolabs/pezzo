@@ -22,7 +22,5 @@ export async function generateTasks(
     numTasks,
   });
 
-
-
   return data as TasksResult;
 }

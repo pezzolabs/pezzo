@@ -85,7 +85,7 @@ export const defaultOpenAISettings: CreateChatCompletionRequest = {
     {
       role: "user",
       content: "",
-    }
+    },
   ],
   top_p: 1,
   frequency_penalty: 0,

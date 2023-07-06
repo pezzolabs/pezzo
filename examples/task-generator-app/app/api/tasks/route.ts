@@ -9,9 +9,8 @@ export async function POST(request: Request) {
     variables: {
       goal,
       numTasks,
-    }
+    },
   });
-
 
   const settings = resulting.getChatCompletionSettings();
   let result;
@@ -24,7 +23,6 @@ export async function POST(request: Request) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-
     let message;
 
     if (error.response?.errors) {

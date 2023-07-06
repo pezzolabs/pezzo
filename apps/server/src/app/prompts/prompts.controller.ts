@@ -32,7 +32,7 @@ export class PromptsController {
     private prisma: PrismaService,
     private promptsService: PromptsService,
     private analytics: AnalyticsService
-  ) { }
+  ) {}
 
   @Get("/deployment")
   async getPromptDeployment(

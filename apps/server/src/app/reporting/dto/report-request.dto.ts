@@ -5,7 +5,7 @@ import {
   ObservabilityReportProperties,
   ObservabilityReportMetadata,
   ObservabilityRequest,
-  ObservabilityResponse
+  ObservabilityResponse,
 } from "@pezzo/types";
 
 export class ReportRequestDto<
