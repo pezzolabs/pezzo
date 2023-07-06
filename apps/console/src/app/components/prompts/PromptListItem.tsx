@@ -1,17 +1,14 @@
 import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
 import { Card, Col, Row, Typography } from "antd";
 import { css } from "@emotion/css";
-import { getIntegration } from "@pezzo/integrations";
+import OpenAILogo from "../../../assets/openai-logo.svg";
 
 interface Props {
   name: string;
-  integrationId: string;
   onClick: () => void;
 }
 
-export const PromptListItem = ({ name, integrationId, onClick }: Props) => {
-  const integration = getIntegration(integrationId);
-
+export const PromptListItem = ({ name, onClick }: Props) => {
   return (
     <Card hoverable={true} onClick={onClick} size="small">
       <Row gutter={[12, 12]} align="middle">
@@ -20,11 +17,12 @@ export const PromptListItem = ({ name, integrationId, onClick }: Props) => {
             className={css`
               width: 46px;
               margin: auto;
+              padding: 4px;
             `}
           >
             <img
-              src={integration.iconBase64}
-              alt={integration.name}
+              src={OpenAILogo}
+              alt={"Prompt Logo"}
               style={{ width: "100%", height: "100%", borderRadius: 6 }}
             />
           </div>

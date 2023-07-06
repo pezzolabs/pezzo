@@ -8,10 +8,9 @@ import { ThemeProvider } from "./lib/providers/ThemeProvider";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/graphql";
 import { CurrentPromptProvider } from "./lib/providers/CurrentPromptContext";
-import { PromptTesterProvider } from "./lib/providers/PromptTesterContext";
-import { EnvironmentsPage } from "./pages/environments";
-import { PromptsPage } from "./pages/prompts";
-import { PromptPage } from "./pages/prompts/[promptId]";
+import { EnvironmentsPage } from "./pages/environments/EnvironmentsPage";
+import { PromptsPage } from "./pages/prompts/PromptsPage";
+import { PromptPage } from "./pages/prompts/PromptPage";
 import { initSuperTokens } from "./lib/auth/supertokens";
 import { SuperTokensWrapper } from "supertokens-auth-react";
 import { getSuperTokensRoutesForReactRouterDom } from "supertokens-auth-react/ui";
@@ -20,7 +19,7 @@ import { InfoPage } from "./pages/InfoPage";
 import { ProjectsPage } from "./pages/projects/ProjectsPage";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
 import { LayoutWrapper } from "./components/layout/LayoutWrapper";
-import { OnboardingPage } from "./pages/onboarding";
+import { OnboardingPage } from "./pages/organizations/onboarding";
 import { AuthProvider } from "./lib/providers/AuthProvider";
 import { ThirdpartyEmailPasswordComponentsOverrideProvider } from "supertokens-auth-react/recipe/thirdpartyemailpassword";
 import LogoVertical from "../assets/logo-vertical.svg";
@@ -30,7 +29,7 @@ import { OrgPage } from "./pages/organizations/OrgPage";
 import { AcceptInvitationPage } from "./pages/invitations/AcceptInvitationPage";
 import { LogoutPage } from "./pages/LogoutPage";
 import { ProjectPage } from "./pages/projects/ProjectPage";
-import { RequestsPage } from "./pages/requests";
+import { RequestsPage } from "./pages/requests/RequestsPage";
 
 initSuperTokens();
 
@@ -169,11 +168,9 @@ export function App() {
                     path={paths["/projects/:projectId"]}
                     element={
                       <CurrentPromptProvider>
-                        <PromptTesterProvider>
-                          <LayoutWrapper withSideNav={true}>
-                            <Outlet />
-                          </LayoutWrapper>
-                        </PromptTesterProvider>
+                        <LayoutWrapper withSideNav={true}>
+                          <Outlet />
+                        </LayoutWrapper>
                       </CurrentPromptProvider>
                     }
                   >

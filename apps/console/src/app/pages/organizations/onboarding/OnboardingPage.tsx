@@ -3,19 +3,19 @@ import { Button, Col, Input, Row, Space, Typography, Card, theme } from "antd";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
-import { useGetProjects } from "../../graphql/hooks/queries";
+import { useGetProjects } from "../../../graphql/hooks/queries";
 import {
   useCreateProjectMutation,
   useUpdateCurrentUserMutation,
-} from "../../graphql/hooks/mutations";
+} from "../../../graphql/hooks/mutations";
 import { useCallback, useEffect } from "react";
 import { Form } from "antd";
 import {
   CreateProjectMutation,
   UpdateProfileMutation,
-} from "../../../@generated/graphql/graphql";
-import { useAuthContext } from "../../lib/providers/AuthProvider";
-import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
+} from "../../../../@generated/graphql/graphql";
+import { useAuthContext } from "../../../lib/providers/AuthProvider";
+import { useCurrentOrganization } from "../../../lib/hooks/useCurrentOrganization";
 
 const StyledButton = styled(Button)<{ spacing: number }>`
   margin-top: ${(props) => props.spacing}px;

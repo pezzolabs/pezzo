@@ -19,7 +19,6 @@ interface Props {
 
 type Inputs = {
   name: string;
-  integrationId: string;
 };
 
 export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
@@ -35,7 +34,6 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
       gqlClient.request(CREATE_PROMPT, {
         data: {
           name: data.name,
-          integrationId: data.integrationId,
           projectId: project.id,
         },
       }),
@@ -60,20 +58,9 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
         layout="vertical"
         name="basic"
         style={{ maxWidth: 600, marginTop: 20 }}
-        initialValues={{ integrationId: integrationsArray[0].id }}
         onFinish={handleFormFinish}
         autoComplete="off"
       >
-        <Form.Item
-          label="Integration"
-          name="integrationId"
-          rules={[{ required: true, message: "Integration is required" }]}
-        >
-          <PromptIntegrationSelector
-            onChange={(value) => form.setFieldValue("integration", value)}
-          />
-        </Form.Item>
-
         <Form.Item
           label="Prompt name"
           name="name"
