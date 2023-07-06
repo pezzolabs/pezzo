@@ -25,7 +25,7 @@ import { ApiKeyOrgId } from "../identity/api-key-org-id.decoator";
 import { GetPromptDeploymentDto } from "./dto/get-prompt-deployment.dto";
 
 @UseGuards(ApiKeyAuthGuard)
-@Controller("prompts")
+@Controller("prompts/v2")
 export class PromptsController {
   constructor(
     private logger: PinoLogger,

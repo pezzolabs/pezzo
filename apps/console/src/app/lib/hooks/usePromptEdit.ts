@@ -1,10 +1,10 @@
 import { Form } from "antd";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useCurrentPrompt } from "../providers/CurrentPromptContext";
 import { getIntegration } from "@pezzo/integrations";
+import { defaultOpenAISettings } from "../model-providers";
 
 export type PromptEditFormInputs = {
-  content: string;
   settings: any;
 };
 
@@ -30,26 +30,27 @@ export const getDraftPromptData = (integrationId: string) => {
 };
 
 export const usePromptEdit = () => {
-  const { prompt, currentPromptVersion, isDraft } = useCurrentPrompt();
+  const { currentPromptVersion, isDraft } = useCurrentPrompt();
   const [form] = Form.useForm<PromptEditFormInputs>();
   const isFirstRunRef = useRef(true);
   const [isFormTouched, setIsFormTouched] = useState<boolean>(false);
   const [variables, setVariables] = useState<{ [key: string]: string }>({});
   const versionInitialSnapshot = isDraft
-    ? getDraftPromptData(prompt.integrationId)
-    : currentPromptVersion;
-  const [content, setContent] = useState<string>(
-    versionInitialSnapshot.content
-  );
+    ? defaultOpenAISettings
+    : currentPromptVersion.settings;
 
   const handleFormValuesChange = () => {
-    const { content } = form.getFieldsValue(true);
-    const touched = form.isFieldsTouched(["content", "settings"]);
+    const touched = form.isFieldsTouched(["settings"]);
     setIsFormTouched(touched);
-    setContent(content);
-
+    const messages = form.getFieldValue("settings").messages;
     setVariables((oldVarialbes) => {
-      const newVariables = findVariables(content);
+      const newVariables = messages
+        .filter((message) => message.content)
+        .map((message) => findVariables(message.content))
+        .reduce((acc, curr) => {
+          return { ...acc, ...curr };
+        }, {});
+
       const mappedVariables = Object.keys(newVariables).reduce<
         Record<string, string | null>
       >((acc, key: string) => {
@@ -66,8 +67,17 @@ export const usePromptEdit = () => {
   useEffect(() => {
     if (!isFirstRunRef.current) return;
     isFirstRunRef.current = false;
-    setVariables(findVariables(content));
-  }, [content]);
+    const messages = form.getFieldValue("settings").messages;
+    const newVariables = messages
+      .map((message) => findVariables(message.content))
+      .reduce((acc, curr) => {
+        return { ...acc, ...curr };
+      }, {});
+
+    if (Object.keys(newVariables).length === 0) return;
+
+    setVariables(newVariables);
+  }, [form]);
 
   const setVariable = (key: string, value: string) => {
     const newVariables = { ...variables };
@@ -75,20 +85,14 @@ export const usePromptEdit = () => {
     setVariables(newVariables);
   };
 
-  const isPromptChanged = () => {
-    const contentChanged = content !== versionInitialSnapshot.content;
-    const settingsChanged =
-      JSON.stringify(form.getFieldValue("settings")) !==
-      JSON.stringify(versionInitialSnapshot.settings);
-    return contentChanged || settingsChanged;
-  };
-
   return {
     form,
     handleFormValuesChange,
     isSaveDisabled: !isFormTouched,
+    hasChangesToCommit:
+      JSON.stringify(form.getFieldValue("settings")) !==
+      JSON.stringify(versionInitialSnapshot),
     isSaving: false,
-    isChangesToCommit: isPromptChanged(),
     variables,
     setVariable,
   };

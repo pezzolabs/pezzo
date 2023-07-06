@@ -1,5 +1,5 @@
-import { FormField, FormSchema, SliderFormField } from "../form.types";
-import { OpenAIIntegrationSettings } from "./types";
+import { CreateChatCompletionRequest } from "openai";
+import { FormField, FormSchema, SliderFormField } from "./types";
 
 const settingsSchema: FormSchema = [
   {
@@ -15,7 +15,7 @@ const settingsSchema: FormSchema = [
   },
   {
     label: "Temperature",
-    name: ["settings", "modelSettings", "temperature"],
+    name: ["settings", "temperature"],
     type: "slider",
     min: 0,
     max: 2,
@@ -23,7 +23,7 @@ const settingsSchema: FormSchema = [
   },
   {
     label: "Max Response Length",
-    name: ["settings", "modelSettings", "max_tokens"],
+    name: ["settings", "max_tokens"],
     type: "slider",
     min: 1,
     max: 2048,
@@ -31,7 +31,7 @@ const settingsSchema: FormSchema = [
   },
   {
     label: "Top P",
-    name: ["settings", "modelSettings", "top_p"],
+    name: ["settings", "top_p"],
     type: "slider",
     min: 0,
     max: 1,
@@ -39,7 +39,7 @@ const settingsSchema: FormSchema = [
   },
   {
     label: "Frequency Penalty",
-    name: ["settings", "modelSettings", "frequency_penalty"],
+    name: ["settings", "frequency_penalty"],
     type: "slider",
     min: 0,
     max: 1,
@@ -47,7 +47,7 @@ const settingsSchema: FormSchema = [
   },
   {
     label: "Presence Penalty",
-    name: ["settings", "modelSettings", "presence_penalty"],
+    name: ["settings", "presence_penalty"],
     type: "slider",
     min: 0,
     max: 1,
@@ -58,13 +58,12 @@ const settingsSchema: FormSchema = [
 export const generateSchema = (modelName: string): FormSchema => {
   const settings = [...settingsSchema];
 
-  // check if type is slider (with typescript "is" operator)
   const isSlider = (setting: FormField): setting is SliderFormField =>
     setting.type === "slider";
 
   const sliders = settings.filter(isSlider);
   const maxTokensField = sliders.find(
-    (field) => field.name[2] === "max_tokens"
+    (field) => field.name[1] === "max_tokens"
   );
 
   if (modelName === "gpt-4") {
@@ -78,14 +77,17 @@ export const generateSchema = (modelName: string): FormSchema => {
   return settingsSchema;
 };
 
-export const defaultSettings: OpenAIIntegrationSettings = {
+export const defaultOpenAISettings: CreateChatCompletionRequest = {
   model: "gpt-3.5-turbo",
-  modelSettings: {
-    temperature: 0.7,
-    max_tokens: 256,
-    messages: [],
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
-  },
+  temperature: 0.7,
+  max_tokens: 256,
+  messages: [
+    {
+      role: "user",
+      content: "",
+    },
+  ],
+  top_p: 1,
+  frequency_penalty: 0,
+  presence_penalty: 0,
 };

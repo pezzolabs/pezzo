@@ -6,6 +6,8 @@ import {
   CreateChatCompletionResponse,
   CreateChatCompletionResponseChoicesInner,
   CreateCompletionResponseUsage,
+  CreateChatCompletionRequest,
+  ChatCompletionRequestMessage,
 } from "openai";
 
 type ExtractModelNames<T> = T extends { model: infer M } ? M : never;
@@ -23,8 +25,14 @@ export class GenericObservabilityRequestResponseBody {
   [key: string]: AllPrimitiveTypes;
 }
 
-export class OpenAIObservabilityRequestBody extends GenericObservabilityRequestResponseBody {
+export class OpenAIObservabilityRequestBody
+  implements Partial<CreateChatCompletionRequest>
+{
   model: AcceptedModels;
+  messages: ChatCompletionRequestMessage[];
+  max_tokens: number;
+  temperature: number;
+  top_p: number;
 }
 
 export class OpenAIObservabilityResponseBody

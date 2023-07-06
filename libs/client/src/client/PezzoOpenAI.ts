@@ -25,6 +25,7 @@ export class PezzoOpenAIApi extends OpenAIApi {
     ...args: PezzoExtendedArgs<Parameters<OpenAIApi["createChatCompletion"]>>
   ) {
     const { pezzo, originalArgs } = extractPezzoFromArgs(args);
+
     const requestBody = originalArgs[0];
 
     const requestTimestamp = new Date().toISOString();
@@ -45,7 +46,7 @@ export class PezzoOpenAIApi extends OpenAIApi {
     const reportPayload: ReportData = {
       provider: ProviderType.OpenAI,
       type: PromptExecutionType.ChatCompletion,
-      metadata: pezzo.metadata,
+      metadata: pezzo?.metadata ?? {},
       request: {
         timestamp: requestTimestamp,
         body: requestBody,

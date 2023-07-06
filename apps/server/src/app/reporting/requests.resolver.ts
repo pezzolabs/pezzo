@@ -29,7 +29,6 @@ export class RequestReportsResolver {
     @Args("data") data: GetRequestsInput,
     @CurrentUser() user: RequestUser
   ): Promise<RequestReportResult> {
-    let organizationId;
     try {
       const project = await this.projectsService.getProjectById(data.projectId);
 
@@ -37,8 +36,7 @@ export class RequestReportsResolver {
         throw new NotFoundException();
       }
 
-      organizationId = project.organizationId;
-      isOrgMemberOrThrow(user, organizationId);
+      isOrgMemberOrThrow(user, project.organizationId);
     } catch (error) {
       this.logger.error(error, "Error getting projects");
       throw new InternalServerErrorException();
@@ -47,11 +45,8 @@ export class RequestReportsResolver {
     try {
       const response = await this.reportingService.getReports({
         projectId: data.projectId,
-        organizationId,
         page: data.page,
         size: data.size,
-        filters: data.filters,
-        sort: data.sort,
       });
 
       return {

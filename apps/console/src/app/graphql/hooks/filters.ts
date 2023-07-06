@@ -1,6 +1,5 @@
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useMemo } from "react";
-import { FilterOperator, SortOrder } from "../../../@generated/graphql/graphql";
 
 const extractSortAndFiltersFromSearchParams = (
   searchParams: URLSearchParams
@@ -12,7 +11,7 @@ const extractSortAndFiltersFromSearchParams = (
     );
     return {
       field,
-      operator: operator as FilterOperator,
+      operator: operator as any,
       value,
       secondValue,
     };
@@ -27,7 +26,7 @@ const extractSortAndFiltersFromSearchParams = (
     sort: sortField &&
       sortOrder && {
         field: sortField,
-        order: (sortOrder as SortOrder) ?? SortOrder.Desc,
+        order: (sortOrder as any) ?? "desc",
       },
   };
 };

@@ -90,25 +90,49 @@ export class Pezzo {
     promptName: string,
     options?: GetPromptOptions
   ): Promise<Prompt<TProviderType>> {
-    const url = new URL(`${this.options.serverUrl}/api/v2/prompts/deployment`);
+    const url = new URL(`${this.options.serverUrl}/api/prompts/v2/deployment`);
     url.searchParams.append("name", promptName);
     url.searchParams.append("environmentName", this.options.environment);
 
     const response = await fetch(url.toString(), {
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": this.options.apiKey,
+        "x-pezzo-api-key": this.options.apiKey,
       },
     });
-    const data = await response.json();
-    const content = data.content;
 
-    let interpolatedContent = data.content;
+    const data = await response.json();
+
+    if (data?.statusCode === 404) {
+      throw new Error(
+        `Prompt "${promptName}" not found in environment "${this.options.environment}"`
+      );
+    }
+
+    if (!response.ok) {
+      throw new Error(
+        `Error while fetching prompt "${promptName}" in environment "${this.options.environment}"`
+      );
+    }
+
+    const content = data.settings.messages[0].content;
+
+    let interpolatedMessages = data.settings.messages;
 
     if (options?.variables) {
-      interpolatedContent = interpolateVariables(
-        data.content,
-        options.variables
+      interpolatedMessages = data.settings.messages.map((message) => ({
+        ...message,
+        content: interpolateVariables(message.content, options.variables),
+      }));
+    }
+
+    if (
+      interpolatedMessages.some((message) =>
+        /{\s*(\w+)\s*}/g.test(message.content)
+      )
+    ) {
+      throw new Error(
+        `Invalid or missing variables provided for prompt "${promptName}"`
       );
     }
 
@@ -124,9 +148,9 @@ export class Pezzo {
           promptVersionSha: data.sha,
           variables: options?.variables,
           content,
-          interpolatedContent,
+          interpolatedMessages,
         },
-        interpolatedContent,
+        interpolatedMessages,
       }),
     };
 
@@ -146,7 +170,7 @@ export class Pezzo {
     );
   }
 
-  async getOpenAiPrompt(promptName: string) {
-    return this.getPrompt<ProviderType.OpenAI>(promptName);
+  async getOpenAiPrompt(promptName: string, options?: GetPromptOptions) {
+    return this.getPrompt<ProviderType.OpenAI>(promptName, options);
   }
 }

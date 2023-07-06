@@ -1,3 +1,4 @@
+import { ChatCompletionRequestMessage } from "openai";
 import { IntegrationBaseSettings } from "../types";
 
 export interface ExecutorOptions {
@@ -12,6 +13,7 @@ export type OpenAIIntegrationSettings = IntegrationBaseSettings<{
   temperature: number;
   max_tokens: number;
   top_p: number;
+  messages: ChatCompletionRequestMessage[];
   frequency_penalty: number;
   presence_penalty: number;
 }> & {

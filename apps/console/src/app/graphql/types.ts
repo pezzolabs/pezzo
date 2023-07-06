@@ -26,6 +26,5 @@ export interface ReportRequestResponse<
   request: ObservabilityRequest<TProviderType>;
   response: ObservabilityResponse<TProviderType>;
   reportId: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  calculated: Record<string, any>;
+  calculated: Record<string, number>;
 }

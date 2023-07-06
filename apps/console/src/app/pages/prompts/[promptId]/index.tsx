@@ -1,20 +1,18 @@
 import { Spin, Tabs } from "antd";
 import {
   EditOutlined,
-  HistoryOutlined,
   DashboardOutlined,
   BranchesOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
-import { PromptHistoryView } from "../../../components/prompts/views/PromptHistoryView";
-import { NewPromptEditView } from "../../../components/prompts/views/NewPromptEditView";
 import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
 import { MetricsView } from "../../../components/prompts/views/MetricsView";
 import { useParams } from "react-router-dom";
 import { PromptVersionsView } from "../../../components/prompts/views/PromptVersionsView";
 import { PromptSettingsView } from "../../../components/prompts/views/PromptSettingsView";
+import { PromptEditView } from "../../../components/prompts/views/PromptEditView";
 
 const TabLabel = styled.div`
   display: inline-block;
@@ -61,14 +59,6 @@ export const PromptPage = () => {
     {
       label: (
         <TabLabel>
-          <HistoryOutlined /> History
-        </TabLabel>
-      ),
-      key: "history",
-    },
-    {
-      label: (
-        <TabLabel>
           <SettingOutlined /> Settings
         </TabLabel>
       ),
@@ -85,10 +75,9 @@ export const PromptPage = () => {
 
       {prompt && (
         <>
-          {activeView === "edit" && <NewPromptEditView />}
+          {activeView === "edit" && <PromptEditView />}
           {activeView === "metrics" && <MetricsView />}
           {activeView === "versions" && <PromptVersionsView />}
-          {activeView === "history" && <PromptHistoryView />}
           {activeView === "settings" && <PromptSettingsView />}
         </>
       )}
