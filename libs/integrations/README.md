@@ -1,9 +1,9 @@
 # `@pezzo/integrations`
 
-## Getting Started
+## ⚠️ Deprecated ⚠️
 
-For full instructions, please visit the [open-source Pezzo git repository](https://github.com/pezzolabs/pezzo).
+The `@pezzo/integrations` library is deprecated as of Pezzo v0.4.0. Instead, you should use the `@pezzo/client` library exclusively.
 
-## License
+For more information, please check out the [Pezzo Documentation](https://docs.pezzo.ai).
 
-The `@pezzo/integrations` library is provided under the MIT licesnse.
+Additionally, you can view the full release notes for Pezzo v0.4.0 [here](https://github.com/pezzolabs/pezzo/releases/tag/v0.4.0).
