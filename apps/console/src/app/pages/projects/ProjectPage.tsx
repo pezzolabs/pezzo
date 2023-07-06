@@ -3,15 +3,15 @@ import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 import { CopyOutlined } from "@ant-design/icons";
 import { copyToClipboard } from "../../lib/utils/browser-utils";
 import { useState } from "react";
-import { GettingStartedWizard } from "./getting-started-wizard/GettingStartedWizard";
+import { GettingStartedWizard } from "../../components/getting-started-wizard/GettingStartedWizard";
 import { GettingStartedWizardProvider } from "../../lib/providers/GettingStartedWizardProvider";
+import { Loader } from "../../components/common/Loader";
 
 export const ProjectPage = () => {
   const { project, isLoading } = useCurrentProject();
   const [clicked, setClicked] = useState(false);
-  const [showModal, setShowModal] = useState<"javascript" | undefined>();
 
-  if (isLoading) return <>Loading...</>;
+  if (isLoading) return <Loader />;
 
   return (
     <div>

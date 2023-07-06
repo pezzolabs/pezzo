@@ -1,5 +1,5 @@
 import { ProviderType } from "@pezzo/types";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 
 export enum Language {
   TypeScript = "TypeScript",
@@ -31,11 +31,11 @@ interface Props {
 }
 
 export const GettingStartedWizardProvider = ({ children }: Props) => {
-  const [provider, _setProvider] = useState<ProviderType | undefined>();
-  const [language, _setLanguage] = useState<Language | undefined>();
-  const [usage, _setUsage] = useState<Usage | undefined>();
+  const [provider, setProvider] = useState<ProviderType | undefined>();
+  const [language, setLanguage] = useState<Language | undefined>();
+  const [usage, setUsage] = useState<Usage | undefined>();
 
-  const determineCurrentStep = () => {
+  const currentStep = useMemo(() => {
     if (usage) {
       return 3;
     }
@@ -49,32 +49,32 @@ export const GettingStartedWizardProvider = ({ children }: Props) => {
     }
 
     return 0;
+  }, [usage, language, provider]);
+
+  const handleProviderChange = (provider: ProviderType) => {
+    setLanguage(undefined);
+    setUsage(undefined);
+    setProvider(provider);
   };
 
-  const setProvider = (provider: ProviderType) => {
-    _setLanguage(undefined);
-    _setUsage(undefined);
-    _setProvider(provider);
+  const handleLanguageChange = (language: Language) => {
+    setLanguage(language);
   };
 
-  const setLanguage = (language: Language) => {
-    _setLanguage(language);
-  };
-
-  const setUsage = (usage: Usage) => {
-    _setUsage(usage);
+  const handleUsageChange = (usage: Usage) => {
+    setUsage(usage);
   };
 
   return (
     <GetingStartedWizardContext.Provider
       value={{
-        currentStep: determineCurrentStep(),
+        currentStep,
         provider,
-        setProvider,
+        setProvider: handleProviderChange,
         language,
-        setLanguage,
+        setLanguage: handleLanguageChange,
         usage,
-        setUsage,
+        setUsage: handleUsageChange,
       }}
     >
       {children}

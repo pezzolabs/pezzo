@@ -1,40 +1,17 @@
-import { Button, Typography } from "antd";
-import { Highlight, themes } from "prism-react-renderer";
-import { useCurrentProject } from "../../../lib/hooks/useCurrentProject";
+import { Typography } from "antd";
+import { HighlightCode } from "./HighlightCode";
+import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 import styled from "@emotion/styled";
 import {
   Usage,
   useGettingStartedWizard,
-} from "../../../lib/providers/GettingStartedWizardProvider";
+} from "../../lib/providers/GettingStartedWizardProvider";
 
 const StyledPre = styled.pre`
   background: #000;
   border-radius: 8px;
   padding: 14px;
 `;
-
-const HighlightCode = ({ code }) => (
-  <Highlight theme={themes.vsDark} code={code} language="ts">
-    {({ style, tokens, getLineProps, getTokenProps }) => (
-      <pre
-        style={{
-          ...style,
-          background: "#000",
-          padding: 14,
-          borderRadius: 6,
-        }}
-      >
-        {tokens.map((line, i) => (
-          <div key={i} {...getLineProps({ line })}>
-            {line.map((token, key) => (
-              <span key={key} {...getTokenProps({ token })} />
-            ))}
-          </div>
-        ))}
-      </pre>
-    )}
-  </Highlight>
-);
 
 export const TypeScriptOpenAIIntegrationTutorial = () => {
   const { project } = useCurrentProject();

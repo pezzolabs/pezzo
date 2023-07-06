@@ -2,7 +2,7 @@ import { Space } from "antd";
 import {
   Usage,
   useGettingStartedWizard,
-} from "../../../lib/providers/GettingStartedWizardProvider";
+} from "../../lib/providers/GettingStartedWizardProvider";
 import { SelectionItem } from "./SelectionItem";
 
 export const UsageSelector = () => {
