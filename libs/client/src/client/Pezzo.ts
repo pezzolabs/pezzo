@@ -166,7 +166,7 @@ export class Pezzo {
     );
   }
 
-  async getOpenAiPrompt(promptName: string, options?: GetPromptOptions) {
+  async getOpenAIPrompt(promptName: string, options?: GetPromptOptions) {
     return this.getPrompt<ProviderType.OpenAI>(promptName, options);
   }
 }

@@ -9,7 +9,7 @@ export async function POST(request: Request) {
   let settings;
 
   try {
-    prompt = await pezzo.getOpenAiPrompt("GenerateTasks", {
+    prompt = await pezzo.getOpenAIPrompt("GenerateTasks", {
       variables: {
         goal,
         numTasks,
@@ -38,20 +38,10 @@ export async function POST(request: Request) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    let message;
-
-    if (error.response?.errors) {
-      // Handle Pezzo Server GraphQL errors
-      message = error.response.errors[0].message;
-    } else {
-      message =
-        "Prompt execution failed. Check the Pezzo History tab for more information.";
-    }
-    console.log(error);
-
+    console.error(error);
     return NextResponse.json(
       {
-        message,
+        message: "Prompt execution failed. Check the Pezzo History tab for more information.",
       },
       {
         status: 500,

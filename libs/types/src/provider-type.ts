@@ -1,3 +1,3 @@
 export enum ProviderType {
-  OpenAi = "OpenAI",
+  OpenAI = "OpenAI",
 }

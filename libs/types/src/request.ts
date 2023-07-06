@@ -55,11 +55,11 @@ export class ObservabilityRequest<
 > {
   timestamp: string;
   @Type((opts) =>
-    opts?.object["provider"] === ProviderType.OpenAi
+    opts?.object["provider"] === ProviderType.OpenAI
       ? OpenAIObservabilityRequestBody
       : GenericObservabilityRequestResponseBody
   )
-  body: TProviderType extends ProviderType.OpenAi
+  body: TProviderType extends ProviderType.OpenAI
     ? OpenAIObservabilityRequestBody
     : GenericObservabilityRequestResponseBody;
 }
@@ -69,11 +69,11 @@ export class ObservabilityResponse<
 > {
   timestamp: string;
   @Type((opts) =>
-    opts?.object["provider"] === ProviderType.OpenAi
+    opts?.object["provider"] === ProviderType.OpenAI
       ? OpenAIObservabilityResponseBody
       : GenericObservabilityRequestResponseBody
   )
-  body: TProviderType extends ProviderType.OpenAi
+  body: TProviderType extends ProviderType.OpenAI
     ? OpenAIObservabilityResponseBody
     : GenericObservabilityRequestResponseBody;
   status: number;
