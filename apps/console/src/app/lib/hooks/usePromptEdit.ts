@@ -1,7 +1,6 @@
 import { Form } from "antd";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCurrentPrompt } from "../providers/CurrentPromptContext";
-import { getIntegration } from "@pezzo/integrations";
 import { defaultOpenAISettings } from "../model-providers";
 
 export type PromptEditFormInputs = {
@@ -21,13 +20,6 @@ function findVariables(text: string): Record<string, null> {
   });
   return interpolatableObject;
 }
-
-export const getDraftPromptData = (integrationId: string) => {
-  return {
-    content: "",
-    settings: getIntegration(integrationId).defaultSettings,
-  };
-};
 
 export const usePromptEdit = () => {
   const { currentPromptVersion, isDraft } = useCurrentPrompt();
