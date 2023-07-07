@@ -1,5 +1,5 @@
 import { OpenAIApi } from "openai";
-import { extractPezzoFromArgs } from "../utils/helpers";
+import { extractPezzoFromArgs, merge } from "../utils/helpers";
 import {
   PezzoArgExtension,
   PezzoExtendedArgs,
@@ -43,10 +43,15 @@ export class PezzoOpenAIApi extends OpenAIApi {
 
     const responseTimestamp = new Date().toISOString();
 
+    const baseMetadata = {
+      environment: this.pezzo.options.environment,
+    };
+
     const reportPayload: ReportData = {
       provider: ProviderType.OpenAI,
       type: PromptExecutionType.ChatCompletion,
-      metadata: pezzo?.metadata ?? {},
+      metadata: merge(pezzo?.metadata ?? {}, baseMetadata),
+      ...(pezzo?.properties && { properties: pezzo.properties }),
       request: {
         timestamp: requestTimestamp,
         body: requestBody,

@@ -139,7 +139,7 @@ export class Pezzo {
         settings: data.settings as Record<string, unknown>,
         content,
         _pezzo: {
-          environmentName: this.options.environment,
+          environment: this.options.environment,
           promptId: data.promptId,
           promptVersionSha: data.sha,
           variables: options?.variables,
