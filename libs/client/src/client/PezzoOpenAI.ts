@@ -44,9 +44,6 @@ export class PezzoOpenAIApi extends OpenAIApi {
 
     const responseTimestamp = new Date().toISOString();
 
-
-
-
     const baseMetadata = {
       environment: this.pezzo.options.environment,
     };
