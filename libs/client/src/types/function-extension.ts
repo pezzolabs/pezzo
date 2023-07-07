@@ -9,7 +9,7 @@ import { ChatCompletionRequestMessage } from "openai";
 // Types that helps extending functions with Pezzo context or args
 
 export interface PezzoInjectedContext {
-  environmentName?: string;
+  environment?: string;
   promptId?: string;
   promptVersionSha?: string;
   variables?: PromptVariables;
