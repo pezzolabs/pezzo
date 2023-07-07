@@ -15,3 +15,16 @@ export const extractPezzoFromArgs = <TArgs extends unknown[]>(
     originalArgs: [originalArgs0, ...args.slice(1)] as TArgs,
   };
 };
+
+export const merge = <T extends Record<string, unknown>>(
+  ...args: T[]
+): T => {
+  return args.reduce((acc, arg) => {
+    return {
+      ...acc,
+      ...arg,
+    };
+  }, {} as T);
+};
+
+

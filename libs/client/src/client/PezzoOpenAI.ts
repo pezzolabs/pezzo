@@ -1,5 +1,5 @@
 import { OpenAIApi } from "openai";
-import { extractPezzoFromArgs } from "../utils/helpers";
+import { extractPezzoFromArgs, merge } from "../utils/helpers";
 import {
   PezzoArgExtension,
   PezzoExtendedArgs,
@@ -8,7 +8,6 @@ import {
   ReportData,
 } from "../types";
 import { Pezzo } from "./Pezzo";
-import { merge } from "lodash";
 
 export type CreatePezzoChatCompletionRequest = PezzoArgExtension<
   Parameters<OpenAIApi["createChatCompletion"]>
