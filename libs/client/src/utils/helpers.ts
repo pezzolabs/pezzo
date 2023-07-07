@@ -16,9 +16,7 @@ export const extractPezzoFromArgs = <TArgs extends unknown[]>(
   };
 };
 
-export const merge = <T extends Record<string, unknown>>(
-  ...args: T[]
-): T => {
+export const merge = <T extends Record<string, unknown>>(...args: T[]): T => {
   return args.reduce((acc, arg) => {
     return {
       ...acc,
@@ -26,5 +24,3 @@ export const merge = <T extends Record<string, unknown>>(
     };
   }, {} as T);
 };
-
-
