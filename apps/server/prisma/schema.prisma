@@ -26,10 +26,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum PromptType {
+  Prompt
+  Chat
+}
+
 model PromptVersion {
   sha                String              @id
-  content            String
   settings           Json
+  content            Json
+  type               PromptType
   promptId           String
   prompt             Prompt              @relation(fields: [promptId], references: [id], onDelete: Cascade)
   createdAt          DateTime            @default(now())
