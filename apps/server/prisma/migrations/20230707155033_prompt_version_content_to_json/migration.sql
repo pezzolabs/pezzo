@@ -41,9 +41,9 @@ SET "settings" = jsonb_build_object(
 );
 
 -- Step 7: Add the new type column with a temporary default value
-ALTER TABLE "PromptVersion" ADD COLUMN "type" "PromptType" NOT NULL DEFAULT E'Prompt';
+ALTER TABLE "Prompt" ADD COLUMN "type" "PromptType" NOT NULL DEFAULT E'Prompt';
 
 -- Remove the default constraint
-ALTER TABLE "PromptVersion" ALTER COLUMN "type" DROP DEFAULT;
+ALTER TABLE "Prompt" ALTER COLUMN "type" DROP DEFAULT;
 
 COMMIT;

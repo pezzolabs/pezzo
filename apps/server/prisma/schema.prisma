@@ -35,7 +35,6 @@ model PromptVersion {
   sha                String              @id
   settings           Json
   content            Json
-  type               PromptType
   promptId           String
   prompt             Prompt              @relation(fields: [promptId], references: [id], onDelete: Cascade)
   createdAt          DateTime            @default(now())
@@ -138,6 +137,7 @@ model Prompt {
   id                 String              @id @default(cuid())
   projectId          String
   name               String
+  type               PromptType
   executions         PromptExecution[]
   promptEnvironments PromptEnvironment[]
   versions           PromptVersion[]
