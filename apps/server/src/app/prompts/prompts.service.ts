@@ -3,6 +3,7 @@ import sha256 from "sha256";
 import { Injectable } from "@nestjs/common";
 import { CreatePromptVersionInput } from "./inputs/create-prompt-version.input";
 import { CreatePromptInput } from "./inputs/create-prompt.input";
+import { PromptType } from "@prisma/client";
 
 @Injectable()
 export class PromptsService {
@@ -28,9 +29,10 @@ export class PromptsService {
   }
 
   async createPrompt(data: CreatePromptInput) {
-    const { name, projectId } = data;
+    const { name, projectId, type } = data;
     const prompt = await this.prisma.prompt.create({
       data: {
+        type,
         projectId,
         name,
         versions: {

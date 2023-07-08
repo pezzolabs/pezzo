@@ -14,15 +14,16 @@ export const GET_PROMPT = graphql(/* GraphQL */ `
     prompt(data: $data) {
       id
       name
+      type
       latestVersion {
         sha
-        content
         settings
+        content
       }
       version(data: $data) {
         sha
-        content
         settings
+        content
       }
     }
   }
@@ -31,6 +32,7 @@ export const GET_PROMPT = graphql(/* GraphQL */ `
 export const GET_PROMPT_VERSIONS = graphql(/* GraphQL */ `
   query GetPromptVersionsWithTags($data: GetPromptInput!) {
     prompt(data: $data) {
+      type
       versions {
         sha
         message
