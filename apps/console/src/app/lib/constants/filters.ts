@@ -31,7 +31,6 @@ export const FILTER_FIELDS_LIST = [
   },
 ];
 
-
 export const NUMBER_FILTER_OPERATORS: { value: string; label: string }[] = [
   {
     value: "eq",
@@ -71,5 +70,5 @@ export const STRING_FILTER_OPERATORS: { value: string; label: string }[] = [
   {
     value: "contains",
     label: "LIKE",
-  }
+  },
 ];

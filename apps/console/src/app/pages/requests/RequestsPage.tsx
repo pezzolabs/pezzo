@@ -64,12 +64,9 @@ export const RequestsPage = () => {
     [reports?.paginatedRequests.data, currentReportId]
   );
 
-  if (!reports || isLoading) return <Loading3QuartersOutlined />;
-
   const { data, pagination } = reports.paginatedRequests;
 
   const tableData = data?.map((report) => {
-    const type = report.provider;
     const isError = report.response.status >= 400;
     const response = isError
       ? JSON.stringify(report.response.body.error ?? {})
@@ -123,6 +120,7 @@ export const RequestsPage = () => {
           )}
         </Drawer>
         <Table
+          loading={isLoading}
           columns={columns}
           dataSource={tableData}
           onRow={(record) => {

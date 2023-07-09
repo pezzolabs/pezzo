@@ -2,21 +2,14 @@ import { RequestReportItem } from "../../pages/requests/types";
 import { Card, Space } from "antd";
 import styled from "@emotion/styled";
 import { AddFilterItem, FilterItem } from "./filters/FilterItem";
-import { Typography } from "antd";
 import { useFiltersAndSortParams } from "../../lib/hooks/useFiltersAndSortParams";
 import {
   NUMBER_FILTER_OPERATORS,
   STRING_FILTER_OPERATORS,
 } from "../../lib/constants/filters";
 
-const { Title } = Typography;
-
 const Box = styled.div`
   padding: 10px 0;
-`;
-
-const FiltersList = styled.div`
-  display: flex;
 `;
 
 interface Props {
