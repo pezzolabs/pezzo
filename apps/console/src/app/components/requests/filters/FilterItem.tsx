@@ -2,11 +2,12 @@ import styled from "@emotion/styled";
 import { Button, Form, Input, Select, Tag, Tooltip, Typography } from "antd";
 import { useCallback, useMemo, useState } from "react";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
-import { FILTER_FIELDS_ALLOW_LIST } from "../../../lib/constants/filters";
+import { FilterInput } from "../../../../@generated/graphql/graphql";
 import {
-  FilterInput,
-  FilterOperator,
-} from "../../../../@generated/graphql/graphql";
+  FILTER_FIELDS_LIST,
+  NUMBER_FILTER_OPERATORS,
+  STRING_FILTER_OPERATORS,
+} from "../../../lib/constants/filters";
 
 const { Text } = Typography;
 
@@ -20,8 +21,11 @@ const FilterItemTag = styled(Tag)<{ formMode?: boolean }>`
     formMode ? "none" : "rgba(255, 255, 255, 0.04)"};
 `;
 
-interface Props extends FilterInput {
+interface Props {
   onRemoveFilter: () => void;
+  field: string;
+  operator: string;
+  value: string;
 }
 
 export const FilterItem = ({
@@ -43,7 +47,7 @@ export const FilterItem = ({
   return (
     <FilterItemTag closable onClose={onRemoveFilter}>
       <Text>{translatedField}</Text>
-      <Text style={{ fontWeight: "bold" }}>: {operator} :</Text>
+      <Text style={{ fontWeight: "bold" }}>{operator}</Text>
       <Text>{value}</Text>
     </FilterItemTag>
   );
@@ -63,6 +67,7 @@ export const AddFilterForm = ({
   onCancel: () => void;
 }) => {
   const [form] = Form.useForm<FilterInput>();
+  const [_, setTrigger] = useState(0);
 
   const handleFormSubmit = () => {
     onAdd(form.getFieldsValue());
@@ -80,8 +85,7 @@ export const AddFilterForm = ({
     >
       <Form.Item
         name="field"
-        fieldId="field"
-        style={{ margin: 0 }}
+        style={{ margin: 0, width: 120 }}
         rules={[
           {
             required: true,
@@ -91,18 +95,12 @@ export const AddFilterForm = ({
           },
         ]}
       >
-        <Select
-          placeholder="Select a field"
-          options={[...FILTER_FIELDS_ALLOW_LIST].map((f) => ({
-            value: f,
-            label: f,
-          }))}
-        />
+        <Select placeholder="Select a field" options={FILTER_FIELDS_LIST} />
       </Form.Item>
 
       <Form.Item
-        name="operator"
         fieldId="operator"
+        dependencies={["field"]}
         style={{ margin: 0 }}
         rules={[
           {
@@ -113,13 +111,26 @@ export const AddFilterForm = ({
           },
         ]}
       >
-        <Select
-          placeholder="Select an operator"
-          options={Object.keys(FilterOperator).map((f) => ({
-            value: FilterOperator[f],
-            label: f,
-          }))}
-        />
+        {({ getFieldValue }) => {
+          const selectedFilterField = FILTER_FIELDS_LIST.find(
+            (field) => field.value === getFieldValue("field")
+          );
+
+          const options =
+            selectedFilterField?.type === "string"
+              ? STRING_FILTER_OPERATORS
+              : NUMBER_FILTER_OPERATORS;
+
+          return (
+            <Form.Item noStyle name="operator">
+              <Select
+                placeholder="Select an operator"
+                style={{ width: 120 }}
+                options={options}
+              />
+            </Form.Item>
+          );
+        }}
       </Form.Item>
 
       <Form.Item
@@ -190,17 +201,14 @@ export const AddFilterItem = ({
     [onAdd]
   );
 
+  if (addFormOpen) {
+    return (
+      <AddFilterForm onAdd={handleAdd} onCancel={() => setAddFormOpen(false)} />
+    );
+  }
   return (
-    <FilterItemTag formMode={addFormOpen} onClick={() => setAddFormOpen(true)}>
-      +
-      {addFormOpen ? (
-        <AddFilterForm
-          onAdd={handleAdd}
-          onCancel={() => setAddFormOpen(false)}
-        />
-      ) : (
-        <Text>Add Filter</Text>
-      )}
-    </FilterItemTag>
+    <Button onClick={() => setAddFormOpen(true)} type="dashed">
+      + Add Filter
+    </Button>
   );
 };

@@ -1,9 +1,13 @@
 import { RequestReportItem } from "../../pages/requests/types";
-import { Card } from "antd";
+import { Card, Space } from "antd";
 import styled from "@emotion/styled";
 import { AddFilterItem, FilterItem } from "./filters/FilterItem";
 import { Typography } from "antd";
 import { useFiltersAndSortParams } from "../../lib/hooks/useFiltersAndSortParams";
+import {
+  NUMBER_FILTER_OPERATORS,
+  STRING_FILTER_OPERATORS,
+} from "../../lib/constants/filters";
 
 const { Title } = Typography;
 
@@ -24,25 +28,28 @@ export const RequestFilters = (props: Props) => {
 
   return (
     <Box>
-      <Card
-        style={{ width: "100%" }}
-        bodyStyle={{ display: "flex", alignItems: "center" }}
-      >
-        <Title level={4} style={{ margin: 0, marginRight: 5 }}>
-          Filters:
-        </Title>
-        <FiltersList>
-          {filters.map((filter) => (
-            <FilterItem
-              key={`${filter.field}-${filter.operator}-${filter.value}`}
-              field={filter.field}
-              operator={filter.operator}
-              value={filter.value}
-              onRemoveFilter={() => removeFilter(filter)}
-            />
-          ))}
+      <Card style={{ width: "100%" }}>
+        <Space direction="vertical" style={{ width: "100%" }} size="large">
           <AddFilterItem onAdd={addFilter} />
-        </FiltersList>
+          <Space
+            direction="horizontal"
+            style={{ width: "100%", flexWrap: "wrap" }}
+          >
+            {filters.map((filter) => (
+              <FilterItem
+                key={`${filter.field}-${filter.operator}-${filter.value}`}
+                field={filter.field}
+                operator={
+                  [...STRING_FILTER_OPERATORS, ...NUMBER_FILTER_OPERATORS].find(
+                    (op) => op.value === filter.operator
+                  )?.label
+                }
+                value={filter.value}
+                onRemoveFilter={() => removeFilter(filter)}
+              />
+            ))}
+          </Space>
+        </Space>
       </Card>
     </Box>
   );
