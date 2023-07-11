@@ -13,14 +13,13 @@ export const DeleteEnvironmentModal = ({
   onClose,
   onDelete,
 }: Props) => {
-
   const { mutate: deleteEnvironment } = useDeleteEnvironmentMutation();
 
   const handleDelete = () => {
     if (environmentToDelete) {
       deleteEnvironment({ id: environmentToDelete.id });
     }
-  
+
     onDelete();
   };
 

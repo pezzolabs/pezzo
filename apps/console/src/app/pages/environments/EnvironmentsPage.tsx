@@ -49,9 +49,7 @@ export const EnvironmentsPage = () => {
               size="small"
             >
               <Row justify="space-between" align="middle">
-                <Col>
-                  {environment.name}
-                </Col>
+                <Col>{environment.name}</Col>
                 <Col>
                   <Button
                     onClick={() => setEnvironmentToDelete(environment)}

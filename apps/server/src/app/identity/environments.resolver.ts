@@ -12,7 +12,10 @@ import { RequestUser } from "../identity/users.types";
 import { AuthGuard } from "../auth/auth.guard";
 import { EnvironmentsService } from "./environments.service";
 import { GetEnvironmentsInput } from "./inputs/get-environments.input";
-import { isOrgAdminOrThrow, isOrgMemberOrThrow } from "../identity/identity.utils";
+import {
+  isOrgAdminOrThrow,
+  isOrgMemberOrThrow,
+} from "../identity/identity.utils";
 import { PinoLogger } from "../logger/pino-logger";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { PrismaService } from "../prisma.service";
