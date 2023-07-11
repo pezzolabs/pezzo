@@ -5,8 +5,9 @@ import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import Joi from "joi";
 import { randomUUID } from "crypto";
-
 import { ApolloServerPluginLandingPageLocalDefault } from "@apollo/server/plugin/landingPage/default";
+import { EventEmitterModule } from "@nestjs/event-emitter";
+
 import { PromptsModule } from "./prompts/prompts.module";
 import { HealthController } from "./health.controller";
 import { formatError } from "../lib/gql-format-error";
@@ -20,8 +21,10 @@ import { MetricsModule } from "./metrics/metrics.module";
 import { LoggerModule } from "./logger/logger.module";
 import { PinoLogger } from "./logger/pino-logger";
 import { AnalyticsModule } from "./analytics/analytics.module";
-import { KafkaModule } from "@pezzo/kafka";
+import { NotificationsModule } from "./notifications/notifications.module";
+import { getConfigSchema } from "./config/common-config-schema";
 
+const isCloud = process.env.PEZZO_CLOUD === "true";
 const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
 
 @Module({
@@ -30,50 +33,13 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ".env",
-      validationSchema: Joi.object({
-        PINO_PRETTIFY: Joi.boolean().default(false),
-        SEGMENT_KEY: Joi.string().optional().default(null),
-        DATABASE_URL: Joi.string().required(),
-        PORT: Joi.number().default(3000),
-        SUPERTOKENS_CONNECTION_URI: Joi.string().required(),
-        SUPERTOKENS_API_KEY: Joi.string().optional(),
-        SUPERTOKENS_API_DOMAIN: Joi.string().default("http://localhost:3000"),
-        SUPERTOKENS_WEBSITE_DOMAIN: Joi.string().default(
-          "http://localhost:4200"
-        ),
-        GOOGLE_OAUTH_CLIENT_ID: Joi.string().optional().default(null),
-        GOOGLE_OAUTH_CLIENT_SECRET: Joi.string().optional().default(null),
-        INFLUXDB_URL: Joi.string().required(),
-        INFLUXDB_TOKEN: Joi.string().required(),
-        CONSOLE_HOST: Joi.string().required(),
-        KAFKA_BROKERS: Joi.string().required(),
-        KAFKA_GROUP_ID: Joi.string().default("pezzo"),
-        KAFKA_REBALANCE_TIMEOUT: Joi.number().default(10000),
-        KAFKA_HEARTBEAT_INTERVAL: Joi.number().default(3000),
-        KAFKA_SESSION_TIMEOUT: Joi.number().default(10000),
-      }),
+      validationSchema: getConfigSchema(),
       // In CI, we need to skip validation because we don't have a .env file
       // This is consumed by the graphql:schema-generate Nx target
       validate:
         process.env.SKIP_CONFIG_VALIDATION === "true" ? () => ({}) : undefined,
     }),
-    KafkaModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (config: ConfigService) => ({
-        client: {
-          brokers: config.get("KAFKA_BROKERS").split(","),
-        },
-        consumer: {
-          groupId: config.get("KAFKA_GROUP_ID"),
-          rebalanceTimeout: config.get("KAFKA_REBALANCE_TIMEOUT"),
-          heartbeatInterval: config.get("KAFKA_HEARTBEAT_INTERVAL"),
-          sessionTimeout: config.get("KAFKA_SESSION_TIMEOUT"),
-        },
-        producer: {},
-      }),
-      isGlobal: true,
-      inject: [ConfigService],
-    }),
+    EventEmitterModule.forRoot(),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       playground: false,
@@ -113,6 +79,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
     CredentialsModule,
     IdentityModule,
     MetricsModule,
+    ...(isCloud ? [NotificationsModule] : []),
   ],
   controllers: [HealthController],
 })
