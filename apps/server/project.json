@@ -82,7 +82,7 @@
       "outputs": ["{projectRoot}/src/schema.graphql"],
       "executor": "nx:run-commands",
       "options": {
-        "command": "GITHUB_ACTIONS=true && npx ts-node -P apps/server/tsconfig.app.json -r tsconfig-paths/register apps/server/scripts/generate-graphql-schema.ts"
+        "command": "GITHUB_ACTIONS=true npx ts-node -P apps/server/tsconfig.app.json -r tsconfig-paths/register apps/server/scripts/generate-graphql-schema.ts"
       }
     },
     "graphql:codegen": {
