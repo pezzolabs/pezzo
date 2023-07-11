@@ -6,6 +6,9 @@ import { randomUUID } from "crypto";
 import { buildRequestReport } from "./utils/build-request-report";
 import { RequestReport } from "./object-types/request-report.model";
 import { MAX_PAGE_SIZE } from "../../lib/pagination";
+import { FilterInput } from "../common/filters/filter.input";
+import { SortInput } from "../common/filters/sort.input";
+import { mapFiltersToDql } from "./utils/dql-utils";
 
 @Injectable()
 export class ReportingService {
@@ -41,31 +44,39 @@ export class ReportingService {
 
   async getReports({
     projectId,
+    organizationId,
     page,
     size: pageSize,
+    filters,
+    sort,
   }: {
     projectId: string;
+    organizationId: string;
     page: number;
     size: number;
+    filters: FilterInput[];
+    sort: SortInput;
   }) {
     const size = pageSize > MAX_PAGE_SIZE ? MAX_PAGE_SIZE : pageSize;
     const from = (page - 1) * size;
 
-    return await this.openSearchService.client.search<{
+    const dql = mapFiltersToDql({
+      restrictions: {
+        "ownership.projectId": projectId,
+        "ownership.organizationId": organizationId,
+      },
+      sort,
+      filters,
+    });
+
+    return this.openSearchService.client.search<{
       hits: {
         hits: Array<{ _source: RequestReport }>;
         total: { value: number };
       };
     }>({
       index: OpenSearchIndex.Requests,
-      body: {
-        query: {
-          match: {
-            "ownership.projectId": projectId,
-          },
-        },
-      },
-      sort: ["request.timestamp:desc"],
+      body: dql,
       size,
       from,
       track_total_hits: true,

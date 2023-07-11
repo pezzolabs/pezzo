@@ -26,7 +26,4 @@ export class FilterInput {
 
   @Field(() => String, { nullable: false })
   value: string | string[];
-
-  @Field(() => String, { nullable: true })
-  secondValue?: string | string[];
 }
