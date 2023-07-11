@@ -22,7 +22,8 @@ const cloudConfigSchema = {
 
 const isCloud = process.env.PEZZO_CLOUD === "true";
 
-export const getConfigSchema = () => Joi.object({
-  ...commonConfigSchema,
-  ...(isCloud ? cloudConfigSchema : {}),
-});
+export const getConfigSchema = () =>
+  Joi.object({
+    ...commonConfigSchema,
+    ...(isCloud ? cloudConfigSchema : {}),
+  });

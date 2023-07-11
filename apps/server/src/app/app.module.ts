@@ -79,9 +79,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
     CredentialsModule,
     IdentityModule,
     MetricsModule,
-    ...(isCloud ? [
-      NotificationsModule,
-    ] : []),
+    ...(isCloud ? [NotificationsModule] : []),
   ],
   controllers: [HealthController],
 })
