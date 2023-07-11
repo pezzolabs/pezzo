@@ -127,10 +127,6 @@ If you want to contribute but not sure how, join our [Discord](https://discord.g
 
 Please check out [CONTRIBUTING.md](CONTRIBUTING.md) before contributing.
 
-# Alpha Disclaimer
-
-Pezzo is currently in early development stages. As we strive to provide a reliable and useful platform, you may encounter bugs, performance issues or other limitations. As a result, Pezzo cannot be held responsible for any errors, data loss, or other negative outcomes that may arise from usage during this stage.
-
 # License
 
 This repository's source code is available under the [Apache 2.0 License](LICENSE).
