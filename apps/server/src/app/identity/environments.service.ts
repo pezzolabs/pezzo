@@ -40,4 +40,12 @@ export class EnvironmentsService {
     });
     return environment;
   }
+
+  async deleteEnvironment(id: string) {
+    const environment = await this.prisma.environment.delete({
+      where: { id },
+    });
+
+    return environment;
+  }
 }

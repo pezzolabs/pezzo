@@ -147,7 +147,7 @@ model PromptEnvironment {
   prompt           Prompt         @relation(fields: [promptId], references: [id], onDelete: Cascade)
   promptVersionSha String
   promptVersion    PromptVersion? @relation(fields: [promptVersionSha], references: [sha])
-  environment      Environment    @relation(fields: [environmentId], references: [id])
+  environment      Environment    @relation(fields: [environmentId], references: [id], onDelete: Cascade)
   publishedById    String
   publishedBy      User           @relation(fields: [publishedById], references: [id])
 }
