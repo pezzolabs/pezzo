@@ -1,18 +1,9 @@
-import { useMutation } from "@tanstack/react-query";
-import { Modal, Alert, Typography } from "antd";
-import { gqlClient, queryClient } from "../../lib/graphql";
-// import { DELETE_ENVIRONMENT } from "../../graphql/definitions/mutations/environments";
-// import { DeleteEnvironmentMutation } from "../../../@generated/graphql/graphql";
-import { GraphQLErrorResponse } from "../../graphql/types";
-
-interface Environment {
-  __typename?: "Environment";
-  id: string;
-  name: string;
-}
+import { Modal, Typography } from "antd";
+import { EnvironmentsQuery } from "../../../@generated/graphql/graphql";
+import { useDeleteEnvironmentMutation } from "../../graphql/hooks/mutations";
 
 interface Props {
-  environmentToDelete: Environment | null;
+  environmentToDelete: EnvironmentsQuery["environments"][0] | null;
   onClose: () => void;
   onDelete: () => void;
 }
@@ -22,25 +13,14 @@ export const DeleteEnvironmentModal = ({
   onClose,
   onDelete,
 }: Props) => {
-  // const { mutate, error } = useMutation<
-  //   DeleteEnvironmentMutation,
-  //   GraphQLErrorResponse,
-  //   string
-  // >({
-  //   mutationFn: (id: string) =>
-  //     gqlClient.request(DELETE_ENVIRONMENT, {
-  //       id,
-  //     }),
-  //   onSuccess: () => {
-  //     onDelete();
-  //     queryClient.invalidateQueries({ queryKey: ["environments"] });
-  //   },
-  // });
+
+  const { mutate: deleteEnvironment } = useDeleteEnvironmentMutation();
 
   const handleDelete = () => {
-    // if (environmentToDelete) {
-    //   mutate(environmentToDelete.id);
-    // }
+    if (environmentToDelete) {
+      deleteEnvironment({ id: environmentToDelete.id });
+    }
+  
     onDelete();
   };
 

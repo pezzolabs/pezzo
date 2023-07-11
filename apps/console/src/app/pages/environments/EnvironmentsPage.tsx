@@ -4,12 +4,9 @@ import { CreateEnvironmentModal } from "../../components/environments/CreateEnvi
 import { DeleteEnvironmentModal } from "../../components/environments/DeleteEnvironmentModal";
 import { useState } from "react";
 import { useEnvironments } from "../../lib/hooks/useEnvironments";
+import { EnvironmentsQuery } from "../../../@generated/graphql/graphql";
 
-interface Environment {
-  __typename?: "Environment";
-  id: string;
-  name: string;
-}
+type Environment = EnvironmentsQuery["environments"][0];
 
 export const EnvironmentsPage = () => {
   const { environments, isLoading } = useEnvironments();
@@ -45,17 +42,19 @@ export const EnvironmentsPage = () => {
         </div>
 
         {environments &&
-          environments.map((e) => (
+          environments.map((environment) => (
             <Card
-              key={e.id}
+              key={environment.id}
               style={{ marginBottom: 10, maxWidth: 600 }}
               size="small"
             >
-              <Row justify="space-between">
-                <Col>{e.name}</Col>
+              <Row justify="space-between" align="middle">
+                <Col>
+                  {environment.name}
+                </Col>
                 <Col>
                   <Button
-                    onClick={() => setEnvironmentToDelete(e)}
+                    onClick={() => setEnvironmentToDelete(environment)}
                     type="text"
                     danger
                     icon={<DeleteOutlined />}
