@@ -1,4 +1,4 @@
-import { Modal, Typography } from "antd";
+import { Alert, Modal, Typography } from "antd";
 import { EnvironmentsQuery } from "../../../@generated/graphql/graphql";
 import { useDeleteEnvironmentMutation } from "../../graphql/hooks/mutations";
 
@@ -13,7 +13,7 @@ export const DeleteEnvironmentModal = ({
   onClose,
   onDelete,
 }: Props) => {
-  const { mutate: deleteEnvironment } = useDeleteEnvironmentMutation();
+  const { mutate: deleteEnvironment, error } = useDeleteEnvironmentMutation();
 
   const handleDelete = () => {
     if (environmentToDelete) {
@@ -32,9 +32,9 @@ export const DeleteEnvironmentModal = ({
       okText="Delete"
       onOk={handleDelete}
     >
-      {/* {error && (
+      {error && (
         <Alert type="error" message={error.response.errors[0].message} />
-      )} */}
+      )}
       <p>
         Are you sure you want to remove{" "}
         <Typography.Text style={{ fontWeight: 800 }}>
