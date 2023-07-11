@@ -82,7 +82,7 @@
       "outputs": ["{projectRoot}/src/schema.graphql"],
       "executor": "nx:run-commands",
       "options": {
-        "command": "set GITHUB_ACTIONS=true && npx ts-node -P apps/server/tsconfig.app.json -r tsconfig-paths/register apps/server/scripts/generate-graphql-schema.ts"
+        "command": "GITHUB_ACTIONS=true && npx ts-node -P apps/server/tsconfig.app.json -r tsconfig-paths/register apps/server/scripts/generate-graphql-schema.ts"
       }
     },
     "graphql:codegen": {
@@ -95,7 +95,7 @@
       "dependsOn": ["prsima:generate", "graphql:schema-generate"],
       "executor": "nx:run-commands",
       "options": {
-        "command": "set OFFLINE=true npx graphql-codegen"
+        "command": "OFFLINE=true npx graphql-codegen"
       }
     },
     "docker:build": {
