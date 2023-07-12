@@ -163,8 +163,8 @@ fix(server): missing entity on init
 
 - **server**
 - **console**
-- **integrations**
 - **client**
+- **types**
 
 ## Code of conduct
 

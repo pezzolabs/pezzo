@@ -2,8 +2,7 @@ import { join } from "path";
 import { Module } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
-import { ConfigModule, ConfigService } from "@nestjs/config";
-import Joi from "joi";
+import { ConfigModule } from "@nestjs/config";
 import { randomUUID } from "crypto";
 import { ApolloServerPluginLandingPageLocalDefault } from "@apollo/server/plugin/landingPage/default";
 import { EventEmitterModule } from "@nestjs/event-emitter";
@@ -15,12 +14,12 @@ import { PromptEnvironmentsModule } from "./prompt-environments/prompt-environme
 import { CredentialsModule } from "./credentials/credentials.module";
 import { AuthModule } from "./auth/auth.module";
 import { IdentityModule } from "./identity/identity.module";
-import { InfluxDbModule } from "./influxdb/influxdb.module";
-import { InfluxModuleOptions } from "./influxdb/types";
 import { MetricsModule } from "./metrics/metrics.module";
 import { LoggerModule } from "./logger/logger.module";
 import { PinoLogger } from "./logger/pino-logger";
 import { AnalyticsModule } from "./analytics/analytics.module";
+import { ReportingModule } from "./reporting/reporting.module";
+import { OpenSearchModule } from "./opensearch/opensearch.module";
 import { NotificationsModule } from "./notifications/notifications.module";
 import { getConfigSchema } from "./config/common-config-schema";
 
@@ -39,6 +38,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
       validate:
         process.env.SKIP_CONFIG_VALIDATION === "true" ? () => ({}) : undefined,
     }),
+    OpenSearchModule,
     EventEmitterModule.forRoot(),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -49,28 +49,17 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       context: (ctx) => {
         ctx.requestId = ctx.req.headers["x-request-id"] || randomUUID();
-        const logger = new PinoLogger(ctx);
         return ctx;
       },
       include: [
         PromptsModule,
+        ReportingModule,
         PromptEnvironmentsModule,
         CredentialsModule,
         IdentityModule,
         MetricsModule,
       ],
       formatError,
-    }),
-    InfluxDbModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: async (
-        config: ConfigService
-      ): Promise<InfluxModuleOptions> => {
-        return {
-          url: config.get("INFLUXDB_URL"),
-          token: config.get("INFLUXDB_TOKEN"),
-        };
-      },
     }),
     AuthModule.forRoot(),
     AnalyticsModule,
@@ -79,6 +68,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
     CredentialsModule,
     IdentityModule,
     MetricsModule,
+    ReportingModule,
     ...(isCloud ? [NotificationsModule] : []),
   ],
   controllers: [HealthController],

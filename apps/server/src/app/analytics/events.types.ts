@@ -40,13 +40,11 @@ export type AnalyticsPayloads = {
     projectId: string;
     promptId: string;
     executionId: string;
-    integrationId: string;
     data: Partial<PromptExecution>;
   };
   "PROMPT:TESTED": {
     organizationId: string;
     projectId: string;
-    integrationId: string;
     executionId: string;
     data: Partial<PromptExecution>;
   };

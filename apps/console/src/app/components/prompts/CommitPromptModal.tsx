@@ -62,10 +62,9 @@ export const CommitPromptModal = ({
 
   const handleFormFinish = async (values: Inputs) => {
     const editPromptValues = editPromptForm.getFieldsValue(true);
-
     mutate({
       message: form.getFieldValue("message"),
-      content: editPromptValues.content,
+      content: "",
       settings: editPromptValues.settings,
       promptId: prompt.id,
     });

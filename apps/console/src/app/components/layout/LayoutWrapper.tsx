@@ -44,7 +44,6 @@ export const LayoutWrapper = ({
         height: "100vh",
         maxHeight: "100vh",
         flexDirection: "column",
-        background: "rgb(13, 13, 13)",
       }}
     >
       {withHeader && <Header />}

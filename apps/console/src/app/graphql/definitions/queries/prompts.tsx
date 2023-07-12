@@ -5,7 +5,6 @@ export const GET_ALL_PROMPTS = graphql(/* GraphQL */ `
     prompts(data: $data) {
       id
       name
-      integrationId
     }
   }
 `);
@@ -14,7 +13,6 @@ export const GET_PROMPT = graphql(/* GraphQL */ `
   query getPrompt($data: GetPromptInput!) {
     prompt(data: $data) {
       id
-      integrationId
       name
       latestVersion {
         sha

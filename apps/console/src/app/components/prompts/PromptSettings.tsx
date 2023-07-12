@@ -1,15 +1,13 @@
-import { getIntegration } from "@pezzo/integrations";
 import { Form, Select } from "antd";
 import { PromptSettingsSlider } from "./PromptSettingsSlider";
+import { generateSchema } from "../../lib/model-providers";
 
 interface Props {
-  integrationId: string;
   model: string;
 }
 
-export const PromptSettings = ({ integrationId, model }: Props) => {
-  const integration = getIntegration(integrationId);
-  const settings = integration.generateSchema(model);
+export const PromptSettings = ({ model }: Props) => {
+  const settingsSchema = generateSchema(model);
 
   const commonStyle = {
     marginBottom: 8,
@@ -17,7 +15,7 @@ export const PromptSettings = ({ integrationId, model }: Props) => {
 
   return (
     <>
-      {settings.map((field, index) => (
+      {settingsSchema.map((field, index) => (
         <Form.Item
           key={index}
           label={field.label}

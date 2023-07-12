@@ -20,5 +20,8 @@ export const antTheme: ThemeConfig = {
     Button: {
       fontFamily: "Brockmann",
     },
+    Layout: {
+      colorBgHeader: "#141414",
+    },
   },
 };

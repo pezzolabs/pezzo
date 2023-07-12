@@ -1,6 +1,4 @@
-import { Space, Typography } from "antd";
-import { PromptVariable } from "./PromptVariable";
-import { isJson } from "../../lib/utils/is-json";
+import { Space, Tag, Tooltip, Typography } from "antd";
 
 interface Props {
   variables: Record<string, string>;
@@ -14,19 +12,18 @@ export const PromptVariables = ({ variables, onVariableChange }: Props) => {
         <Typography.Text type="secondary">No variables found.</Typography.Text>
       )}
 
-      <Space direction="vertical">
+      <Space direction="horizontal">
         {Object.keys(variables).length > 0 &&
           Object.keys(variables).map((variableName) => (
-            <PromptVariable
+            <Tooltip
               key={variableName}
-              name={variableName}
-              value={
-                isJson(variables[variableName])
-                  ? JSON.stringify(JSON.parse(variables[variableName]), null, 2)
-                  : variables[variableName]
-              }
-              onChange={(value) => onVariableChange(variableName, value)}
-            />
+              title="Click to edit"
+              placement="bottomLeft"
+            >
+              <Tag style={{ cursor: "pointer" }} key={variableName}>
+                {variableName}
+              </Tag>
+            </Tooltip>
           ))}
       </Space>
     </div>

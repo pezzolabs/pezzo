@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/console/src",
   "projectType": "application",
+  "implicitDependencies": ["server"],
   "targets": {
     "build": {
       "dependsOn": ["^graphql:codegen:offline", "^prebuild", "^build"],
@@ -59,7 +60,7 @@
       }
     },
     "serve": {
-      "dependsOn": ["^graphql:codegen", "^prebuild", "prebuild"],
+      "dependsOn": ["^graphql:codegen:offline", "^prebuild", "prebuild"],
       "executor": "@nrwl/webpack:dev-server",
       "defaultConfiguration": "development",
       "options": {

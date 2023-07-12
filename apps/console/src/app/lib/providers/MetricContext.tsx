@@ -10,6 +10,7 @@ import { useGetPromptExecutionMetric } from "../hooks/useGetPromptExecutionMetri
 import { format } from "date-fns";
 import { Card, Col, Empty, Radio, Row, Select, Typography, theme } from "antd";
 import { Loading3QuartersOutlined } from "@ant-design/icons";
+import ms from "ms";
 
 interface MetricContextValue {
   data: GetMetricsQuery["metrics"];
@@ -23,40 +24,45 @@ export const MetricContext = createContext<MetricContextValue>({
 
 export const useMetric = () => useContext(MetricContext);
 
+const calculateStartDate = (start: string): Date => {
+  const startDate = new Date();
+  const subtractMs = ms(start);
+  startDate.setMilliseconds(startDate.getMilliseconds() + subtractMs);
+  return startDate;
+};
+
 interface Props {
   children: React.ReactNode;
   title: string;
-  field: PromptExecutionMetricField;
-  fillEmpty?: string;
+  field?: PromptExecutionMetricField;
   aggregation: Aggregation;
 }
 
 export const MetricProvider = ({
   children,
   title,
-  field,
-  fillEmpty,
+  field = null,
   aggregation,
 }: Props) => {
   const { token } = theme.useToken();
   const { prompt } = useCurrentPrompt();
   const [granularity, setGranularity] = useState<Granularity>(Granularity.Day);
   const [start, setStart] = useState<string>("-7d");
+  const startDate = calculateStartDate(start);
 
   const { data: metricsData, isLoading } = useGetPromptExecutionMetric(
     [prompt.id, "metrics", title, granularity, start],
     {
       promptId: prompt.id,
-      start,
-      stop: "now()",
       field,
-      granularity,
       aggregation,
-      fillEmpty,
+      start: startDate.toISOString(),
+      stop: new Date().toISOString(),
+      granularity,
     }
   );
 
-  if (isLoading || !metricsData) {
+  if (!startDate || isLoading || !metricsData) {
     return <Loading3QuartersOutlined spin />;
   }
 
