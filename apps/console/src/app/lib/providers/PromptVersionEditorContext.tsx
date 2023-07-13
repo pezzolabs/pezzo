@@ -1,4 +1,11 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import {
+  MutableRefObject,
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useCurrentPrompt } from "./CurrentPromptContext";
 import {
   GetPromptVersionQuery,
@@ -6,6 +13,11 @@ import {
 } from "../../../@generated/graphql/graphql";
 import { Form, FormInstance } from "antd";
 import { useGetPromptVersion } from "../../graphql/hooks/queries";
+
+interface FormInputs {
+  settings: any;
+  content: any;
+}
 
 interface PromptVersionEditorContext {
   hasChangesToCommit: boolean;
@@ -16,7 +28,7 @@ interface PromptVersionEditorContext {
   isDraft: boolean;
   isFetched: boolean;
   form: FormInstance;
-  initialValues: any;
+  initialValues: MutableRefObject<FormInputs>;
 }
 
 const PromptVersionEditorContext =
@@ -28,9 +40,9 @@ export const usePromptVersionEditorContext = () => {
 
 export const PromptVersionEditorProvider = ({ children }) => {
   const { prompt } = useCurrentPrompt();
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<FormInputs>();
   const formValues = Form.useWatch(null, { form, preserve: true });
-  const initialValues = useRef(undefined);
+  const initialValues = useRef<FormInputs>(undefined);
   const isDraft = !prompt?.latestVersion;
   const [currentVersionSha, setCurrentVersionSha] = useState<string>(
     prompt?.latestVersion?.sha
@@ -44,7 +56,8 @@ export const PromptVersionEditorProvider = ({ children }) => {
   );
 
   useEffect(() => {
-    // Define initial values. These will be used later to determine if there are changes to commit.
+    // Take a snapshot of the initial values.
+    // This will then be used to determine if there are changes to commit.
     if (isDraft) {
       initialValues.current = {
         settings: {},
