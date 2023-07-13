@@ -9,6 +9,9 @@ import { PublishPromptModal } from "../PublishPromptModal";
 import { useEffect, useMemo, useState } from "react";
 import { PlayCircleOutlined, SendOutlined } from "@ant-design/icons";
 import { PromptVersionSelector } from "../PromptVersionSelector";
+import { FunctionsFormModal } from "../FormModal";
+
+const FUNCTIONS_FEATURE_FLAG = true;
 
 export const PromptEditView = () => {
   const { prompt, currentPromptVersion, isDraft } = useCurrentPrompt();
@@ -29,6 +32,7 @@ export const PromptEditView = () => {
 
   const [isCommitModalOpen, setIsCommitModalOpen] = useState(false);
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
+  const [isFunctionsModalOpen, setIsFunctionsModalOpen] = useState(false);
   const [messages, setMessages] = useState<{ role: "user" | "assistant" }[]>(
     []
   );
@@ -104,10 +108,17 @@ export const PromptEditView = () => {
           />
         </Col>
         <Col span={6} offset={1}>
-          <Card title="Settings">
-            <PromptSettings model={settings.model} />
+          <Card title="Settings" style={{ marginBottom: 18 }}>
+            <PromptSettings
+              model={settings.model}
+              onOpenFunctionsModal={
+                FUNCTIONS_FEATURE_FLAG
+                  ? () => setIsFunctionsModalOpen(true)
+                  : null
+              }
+            />
           </Card>
-          <Card title="Variables" style={{ marginTop: 18 }}>
+          <Card title="Variables">
             {Object.keys(variables).length === 0 && (
               <Typography.Text type="secondary">
                 No variables found.
@@ -120,7 +131,6 @@ export const PromptEditView = () => {
           </Card>
         </Col>
       </Row>
-
       <CommitPromptModal
         form={form}
         open={isCommitModalOpen}
@@ -134,6 +144,14 @@ export const PromptEditView = () => {
         <PublishPromptModal
           onClose={() => setIsPublishModalOpen(false)}
           open={isPublishModalOpen}
+        />
+      )}
+
+      {FUNCTIONS_FEATURE_FLAG && (
+        <FunctionsFormModal
+          onClose={() => setIsFunctionsModalOpen(false)}
+          open={isFunctionsModalOpen}
+          form={form}
         />
       )}
     </Form>

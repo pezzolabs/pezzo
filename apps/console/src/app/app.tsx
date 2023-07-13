@@ -3,6 +3,7 @@ import * as reactRouterDom from "react-router-dom";
 import { hotjar } from "react-hotjar";
 import "antd/dist/reset.css";
 import "./styles.css";
+import "./form.css";
 
 import { ThemeProvider } from "./lib/providers/ThemeProvider";
 import { QueryClientProvider } from "@tanstack/react-query";

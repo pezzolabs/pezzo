@@ -1,12 +1,14 @@
-import { Form, Select } from "antd";
+import { Button, Form, Select } from "antd";
 import { PromptSettingsSlider } from "./PromptSettingsSlider";
 import { generateSchema } from "../../lib/model-providers";
+import { SendOutlined } from "@ant-design/icons";
 
 interface Props {
   model: string;
+  onOpenFunctionsModal: () => void;
 }
 
-export const PromptSettings = ({ model }: Props) => {
+export const PromptSettings = ({ model, onOpenFunctionsModal }: Props) => {
   const settingsSchema = generateSchema(model);
 
   const commonStyle = {
@@ -34,6 +36,11 @@ export const PromptSettings = ({ model }: Props) => {
           )}
         </Form.Item>
       ))}
+      {onOpenFunctionsModal && (
+        <Button onClick={onOpenFunctionsModal} icon={<SendOutlined />}>
+          Edit Functions
+        </Button>
+      )}
     </>
   );
 };
