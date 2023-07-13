@@ -1,87 +1,142 @@
-import { Button, Card, Col, Form, FormInstance, Row, Input } from "antd";
+import { Col, FormInstance, Row } from "antd";
 import { PromptEditFormInputs } from "../../lib/hooks/usePromptEdit";
-import { DeleteOutlined } from "@ant-design/icons";
-
-const { TextArea } = Input;
+import { FormConfig, OnSubmit } from "@tutim/types";
+import { TutimWizard, TutimProvider } from "@tutim/headless";
+import { defaultFields } from "@tutim/fields";
 
 interface Props {
-  functions: any[];
-  onNewMessage: () => void;
   form: FormInstance<PromptEditFormInputs>;
-  onDeleteMessage: (ix: number) => void;
-  onChange?: (value: string) => void;
+  onClose: () => void;
 }
 
-export const FunctionsEditor = ({
-  form,
-  onDeleteMessage,
-  onNewMessage,
-  functions,
-}: Props) => {
-  const settings = form.getFieldValue("settings");
+const config: FormConfig = {
+  fields: [
+    {
+      key: "functions",
+      label: "Functions",
+      type: "array",
+      children: {
+        fields: [
+          {
+            key: "name",
+            label: "Function Name",
+            type: "text",
+            isRequired: true,
+          },
+          {
+            key: "description",
+            label: "Function Description",
+            type: "text",
+            isRequired: true,
+          },
+          {
+            key: "parameters",
+            label: "Parameters",
+            type: "array",
+            children: {
+              fields: [
+                {
+                  key: "key",
+                  label: "Key",
+                  type: "text",
+                  isRequired: true,
+                },
+                {
+                  key: "type",
+                  label: "Type",
+                  type: "select",
+                  isRequired: true,
+                  defaultValue: "string",
+                  options: [
+                    { label: "String", value: "string" },
+                    { label: "Number", value: "number" },
+                    { label: "Boolean", value: "boolean" },
+                    { label: "Object", value: "object" },
+                    { label: "Array", value: "array" },
+                  ],
+                },
+                {
+                  key: "description",
+                  label: "Description",
+                  type: "text",
+                },
+                {
+                  key: "required",
+                  label: "Is Required?",
+                  type: "checkbox",
+                  helperText: "Check if required",
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+};
 
+export const FunctionsForm = ({ data, onSubmit }): JSX.Element => {
   return (
-    <Row>
+    <TutimProvider fieldComponents={defaultFields}>
+      <TutimWizard onSubmit={onSubmit} config={config} initialValues={data} />
+    </TutimProvider>
+  );
+};
+
+export const FunctionsEditor = ({ form, onClose }: Props) => {
+  const functions = form.getFieldValue(["settings", "functions"]) || [];
+
+  const data = functions.map(parseFromSchemaToFormData);
+  const onSubmit: OnSubmit = ({ data }) => {
+    const parsedFunctions = data.functions.map(parseFromFormDataToSchema);
+    form.setFieldsValue({ settings: { functions: parsedFunctions } });
+    onClose();
+  };
+  return (
+    <Row style={{ background: "white", padding: "8px", color: "black" }}>
       <Col span={24}>
-        {functions.map((_, index) => (
-          <Card
-            style={{ marginBottom: 12 }}
-            key={index}
-            title={
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <Form.Item
-                  name={["settings", "functions", index, "name"]}
-                  rules={[
-                    { required: true, message: "Function name is required" },
-                  ]}
-                  initialValue={
-                    settings.functions[index]?.name || `untitled_function`
-                  }
-                  style={{
-                    width: index > 0 ? "95%" : "100%",
-                    margin: 0,
-                    padding: 0,
-                  }}
-                >
-                  <Input bordered={false} />
-                </Form.Item>
-                <Button
-                  icon={<DeleteOutlined />}
-                  onClick={() => onDeleteMessage(index)}
-                />
-              </div>
-            }
-          >
-            <Form.Item
-              key={index}
-              rules={[
-                { required: true, message: "Function description is required" },
-              ]}
-              name={["settings", "functions", index, "description"]}
-            >
-              <TextArea
-                styles={{
-                  textarea: {
-                    color: "#fff",
-                  },
-                }}
-                placeholder="Start typing your description here..."
-                style={{
-                  resize: "none",
-                  border: "none",
-                  background: "transparent",
-                  outline: "none",
-                  color: "#fff",
-                }}
-                rows={3}
-                bordered={false}
-                color="#fff"
-              />
-            </Form.Item>
-          </Card>
-        ))}
+        <FunctionsForm data={{ functions: data }} onSubmit={onSubmit} />
       </Col>
-      <Button onClick={onNewMessage}>+ New Function</Button>
     </Row>
   );
+};
+
+interface FunctionSchema {
+  name: string;
+  description: string;
+  parameters: {
+    key: string;
+    type: string;
+    description: string;
+  }[];
+}
+interface FunctionForm {
+  name: string;
+  description: string;
+  parameters: Record<
+    string,
+    {
+      type: string;
+      description: string;
+    }
+  >;
+}
+
+const mapArrWithKeyToObjByKey = <T extends { key: string }>(arr: T[]) => {
+  return arr.reduce((acc, { key, ...rest }) => {
+    acc[key] = rest;
+    return acc;
+  }, {});
+};
+
+const parseFromFormDataToSchema = (data: FunctionSchema) => {
+  const parametersObject = mapArrWithKeyToObjByKey(data.parameters);
+  return { ...data, parameters: parametersObject };
+};
+
+const parseFromSchemaToFormData = (data: FunctionForm) => {
+  const parametersArray = Object.entries(data.parameters).map(
+    ([key, value]) => ({ key, ...value })
+  );
+  return { ...data, parameters: parametersArray };
 };
