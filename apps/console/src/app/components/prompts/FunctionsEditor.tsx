@@ -93,7 +93,7 @@ export const FunctionsEditor = ({ form, onClose }: Props) => {
     onClose();
   };
   return (
-    <Row style={{ background: "white", padding: "8px", color: "black" }}>
+    <Row style={{ padding: "8px" }}>
       <Col span={24}>
         <FunctionsForm data={{ functions: data }} onSubmit={onSubmit} />
       </Col>
