@@ -55,7 +55,7 @@ export const PromptEditView = () => {
             )}
           </Col>
           <Col span={7}>
-            <Card title="Variables" style={{ marginTop: 18 }}>
+            <Card title="Variables">
               <Variables />
             </Card>
           </Col>
