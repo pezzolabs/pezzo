@@ -11,7 +11,7 @@ import { PlayCircleOutlined, SendOutlined } from "@ant-design/icons";
 import { PromptVersionSelector } from "../PromptVersionSelector";
 import { FunctionsFormModal } from "../FormModal";
 
-const FUNCTIONS_FEATURE_FLAG = false;
+const FUNCTIONS_FEATURE_FLAG = true;
 
 export const PromptEditView = () => {
   const { prompt, currentPromptVersion, isDraft } = useCurrentPrompt();
@@ -108,18 +108,15 @@ export const PromptEditView = () => {
           />
         </Col>
         <Col span={6} offset={1}>
-          {FUNCTIONS_FEATURE_FLAG && (
-            <Card title="Functions" style={{ marginBottom: 18 }}>
-              <Button
-                onClick={() => setIsFunctionsModalOpen(true)}
-                icon={<SendOutlined />}
-              >
-                Edit Functions
-              </Button>
-            </Card>
-          )}
           <Card title="Settings" style={{ marginBottom: 18 }}>
-            <PromptSettings model={settings.model} />
+            <PromptSettings
+              model={settings.model}
+              onOpenFunctionsModal={
+                FUNCTIONS_FEATURE_FLAG
+                  ? () => setIsFunctionsModalOpen(true)
+                  : null
+              }
+            />
           </Card>
           <Card title="Variables">
             {Object.keys(variables).length === 0 && (
