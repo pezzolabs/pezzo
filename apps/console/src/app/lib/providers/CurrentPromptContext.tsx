@@ -1,9 +1,7 @@
 import { createContext, useContext } from "react";
-import { gqlClient } from "../graphql";
-import { GET_PROMPT } from "../../graphql/definitions/queries/prompts";
 import { GetPromptQuery } from "../../../@generated/graphql/graphql";
-import { useQuery } from "@tanstack/react-query";
 import { Navigate, useParams } from "react-router-dom";
+import { useGetPrompt } from "../../graphql/hooks/queries";
 
 interface CurrentPromptContextValue {
   prompt: GetPromptQuery["prompt"];
@@ -21,17 +19,7 @@ export const useCurrentPrompt = () => {
 
 export const CurrentPromptProvider = ({ children }) => {
   const { promptId } = useParams();
-
-  const {
-    data: currentPrompt,
-    isError,
-    isLoading,
-  } = useQuery({
-    queryKey: ["prompt", promptId],
-    queryFn: () =>
-      gqlClient.request(GET_PROMPT, {
-        data: { promptId },
-      }),
+  const { prompt, isError, isLoading } = useGetPrompt(promptId, {
     enabled: !!promptId,
   });
 
@@ -40,7 +28,7 @@ export const CurrentPromptProvider = ({ children }) => {
   }
 
   const value = {
-    prompt: currentPrompt?.prompt,
+    prompt,
     isLoading,
   };
 

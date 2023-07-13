@@ -1,13 +1,11 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { useCurrentPrompt } from "./CurrentPromptContext";
-import { useQuery } from "@tanstack/react-query";
-import { gqlClient } from "../graphql";
-import { GET_PROMPT_VERSION } from "../../graphql/definitions/queries/prompts";
 import {
   GetPromptVersionQuery,
   PromptType,
 } from "../../../@generated/graphql/graphql";
 import { Form, FormInstance } from "antd";
+import { useGetPromptVersion } from "../../graphql/hooks/queries";
 
 interface PromptVersionEditorContext {
   hasChangesToCommit: boolean;
@@ -32,24 +30,21 @@ export const PromptVersionEditorProvider = ({ children }) => {
   const { prompt } = useCurrentPrompt();
   const [form] = Form.useForm();
   const formValues = Form.useWatch(null, { form, preserve: true });
+  const initialValues = useRef(undefined);
+  const isDraft = !prompt?.latestVersion;
   const [currentVersionSha, setCurrentVersionSha] = useState<string>(
     prompt?.latestVersion?.sha
   );
-  const initialValues = useRef(undefined);
-  const isDraft = !prompt?.latestVersion;
 
-  const { data, isFetched } = useQuery({
-    queryKey: ["prompt", prompt.id, "currentVersion", currentVersionSha],
-    queryFn: () =>
-      gqlClient.request(GET_PROMPT_VERSION, {
-        data: { sha: currentVersionSha },
-      }),
-    enabled: !!prompt && !!currentVersionSha,
-  });
-
-  const currentVersion = data?.promptVersion;
+  const { promptVersion: currentVersion, isFetched } = useGetPromptVersion(
+    { promptId: prompt.id, promptVersionSha: currentVersionSha },
+    {
+      enabled: !!prompt && !!currentVersionSha,
+    }
+  );
 
   useEffect(() => {
+    // Define initial values. These will be used later to determine if there are changes to commit.
     if (isDraft) {
       initialValues.current = {
         settings: {},
@@ -65,10 +60,9 @@ export const PromptVersionEditorProvider = ({ children }) => {
       };
     }
 
+    // Set the form values to the initial values.
     form.setFieldsValue(initialValues.current);
   }, [currentVersion, isFetched, form, prompt, isDraft]);
-
-  const isPublishEnabled = !isDraft;
 
   const checkForChangesToCommit = () => {
     const initialStringified = JSON.stringify(initialValues.current);
@@ -79,7 +73,7 @@ export const PromptVersionEditorProvider = ({ children }) => {
   const value = {
     isFetched,
     hasChangesToCommit: checkForChangesToCommit(),
-    isPublishEnabled,
+    isPublishEnabled: !isDraft,
     currentVersionSha,
     setCurrentVersionSha,
     currentVersion,

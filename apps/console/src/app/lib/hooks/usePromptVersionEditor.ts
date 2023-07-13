@@ -6,7 +6,7 @@ import { defaultOpenAISettings } from "../model-providers";
 export type PromptVersionContent = {
   prompt?: string;
   messages?: {
-    role: "user" | "assistant",
+    role: "user" | "assistant";
     content: string;
   }[];
 };
@@ -30,57 +30,14 @@ function findVariables(text: string): Record<string, null> {
   return interpolatableObject;
 }
 
-export const usePromptVersionEditor___ = () => {
-  const { currentPromptVersion, isDraft } = useCurrentPrompt();
-  const [form] = Form.useForm<PromptEditFormInputs>();
-  const isFirstRunRef = useRef(true);
+export const usePromptVersionEditor = () => {
   const [isFormTouched, setIsFormTouched] = useState<boolean>(false);
   const [variables, setVariables] = useState<{ [key: string]: string }>({});
   const [content, setContent] = useState<any>({});
 
-  const versionInitialSnapshot = isDraft
-    ? defaultOpenAISettings
-    : currentPromptVersion.settings;
-
-  const handleFormValuesChange = () => {
-    const touched = form.isFieldsTouched(["settings"]);
-    setIsFormTouched(touched);
-    // const messages = form.getFieldValue("settings").messages;
-    // setVariables((oldVarialbes) => {
-    //   const newVariables = messages
-    //     .filter((message) => message.content)
-    //     .map((message) => findVariables(message.content))
-    //     .reduce((acc, curr) => {
-    //       return { ...acc, ...curr };
-    //     }, {});
-
-    //   const mappedVariables = Object.keys(newVariables).reduce<
-    //     Record<string, string | null>
-    //   >((acc, key: string) => {
-    //     if (oldVarialbes[key]) {
-    //       acc[key] = oldVarialbes[key];
-    //     }
-
-    //     return acc;
-    //   }, newVariables);
-    //   return mappedVariables;
-    // });
-  };
-
-  useEffect(() => {
-    if (!isFirstRunRef.current) return;
-    isFirstRunRef.current = false;
-    // const messages = form.getFieldValue("settings").messages;
-    // const newVariables = messages
-    //   .map((message) => findVariables(message.content))
-    //   .reduce((acc, curr) => {
-    //     return { ...acc, ...curr };
-    //   }, {});
-
-    // if (Object.keys(newVariables).length === 0) return;
-
-    // setVariables(newVariables);
-  }, [form]);
+  // const versionInitialSnapshot = isDraft
+  //   ? defaultOpenAISettings
+  //   : currentPromptVersion.settings;
 
   const setVariable = (key: string, value: string) => {
     const newVariables = { ...variables };
@@ -88,13 +45,13 @@ export const usePromptVersionEditor___ = () => {
     setVariables(newVariables);
   };
 
+  const checkHasChangesToCommit = () => {
+    return true;
+  };
+
   return {
-    form,
-    handleFormValuesChange,
     isSaveDisabled: !isFormTouched,
-    hasChangesToCommit:
-      JSON.stringify(form.getFieldValue("settings")) !==
-      JSON.stringify(versionInitialSnapshot),
+    hasChangesToCommit: checkHasChangesToCommit(),
     isSaving: false,
     variables,
     setVariable,
