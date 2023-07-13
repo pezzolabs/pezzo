@@ -10,6 +10,32 @@ interface Props {
 }
 
 const config: FormConfig = {
+  layout: {
+    arrayConfigs: {
+      functions: {
+        groupConfigs: {
+          groups: [
+            {
+              key: "meta",
+              fields: ["name", "description"],
+              layout: { fieldsPerRow: 2 },
+            },
+          ],
+        },
+      },
+      "functions.$.parameters": {
+        groupConfigs: {
+          groups: [
+            {
+              key: "name",
+              fields: ["key", "type", "required"],
+              layout: { fieldsPerRow: 3 },
+            },
+          ],
+        },
+      },
+    },
+  },
   fields: [
     {
       key: "functions",
@@ -64,7 +90,6 @@ const config: FormConfig = {
                   key: "required",
                   label: "Is Required?",
                   type: "checkbox",
-                  helperText: "Check if required",
                 },
               ],
             },

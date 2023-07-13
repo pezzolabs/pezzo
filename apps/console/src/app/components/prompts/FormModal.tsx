@@ -15,7 +15,7 @@ export const FunctionsFormModal = ({ open, onClose, form }: Props) => {
       open={open}
       onCancel={onClose}
       footer={false}
-      width={600}
+      width={"80%"}
     >
       <FunctionsEditor form={form} onClose={onClose} />
     </Modal>
