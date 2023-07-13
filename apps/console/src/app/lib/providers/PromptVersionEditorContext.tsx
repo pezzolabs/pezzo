@@ -29,6 +29,8 @@ interface PromptVersionEditorContext {
   isFetched: boolean;
   form: FormInstance;
   initialValues: MutableRefObject<FormInputs>;
+  variables: string[];
+  setVariables: (variables: string[]) => void;
 }
 
 const PromptVersionEditorContext =
@@ -47,6 +49,7 @@ export const PromptVersionEditorProvider = ({ children }) => {
   const [currentVersionSha, setCurrentVersionSha] = useState<string>(
     prompt?.latestVersion?.sha
   );
+  const [variables, setVariables] = useState<string[]>([]);
 
   const { promptVersion: currentVersion, isFetched } = useGetPromptVersion(
     { promptId: prompt.id, promptVersionSha: currentVersionSha },
@@ -93,6 +96,8 @@ export const PromptVersionEditorProvider = ({ children }) => {
     isDraft,
     form,
     initialValues,
+    variables,
+    setVariables,
   };
 
   return (

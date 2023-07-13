@@ -1,5 +1,5 @@
 import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
-import { Button, Col, Row, Space } from "antd";
+import { Button, Card, Col, Row, Space } from "antd";
 import { CommitPromptModal } from "../CommitPromptModal";
 import { PublishPromptModal } from "../PublishPromptModal";
 import { useState } from "react";
@@ -10,6 +10,7 @@ import { ChatEditMode } from "../editor/chat/ChatEditMode";
 import { PromptEditMode } from "../editor/prompt/PromptEditMode";
 import { usePromptVersionEditorContext } from "../../../lib/providers/PromptVersionEditorContext";
 import { CommitButton } from "../editor/CommitButton";
+import { Variables } from "../editor/Variables";
 
 export const PromptEditView = () => {
   const { prompt, isLoading: isPromptLoading } = useCurrentPrompt();
@@ -53,7 +54,11 @@ export const PromptEditView = () => {
               <ChatEditMode />
             )}
           </Col>
-          <Col span={7}></Col>
+          <Col span={7}>
+            <Card title="Variables" style={{ marginTop: 18 }}>
+              <Variables />
+            </Card>
+          </Col>
         </Row>
 
         <CommitPromptModal
