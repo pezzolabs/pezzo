@@ -4,6 +4,8 @@ import {
   CreateOrgInvitationMutation,
   CreateProjectInput,
   CreateProjectMutation,
+  CreatePromptVersionInput,
+  CreatePromptVersionMutation,
   DeleteEnvironmentMutation,
   DeletePromptMutation,
   EnvironmentWhereUniqueInput,
@@ -30,8 +32,13 @@ import {
   UPDATE_ORG_SETTINGS,
 } from "../definitions/mutations/organizations";
 import { GraphQLErrorResponse } from "../types";
-import { DELETE_PROMPT } from "../definitions/mutations/prompts";
+import {
+  CREATE_PROMPT_VERSION,
+  DELETE_PROMPT,
+} from "../definitions/mutations/prompts";
 import { DELETE_ENVIRONMENT } from "../definitions/mutations/environments";
+import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
+import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
 
 export const useUpdateCurrentUserMutation = () =>
   useMutation({
@@ -42,7 +49,7 @@ export const useUpdateCurrentUserMutation = () =>
 export const useCreateProjectMutation = (props?: {
   onSuccess?: () => void;
 }) => {
-  const queryCache = useQueryClient();
+  const queryClient = useQueryClient();
 
   return useMutation<
     CreateProjectMutation,
@@ -52,7 +59,7 @@ export const useCreateProjectMutation = (props?: {
     mutationFn: (data: CreateProjectInput) =>
       gqlClient.request(CREATE_PROJECT, { data }),
     onSuccess: () => {
-      queryCache.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: ["projects"],
       });
       props?.onSuccess?.();
@@ -61,13 +68,13 @@ export const useCreateProjectMutation = (props?: {
 };
 
 export const useDeleteOrgInvitationMutation = () => {
-  const queryCache = useQueryClient();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (data: InvitationWhereUniqueInput) =>
       gqlClient.request(DELETE_INVITATION, { data }),
     onSuccess: () => {
-      queryCache.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: ["currentOrganization"],
       });
     },
@@ -75,7 +82,7 @@ export const useDeleteOrgInvitationMutation = () => {
 };
 
 export const useAcceptOrgInvitationMutation = () => {
-  const queryCache = useQueryClient();
+  const queryClient = useQueryClient();
 
   return useMutation<
     AcceptInvitationMutation,
@@ -85,7 +92,7 @@ export const useAcceptOrgInvitationMutation = () => {
     mutationFn: (data: InvitationWhereUniqueInput) =>
       gqlClient.request(ACCEPT_ORG_INVITATION, { data }),
     onSuccess: () => {
-      queryCache.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: ["organizations"],
       });
     },
@@ -93,13 +100,13 @@ export const useAcceptOrgInvitationMutation = () => {
 };
 
 export const useDeleteOrgMemberMutation = () => {
-  const queryCache = useQueryClient();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (data: InvitationWhereUniqueInput) =>
       gqlClient.request(DELETE_ORG_MEMBER, { data }),
     onSuccess: () => {
-      queryCache.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: ["currentOrganization"],
       });
     },
@@ -107,7 +114,7 @@ export const useDeleteOrgMemberMutation = () => {
 };
 
 export const useCreateOrgInvitationMutation = () => {
-  const queryCache = useQueryClient();
+  const queryClient = useQueryClient();
 
   return useMutation<
     CreateOrgInvitationMutation,
@@ -117,7 +124,7 @@ export const useCreateOrgInvitationMutation = () => {
     mutationFn: (data: CreateOrgInvitationInput) =>
       gqlClient.request(CREATE_ORG_INVITATION, { data }),
     onSuccess: () => {
-      queryCache.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: ["currentOrganization"],
       });
     },
@@ -125,7 +132,7 @@ export const useCreateOrgInvitationMutation = () => {
 };
 
 export const useUpdateOrgInvitationMutation = () => {
-  const queryCache = useQueryClient();
+  const queryClient = useQueryClient();
 
   return useMutation<
     UpdateOrgInvitationMutation,
@@ -135,7 +142,7 @@ export const useUpdateOrgInvitationMutation = () => {
     mutationFn: (data: UpdateOrgInvitationInput) =>
       gqlClient.request(UPDATE_ORG_INVITATION, { data }),
     onSuccess: () => {
-      queryCache.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: ["currentOrganization"],
       });
     },
@@ -143,7 +150,7 @@ export const useUpdateOrgInvitationMutation = () => {
 };
 
 export const useDeletePromptMutation = () => {
-  const queryCache = useQueryClient();
+  const queryClient = useQueryClient();
 
   return useMutation<DeletePromptMutation, GraphQLErrorResponse, string>({
     mutationFn: (id: string) =>
@@ -153,13 +160,13 @@ export const useDeletePromptMutation = () => {
         },
       }),
     onSuccess: (data) => {
-      queryCache.invalidateQueries({ queryKey: ["prompts"] });
+      queryClient.invalidateQueries({ queryKey: ["prompts"] });
     },
   });
 };
 
 export const useUpdateOrgMemberRoleMutation = () => {
-  const queryCache = useQueryClient();
+  const queryClient = useQueryClient();
 
   return useMutation<
     UpdateOrgMemberRoleMutation,
@@ -169,7 +176,7 @@ export const useUpdateOrgMemberRoleMutation = () => {
     mutationFn: (data: UpdateOrgMemberRoleInput) =>
       gqlClient.request(UPDATE_ORG_MEMBER_ROLE, { data }),
     onSuccess: () => {
-      queryCache.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: ["currentOrganization"],
       });
     },
@@ -177,7 +184,7 @@ export const useUpdateOrgMemberRoleMutation = () => {
 };
 
 export const useUpdateOrgSettingsMutation = () => {
-  const queryCache = useQueryClient();
+  const queryClient = useQueryClient();
 
   return useMutation<
     UpdateOrgSettingsMutation,
@@ -187,7 +194,7 @@ export const useUpdateOrgSettingsMutation = () => {
     mutationFn: (data: UpdateOrgSettingsInput) =>
       gqlClient.request(UPDATE_ORG_SETTINGS, { data }),
     onSuccess: () => {
-      queryCache.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: ["currentOrganization"],
       });
     },
@@ -195,7 +202,7 @@ export const useUpdateOrgSettingsMutation = () => {
 };
 
 export const useDeleteEnvironmentMutation = () => {
-  const queryCache = useQueryClient();
+  const queryClient = useQueryClient();
 
   return useMutation<
     DeleteEnvironmentMutation,
@@ -205,9 +212,37 @@ export const useDeleteEnvironmentMutation = () => {
     mutationFn: (data: EnvironmentWhereUniqueInput) =>
       gqlClient.request(DELETE_ENVIRONMENT, { data }),
     onSuccess: () => {
-      queryCache.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: ["environments"],
       });
+    },
+  });
+};
+
+export const useCreatePromptVersion = () => {
+  const { prompt } = useCurrentPrompt();
+  const { setCurrentVersionSha } = usePromptVersionEditorContext();
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    CreatePromptVersionMutation,
+    GraphQLErrorResponse,
+    CreatePromptVersionInput
+  >({
+    mutationFn: (data: CreatePromptVersionInput) => {
+      return gqlClient.request(CREATE_PROMPT_VERSION, {
+        data: {
+          message: data.message,
+          content: data.content,
+          settings: data.settings,
+          promptId: data.promptId,
+        },
+      });
+    },
+    onSuccess: (data) => {
+      const { sha } = data.createPromptVersion;
+      queryClient.invalidateQueries(["prompt", prompt.id]);
+      setCurrentVersionSha(sha);
     },
   });
 };

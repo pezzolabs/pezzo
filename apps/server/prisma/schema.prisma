@@ -33,7 +33,7 @@ enum PromptType {
 
 model PromptVersion {
   sha                String              @id
-  settings           Json
+  settings           Json                @default("{}")         
   content            Json
   promptId           String
   prompt             Prompt              @relation(fields: [promptId], references: [id], onDelete: Cascade)

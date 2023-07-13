@@ -17,14 +17,18 @@ export const GET_PROMPT = graphql(/* GraphQL */ `
       type
       latestVersion {
         sha
-        settings
-        content
       }
-      version(data: $data) {
-        sha
-        settings
-        content
-      }
+    }
+  }
+`);
+
+export const GET_PROMPT_VERSION = graphql(/* GraphQL */ `
+  query getPromptVersion($data: PromptVersionWhereUniqueInput!) {
+    promptVersion(data: $data) {
+      sha
+      content
+      settings
+      message
     }
   }
 `);
@@ -42,16 +46,6 @@ export const GET_PROMPT_VERSIONS = graphql(/* GraphQL */ `
           photoUrl
         }
       }
-    }
-  }
-`);
-
-export const GET_PROMPT_VERSION = graphql(/* GraphQL */ `
-  query getPromptVersion($data: GetPromptVersionInput!) {
-    promptVersion(data: $data) {
-      sha
-      content
-      settings
     }
   }
 `);

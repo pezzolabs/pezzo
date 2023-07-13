@@ -3,7 +3,6 @@ import sha256 from "sha256";
 import { Injectable } from "@nestjs/common";
 import { CreatePromptVersionInput } from "./inputs/create-prompt-version.input";
 import { CreatePromptInput } from "./inputs/create-prompt.input";
-import { PromptType } from "@prisma/client";
 
 @Injectable()
 export class PromptsService {

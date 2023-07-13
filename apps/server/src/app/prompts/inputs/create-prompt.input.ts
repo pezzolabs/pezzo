@@ -8,7 +8,7 @@ export class CreatePromptInput {
 
   @Field(() => String, { nullable: false })
   projectId: string;
-  
+
   @Field(() => PromptType, { nullable: false })
   type: PromptType;
 }

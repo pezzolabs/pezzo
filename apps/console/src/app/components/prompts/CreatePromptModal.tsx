@@ -36,7 +36,6 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
           type: data.type,
           name: data.name,
           projectId: project.id,
-          type: PromptType.Chat
         },
       }),
     onSuccess: (data) => {

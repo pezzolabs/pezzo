@@ -4,7 +4,7 @@ import { v4 as uuid } from "uuid";
 import { ChatMessage } from "./ChatMessage";
 import { PlusOutlined } from "@ant-design/icons";
 
-export const PromptEditorChat = () => {
+export const ChatEditMode = () => {
   const [form] = Form.useForm();
   const [messageOrder, setMessageOrder] = useState<string[]>([]);
 
@@ -28,12 +28,10 @@ export const PromptEditorChat = () => {
     const values = form.getFieldsValue();
     console.log("values", values);
 
-    const messages = messageOrder.map(messageId => (
-      {
-        role: values.messages[messageId].role,
-        content: values.messages[messageId].content,
-      }
-    ));
+    const messages = messageOrder.map((messageId) => ({
+      role: values.messages[messageId].role,
+      content: values.messages[messageId].content,
+    }));
 
     console.log("messages", messages);
   };

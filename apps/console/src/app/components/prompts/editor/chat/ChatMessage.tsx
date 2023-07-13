@@ -1,21 +1,7 @@
 import { Button, Card, Form, Select } from "antd";
-import { PromptEditFormInputs } from "../../../../lib/hooks/usePromptVersionEditor";
 import { DeleteOutlined, SwapOutlined } from "@ant-design/icons";
-import TextArea from "antd/es/input/TextArea";
 import { colors } from "../../../../lib/theme/colors";
-import styled from "@emotion/styled";
-
-const StyledTextArea = styled(TextArea)`
-  resize: none !important;
-  border: none;
-  background: transparent;
-  outline: none;
-  color: ${colors.neutral["200"]};
-
-  ::placeholder {
-    color: ${colors.neutral["500"]};
-  }
-`;
+import { PromptEditorTextArea } from "../../../common/PromptEditorTextArea";
 
 interface Props {
   id: string;
@@ -32,7 +18,7 @@ export const ChatMessage = ({ id, canDelete = true, onDelete }: Props) => {
           <div style={{ display: "flex" }}>
             <SwapOutlined style={{ color: colors.neutral["500"] }} />
             <Form.Item
-              name={["messages", id, "role"]}
+              name={["content", "messages", id, "role"]}
               initialValue={"user"}
               style={{
                 width: 200,
@@ -64,7 +50,7 @@ export const ChatMessage = ({ id, canDelete = true, onDelete }: Props) => {
         name={["messages", id, "content"]}
         rules={[{ required: true, message: "Message content is required" }]}
       >
-        <StyledTextArea
+        <PromptEditorTextArea
           placeholder="Start typing your prompt here..."
           rows={5}
           bordered={false}
