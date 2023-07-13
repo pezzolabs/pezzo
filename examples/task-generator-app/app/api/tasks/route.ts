@@ -33,6 +33,8 @@ export async function POST(request: Request) {
   try {
     result = await openai.createChatCompletion(settings);
 
+    console.log("result", result.data.choices);
+
     const parsed = JSON.parse(result.data.choices[0].message.content);
     return NextResponse.json(parsed, {
       headers: { "Content-Type": "application/json" },

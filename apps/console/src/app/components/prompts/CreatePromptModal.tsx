@@ -3,7 +3,7 @@ import { Modal, Form, Input, Button, Alert } from "antd";
 import { CREATE_PROMPT } from "../../graphql/definitions/mutations/prompts";
 import { gqlClient, queryClient } from "../../lib/graphql";
 import { css } from "@emotion/css";
-import { CreatePromptMutation } from "../../../@generated/graphql/graphql";
+import { CreatePromptMutation, PromptType } from "../../../@generated/graphql/graphql";
 import { GraphQLErrorResponse } from "../../graphql/types";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 
@@ -31,6 +31,7 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
         data: {
           name: data.name,
           projectId: project.id,
+          type: PromptType.Chat
         },
       }),
     onSuccess: (data) => {
