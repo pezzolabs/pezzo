@@ -8,7 +8,7 @@ import {
   Select,
   Input,
 } from "antd";
-import { PromptEditFormInputs } from "../../lib/hooks/usePromptEdit";
+import { PromptEditFormInputs } from "../../lib/hooks/usePromptVersionEditor";
 import { DeleteOutlined, SwapOutlined } from "@ant-design/icons";
 
 const { TextArea } = Input;
