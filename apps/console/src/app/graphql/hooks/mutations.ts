@@ -4,7 +4,9 @@ import {
   CreateOrgInvitationMutation,
   CreateProjectInput,
   CreateProjectMutation,
+  DeleteEnvironmentMutation,
   DeletePromptMutation,
+  EnvironmentWhereUniqueInput,
   InvitationWhereUniqueInput,
   UpdateOrgInvitationInput,
   UpdateOrgInvitationMutation,
@@ -29,6 +31,7 @@ import {
 } from "../definitions/mutations/organizations";
 import { GraphQLErrorResponse } from "../types";
 import { DELETE_PROMPT } from "../definitions/mutations/prompts";
+import { DELETE_ENVIRONMENT } from "../definitions/mutations/environments";
 
 export const useUpdateCurrentUserMutation = () =>
   useMutation({
@@ -186,6 +189,24 @@ export const useUpdateOrgSettingsMutation = () => {
     onSuccess: () => {
       queryCache.invalidateQueries({
         queryKey: ["currentOrganization"],
+      });
+    },
+  });
+};
+
+export const useDeleteEnvironmentMutation = () => {
+  const queryCache = useQueryClient();
+
+  return useMutation<
+    DeleteEnvironmentMutation,
+    GraphQLErrorResponse,
+    EnvironmentWhereUniqueInput
+  >({
+    mutationFn: (data: EnvironmentWhereUniqueInput) =>
+      gqlClient.request(DELETE_ENVIRONMENT, { data }),
+    onSuccess: () => {
+      queryCache.invalidateQueries({
+        queryKey: ["environments"],
       });
     },
   });

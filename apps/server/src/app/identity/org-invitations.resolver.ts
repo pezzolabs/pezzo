@@ -23,19 +23,20 @@ import { UsersService } from "./users.service";
 import { ExtendedUser } from "./models/extended-user.model";
 import { InvitationWhereUniqueInput } from "../../@generated/invitation/invitation-where-unique.input";
 import { Organization } from "../../@generated/organization/organization.model";
-import { KafkaProducerService } from "@pezzo/kafka";
 import { UpdateOrgInvitationInput } from "./inputs/update-org-invitation.input";
 import { ConfigService } from "@nestjs/config";
 import { PinoLogger } from "../logger/pino-logger";
 import { OrganizationsService } from "./organizations.service";
 import { InvitationsService } from "./invitations.service";
+import { EventEmitter2 } from "@nestjs/event-emitter";
+import { KafkaSchemas } from "@pezzo/kafka";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Invitation)
 export class OrgInvitationsResolver {
   constructor(
+    private eventEmitter: EventEmitter2,
     private usersService: UsersService,
-    private kafkaProducer: KafkaProducerService,
     private organizationService: OrganizationsService,
     private invitationsService: InvitationsService,
     private logger: PinoLogger,
@@ -114,7 +115,7 @@ export class OrgInvitationsResolver {
       .assign({ topic })
       .info("Sending kafka invitation created event");
 
-    await this.kafkaProducer.produce("org-invitation-created", {
+    const payload: KafkaSchemas["org-invitation-created"] = {
       key: invitation.id,
       invitationUrl: invitationUrl.toString(),
       invitationId: invitation.id,
@@ -122,7 +123,9 @@ export class OrgInvitationsResolver {
       organizationName: organization.name,
       email,
       role: invitation.role,
-    });
+    };
+
+    this.eventEmitter.emit("org-invitation-created", payload);
 
     return invitation;
   }
