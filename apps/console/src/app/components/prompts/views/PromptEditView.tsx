@@ -11,6 +11,8 @@ import { PlayCircleOutlined, SendOutlined } from "@ant-design/icons";
 import { PromptVersionSelector } from "../PromptVersionSelector";
 import { FunctionsFormModal } from "../FormModal";
 
+const FUNCTIONS_FEATURE_FLAG = false;
+
 export const PromptEditView = () => {
   const { prompt, currentPromptVersion, isDraft } = useCurrentPrompt();
   const initialMessages = useMemo(
@@ -106,14 +108,16 @@ export const PromptEditView = () => {
           />
         </Col>
         <Col span={6} offset={1}>
-          <Card title="Functions" style={{ marginBottom: 18 }}>
-            <Button
-              onClick={() => setIsFunctionsModalOpen(true)}
-              icon={<SendOutlined />}
-            >
-              Edit Functions
-            </Button>
-          </Card>
+          {FUNCTIONS_FEATURE_FLAG && (
+            <Card title="Functions" style={{ marginBottom: 18 }}>
+              <Button
+                onClick={() => setIsFunctionsModalOpen(true)}
+                icon={<SendOutlined />}
+              >
+                Edit Functions
+              </Button>
+            </Card>
+          )}
           <Card title="Settings" style={{ marginBottom: 18 }}>
             <PromptSettings model={settings.model} />
           </Card>
@@ -146,11 +150,13 @@ export const PromptEditView = () => {
         />
       )}
 
-      <FunctionsFormModal
-        onClose={() => setIsFunctionsModalOpen(false)}
-        open={isFunctionsModalOpen}
-        form={form}
-      />
+      {FUNCTIONS_FEATURE_FLAG && (
+        <FunctionsFormModal
+          onClose={() => setIsFunctionsModalOpen(false)}
+          open={isFunctionsModalOpen}
+          form={form}
+        />
+      )}
     </Form>
   );
 };
