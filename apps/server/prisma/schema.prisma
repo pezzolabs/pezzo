@@ -26,11 +26,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum PromptType {
-  Prompt
-  Chat
-}
-
 model PromptVersion {
   sha                String              @id
   settings           Json                @default("{}")         
@@ -131,6 +126,11 @@ model ApiKey {
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
   createdAt      DateTime     @default(now())
+}
+
+enum PromptType {
+  Prompt
+  Chat
 }
 
 model Prompt {
