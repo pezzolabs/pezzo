@@ -122,7 +122,13 @@ export class PromptsController {
       throw new InternalServerErrorException();
     }
 
-    return promptVersion;
+    return {
+      promptId: prompt.id,
+      type: prompt.type,
+      promptVersionSha: promptVersion.sha,
+      settings: promptVersion.settings,
+      content: promptVersion.content,
+    };
   }
 
   @Post("execution")
