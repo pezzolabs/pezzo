@@ -11,7 +11,10 @@ interface Props {
   baseFieldPath: string[];
 }
 
-export const ProviderSettingsSchemaRenderer = ({ schema, baseFieldPath }: Props) => {
+export const ProviderSettingsSchemaRenderer = ({
+  schema,
+  baseFieldPath,
+}: Props) => {
   return (
     <>
       {schema.map((field, index) => (

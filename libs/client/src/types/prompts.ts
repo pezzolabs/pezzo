@@ -2,9 +2,15 @@ import { PromptType } from "../@generated/graphql/graphql";
 
 export type InjectPezzoProps<TSettings> = TSettings & {
   pezzo: Prompt<TSettings>;
-}
+};
 
-type PrompContent = { prompt: string } | { messages: { role: "user" | "assistant", content: string }[] };
+type PrompContent =
+  | { prompt: string }
+  | { messages: { role: "user" | "assistant"; content: string }[] };
+
+export type GetPromptResult<TSettings = unknown> = {
+  pezzo: Prompt<TSettings>;
+};
 
 export interface Prompt<TSettings = unknown> {
   promptId: string;

@@ -19,13 +19,18 @@ interface Props {
   onAdd: (value: ProviderSettingsKeys) => void;
 }
 
-
-export const ProviderSelector = ({ selectedProvider, onSelect, onAdd}: Props) => {
+export const ProviderSelector = ({
+  selectedProvider,
+  onSelect,
+  onAdd,
+}: Props) => {
   const [open, setOpen] = useState<boolean>(false);
   const { form } = usePromptVersionEditorContext();
 
   const settings = Form.useWatch("settings", { form, preserve: true }) ?? {};
-  const providers = sortRenderedProviders(Object.keys(settings) as ProviderSettingsKeys[]);
+  const providers = sortRenderedProviders(
+    Object.keys(settings) as ProviderSettingsKeys[]
+  );
 
   const handleDelete = (
     event: React.MouseEvent<HTMLElement>,
@@ -34,7 +39,7 @@ export const ProviderSelector = ({ selectedProvider, onSelect, onAdd}: Props) =>
     event.stopPropagation();
     const newSettings = { ...settings };
     delete newSettings[provider.value];
-    form.setFieldValue("settings", newSettings)
+    form.setFieldValue("settings", newSettings);
 
     if (selectedProvider === provider.value) {
       onSelect(null);

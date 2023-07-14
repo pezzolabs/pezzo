@@ -7,8 +7,9 @@ import { ProviderSettingsSchemaRenderer } from "./ProviderSettings/ProviderSetti
 import { openAIChatCompletionSettingsDefinition } from "./ProviderSettings/providers/openai-chat-completion";
 
 const providerSettings = {
-  [ProviderSettingsKeys.OPENAI_CHAT_COMPLETION]: openAIChatCompletionSettingsDefinition,
-}
+  [ProviderSettingsKeys.OPENAI_CHAT_COMPLETION]:
+    openAIChatCompletionSettingsDefinition,
+};
 
 export const ProviderSettingsCard = () => {
   const { form } = usePromptVersionEditorContext();

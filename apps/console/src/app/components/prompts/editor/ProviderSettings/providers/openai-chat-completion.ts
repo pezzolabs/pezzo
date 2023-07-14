@@ -78,7 +78,8 @@ const generateFormSchema = (settings: OpenAIProviderSettings): FormSchema => {
   ];
 };
 
-export const openAIChatCompletionSettingsDefinition: ProviderSettingsDefinition<OpenAIProviderSettings> = {
-  defaultSettings,
-  generateFormSchema,
-}
+export const openAIChatCompletionSettingsDefinition: ProviderSettingsDefinition<OpenAIProviderSettings> =
+  {
+    defaultSettings,
+    generateFormSchema,
+  };

@@ -3,5 +3,5 @@ export enum ProviderSettingsKeys {
 }
 
 export enum ProviderType {
-  OpenAI = "OpenAI"
+  OpenAI = "OpenAI",
 }

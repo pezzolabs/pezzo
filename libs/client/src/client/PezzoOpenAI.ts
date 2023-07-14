@@ -3,19 +3,21 @@ import {
   CreateChatCompletionRequest as OriginalCreateChatCompletionRequest,
   OpenAIApi,
 } from "openai";
-import {
-  InjectPezzoProps
-} from "../types";
+import { InjectPezzoProps } from "../types";
 import { Pezzo } from "./Pezzo";
 import { PromptType } from "../@generated/graphql/graphql";
 import { ProviderSettingsKeys } from "@pezzo/types";
 
-type CreateChatCompletionRequest = Omit<OriginalCreateChatCompletionRequest, "model" | "messages"> & {
+type CreateChatCompletionRequest = Omit<
+  OriginalCreateChatCompletionRequest,
+  "model" | "messages"
+> & {
   model?: OriginalCreateChatCompletionRequest["model"];
   messages?: OriginalCreateChatCompletionRequest["messages"];
 };
 
-type PezzoCreateChatCompletionRequest = InjectPezzoProps<CreateChatCompletionRequest>;
+type PezzoCreateChatCompletionRequest =
+  InjectPezzoProps<CreateChatCompletionRequest>;
 
 export class PezzoOpenAIApi extends OpenAIApi {
   constructor(
@@ -37,7 +39,8 @@ export class PezzoOpenAIApi extends OpenAIApi {
     const nativeOptions = { ...arg1 };
     delete nativeOptions["pezzo"];
 
-    const settings = pezzoPrompt.settings[ProviderSettingsKeys.OPENAI_CHAT_COMPLETION] ?? {};
+    const settings =
+      pezzoPrompt.settings[ProviderSettingsKeys.OPENAI_CHAT_COMPLETION] ?? {};
 
     let messages: ChatCompletionRequestMessage[] = [];
 

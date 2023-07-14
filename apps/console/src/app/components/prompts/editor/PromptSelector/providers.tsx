@@ -27,15 +27,21 @@ export const providersList: ProviderProps[] = [
  * This function sorts the providers list for correct rendering in the UI.
  * It divides them into two groups - managed and unmanaged.
  * Within those groups, they will be provided in the original order as displayed in the "providersList" array.
- * 
+ *
  * @param providersKeys Array of provider keys that are managed
- * @returns 
+ * @returns
  */
-export const sortRenderedProviders = (providersKeys: ProviderSettingsKeys[]) => {
-  const managed = providersList.filter((provider) => providersKeys.includes(provider.value));
-  const unmanaged = providersList.filter((provider) => !providersKeys.includes(provider.value));
+export const sortRenderedProviders = (
+  providersKeys: ProviderSettingsKeys[]
+) => {
+  const managed = providersList.filter((provider) =>
+    providersKeys.includes(provider.value)
+  );
+  const unmanaged = providersList.filter(
+    (provider) => !providersKeys.includes(provider.value)
+  );
   const sort = (a, b) => providersList.indexOf(a) - providersList.indexOf(b);
   const sortedManaged = managed.sort(sort);
   const sortedUnmanaged = unmanaged.sort(sort);
   return [...sortedManaged, ...sortedUnmanaged];
-}
+};
