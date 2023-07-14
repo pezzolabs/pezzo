@@ -24,20 +24,8 @@ export const ChatEditMode = () => {
     handleNewMessage();
   }, [messageOrder, handleNewMessage]);
 
-  const handleFormChange = () => {
-    const values = form.getFieldsValue();
-    console.log("values", values);
-
-    const messages = messageOrder.map((messageId) => ({
-      role: values.messages[messageId].role,
-      content: values.messages[messageId].content,
-    }));
-
-    console.log("messages", messages);
-  };
-
   return (
-    <Form form={form} onValuesChange={handleFormChange}>
+    <Form form={form}>
       {messageOrder?.map((messageId, index) => (
         <ChatMessage
           key={messageId}

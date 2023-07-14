@@ -51,7 +51,6 @@ export const ProviderSelector = ({ selectedProvider, onSelect, onAdd}: Props) =>
   };
 
   const handleSelect = (value: ProviderProps["value"]) => {
-    console.log("handleSelect", value);
     onSelect(value);
     setOpen(false);
   };
