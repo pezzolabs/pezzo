@@ -1,7 +1,4 @@
-export enum ProviderSettingsKeys {
-  OPENAI_CHAT_COMPLETION = "openai_chatCompletion",
-  AZURE_OPENAI_CHAT_COMPLETION = "azure_openai_chatCompletion"
-}
+import { ProviderSettingsKeys } from "@pezzo/types";
 
 export interface ProviderProps {
   image: React.ReactNode;

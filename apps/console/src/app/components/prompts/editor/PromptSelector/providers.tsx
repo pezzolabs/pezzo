@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
-import { ProviderProps, ProviderSettingsKeys } from "./types";
+import { ProviderProps } from "./types";
+import { ProviderSettingsKeys } from "@pezzo/types";
 
 // Logos
 import OpenAILogo from "../../../../../assets/providers/openai-logo.svg";

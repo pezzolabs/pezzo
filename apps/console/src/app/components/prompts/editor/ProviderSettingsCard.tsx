@@ -1,7 +1,7 @@
 import { Divider, Form } from "antd";
 import { usePromptVersionEditorContext } from "../../../lib/providers/PromptVersionEditorContext";
 import { ProviderSelector } from "./PromptSelector/ProviderSelector";
-import { ProviderSettingsKeys } from "./PromptSelector/types";
+import { ProviderSettingsKeys } from "@pezzo/types";
 import { useState } from "react";
 import { ProviderSettingsSchemaRenderer } from "./ProviderSettings/ProviderSettingsSchemaRenderer";
 import { openAIChatCompletionSettingsDefinition } from "./ProviderSettings/providers/openai-chat-completion";

@@ -8,6 +8,7 @@ import {
 } from "../types";
 import { Pezzo } from "./Pezzo";
 import { PromptType } from "../@generated/graphql/graphql";
+import { ProviderSettingsKeys } from "@pezzo/types";
 
 type CreateChatCompletionRequest = Omit<OriginalCreateChatCompletionRequest, "model" | "messages"> & {
   model?: OriginalCreateChatCompletionRequest["model"];
@@ -36,7 +37,7 @@ export class PezzoOpenAIApi extends OpenAIApi {
     const nativeOptions = { ...arg1 };
     delete nativeOptions["pezzo"];
 
-    const settings = pezzoPrompt.settings["openai_chatCompletion"] ?? {};
+    const settings = pezzoPrompt.settings[ProviderSettingsKeys.OPENAI_CHAT_COMPLETION] ?? {};
 
     let messages: ChatCompletionRequestMessage[] = [];
 

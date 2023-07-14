@@ -3,7 +3,8 @@ import styled from "@emotion/styled";
 import { useState } from "react";
 import { DeleteOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { sortRenderedProviders } from "./providers";
-import { ProviderProps, ProviderSettingsKeys } from "./types";
+import { ProviderProps } from "./types";
+import { ProviderSettingsKeys } from "@pezzo/types";
 import { usePromptVersionEditorContext } from "../../../../lib/providers/PromptVersionEditorContext";
 
 const StyledSelect = styled(Select)`

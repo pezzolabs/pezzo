@@ -20,6 +20,8 @@ ALTER TABLE "PromptVersion"
 DROP COLUMN "content",
 ADD COLUMN "content" JSONB;
 
+ALTER TABLE "PromptVersion" ALTER COLUMN "settings" SET DEFAULT '{}';
+
 -- Step 4: Format the tempContent into a JSON structure and copy it to the content column
 UPDATE "PromptVersion" SET "content" = jsonb_build_object('prompt', "tempContent");
 
@@ -30,7 +32,7 @@ ALTER TABLE "PromptVersion" DROP COLUMN "tempContent";
 -- Step 6: Flatten the settings column
 UPDATE "PromptVersion"
 SET "settings" = jsonb_build_object(
-  'openai_chatCompletion', jsonb_build_object(
+  'OPENAI_CHAT_COMPLETION', jsonb_build_object(
     'model', "settings" -> 'model',
     'top_p', "settings" -> 'modelSettings' -> 'top_p',
     'max_tokens', "settings" -> 'modelSettings' -> 'max_tokens',
