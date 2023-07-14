@@ -5,7 +5,6 @@ interface BaseFormField {
 
 export interface SelectFormField extends BaseFormField {
   type: "select";
-  defaultValue: string;
   options: {
     value: string;
     label: string;
@@ -22,3 +21,8 @@ export interface SliderFormField extends BaseFormField {
 export type FormField = SelectFormField | SliderFormField;
 
 export type FormSchema = FormField[];
+
+export interface ProviderSettingsDefinition<TSettings = unknown> {
+  defaultSettings: TSettings;
+  generateFormSchema: (settings: TSettings) => FormSchema;
+}

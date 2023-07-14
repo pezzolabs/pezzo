@@ -102,7 +102,7 @@ export const PromptVersionEditorProvider = ({ children }) => {
 
   return (
     <PromptVersionEditorContext.Provider value={value}>
-      <Form form={form} initialValues={initialValues.current}>
+      <Form layout="vertical" form={form} initialValues={initialValues.current}>
         {children}
       </Form>
     </PromptVersionEditorContext.Provider>

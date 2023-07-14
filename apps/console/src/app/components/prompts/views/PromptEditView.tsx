@@ -11,6 +11,7 @@ import { PromptEditMode } from "../editor/prompt/PromptEditMode";
 import { usePromptVersionEditorContext } from "../../../lib/providers/PromptVersionEditorContext";
 import { CommitButton } from "../editor/CommitButton";
 import { Variables } from "../editor/Variables";
+import { ProviderSettingsCard } from "../editor/ProviderSettingsCard";
 
 export const PromptEditView = () => {
   const { prompt, isLoading: isPromptLoading } = useCurrentPrompt();
@@ -55,6 +56,9 @@ export const PromptEditView = () => {
             )}
           </Col>
           <Col span={7}>
+            <Card title="Provider Settings" style={{ marginBottom: 24 }}>
+              <ProviderSettingsCard />
+            </Card>
             <Card title="Variables">
               <Variables />
             </Card>

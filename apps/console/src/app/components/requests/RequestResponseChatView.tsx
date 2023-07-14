@@ -5,7 +5,7 @@ import {
   ProviderType,
 } from "@pezzo/types";
 import { Space, Typography, theme, List, Row, Col, Avatar } from "antd";
-import OpenAILogo from "../../../assets/openai-logo.svg";
+import OpenAILogo from "../../../assets/providers/openai-logo.svg";
 
 interface Props {
   request: ObservabilityRequest<ProviderType.OpenAI>;
