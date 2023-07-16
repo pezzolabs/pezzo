@@ -1,11 +1,10 @@
-import { Col, FormInstance, Row } from "antd";
-import { PromptEditFormInputs } from "../../lib/hooks/usePromptEdit";
+import { Col, Row } from "antd";
 import { FormConfig, OnSubmit } from "@tutim/types";
 import { TutimWizard, TutimProvider } from "@tutim/headless";
 import { defaultFields } from "@tutim/fields";
+import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
 
 interface Props {
-  form: FormInstance<PromptEditFormInputs>;
   onClose: () => void;
 }
 
@@ -108,7 +107,8 @@ export const FunctionsForm = ({ data, onSubmit }): JSX.Element => {
   );
 };
 
-export const FunctionsEditor = ({ form, onClose }: Props) => {
+export const FunctionsEditor = ({ onClose }: Props) => {
+  const { form } = usePromptVersionEditorContext();
   const functions = form.getFieldValue(["settings", "functions"]) || [];
 
   const data = functions.map(parseFromSchemaToFormData);

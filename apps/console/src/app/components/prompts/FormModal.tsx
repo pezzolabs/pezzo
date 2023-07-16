@@ -1,23 +1,21 @@
-import { Modal, FormInstance } from "antd";
-import { PromptEditFormInputs } from "../../lib/hooks/usePromptEdit";
+import { Modal } from "antd";
 import { FunctionsEditor } from "./FunctionsEditor";
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  form: FormInstance<PromptEditFormInputs>;
 }
 
-export const FunctionsFormModal = ({ open, onClose, form }: Props) => {
+export const FunctionsFormModal = ({ open, onClose }: Props) => {
   return (
     <Modal
       title={`Edit Prompt Functions`}
       open={open}
       onCancel={onClose}
       footer={false}
-      width={"80%"}
+      width={"700px"}
     >
-      <FunctionsEditor form={form} onClose={onClose} />
+      <FunctionsEditor onClose={onClose} />
     </Modal>
   );
 };

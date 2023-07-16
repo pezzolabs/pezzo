@@ -62,10 +62,11 @@ export const PromptEditView = () => {
           <Col span={7}>
             <Card title="Provider Settings" style={{ marginBottom: 24 }}>
               <ProviderSettingsCard
-              //  onOpenFunctionsModal={
-              //   FUNCTIONS_FEATURE_FLAG
-              //     ? () => setIsFunctionsModalOpen(true)
-              //     : null}
+                onOpenFunctionsModal={
+                  FUNCTIONS_FEATURE_FLAG
+                    ? () => setIsFunctionsModalOpen(true)
+                    : null
+                }
               />
             </Card>
             <Card title="Variables">
@@ -88,13 +89,12 @@ export const PromptEditView = () => {
           />
         )}
 
-        {/* {FUNCTIONS_FEATURE_FLAG && (
-        <FunctionsFormModal
-          onClose={() => setIsFunctionsModalOpen(false)}
-          open={isFunctionsModalOpen}
-          form={form}
-        />
-      )} */}
+        {FUNCTIONS_FEATURE_FLAG && (
+          <FunctionsFormModal
+            onClose={() => setIsFunctionsModalOpen(false)}
+            open={isFunctionsModalOpen}
+          />
+        )}
       </>
     )
   );
