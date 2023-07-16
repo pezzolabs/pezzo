@@ -12,6 +12,9 @@ import { usePromptVersionEditorContext } from "../../../lib/providers/PromptVers
 import { CommitButton } from "../editor/CommitButton";
 import { Variables } from "../editor/Variables";
 import { ProviderSettingsCard } from "../editor/ProviderSettingsCard";
+import { FunctionsFormModal } from "../FormModal";
+
+const FUNCTIONS_FEATURE_FLAG = true;
 
 export const PromptEditView = () => {
   const { prompt, isLoading: isPromptLoading } = useCurrentPrompt();
@@ -20,6 +23,7 @@ export const PromptEditView = () => {
 
   const [isCommitModalOpen, setIsCommitModalOpen] = useState(false);
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
+  const [isFunctionsModalOpen, setIsFunctionsModalOpen] = useState(false);
 
   return (
     !isPromptLoading && (
@@ -57,7 +61,13 @@ export const PromptEditView = () => {
           </Col>
           <Col span={7}>
             <Card title="Provider Settings" style={{ marginBottom: 24 }}>
-              <ProviderSettingsCard />
+              <ProviderSettingsCard
+                onOpenFunctionsModal={
+                  FUNCTIONS_FEATURE_FLAG
+                    ? () => setIsFunctionsModalOpen(true)
+                    : null
+                }
+              />
             </Card>
             <Card title="Variables">
               <Variables />
@@ -76,6 +86,13 @@ export const PromptEditView = () => {
           <PublishPromptModal
             onClose={() => setIsPublishModalOpen(false)}
             open={isPublishModalOpen}
+          />
+        )}
+
+        {FUNCTIONS_FEATURE_FLAG && (
+          <FunctionsFormModal
+            onClose={() => setIsFunctionsModalOpen(false)}
+            open={isFunctionsModalOpen}
           />
         )}
       </>

@@ -31,6 +31,7 @@ interface PromptVersionEditorContext {
   initialValues: MutableRefObject<FormInputs>;
   variables: string[];
   setVariables: (variables: string[]) => void;
+  formValues: FormInputs;
 }
 
 const PromptVersionEditorContext =
@@ -43,7 +44,9 @@ export const usePromptVersionEditorContext = () => {
 export const PromptVersionEditorProvider = ({ children }) => {
   const { prompt } = useCurrentPrompt();
   const [form] = Form.useForm<FormInputs>();
+
   const formValues = Form.useWatch(null, { form, preserve: true });
+
   const initialValues = useRef<FormInputs>(undefined);
   const isDraft = !prompt?.latestVersion;
   const [currentVersionSha, setCurrentVersionSha] = useState<string>(
@@ -98,6 +101,7 @@ export const PromptVersionEditorProvider = ({ children }) => {
     initialValues,
     variables,
     setVariables,
+    formValues,
   };
 
   return (
