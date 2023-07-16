@@ -1,5 +1,4 @@
-import { PromptExecutionType, ProviderType } from "./providers";
-import { ValueType } from "../types";
+import { ValueType, PromptExecutionType, ProviderType } from "../types";
 
 export type ObservabilityReportProperties = Record<string, ValueType>;
 export type ObservabilityReportMetadata = {
