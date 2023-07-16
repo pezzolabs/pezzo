@@ -35,7 +35,7 @@ export class PezzoOpenAIApi extends OpenAIApi {
   ) {
     const arg1 = _arg1 as PezzoCreateChatCompletionRequest;
 
-    const pezzoPrompt = arg1.pezzo;
+    const pezzoPrompt = arg1.pezzo as any; // TODO: Fix this type;
     const nativeOptions = { ...arg1 };
     delete nativeOptions["pezzo"];
 
