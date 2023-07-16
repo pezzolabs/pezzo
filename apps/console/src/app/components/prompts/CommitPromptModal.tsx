@@ -17,12 +17,12 @@ type Inputs = {
 export const CommitPromptModal = ({ open, onClose, onCommitted }: Props) => {
   const [form] = Form.useForm<Inputs>();
   const { prompt } = useCurrentPrompt();
-  const { form: promptEditorForm } = usePromptVersionEditorContext();
+  const { formValues } = usePromptVersionEditorContext();
 
   const { mutateAsync: createPromptVersion, error } = useCreatePromptVersion();
 
   const handleFormFinish = async (values: Inputs) => {
-    const { settings, content } = promptEditorForm.getFieldsValue();
+    const { settings, content } = formValues;
 
     const data = {
       message: values.message,

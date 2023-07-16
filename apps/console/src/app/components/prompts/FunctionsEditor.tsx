@@ -3,6 +3,7 @@ import { FormConfig, OnSubmit } from "@tutim/types";
 import { TutimWizard, TutimProvider } from "@tutim/headless";
 import { defaultFields } from "@tutim/fields";
 import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
+import { ProviderSettingsKeys } from "@pezzo/types";
 
 interface Props {
   onClose: () => void;
@@ -109,12 +110,23 @@ export const FunctionsForm = ({ data, onSubmit }): JSX.Element => {
 
 export const FunctionsEditor = ({ onClose }: Props) => {
   const { form } = usePromptVersionEditorContext();
-  const functions = form.getFieldValue(["settings", "functions"]) || [];
+  const functions =
+    form.getFieldValue([
+      "settings",
+      ProviderSettingsKeys.OPENAI_CHAT_COMPLETION,
+      "functions",
+    ]) || [];
 
   const data = functions.map(parseFromSchemaToFormData);
   const onSubmit: OnSubmit = ({ data }) => {
     const parsedFunctions = data.functions.map(parseFromFormDataToSchema);
-    form.setFieldsValue({ settings: { functions: parsedFunctions } });
+    form.setFieldsValue({
+      settings: {
+        [ProviderSettingsKeys.OPENAI_CHAT_COMPLETION]: {
+          functions: parsedFunctions,
+        },
+      },
+    });
     onClose();
   };
   return (
