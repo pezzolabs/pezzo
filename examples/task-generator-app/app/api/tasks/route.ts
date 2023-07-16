@@ -1,22 +1,20 @@
 import { NextResponse } from "next/server";
 import { openai, pezzo } from "../../lib/pezzo";
+import { GetPromptResult } from "@pezzo/client";
 
 export async function POST(request: Request) {
   const body = await request.json();
   const { goal, numTasks } = body;
 
-  let prompt;
-  let settings;
+  let prompt: GetPromptResult;
 
   try {
-    prompt = await pezzo.getOpenAIPrompt("GenerateTasks", {
+    prompt = await pezzo.getPrompt("GenerateTasks", {
       variables: {
         goal,
         numTasks,
       },
     });
-
-    settings = prompt.getChatCompletionSettings();
   } catch (error) {
     return NextResponse.json(
       {
@@ -28,10 +26,9 @@ export async function POST(request: Request) {
     );
   }
 
-  let result;
-
   try {
-    result = await openai.createChatCompletion(settings);
+    const result = await openai.createChatCompletion(prompt);
+    console.log("result", result.data.choices);
 
     const parsed = JSON.parse(result.data.choices[0].message.content);
     return NextResponse.json(parsed, {

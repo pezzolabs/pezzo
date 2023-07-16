@@ -6,7 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { gqlClient, queryClient } from "../../lib/graphql";
 import { PUBLISH_PROMPT } from "../../graphql/definitions/mutations/prompt-environments";
 import { PublishPromptInput } from "../../../@generated/graphql/graphql";
-import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
+import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
 
 interface Props {
   open: boolean;
@@ -14,8 +14,8 @@ interface Props {
 }
 
 export const PublishPromptModal = ({ open, onClose }: Props) => {
-  const { project } = useCurrentProject();
-  const { currentPromptVersion, prompt } = useCurrentPrompt();
+  const { currentVersion } = usePromptVersionEditorContext();
+  const { prompt } = useCurrentPrompt();
   const { environments } = useEnvironments();
   const [selectedEnvironmentId, setSelectedEnvironmentId] =
     useState<string>(undefined);
@@ -25,7 +25,7 @@ export const PublishPromptModal = ({ open, onClose }: Props) => {
   const publishPromptMutation = useMutation({
     mutationFn: (data: PublishPromptInput) =>
       gqlClient.request(PUBLISH_PROMPT, { data }),
-    mutationKey: ["publishPrompt", prompt.id, currentPromptVersion.sha],
+    mutationKey: ["publishPrompt", prompt.id, currentVersion.sha],
     onSuccess: () => {
       queryClient.invalidateQueries(["promptEnvironments"]);
     },
@@ -35,7 +35,7 @@ export const PublishPromptModal = ({ open, onClose }: Props) => {
     publishPromptMutation.mutate({
       promptId: prompt.id,
       environmentId: selectedEnvironmentId,
-      promptVersionSha: currentPromptVersion.sha,
+      promptVersionSha: currentVersion.sha,
     });
   };
 

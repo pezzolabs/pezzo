@@ -6,13 +6,13 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import styled from "@emotion/styled";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
 import { MetricsView } from "../../components/prompts/views/MetricsView";
-import { useParams } from "react-router-dom";
 import { PromptVersionsView } from "../../components/prompts/views/PromptVersionsView";
 import { PromptSettingsView } from "../../components/prompts/views/PromptSettingsView";
 import { PromptEditView } from "../../components/prompts/views/PromptEditView";
+import { PromptVersionEditorProvider } from "../../lib/providers/PromptVersionEditorContext";
 
 const TabLabel = styled.div`
   display: inline-block;
@@ -21,15 +21,8 @@ const TabLabel = styled.div`
 `;
 
 export const PromptPage = () => {
-  const params = useParams();
-  const { setCurrentPromptId, prompt, isLoading } = useCurrentPrompt();
+  const { prompt, isLoading } = useCurrentPrompt();
   const [activeView, setActiveView] = useState("edit");
-
-  useEffect(() => {
-    if (params.promptId) {
-      setCurrentPromptId(params.promptId as string, "latest");
-    }
-  }, [params.promptId]);
 
   const tabs = [
     {
@@ -75,7 +68,11 @@ export const PromptPage = () => {
 
       {prompt && (
         <>
-          {activeView === "edit" && <PromptEditView />}
+          {activeView === "edit" && (
+            <PromptVersionEditorProvider>
+              <PromptEditView />
+            </PromptVersionEditorProvider>
+          )}
           {activeView === "metrics" && <MetricsView />}
           {activeView === "versions" && <PromptVersionsView />}
           {activeView === "settings" && <PromptSettingsView />}

@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { UseQueryOptions, useQuery } from "@tanstack/react-query";
 import { gqlClient } from "../../lib/graphql";
 import {
   GET_ALL_API_KEYS,
@@ -9,9 +9,15 @@ import { GET_ALL_PROJECTS } from "../definitions/queries/projects";
 import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 import { GET_ALL_REQUESTS } from "../definitions/queries/requests";
-import { Pagination, RequestReport } from "../../../@generated/graphql/graphql";
-import { ReportRequestResponse } from "../types";
+import {
+  GetPromptQuery,
+  GetPromptVersionQuery,
+  Pagination,
+  RequestReport,
+} from "../../../@generated/graphql/graphql";
+import { GraphQLErrorResponse, ReportRequestResponse } from "../types";
 import { ProviderType } from "@pezzo/types";
+import { GET_PROMPT, GET_PROMPT_VERSION } from "../definitions/queries/prompts";
 
 export const useProviderApiKeys = () => {
   const { organization } = useCurrentOrganization();
@@ -56,6 +62,41 @@ export const useGetProjects = () => {
     projects: data?.projects,
     isLoading,
   };
+};
+
+export const useGetPrompt = (
+  promptId: string,
+  options: UseQueryOptions<GetPromptQuery, GraphQLErrorResponse> = {}
+) => {
+  const result = useQuery({
+    queryKey: ["prompt", promptId],
+    queryFn: () =>
+      gqlClient.request(GET_PROMPT, {
+        data: { promptId },
+      }),
+    ...options,
+  });
+
+  return { ...result, prompt: result.data?.prompt };
+};
+
+export const useGetPromptVersion = (
+  {
+    promptId,
+    promptVersionSha,
+  }: { promptId: string; promptVersionSha: string },
+  options: UseQueryOptions<GetPromptVersionQuery, GraphQLErrorResponse> = {}
+) => {
+  const result = useQuery({
+    queryKey: ["prompt", promptId, "version", promptVersionSha],
+    queryFn: () =>
+      gqlClient.request(GET_PROMPT_VERSION, {
+        data: { sha: promptVersionSha },
+      }),
+    ...options,
+  });
+
+  return { ...result, promptVersion: result.data?.promptVersion };
 };
 
 const buildTypedRequestReportObject = (requestReport: RequestReport) => {

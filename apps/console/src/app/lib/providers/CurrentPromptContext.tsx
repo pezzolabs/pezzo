@@ -1,29 +1,16 @@
-import { createContext, useContext, useState } from "react";
-import { gqlClient } from "../graphql";
-import { GET_PROMPT } from "../../graphql/definitions/queries/prompts";
-import {
-  GetPromptQuery,
-  GetPromptVersionQuery,
-} from "../../../@generated/graphql/graphql";
-import { useQuery } from "@tanstack/react-query";
-import { Navigate } from "react-router-dom";
+import { createContext, useContext } from "react";
+import { GetPromptQuery } from "../../../@generated/graphql/graphql";
+import { Navigate, useParams } from "react-router-dom";
+import { useGetPrompt } from "../../graphql/hooks/queries";
 
 interface CurrentPromptContextValue {
-  isDraft: boolean;
   prompt: GetPromptQuery["prompt"];
-  currentPromptVersion: GetPromptVersionQuery["promptVersion"];
-  setCurrentPromptId: (promptId: string, version: string) => void;
   isLoading: boolean;
-  setPromptVersion: (version: string) => void;
 }
 
 const CurrentPromptContext = createContext<CurrentPromptContextValue>({
-  isDraft: undefined,
   prompt: undefined,
-  currentPromptVersion: undefined,
-  setCurrentPromptId: () => void 0,
   isLoading: false,
-  setPromptVersion: () => void 0,
 });
 
 export const useCurrentPrompt = () => {
@@ -31,24 +18,9 @@ export const useCurrentPrompt = () => {
 };
 
 export const CurrentPromptProvider = ({ children }) => {
-  const [promptId, setPromptId] = useState<string | undefined>(undefined);
-  const [promptVersion, setPromptVersion] = useState<string | undefined>(
-    undefined
-  );
-
-  const queryKey = ["prompt", promptId, promptVersion];
-
-  const {
-    data: currentPrompt,
-    isError,
-    isLoading,
-  } = useQuery({
-    queryKey,
-    queryFn: () =>
-      gqlClient.request(GET_PROMPT, {
-        data: { promptId, version: promptVersion },
-      }),
-    enabled: !!promptId && !!promptVersion,
+  const { promptId } = useParams();
+  const { prompt, isError, isLoading } = useGetPrompt(promptId, {
+    enabled: !!promptId,
   });
 
   if (isError) {
@@ -56,14 +28,7 @@ export const CurrentPromptProvider = ({ children }) => {
   }
 
   const value = {
-    isDraft: currentPrompt?.prompt.version === null,
-    prompt: currentPrompt?.prompt,
-    currentPromptVersion: currentPrompt?.prompt?.version,
-    setCurrentPromptId: (promptId: string, version: string) => {
-      setPromptId(promptId);
-      setPromptVersion(version);
-    },
-    setPromptVersion,
+    prompt,
     isLoading,
   };
 

@@ -1,82 +1,51 @@
-import { useMutation } from "@tanstack/react-query";
-import { Modal, Form, Input, Button, Alert, FormInstance } from "antd";
-import { gqlClient, queryClient } from "../../lib/graphql";
+import { Modal, Form, Input, Button, Alert } from "antd";
 import { css } from "@emotion/css";
-import { useState } from "react";
 import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
-import { CREATE_PROMPT_VERSION } from "../../graphql/definitions/mutations/prompts";
-import { PromptEditFormInputs } from "../../lib/hooks/usePromptEdit";
-import {
-  CreatePromptVersionInput,
-  CreatePromptVersionMutation,
-} from "../../../@generated/graphql/graphql";
-import { GraphQLErrorResponse } from "../../graphql/types";
+import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
+import { useCreatePromptVersion } from "../../graphql/hooks/mutations";
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  onCommitted: (id: string) => void;
-  form: FormInstance<PromptEditFormInputs>;
+  onCommitted: () => void;
 }
 
 type Inputs = {
   message: string;
 };
 
-export const CommitPromptModal = ({
-  open,
-  onClose,
-  onCommitted,
-
-  form: editPromptForm,
-}: Props) => {
-  const { prompt } = useCurrentPrompt();
+export const CommitPromptModal = ({ open, onClose, onCommitted }: Props) => {
   const [form] = Form.useForm<Inputs>();
+  const { prompt } = useCurrentPrompt();
+  const { form: promptEditorForm } = usePromptVersionEditorContext();
 
-  const { mutate, error } = useMutation<
-    CreatePromptVersionMutation,
-    GraphQLErrorResponse,
-    {
-      message: string;
-      content: string;
-      settings: string;
-      promptId: string;
-    }
-  >({
-    mutationFn: (data: CreatePromptVersionInput) => {
-      return gqlClient.request(CREATE_PROMPT_VERSION, {
-        data: {
-          message: data.message,
-          content: data.content,
-          settings: data.settings,
-          promptId: data.promptId,
-        },
-      });
-    },
-    onSuccess: () => {
-      form.resetFields();
-      queryClient.invalidateQueries(["prompt", prompt.id]);
-      onClose();
-    },
-  });
+  const { mutateAsync: createPromptVersion, error } = useCreatePromptVersion();
 
   const handleFormFinish = async (values: Inputs) => {
-    const editPromptValues = editPromptForm.getFieldsValue(true);
-    mutate({
-      message: form.getFieldValue("message"),
-      content: "",
-      settings: editPromptValues.settings,
-      promptId: prompt.id,
-    });
+    const { settings, content } = promptEditorForm.getFieldsValue();
 
+    const data = {
+      message: values.message,
+      content,
+      settings: settings || {},
+      promptId: prompt.id,
+    };
+
+    await createPromptVersion(data);
     form.resetFields();
+    onCommitted();
+  };
+
+  const handleCancel = () => {
+    form.resetFields();
+    onClose();
   };
 
   return (
     <Modal
       title={`Commit Prompt - ${prompt.name}`}
       open={open}
-      onCancel={onClose}
+      onCancel={handleCancel}
       footer={false}
     >
       {error && (

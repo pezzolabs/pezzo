@@ -1,7 +1,8 @@
 import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
 import { Card, Col, Row, Typography } from "antd";
 import { css } from "@emotion/css";
-import OpenAILogo from "../../../assets/openai-logo.svg";
+import { BoltIcon } from "@heroicons/react/24/solid";
+import { colorPrimary } from "../../lib/theme/ant-theme";
 
 interface Props {
   name: string;
@@ -20,11 +21,7 @@ export const PromptListItem = ({ name, onClick }: Props) => {
               padding: 4px;
             `}
           >
-            <img
-              src={OpenAILogo}
-              alt={"Prompt Logo"}
-              style={{ width: "100%", height: "100%", borderRadius: 6 }}
-            />
+            <BoltIcon height={"80%"} width={"80%"} color={colorPrimary} />
           </div>
         </Col>
         <Col flex="auto">

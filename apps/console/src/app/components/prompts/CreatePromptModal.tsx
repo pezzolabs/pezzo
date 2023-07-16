@@ -1,9 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
-import { Modal, Form, Input, Button, Alert } from "antd";
+import { Modal, Form, Input, Button, Alert, Radio } from "antd";
 import { CREATE_PROMPT } from "../../graphql/definitions/mutations/prompts";
 import { gqlClient, queryClient } from "../../lib/graphql";
 import { css } from "@emotion/css";
-import { CreatePromptMutation } from "../../../@generated/graphql/graphql";
+import {
+  CreatePromptMutation,
+  PromptType,
+} from "../../../@generated/graphql/graphql";
 import { GraphQLErrorResponse } from "../../graphql/types";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 
@@ -15,6 +18,7 @@ interface Props {
 
 type Inputs = {
   name: string;
+  type: PromptType;
 };
 
 export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
@@ -29,6 +33,7 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
     mutationFn: (data: Inputs) =>
       gqlClient.request(CREATE_PROMPT, {
         data: {
+          type: data.type,
           name: data.name,
           projectId: project.id,
         },
@@ -53,6 +58,9 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
         form={form}
         layout="vertical"
         name="basic"
+        initialValues={{
+          type: PromptType.Prompt,
+        }}
         style={{ maxWidth: 600, marginTop: 20 }}
         onFinish={handleFormFinish}
         autoComplete="off"
@@ -63,6 +71,13 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
           rules={[{ required: true, message: "Prompt name is required" }]}
         >
           <Input placeholder="e.g. RecommendProduct" />
+        </Form.Item>
+
+        <Form.Item required label="Type" name="type">
+          <Radio.Group>
+            <Radio.Button value={PromptType.Prompt}>Prompt</Radio.Button>
+            <Radio.Button value={PromptType.Chat}>Chat</Radio.Button>
+          </Radio.Group>
         </Form.Item>
 
         <Form.Item

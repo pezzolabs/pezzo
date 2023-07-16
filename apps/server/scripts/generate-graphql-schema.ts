@@ -39,7 +39,6 @@ export default async function generateGraphQLSchema(): Promise<void> {
 if (require.main === module) {
   generateGraphQLSchema()
     .then(() => {
-      console.log("Schema generated");
       process.exit(0);
     })
     .catch((error) => {

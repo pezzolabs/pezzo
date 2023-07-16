@@ -1,14 +1,19 @@
 import { ThemeConfig, theme } from "antd";
 import { colors } from "./colors";
 
+export const colorPrimary = colors["emerald"]["500"];
+export const colorError = colors["red"]["500"];
+export const colorSuccess = colors["emerald"]["500"];
+export const colorInfo = colors["sky"]["500"];
+
 export const antTheme: ThemeConfig = {
   algorithm: theme.darkAlgorithm,
   token: {
-    colorPrimary: colors["emerald"]["500"],
-    colorError: colors["red"]["500"],
-    colorSuccess: colors["emerald"]["500"],
-    colorInfo: colors["sky"]["500"],
     fontFamily: "Inter",
+    colorPrimary,
+    colorError,
+    colorSuccess,
+    colorInfo,
   },
   components: {
     Typography: {

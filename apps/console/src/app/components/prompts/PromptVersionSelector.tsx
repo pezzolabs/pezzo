@@ -3,9 +3,12 @@ import { Button, Dropdown } from "antd";
 import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
 import { useState } from "react";
 import { usePromptVersions } from "../../lib/hooks/usePromptVersions";
+import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
 
 export const PromptVersionSelector = () => {
-  const { prompt, currentPromptVersion, setPromptVersion } = useCurrentPrompt();
+  const { currentVersionSha, setCurrentVersionSha, isDraft } =
+    usePromptVersionEditorContext();
+  const { prompt } = useCurrentPrompt();
   const latestVersion = prompt.latestVersion;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { promptVersions } = usePromptVersions(prompt.id, isDropdownOpen);
@@ -17,7 +20,7 @@ export const PromptVersionSelector = () => {
         .map((version) => ({
           key: version.sha,
           label: version.sha.slice(0, 7),
-          onClick: () => setPromptVersion(version.sha),
+          onClick: () => setCurrentVersionSha(version.sha),
         }))) ||
     [];
 
@@ -26,17 +29,17 @@ export const PromptVersionSelector = () => {
       {
         key: "latest",
         label: `Latest (${latestVersion.sha.slice(0, 7)})`,
-        onClick: () => setPromptVersion("latest"),
+        onClick: () => setCurrentVersionSha(latestVersion.sha),
       },
       ...itemsFromVersionsList,
     ],
   };
 
-  const isLatest = currentPromptVersion.sha === latestVersion.sha;
+  const isLatest = currentVersionSha === latestVersion.sha;
 
   const selectedVersionLabel = isLatest
     ? `Latest (${latestVersion.sha.slice(0, 7)})`
-    : `${currentPromptVersion.sha.slice(0, 7)}`;
+    : `${currentVersionSha.slice(0, 7)}`;
 
   return (
     <Dropdown trigger={["click"]} onOpenChange={setIsDropdownOpen} menu={menu}>
