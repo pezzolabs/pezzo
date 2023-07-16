@@ -1,5 +1,5 @@
 import { OpenAIToolkit } from "@pezzo/llm-toolkit";
-import { ProviderType } from "./provider-type";
+import { ProviderType } from "./provider.types";
 import { Type } from "class-transformer";
 import { AllPrimitiveTypes, Primitive, RecursiveObject } from "./ts-helpers";
 import {

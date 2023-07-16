@@ -80,8 +80,8 @@ export class PromptsResolver {
     @Args("data") data: GetPromptInput,
     @CurrentUser() user: RequestUser
   ) {
-    const { promptId, version } = data;
-    this.logger.assign({ promptId, version }).info("Getting prompt");
+    const { promptId } = data;
+    this.logger.assign({ promptId }).info("Getting prompt");
 
     let prompt: Prompt;
 
@@ -293,26 +293,6 @@ export class PromptsResolver {
       return this.promptsService.getPromptVersions(prompt.id);
     } catch (error) {
       this.logger.error({ error }, "Error getting prompt versions");
-      throw new InternalServerErrorException();
-    }
-  }
-
-  @ResolveField(() => PromptVersion, { nullable: true })
-  async version(
-    @Parent() prompt: PrismaPrompt,
-    @Args("data") data: GetPromptInput
-  ) {
-    this.logger.assign({ ...data }).info("Resolving prompt version");
-    const { version } = data;
-
-    try {
-      if (version === "latest") {
-        return this.promptsService.getLatestPromptVersion(prompt.id);
-      }
-
-      return this.promptsService.getPromptVersion(data.version);
-    } catch (error) {
-      this.logger.error({ error }, "Error getting prompt version");
       throw new InternalServerErrorException();
     }
   }

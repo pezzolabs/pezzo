@@ -1,17 +1,23 @@
-import { OpenAIApi } from "openai";
-import { extractPezzoFromArgs, merge } from "../utils/helpers";
 import {
-  PezzoArgExtension,
-  PezzoExtendedArgs,
-  PromptExecutionType,
-  ProviderType,
-  ReportData,
-} from "../types";
+  ChatCompletionRequestMessage,
+  CreateChatCompletionRequest as OriginalCreateChatCompletionRequest,
+  OpenAIApi,
+} from "openai";
+import { InjectPezzoProps } from "../types";
 import { Pezzo } from "./Pezzo";
+import { PromptType } from "../@generated/graphql/graphql";
+import { ProviderSettingsKeys } from "@pezzo/types";
 
-export type CreatePezzoChatCompletionRequest = PezzoArgExtension<
-  Parameters<OpenAIApi["createChatCompletion"]>
->;
+type CreateChatCompletionRequest = Omit<
+  OriginalCreateChatCompletionRequest,
+  "model" | "messages"
+> & {
+  model?: OriginalCreateChatCompletionRequest["model"];
+  messages?: OriginalCreateChatCompletionRequest["messages"];
+};
+
+type PezzoCreateChatCompletionRequest =
+  InjectPezzoProps<CreateChatCompletionRequest>;
 
 export class PezzoOpenAIApi extends OpenAIApi {
   constructor(
@@ -22,24 +28,50 @@ export class PezzoOpenAIApi extends OpenAIApi {
   }
 
   override async createChatCompletion(
-    ...args: PezzoExtendedArgs<Parameters<OpenAIApi["createChatCompletion"]>>
+    _arg1: PezzoCreateChatCompletionRequest | CreateChatCompletionRequest,
+    ...rest: Parameters<OpenAIApi["createChatCompletion"]>[1] extends infer P
+      ? P[]
+      : never[]
   ) {
-    const { pezzo, originalArgs } = extractPezzoFromArgs(args);
+    const arg1 = _arg1 as PezzoCreateChatCompletionRequest;
 
-    const requestBody = originalArgs[0];
+    const pezzoPrompt = arg1.pezzo;
+    const nativeOptions = { ...arg1 };
+    delete nativeOptions["pezzo"];
+
+    const settings =
+      pezzoPrompt.settings[ProviderSettingsKeys.OPENAI_CHAT_COMPLETION] ?? {};
+
+    let messages: ChatCompletionRequestMessage[] = [];
+
+    if (pezzoPrompt.type === PromptType.Prompt) {
+      messages = [
+        { role: "user", content: pezzoPrompt.interpolatedContent.prompt },
+      ];
+    } else if (pezzoPrompt.type === PromptType.Chat) {
+      messages = pezzoPrompt.interpolatedContent.messages;
+    }
+
+    const requestBody: Partial<CreateChatCompletionRequest> = {
+      ...nativeOptions,
+      ...settings,
+      messages,
+    };
 
     const requestTimestamp = new Date().toISOString();
 
-    let createChatCompletionResult;
+    let result;
+    let error;
+
     try {
-      createChatCompletionResult = await super.createChatCompletion.call(
+      result = await super.createChatCompletion.call(
         this,
-        ...originalArgs
+        ...[requestBody, ...rest.slice(1)]
       );
-    } catch (error) {
-      createChatCompletionResult = error;
+    } catch (err) {
+      error = err;
     }
-    const { request, ...response } = createChatCompletionResult;
+    // const { request, ...response } = result;
 
     const responseTimestamp = new Date().toISOString();
 
@@ -47,28 +79,32 @@ export class PezzoOpenAIApi extends OpenAIApi {
       environment: this.pezzo.options.environment,
     };
 
-    const reportPayload: ReportData = {
-      provider: ProviderType.OpenAI,
-      type: PromptExecutionType.ChatCompletion,
-      metadata: merge(pezzo?.metadata ?? {}, baseMetadata),
-      ...(pezzo?.properties && { properties: pezzo.properties }),
-      request: {
-        timestamp: requestTimestamp,
-        body: requestBody,
-      },
-      response: {
-        timestamp: responseTimestamp,
-        body: response.data ?? response.response.data,
-        status: response.status ?? response.response.status,
-      },
-    };
+    // const reportPayload: ReportData = {
+    //   provider: ProviderType.OpenAI,
+    //   type: PromptExecutionType.ChatCompletion,
+    //   metadata: merge(pezzo?.metadata ?? {}, baseMetadata),
+    //   ...(pezzo?.properties && { properties: pezzo.properties }),
+    //   request: {
+    //     timestamp: requestTimestamp,
+    //     body: requestBody,
+    //   },
+    //   response: {
+    //     timestamp: responseTimestamp,
+    //     body: response.data ?? response.response.data,
+    //     status: response.status ?? response.response.status,
+    //   },
+    // };
 
-    try {
-      await this.pezzo.reportPromptExecutionV2(reportPayload);
-    } catch (error) {
-      console.error("Failed to report prompt execution", error);
+    // try {
+    //   await this.pezzo.reportPromptExecutionV2(reportPayload);
+    // } catch (error) {
+    //   console.error("Failed to report prompt execution", error);
+    // }
+
+    if (error) {
+      throw error;
     }
 
-    return createChatCompletionResult;
+    return result;
   }
 }

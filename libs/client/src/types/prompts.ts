@@ -1,74 +1,24 @@
-import {
-  ChatCompletionRequestMessage,
-  CreateChatCompletionRequest as OpenAICreateChatCompletionRequest,
-} from "openai";
-import { PezzoInjectedContext } from "./function-extension";
-import {
-  OpenAIProviderSettings,
-  PromptExecutionType,
-  ProviderType,
-} from "./providers";
+import { PromptType } from "../@generated/graphql/graphql";
 
-export type PromptSettings<
-  TProviderType extends ProviderType = ProviderType.OpenAI,
-  TExecutionType extends PromptExecutionType = PromptExecutionType.ChatCompletion
-> = TProviderType extends ProviderType.OpenAI
-  ? OpenAIProviderSettings[TExecutionType]
-  : unknown;
+export type InjectPezzoProps<TSettings> = TSettings & {
+  pezzo: Prompt<TSettings>;
+};
 
-type getSettingsFn<
-  TProviderType extends ProviderType = ProviderType.OpenAI,
-  TExecutionType extends PromptExecutionType = PromptExecutionType.ChatCompletion
-> = (
-  overrides?: Partial<PromptSettings<TProviderType, TExecutionType>>
-) => PromptSettings<TProviderType, TExecutionType>;
+type PrompContent =
+  | { prompt: string }
+  | { messages: { role: "user" | "assistant"; content: string }[] };
 
-export type PromptVariables = Record<string, string | number | boolean>;
+export type GetPromptResult<TSettings = unknown> = {
+  pezzo: Prompt<TSettings>;
+};
 
-export interface Prompt<
-  TProviderType extends ProviderType = ProviderType.OpenAI
-> {
-  id: string;
-  deployedVersion: string;
-  getChatCompletionSettings: getSettingsFn<
-    TProviderType,
-    PromptExecutionType.ChatCompletion
-  >;
-}
-
-function chatCompletion(options: {
-  settings: Record<string, unknown>;
-  messages: ChatCompletionRequestMessage[];
-  _pezzo: PezzoInjectedContext;
-}): OpenAICreateChatCompletionRequest & { pezzo: PezzoInjectedContext } {
-  const { settings, messages, _pezzo } = options;
-
-  const { messages: _, ...rest } =
-    settings as unknown as OpenAICreateChatCompletionRequest;
-
-  return {
-    pezzo: _pezzo,
-    model: settings["model"] as string,
-    ...rest,
-    messages,
-  };
-}
-
-export function getPromptSettings(options: {
-  settings: Record<string, unknown>;
-  content: string;
-  interpolatedMessages: ChatCompletionRequestMessage[];
-  _pezzo: PezzoInjectedContext;
-}): Omit<Prompt, "id" | "deployedVersion"> {
-  const obj = {
-    settings: options.settings,
-    messages: options.interpolatedMessages,
-    _pezzo: options._pezzo,
-  };
-
-  return {
-    getChatCompletionSettings: () => chatCompletion(obj),
-  };
+export interface Prompt<TSettings = unknown> {
+  promptId: string;
+  promptVersionSha: string;
+  type: PromptType;
+  settings: TSettings;
+  content: PrompContent;
+  interpolatedContent: PrompContent;
 }
 
 export interface ReportPromptExecutionResult<TResult> {

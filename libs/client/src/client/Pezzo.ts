@@ -1,13 +1,8 @@
 import axios, { AxiosInstance } from "axios";
-import { IntegrationBaseSettings, ProviderType, ReportData } from "../types";
-import type { CreatePromptExecutionDto } from "./create-prompt-execution.dto";
-import {
-  Prompt,
-  getPromptSettings,
-  ReportPromptExecutionResult,
-} from "../types/prompts";
+import { ReportData } from "../types";
+import { Prompt } from "../types/prompts";
 import { interpolateVariables } from "../utils";
-import { PezzoOpenAIApi } from "./PezzoOpenAI";
+import { PromptType } from "../@generated/graphql/graphql";
 
 export interface PezzoClientOptions {
   serverUrl?: string;
@@ -25,10 +20,8 @@ const defaultOptions: Partial<PezzoClientOptions> = {
 };
 
 export class Pezzo {
-  OpenAIApi: PezzoOpenAIApi;
-
   options: PezzoClientOptions;
-  private readonly axios: AxiosInstance;
+  private readonly axios: AxiosInstance; // TODO: swap with fetch for vercel AI
 
   constructor(options: PezzoClientOptions) {
     this.options = {
@@ -40,56 +33,15 @@ export class Pezzo {
       baseURL: `${this.options.serverUrl}/api`,
       headers: {
         "x-pezzo-api-key": this.options.apiKey,
+        "x-pezzo-client-version": "0.0.1", // TODO: make dynamic, handdle in backend
       },
     });
   }
 
-  async reportPromptExecution<TResult>(
-    dto: CreatePromptExecutionDto,
-    autoParseJSON?: boolean
-  ): Promise<ReportPromptExecutionResult<TResult>> {
-    const { data } = await this.axios.post(`prompts/execution`, {
-      ...dto,
-    });
-
-    if (data.result) {
-      const report = {
-        ...data,
-        result: autoParseJSON
-          ? (JSON.parse(data.result) as TResult)
-          : (data.result as TResult),
-      };
-
-      return report;
-    } else {
-      return data;
-    }
-  }
-
-  /**
-   * @deprecated Use `getPrompt` instead
-   */
-  async getDeployedPromptVersion<T>(promptName: string) {
-    const url = new URL(`${this.options.serverUrl}/api/prompts/deployment`);
-    url.searchParams.append("name", promptName);
-    url.searchParams.append("environmentName", this.options.environment);
-
-    const { data } = await this.axios.get(url.toString());
-
-    return {
-      id: data.promptId,
-      deployedVersion: {
-        sha: data.sha,
-        content: data.content,
-        settings: data.settings as IntegrationBaseSettings<T>,
-      },
-    };
-  }
-
-  async getPrompt<TProviderType extends ProviderType>(
+  async getPrompt(
     promptName: string,
     options?: GetPromptOptions
-  ): Promise<Prompt<TProviderType>> {
+  ): Promise<{ pezzo: Prompt }> {
     const url = new URL(`${this.options.serverUrl}/api/prompts/v2/deployment`);
     url.searchParams.append("name", promptName);
     url.searchParams.append("environmentName", this.options.environment);
@@ -111,46 +63,28 @@ export class Pezzo {
       }
     }
 
-    const content = data.settings.messages[0].content;
-
-    let interpolatedMessages = data.settings.messages;
+    let interpolatedContent: any = {};
 
     if (options?.variables) {
-      interpolatedMessages = data.settings.messages.map((message) => ({
-        ...message,
-        content: interpolateVariables(message.content, options.variables),
-      }));
+      if (data.type === PromptType.Prompt) {
+        interpolatedContent = {
+          prompt: interpolateVariables(data.content.prompt, options?.variables),
+        };
+      }
     }
 
-    if (
-      interpolatedMessages.some((message) =>
-        /{\s*(\w+)\s*}/g.test(message.content)
-      )
-    ) {
-      throw new Error(
-        `Invalid or missing variables provided for prompt "${promptName}"`
-      );
-    }
-
-    const prompt = {
-      id: data.promptId,
-      deployedVersion: data.sha,
-      ...getPromptSettings({
-        settings: data.settings as Record<string, unknown>,
-        content,
-        _pezzo: {
-          environment: this.options.environment,
-          promptId: data.promptId,
-          promptVersionSha: data.sha,
-          variables: options?.variables,
-          content,
-          interpolatedMessages,
-        },
-        interpolatedMessages,
-      }),
+    const pezzoPrompt: Prompt = {
+      promptId: data.promptId,
+      promptVersionSha: data.promptVersionSha,
+      type: data.type,
+      settings: data.settings,
+      content: data.content,
+      interpolatedContent,
     };
 
-    return prompt;
+    return {
+      pezzo: pezzoPrompt,
+    };
   }
 
   async reportPromptExecutionV2(dto: ReportData) {
@@ -164,9 +98,5 @@ export class Pezzo {
         },
       }
     );
-  }
-
-  async getOpenAIPrompt(promptName: string, options?: GetPromptOptions) {
-    return this.getPrompt<ProviderType.OpenAI>(promptName, options);
   }
 }

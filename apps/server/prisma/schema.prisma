@@ -28,8 +28,8 @@ datasource db {
 
 model PromptVersion {
   sha                String              @id
-  content            String
-  settings           Json
+  settings           Json                @default("{}")         
+  content            Json
   promptId           String
   prompt             Prompt              @relation(fields: [promptId], references: [id], onDelete: Cascade)
   createdAt          DateTime            @default(now())
@@ -128,10 +128,16 @@ model ApiKey {
   createdAt      DateTime     @default(now())
 }
 
+enum PromptType {
+  Prompt
+  Chat
+}
+
 model Prompt {
   id                 String              @id @default(cuid())
   projectId          String
   name               String
+  type               PromptType
   executions         PromptExecution[]
   promptEnvironments PromptEnvironment[]
   versions           PromptVersion[]

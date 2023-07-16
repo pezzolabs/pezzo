@@ -20,6 +20,10 @@ const config: CodegenConfig = {
       preset: "client",
       plugins: [],
     },
+    "./libs/client/src/@generated/graphql/": {
+      preset: "client",
+      plugins: [],
+    },
   },
 };
 
