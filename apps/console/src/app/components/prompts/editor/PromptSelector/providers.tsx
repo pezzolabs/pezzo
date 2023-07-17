@@ -4,6 +4,7 @@ import { ProviderSettingsKeys } from "@pezzo/types";
 
 // Logos
 import OpenAILogo from "../../../../../assets/providers/openai-logo.svg";
+import AzureOpenAILogo from "../../../../../assets/providers/azure-logo.svg";
 
 const Icon = styled.img`
   border-radius: 2px;
@@ -19,7 +20,17 @@ export const providersList: ProviderProps[] = [
       />
     ),
     value: ProviderSettingsKeys.OPENAI_CHAT_COMPLETION,
-    label: "OpenAI Chat Completion",
+    label: "OpenAI",
+  },
+  {
+    image: (
+      <Icon
+        src={AzureOpenAILogo}
+        style={{ backgroundColor: "#74AA9C", padding: 2 }}
+      />
+    ),
+    value: ProviderSettingsKeys.AZURE_OPENAI_CHAT_COMPLETION,
+    label: "Azure OpenAI",
   },
 ];
 

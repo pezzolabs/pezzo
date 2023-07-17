@@ -3,13 +3,16 @@ import { usePromptVersionEditorContext } from "../../../lib/providers/PromptVers
 import { ProviderSelector } from "./PromptSelector/ProviderSelector";
 import { ProviderSettingsKeys } from "@pezzo/types";
 import { useState } from "react";
+import { SendOutlined } from "@ant-design/icons";
 import { ProviderSettingsSchemaRenderer } from "./ProviderSettings/ProviderSettingsSchemaRenderer";
 import { openAIChatCompletionSettingsDefinition } from "./ProviderSettings/providers/openai-chat-completion";
-import { SendOutlined } from "@ant-design/icons";
+import { azureOpenAIChatCompletionSettingsDefinition } from "./ProviderSettings/providers/azure-openai-chat-completion";
 
 const providerSettings = {
   [ProviderSettingsKeys.OPENAI_CHAT_COMPLETION]:
     openAIChatCompletionSettingsDefinition,
+  [ProviderSettingsKeys.AZURE_OPENAI_CHAT_COMPLETION]:
+    azureOpenAIChatCompletionSettingsDefinition,
 };
 
 interface Props {
@@ -55,11 +58,12 @@ export const ProviderSettingsCard = ({ onOpenFunctionsModal }: Props) => {
             )}
             baseFieldPath={["settings", selectedProvider]}
           />
-          {onOpenFunctionsModal && (
-            <Button onClick={onOpenFunctionsModal} icon={<SendOutlined />}>
-              Edit Functions
-            </Button>
-          )}
+          {selectedProvider === ProviderSettingsKeys.OPENAI_CHAT_COMPLETION &&
+            onOpenFunctionsModal && (
+              <Button onClick={onOpenFunctionsModal} icon={<SendOutlined />}>
+                Edit Functions
+              </Button>
+            )}
         </>
       )}
     </>
