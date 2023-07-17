@@ -76,7 +76,9 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
         <Form.Item required label="Type" name="type">
           <Radio.Group>
             <Radio.Button value={PromptType.Prompt}>Prompt</Radio.Button>
-            <Radio.Button value={PromptType.Chat}>Chat</Radio.Button>
+            <Radio.Button disabled value={PromptType.Chat}>
+              Chat <span style={{ fontSize: "12px" }}>(coming soon)</span>
+            </Radio.Button>
           </Radio.Group>
         </Form.Item>
 
