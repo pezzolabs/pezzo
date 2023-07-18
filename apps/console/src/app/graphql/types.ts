@@ -4,7 +4,7 @@ import {
   ObservabilityRequest,
   ObservabilityResponse,
   PromptExecutionType,
-  ProviderType,
+  Provider,
 } from "@pezzo/types";
 import { GraphQLError } from "graphql-request/build/esm/types";
 
@@ -17,9 +17,9 @@ export interface GraphQLErrorResponse {
 }
 
 export interface ReportRequestResponse<
-  TProviderType extends ProviderType | unknown = unknown
+  TProviderType extends Provider | unknown = unknown
 > {
-  provider: ProviderType;
+  provider: Provider;
   type: PromptExecutionType;
   properties?: ObservabilityReportProperties;
   metadata?: ObservabilityReportMetadata;

@@ -2,7 +2,7 @@ import {
   ObservabilityReportMetadata,
   ObservabilityRequest,
   ObservabilityResponse,
-  ProviderType,
+  Provider,
   ObservabilityReportProperties,
 } from "@pezzo/types";
 import { List, Space, Tag, Tooltip, Typography, Segmented } from "antd";
@@ -23,22 +23,22 @@ interface Props {
   id: string;
   request: ObservabilityRequest;
   response: ObservabilityResponse;
-  provider: ProviderType;
+  provider: Provider;
   metadata: ObservabilityReportMetadata;
   properties: ObservabilityReportProperties;
   calculated: Record<string, any>;
 }
 
 export const RequestDetails = (props: Props) => {
-  const request = props.request as ObservabilityRequest<ProviderType.OpenAI>;
-  const response = props.response as ObservabilityResponse<ProviderType.OpenAI>;
+  const request = props.request as ObservabilityRequest<Provider.OpenAI>;
+  const response = props.response as ObservabilityResponse<Provider.OpenAI>;
   const isSuccess = response.status >= 200 && response.status < 300;
 
   const [selectedMode, setSelectedMode] = useState<Mode>(
     isSuccess ? "chat" : "json"
   );
 
-  if (props.provider !== ProviderType.OpenAI) {
+  if (props.provider !== Provider.OpenAI) {
     return null;
   }
 

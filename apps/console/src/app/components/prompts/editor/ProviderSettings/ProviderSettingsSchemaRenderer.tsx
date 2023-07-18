@@ -8,20 +8,21 @@ const StyledFormItem = styled(Form.Item)`
 
 interface Props {
   schema: any[];
-  baseFieldPath: string[];
 }
 
 export const ProviderSettingsSchemaRenderer = ({
   schema,
-  baseFieldPath,
 }: Props) => {
+
+  console.log("schema", schema);
+
   return (
     <>
       {schema.map((field, index) => (
         <StyledFormItem
           key={index}
           label={field.label}
-          name={[...baseFieldPath, field.name]}
+          name={["settings", field.name]}
         >
           {field.type === "select" && <Select options={field.options} />}
           {field.type === "slider" && (

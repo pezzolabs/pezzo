@@ -2,14 +2,14 @@ import { UserCircleIcon } from "@heroicons/react/24/solid";
 import {
   ObservabilityRequest,
   ObservabilityResponse,
-  ProviderType,
+  Provider,
 } from "@pezzo/types";
 import { Space, Typography, theme, List, Row, Col, Avatar } from "antd";
 import OpenAILogo from "../../../assets/providers/openai-logo.svg";
 
 interface Props {
-  request: ObservabilityRequest<ProviderType.OpenAI>;
-  response: ObservabilityResponse<ProviderType.OpenAI>;
+  request: ObservabilityRequest<Provider.OpenAI>;
+  response: ObservabilityResponse<Provider.OpenAI>;
 }
 
 export const RequestResponseChatView = ({ request, response }: Props) => {

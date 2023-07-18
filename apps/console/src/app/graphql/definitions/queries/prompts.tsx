@@ -26,6 +26,7 @@ export const GET_PROMPT_VERSION = graphql(/* GraphQL */ `
   query getPromptVersion($data: PromptVersionWhereUniqueInput!) {
     promptVersion(data: $data) {
       sha
+      service
       content
       settings
       message
@@ -39,6 +40,7 @@ export const GET_PROMPT_VERSIONS = graphql(/* GraphQL */ `
       type
       versions {
         sha
+        service
         message
         createdAt
         createdBy {

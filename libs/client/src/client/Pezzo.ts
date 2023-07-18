@@ -21,7 +21,7 @@ const defaultOptions: Partial<PezzoClientOptions> = {
 
 export class Pezzo {
   options: PezzoClientOptions;
-  private readonly axios: AxiosInstance; // TODO: swap with fetch for vercel AI
+  private readonly axios: AxiosInstance; // TODO: swap with fetch for Vercel AI
 
   constructor(options: PezzoClientOptions) {
     this.options = {

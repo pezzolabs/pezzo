@@ -46,9 +46,9 @@ ALTER TABLE "Prompt" ADD COLUMN "type" "PromptType" NOT NULL DEFAULT E'Prompt';
 -- Remove the default constraint
 ALTER TABLE "Prompt" ALTER COLUMN "type" DROP DEFAULT;
 
--- Step 8: Add the new "provider" column to PromptVersion
-ALTER TABLE "PromptVersion" ADD COLUMN "provider" text;
-UPDATE "PromptVersion" SET provider='OPENAI_CHAT_COMPLETION';
-ALTER TABLE "PromptVersion" ALTER COLUMN "provider" SET NOT NULL;
+-- Step 8: Add the new "service" column to PromptVersion
+ALTER TABLE "PromptVersion" ADD COLUMN "service" text;
+UPDATE "PromptVersion" SET service='OpenAIChatCompletion';
+ALTER TABLE "PromptVersion" ALTER COLUMN "service" SET NOT NULL;
 
 COMMIT;

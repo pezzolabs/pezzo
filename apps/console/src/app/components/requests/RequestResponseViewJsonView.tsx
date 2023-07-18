@@ -1,13 +1,13 @@
 import {
   ObservabilityRequest,
   ObservabilityResponse,
-  ProviderType,
+  Provider,
 } from "@pezzo/types";
 import { Space, Typography, Card } from "antd";
 
 interface Props {
-  request: ObservabilityRequest<ProviderType.OpenAI>;
-  response: ObservabilityResponse<ProviderType.OpenAI>;
+  request: ObservabilityRequest<Provider.OpenAI>;
+  response: ObservabilityResponse<Provider.OpenAI>;
 }
 
 export const RequestResponseViewJsonView = ({ request, response }: Props) => {

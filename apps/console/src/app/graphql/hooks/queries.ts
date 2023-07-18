@@ -16,7 +16,7 @@ import {
   RequestReport,
 } from "../../../@generated/graphql/graphql";
 import { GraphQLErrorResponse, ReportRequestResponse } from "../types";
-import { ProviderType } from "@pezzo/types";
+import { Provider } from "@pezzo/types";
 import { GET_PROMPT, GET_PROMPT_VERSION } from "../definitions/queries/prompts";
 
 export const useProviderApiKeys = () => {
@@ -101,10 +101,10 @@ export const useGetPromptVersion = (
 
 const buildTypedRequestReportObject = (requestReport: RequestReport) => {
   switch (requestReport.provider) {
-    case ProviderType.OpenAI:
-      return requestReport as ReportRequestResponse<ProviderType.OpenAI>;
+    case Provider.OpenAI:
+      return requestReport as ReportRequestResponse<Provider.OpenAI>;
     default:
-      return requestReport as ReportRequestResponse<ProviderType.OpenAI>;
+      return requestReport as ReportRequestResponse<Provider.OpenAI>;
   }
 };
 

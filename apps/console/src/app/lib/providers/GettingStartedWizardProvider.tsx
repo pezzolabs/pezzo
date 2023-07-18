@@ -1,4 +1,4 @@
-import { ProviderType } from "@pezzo/types";
+import { Provider} from "@pezzo/types";
 import { createContext, useContext, useMemo, useState } from "react";
 
 export enum Language {
@@ -12,8 +12,8 @@ export enum Usage {
 
 interface GettingStartedWizardContextValue {
   currentStep: number;
-  provider: ProviderType;
-  setProvider: (provider: ProviderType) => void;
+  provider: Provider;
+  setProvider: (provider: Provider) => void;
   language: Language;
   setLanguage: (language: Language) => void;
   usage: Usage;
@@ -31,7 +31,7 @@ interface Props {
 }
 
 export const GettingStartedWizardProvider = ({ children }: Props) => {
-  const [provider, setProvider] = useState<ProviderType | undefined>();
+  const [provider, setProvider] = useState<Provider | undefined>();
   const [language, setLanguage] = useState<Language | undefined>();
   const [usage, setUsage] = useState<Usage | undefined>();
 
@@ -51,7 +51,7 @@ export const GettingStartedWizardProvider = ({ children }: Props) => {
     return 0;
   }, [usage, language, provider]);
 
-  const handleProviderChange = (provider: ProviderType) => {
+  const handleProviderChange = (provider: Provider) => {
     setLanguage(undefined);
     setUsage(undefined);
     setProvider(provider);

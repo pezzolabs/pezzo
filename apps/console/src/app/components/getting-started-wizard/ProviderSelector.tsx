@@ -2,7 +2,7 @@ import { Space } from "antd";
 import { useGettingStartedWizard } from "../../lib/providers/GettingStartedWizardProvider";
 import OpenAILogo from "../../../assets/providers/openai-logo.svg";
 import { SelectionItem } from "./SelectionItem";
-import { ProviderType } from "@pezzo/types";
+import { Provider } from "@pezzo/types";
 
 export const ProviderSelector = () => {
   const { provider, setProvider } = useGettingStartedWizard();
@@ -15,9 +15,9 @@ export const ProviderSelector = () => {
     >
       <SelectionItem
         logo={OpenAILogo}
-        label={ProviderType.OpenAI}
-        onClick={() => setProvider(ProviderType.OpenAI)}
-        selected={provider === ProviderType.OpenAI}
+        label={Provider.OpenAI}
+        onClick={() => setProvider(Provider.OpenAI)}
+        selected={provider === Provider.OpenAI}
       />
     </Space>
   );

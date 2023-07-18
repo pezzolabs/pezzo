@@ -1,5 +1,5 @@
 import { OpenAIToolkit } from "@pezzo/llm-toolkit";
-import { ProviderType } from "./provider.types";
+import { Provider } from "./provider.types";
 import { Type } from "class-transformer";
 import { AllPrimitiveTypes, Primitive, RecursiveObject } from "./ts-helpers";
 import {
@@ -51,29 +51,29 @@ export class OpenAIObservabilityResponseBody
 }
 
 export class ObservabilityRequest<
-  TProviderType extends ProviderType | unknown = unknown
+  TProviderType extends Provider | unknown = unknown
 > {
   timestamp: string;
   @Type((opts) =>
-    opts?.object["provider"] === ProviderType.OpenAI
+    opts?.object["provider"] === Provider.OpenAI
       ? OpenAIObservabilityRequestBody
       : GenericObservabilityRequestResponseBody
   )
-  body: TProviderType extends ProviderType.OpenAI
+  body: TProviderType extends Provider.OpenAI
     ? OpenAIObservabilityRequestBody
     : GenericObservabilityRequestResponseBody;
 }
 
 export class ObservabilityResponse<
-  TProviderType extends ProviderType | unknown = unknown
+  TProviderType extends Provider | unknown = unknown
 > {
   timestamp: string;
   @Type((opts) =>
-    opts?.object["provider"] === ProviderType.OpenAI
+    opts?.object["provider"] === Provider.OpenAI
       ? OpenAIObservabilityResponseBody
       : GenericObservabilityRequestResponseBody
   )
-  body: TProviderType extends ProviderType.OpenAI
+  body: TProviderType extends Provider.OpenAI
     ? OpenAIObservabilityResponseBody
     : GenericObservabilityRequestResponseBody;
   status: number;
