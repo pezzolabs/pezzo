@@ -19,6 +19,7 @@ export interface Prompt<TSettings = unknown> {
   settings: TSettings;
   content: PrompContent;
   interpolatedContent: PrompContent;
+  providerName?: string;
 }
 
 export interface ReportPromptExecutionResult<TResult> {
