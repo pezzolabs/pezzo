@@ -14,8 +14,6 @@ export const ProviderSettingsSchemaRenderer = ({
   schema,
 }: Props) => {
 
-  console.log("schema", schema);
-
   return (
     <>
       {schema.map((field, index) => (

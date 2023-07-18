@@ -27,9 +27,6 @@ export const ProviderSettingsCard = ({ onOpenFunctionsModal }: Props) => {
     return null;
   }
 
-  console.log("settings", settings);
-  console.log("service", service);
-
   return (
     <>
       <ProviderSelector />
