@@ -1,16 +1,15 @@
 import { Configuration, OpenAIApi } from "openai";
-import { ChatCompletionProvider, ChatCompletionProviderConfig } from "../Pezzo";
+import { LLMProvider, LLMProviderConfig } from "../types";
 
-export class OpenAIChatCompletionProvider implements ChatCompletionProvider {
-  constructor(
-    private chatCompletionProviderConfig: ChatCompletionProviderConfig
-  ) {}
+export class OpenAILLMProvider implements LLMProvider {
+  constructor(private LLMProviderConfig: LLMProviderConfig) {}
 
-  async createChatCompletion(request) {
+  async createCompletion(request) {
     const configuration = new Configuration({
-      apiKey: this.chatCompletionProviderConfig.apiKey,
+      apiKey: this.LLMProviderConfig.apiKey,
     });
-    const openai: ChatCompletionProvider = new OpenAIApi(configuration);
-    return openai.createChatCompletion(request);
+    const openai = new OpenAIApi(configuration);
+    const { data } = await openai.createChatCompletion(request);
+    return { data };
   }
 }

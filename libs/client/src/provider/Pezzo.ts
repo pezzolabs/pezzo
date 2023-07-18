@@ -1,31 +1,22 @@
-import axios, { AxiosInstance } from "axios";
+import axios from "axios";
 import { ReportData } from "../types";
 import { Prompt } from "../types/prompts";
 import { interpolateVariables } from "../utils";
 import { PromptType } from "../@generated/graphql/graphql";
+import { PezzoChatCompletion } from "./PezzoChatCompletion";
 import {
-  CreateChatCompletionRequest,
-  CreateChatCompletionResponse,
-} from "openai";
-import { OpenAIChatCompletionProvider } from "./chat-providers/openai";
-import { AnthropicChatCompletionProvider } from "./chat-providers/anthropic";
-
-export interface ChatCompletionProviderConfig {
-  apiKey: string;
-}
-
-export interface ChatCompletionProvider {
-  createChatCompletion(
-    request: CreateChatCompletionRequest
-  ): Promise<{ data: CreateChatCompletionResponse }>;
-}
+  CreateCompletionRequest,
+  CreateCompletionResponse,
+  LLMProvider,
+  LLMProviderConfig,
+} from "./types";
 
 export interface PezzoClientOptions {
   serverUrl?: string;
   apiKey: string;
   environment: string;
   projectId: string;
-  providerConfigs: Record<string, ChatCompletionProviderConfig>;
+  providerConfigs: Record<string, LLMProviderConfig>;
 }
 
 export interface GetPromptOptions {
@@ -38,16 +29,13 @@ const defaultOptions: Partial<PezzoClientOptions> = {
 
 export class Pezzo {
   private readonly options: PezzoClientOptions;
-  private readonly chatCompletionProviders: Map<
-    string,
-    ChatCompletionProvider
-  > = new Map();
+  private readonly pezzoChatCompletion: PezzoChatCompletion;
 
   constructor(options: PezzoClientOptions) {
-    this.options = {
-      ...defaultOptions,
-      ...options,
-    };
+    this.options = { ...defaultOptions, ...options };
+    this.pezzoChatCompletion = new PezzoChatCompletion(
+      this.options.providerConfigs
+    );
   }
 
   async getPrompt(
@@ -112,39 +100,23 @@ export class Pezzo {
     );
   }
 
-  async setProviders(providers: Record<string, ChatCompletionProviderConfig>) {
-    const configs = Object.entries(providers);
-
-    configs.forEach(([providerName, config]) => {
-      if (this.chatCompletionProviders.has(providerName)) return;
-      if (providerName === "openai") {
-        const provider = new OpenAIChatCompletionProvider(config);
-        this.chatCompletionProviders.set(providerName, provider);
-        return;
-      }
-
-      if (providerName === "anthropic") {
-        const provider = new AnthropicChatCompletionProvider(config);
-        this.chatCompletionProviders.set(providerName, provider);
-        return;
-      }
-
-      throw new Error(`Unknown chat completion provider: ${providerName}`);
-    });
+  getProvider(providerName: string): LLMProvider {
+    return this.pezzoChatCompletion.getProviderByProviderName(providerName);
   }
 
-  async getPromptProvider({ pezzo }: { pezzo: Prompt }) {
-    const { providerName } = pezzo;
+  async mockReport(data: any) {
+    console.log("mockReport", data);
+  }
 
-    if (!this.chatCompletionProviders.size) throw new Error("No providers set");
-    if (!providerName && this.chatCompletionProviders.size === 1) {
-      return this.chatCompletionProviders.get(
-        this.chatCompletionProviders.keys()[0]
-      );
-    }
-    const provider = this.chatCompletionProviders.get(providerName);
-    if (!provider) throw new Error(`Unknown provider: ${providerName}`);
-
-    return provider;
+  async execute(
+    request: CreateCompletionRequest
+  ): Promise<CreateCompletionResponse> {
+    const response = this.pezzoChatCompletion.execute(request);
+    this.mockReport({
+      meta: this.options,
+      request,
+      response,
+    });
+    return response;
   }
 }
