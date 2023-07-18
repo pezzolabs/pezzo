@@ -28,6 +28,7 @@ datasource db {
 
 model PromptVersion {
   sha                String              @id
+  provider           String
   settings           Json                @default("{}")         
   content            Json
   promptId           String

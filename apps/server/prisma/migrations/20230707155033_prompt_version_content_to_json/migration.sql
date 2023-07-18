@@ -32,14 +32,12 @@ ALTER TABLE "PromptVersion" DROP COLUMN "tempContent";
 -- Step 6: Flatten the settings column
 UPDATE "PromptVersion"
 SET "settings" = jsonb_build_object(
-  'OPENAI_CHAT_COMPLETION', jsonb_build_object(
-    'model', "settings" -> 'model',
-    'top_p', "settings" -> 'modelSettings' -> 'top_p',
-    'max_tokens', "settings" -> 'modelSettings' -> 'max_tokens',
-    'temperature', "settings" -> 'modelSettings' -> 'temperature',
-    'presence_penalty', "settings" -> 'modelSettings' -> 'presence_penalty',
-    'frequency_penalty', "settings" -> 'modelSettings' -> 'frequency_penalty'
-  )
+  'model', "settings" -> 'model',
+  'top_p', "settings" -> 'modelSettings' -> 'top_p',
+  'max_tokens', "settings" -> 'modelSettings' -> 'max_tokens',
+  'temperature', "settings" -> 'modelSettings' -> 'temperature',
+  'presence_penalty', "settings" -> 'modelSettings' -> 'presence_penalty',
+  'frequency_penalty', "settings" -> 'modelSettings' -> 'frequency_penalty'
 );
 
 -- Step 7: Add the new type column with a temporary default value
@@ -47,5 +45,10 @@ ALTER TABLE "Prompt" ADD COLUMN "type" "PromptType" NOT NULL DEFAULT E'Prompt';
 
 -- Remove the default constraint
 ALTER TABLE "Prompt" ALTER COLUMN "type" DROP DEFAULT;
+
+-- Step 8: Add the new "provider" column to PromptVersion
+ALTER TABLE "PromptVersion" ADD COLUMN "provider" text;
+UPDATE "PromptVersion" SET provider='OPENAI_CHAT_COMPLETION';
+ALTER TABLE "PromptVersion" ALTER COLUMN "provider" SET NOT NULL;
 
 COMMIT;
