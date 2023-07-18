@@ -34,9 +34,7 @@ export const ProviderSettingsCard = ({ onOpenFunctionsModal }: Props) => {
         <>
           <Divider />
           <ProviderSettingsSchemaRenderer
-            schema={providerSettings[service].generateFormSchema(
-              settings
-            )}
+            schema={providerSettings[service].generateFormSchema(settings)}
           />
           {service === PromptService.OpenAIChatCompletion &&
             onOpenFunctionsModal && (

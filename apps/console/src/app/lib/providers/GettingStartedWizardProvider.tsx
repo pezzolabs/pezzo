@@ -1,4 +1,4 @@
-import { Provider} from "@pezzo/types";
+import { Provider } from "@pezzo/types";
 import { createContext, useContext, useMemo, useState } from "react";
 
 export enum Language {

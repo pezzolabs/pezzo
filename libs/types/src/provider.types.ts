@@ -30,4 +30,4 @@ export const promptProvidersMapping = {
     provider: Provider.Azure,
     defaultSettings: {},
   },
-}
+};

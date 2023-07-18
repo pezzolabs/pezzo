@@ -10,10 +10,7 @@ interface Props {
   schema: any[];
 }
 
-export const ProviderSettingsSchemaRenderer = ({
-  schema,
-}: Props) => {
-
+export const ProviderSettingsSchemaRenderer = ({ schema }: Props) => {
   return (
     <>
       {schema.map((field, index) => (

@@ -23,12 +23,7 @@ export const providersList: ProviderProps[] = [
     label: promptProvidersMapping[PromptService.OpenAIChatCompletion].name,
   },
   {
-    image: (
-      <Icon
-        src={AzureOpenAILogo}
-        style={{ padding: 2 }}
-      />
-    ),
+    image: <Icon src={AzureOpenAILogo} style={{ padding: 2 }} />,
     value: PromptService.AzureOpenAIChatCompletion,
     label: promptProvidersMapping[PromptService.AzureOpenAIChatCompletion].name,
   },
@@ -42,9 +37,7 @@ export const providersList: ProviderProps[] = [
  * @param providersKeys Array of provider keys that are managed
  * @returns
  */
-export const sortRenderedProviders = (
-  providersKeys: PromptService[]
-) => {
+export const sortRenderedProviders = (providersKeys: PromptService[]) => {
   const managed = providersList.filter((provider) =>
     providersKeys.includes(provider.value)
   );
