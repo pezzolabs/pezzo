@@ -1,4 +1,4 @@
-import { PromptService } from "@pezzo/types";
+import { PromptService } from "../../../../../@generated/graphql/graphql";
 
 export interface ProviderProps {
   image: React.ReactNode;

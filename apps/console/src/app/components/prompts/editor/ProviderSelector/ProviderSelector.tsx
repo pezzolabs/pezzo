@@ -1,10 +1,11 @@
-import { Button, Col, Form, Row, Select, Space } from "antd";
+import { Col, Form, Row, Select, Space } from "antd";
 import styled from "@emotion/styled";
 import { useState } from "react";
 import { sortRenderedProviders } from "./providers";
 import { ProviderProps } from "./types";
-import { PromptService } from "@pezzo/types";
 import { usePromptVersionEditorContext } from "../../../../lib/providers/PromptVersionEditorContext";
+import { getServiceDefaultSettings } from "../ProviderSettings/providers";
+import { PromptService } from "../../../../../@generated/graphql/graphql";
 
 const StyledSelect = styled(Select)`
   .actions {
@@ -21,43 +22,23 @@ export const ProviderSelector = () => {
     Object.keys(settings) as PromptService[]
   );
 
-  const handleSelect = (value: ProviderProps["value"]) => {
+  const handleSelect = (value: PromptService) => {
+    const defaultSettings = getServiceDefaultSettings(value);
+    form.setFieldsValue({ settings: defaultSettings });
     setOpen(false);
   };
 
   const renderProvider = (provider: ProviderProps) => {
-    const isConfigured = true; // TODO
-
     return {
       value: provider.value,
-      disabled: !isConfigured,
       label: (
         <div>
           <Row justify="space-between" align="middle" style={{ width: "100%" }}>
-            <Col style={{ maxWidth: "80%" }}>
+            <Col>
               <Space>
                 {provider.image}
                 {provider.label}
               </Space>
-            </Col>
-            <Col className="actions">
-              {/* {isManaged ? (
-                <Button
-                  type="text"
-                  icon={<DeleteOutlined />}
-                  onClick={(e: React.MouseEvent<HTMLElement>) =>
-                    handleDelete(e, provider)
-                  }
-                />
-              ) : (
-                <Button
-                  type="text"
-                  icon={<PlusCircleOutlined />}
-                  onClick={(e: React.MouseEvent<HTMLElement>) =>
-                    handleAdd(e, provider)
-                  }
-                />
-              )} */}
             </Col>
           </Row>
         </div>
@@ -76,7 +57,6 @@ export const ProviderSelector = () => {
         size="large"
         style={{ width: "100%" }}
         placeholder="Select a provider"
-        // value={selectedProvider}
         options={providers.map(renderProvider)}
       />
     </Form.Item>

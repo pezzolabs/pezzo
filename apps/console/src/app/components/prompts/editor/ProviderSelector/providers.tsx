@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { ProviderProps } from "./types";
-import { PromptService, promptProvidersMapping } from "@pezzo/types";
+import { promptProvidersMapping } from "@pezzo/types";
+import { PromptService } from "../../../../../@generated/graphql/graphql";
 
 // Logos
 import OpenAILogo from "../../../../../assets/providers/openai-logo.svg";
@@ -19,13 +20,13 @@ export const providersList: ProviderProps[] = [
         style={{ backgroundColor: "#74AA9C", padding: 2 }}
       />
     ),
-    value: PromptService.OpenAIChatCompletion,
-    label: promptProvidersMapping[PromptService.OpenAIChatCompletion].name,
+    value: PromptService.OpenAiChatCompletion,
+    label: promptProvidersMapping[PromptService.OpenAiChatCompletion].name,
   },
   {
     image: <Icon src={AzureOpenAILogo} style={{ padding: 2 }} />,
-    value: PromptService.AzureOpenAIChatCompletion,
-    label: promptProvidersMapping[PromptService.AzureOpenAIChatCompletion].name,
+    value: PromptService.AzureOpenAiChatCompletion,
+    label: promptProvidersMapping[PromptService.AzureOpenAiChatCompletion].name,
   },
 ];
 

@@ -3,7 +3,6 @@ import { css } from "@emotion/css";
 import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
 import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
 import { useCreatePromptVersion } from "../../graphql/hooks/mutations";
-import { PromptService } from "../../../@generated/graphql/graphql";
 
 interface Props {
   open: boolean;
@@ -23,11 +22,11 @@ export const CommitPromptModal = ({ open, onClose, onCommitted }: Props) => {
   const { mutateAsync: createPromptVersion, error } = useCreatePromptVersion();
 
   const handleFormFinish = async (values: Inputs) => {
-    const { settings, content } = formValues;
+    const { settings, content, service } = formValues;
 
     const data = {
       message: values.message,
-      service: PromptService.OpenAiChatCompletion,
+      service: service,
       content,
       settings: settings || {},
       promptId: prompt.id,
