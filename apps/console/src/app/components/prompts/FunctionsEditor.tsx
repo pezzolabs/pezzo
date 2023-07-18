@@ -3,7 +3,7 @@ import { FormConfig, OnSubmit } from "@tutim/types";
 import { TutimWizard, TutimProvider } from "@tutim/headless";
 import { defaultFields } from "@tutim/fields";
 import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
-import { ProviderSettingsKeys } from "@pezzo/types";
+import { PromptService } from "@pezzo/types";
 
 interface Props {
   onClose: () => void;
@@ -113,7 +113,7 @@ export const FunctionsEditor = ({ onClose }: Props) => {
   const functions =
     form.getFieldValue([
       "settings",
-      ProviderSettingsKeys.OPENAI_CHAT_COMPLETION,
+      PromptService.OpenAIChatCompletion,
       "functions",
     ]) || [];
 
@@ -122,7 +122,7 @@ export const FunctionsEditor = ({ onClose }: Props) => {
     const parsedFunctions = data.functions.map(parseFromFormDataToSchema);
     form.setFieldsValue({
       settings: {
-        [ProviderSettingsKeys.OPENAI_CHAT_COMPLETION]: {
+        [PromptService.OpenAIChatCompletion]: {
           functions: parsedFunctions,
         },
       },

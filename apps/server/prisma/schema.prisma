@@ -13,6 +13,13 @@ generator nestgraphql {
   binaryTargets = ["native", "debian-openssl-1.1.x", "linux-arm64-openssl-1.1.x"]
   purgeOutput   = true
 
+  // PromptService
+  fields_PromptService_from        = "../../app/prompts/models/prompt-version-service.enum"
+  fields_PromptService_input       = true
+  fields_PromptService_models      = true
+  fields_PromptService_output      = true
+  fields_PromptService_namedImport = true
+
   // ExtendedUser
   fields_ExtendedUser_from        = "../../app/identity/models/extended-user.model"
   fields_ExtendedUser_input       = false
@@ -28,6 +35,9 @@ datasource db {
 
 model PromptVersion {
   sha                String              @id
+  /// @FieldType('PromptService')
+  /// @PropertyType('PromptService')
+  service            String
   settings           Json                @default("{}")         
   content            Json
   promptId           String

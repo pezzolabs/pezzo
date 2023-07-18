@@ -9,12 +9,16 @@ import {
 import { useCurrentPrompt } from "./CurrentPromptContext";
 import {
   GetPromptVersionQuery,
+  PromptService,
   PromptType,
 } from "../../../@generated/graphql/graphql";
 import { Form, FormInstance } from "antd";
 import { useGetPromptVersion } from "../../graphql/hooks/queries";
+import { openAIChatCompletionSettingsDefinition } from "../../components/prompts/editor/ProviderSettings/providers/openai-chat-completion";
+import { getServiceDefaultSettings } from "../../components/prompts/editor/ProviderSettings/providers";
 
 interface FormInputs {
+  service: PromptService;
   settings: any;
   content: any;
 }
@@ -65,8 +69,12 @@ export const PromptVersionEditorProvider = ({ children }) => {
     // Take a snapshot of the initial values.
     // This will then be used to determine if there are changes to commit.
     if (isDraft) {
+      const service = PromptService.OpenAiChatCompletion;
+      const settings = getServiceDefaultSettings(service);
+
       initialValues.current = {
-        settings: {},
+        service,
+        settings,
         content:
           prompt.type === PromptType.Prompt ? { prompt: "" } : { messages: [] },
       };
@@ -74,6 +82,7 @@ export const PromptVersionEditorProvider = ({ children }) => {
 
     if (isFetched && currentVersion) {
       initialValues.current = {
+        service: currentVersion.service,
         settings: currentVersion.settings,
         content: currentVersion.content,
       };

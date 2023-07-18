@@ -54,7 +54,7 @@ export class PromptsService {
     data: CreatePromptVersionInput,
     createdByUserId: string
   ) {
-    const { content, settings, promptId, message } = data;
+    const { promptId, service, content, settings, message } = data;
 
     const sha = sha256(
       `${JSON.stringify({ content, settings })}-${promptId}-${Date.now()}`
@@ -63,6 +63,7 @@ export class PromptsService {
     const version = await this.prisma.promptVersion.create({
       data: {
         sha,
+        service,
         content,
         settings: settings as any, // eslint-disable-line @typescript-eslint/no-explicit-any
         promptId,

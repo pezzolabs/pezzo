@@ -1,5 +1,5 @@
 import { ReportRequestDto } from "../dto/report-request.dto";
-import { ProviderType } from "@pezzo/types";
+import { Provider } from "@pezzo/types";
 import { OpenAIToolkit } from "@pezzo/llm-toolkit";
 
 export const buildRequestReport = (dto: ReportRequestDto) => {
@@ -7,7 +7,7 @@ export const buildRequestReport = (dto: ReportRequestDto) => {
   const responseTimestamp = new Date(dto.response.timestamp);
   const duration = responseTimestamp.getTime() - requestTimestamp.getTime();
   switch (dto.provider) {
-    case ProviderType.OpenAI:
+    case Provider.OpenAI:
       return buildOpenAIReport(dto, duration);
     default:
       throw new Error("Unsupported provider");
@@ -15,7 +15,7 @@ export const buildRequestReport = (dto: ReportRequestDto) => {
 };
 
 const buildOpenAIReport = (
-  dto: ReportRequestDto<ProviderType.OpenAI>,
+  dto: ReportRequestDto<Provider.OpenAI>,
   requestDuration: number
 ) => {
   const { response, request } = dto;
@@ -34,7 +34,7 @@ const buildOpenAIReport = (
     };
 
   const { promptCost, completionCost } = OpenAIToolkit.calculateGptCost({
-    model,
+    model: model as any,
     promptTokens: usage.prompt_tokens,
     completionTokens: usage.completion_tokens,
   });

@@ -1,7 +1,7 @@
 import { Button, Divider, Form } from "antd";
 import { usePromptVersionEditorContext } from "../../../lib/providers/PromptVersionEditorContext";
-import { ProviderSelector } from "./PromptSelector/ProviderSelector";
-import { ProviderSettingsKeys } from "@pezzo/types";
+import { ProviderSelector } from "./ProviderSelector/ProviderSelector";
+import { PromptService } from "@pezzo/types";
 import { useState } from "react";
 import { SendOutlined } from "@ant-design/icons";
 import { ProviderSettingsSchemaRenderer } from "./ProviderSettings/ProviderSettingsSchemaRenderer";
@@ -9,9 +9,8 @@ import { openAIChatCompletionSettingsDefinition } from "./ProviderSettings/provi
 import { azureOpenAIChatCompletionSettingsDefinition } from "./ProviderSettings/providers/azure-openai-chat-completion";
 
 const providerSettings = {
-  [ProviderSettingsKeys.OPENAI_CHAT_COMPLETION]:
-    openAIChatCompletionSettingsDefinition,
-  [ProviderSettingsKeys.AZURE_OPENAI_CHAT_COMPLETION]:
+  [PromptService.OpenAIChatCompletion]: openAIChatCompletionSettingsDefinition,
+  [PromptService.AzureOpenAIChatCompletion]:
     azureOpenAIChatCompletionSettingsDefinition,
 };
 
@@ -22,43 +21,22 @@ interface Props {
 export const ProviderSettingsCard = ({ onOpenFunctionsModal }: Props) => {
   const { form } = usePromptVersionEditorContext();
   const settings = Form.useWatch("settings", { form, preserve: true });
-  const [selectedProvider, setSelectedProvider] =
-    useState<ProviderSettingsKeys>(null);
+  const service = form.getFieldValue("service");
 
   if (!settings) {
     return null;
   }
 
-  const handleSelectProvider = (provider: ProviderSettingsKeys) => {
-    setSelectedProvider(provider);
-  };
-
-  const handleAddProvider = (provider: ProviderSettingsKeys) => {
-    form.setFieldsValue({
-      settings: {
-        ...settings,
-        [provider]: providerSettings[provider].defaultSettings,
-      },
-    });
-  };
-
   return (
     <>
-      <ProviderSelector
-        selectedProvider={selectedProvider}
-        onSelect={handleSelectProvider}
-        onAdd={handleAddProvider}
-      />
-      {selectedProvider && (
+      <ProviderSelector />
+      {service && (
         <>
           <Divider />
           <ProviderSettingsSchemaRenderer
-            schema={providerSettings[selectedProvider].generateFormSchema(
-              settings[selectedProvider]
-            )}
-            baseFieldPath={["settings", selectedProvider]}
+            schema={providerSettings[service].generateFormSchema(settings)}
           />
-          {selectedProvider === ProviderSettingsKeys.OPENAI_CHAT_COMPLETION &&
+          {service === PromptService.OpenAIChatCompletion &&
             onOpenFunctionsModal && (
               <Button onClick={onOpenFunctionsModal} icon={<SendOutlined />}>
                 Edit Functions

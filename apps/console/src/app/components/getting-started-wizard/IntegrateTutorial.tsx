@@ -1,4 +1,4 @@
-import { ProviderType } from "@pezzo/types";
+import { Provider } from "@pezzo/types";
 import {
   Language,
   useGettingStartedWizard,
@@ -8,7 +8,7 @@ import { TypeScriptOpenAIIntegrationTutorial } from "./TypeScriptOpenAIIntegrati
 export const IntegrateTutorial = () => {
   const { language, provider } = useGettingStartedWizard();
 
-  if (provider === ProviderType.OpenAI && language === Language.TypeScript) {
+  if (provider === Provider.OpenAI && language === Language.TypeScript) {
     return <TypeScriptOpenAIIntegrationTutorial />;
   }
 };

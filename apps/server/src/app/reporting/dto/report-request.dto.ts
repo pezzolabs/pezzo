@@ -1,6 +1,6 @@
 import { IsEnum, IsObject, IsOptional } from "class-validator";
 import {
-  ProviderType,
+  Provider,
   PromptExecutionType,
   ObservabilityReportProperties,
   ObservabilityReportMetadata,
@@ -9,10 +9,10 @@ import {
 } from "@pezzo/types";
 
 export class ReportRequestDto<
-  TProviderType extends ProviderType | unknown = unknown
+  TProviderType extends Provider | unknown = unknown
 > {
-  @IsEnum(ProviderType)
-  provider: ProviderType;
+  @IsEnum(Provider)
+  provider: Provider;
 
   @IsEnum(PromptExecutionType)
   type: PromptExecutionType;
@@ -26,7 +26,7 @@ export class ReportRequestDto<
   metadata?: ObservabilityReportMetadata;
 
   @IsObject()
-  request: ObservabilityRequest<TProviderType>;
+  request: ObservabilityRequest<Provider>;
 
   @IsObject()
   response: ObservabilityResponse<TProviderType>;

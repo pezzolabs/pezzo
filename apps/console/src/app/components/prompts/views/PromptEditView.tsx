@@ -60,7 +60,7 @@ export const PromptEditView = () => {
             )}
           </Col>
           <Col span={7}>
-            <Card title="Provider Settings" style={{ marginBottom: 24 }}>
+            <Card title="Settings" style={{ marginBottom: 24 }}>
               <ProviderSettingsCard
                 onOpenFunctionsModal={
                   FUNCTIONS_FEATURE_FLAG

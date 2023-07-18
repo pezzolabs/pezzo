@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { ProviderProps } from "./types";
-import { ProviderSettingsKeys } from "@pezzo/types";
+import { promptProvidersMapping } from "@pezzo/types";
+import { PromptService } from "../../../../../@generated/graphql/graphql";
 
 // Logos
 import OpenAILogo from "../../../../../assets/providers/openai-logo.svg";
@@ -19,18 +20,13 @@ export const providersList: ProviderProps[] = [
         style={{ backgroundColor: "#74AA9C", padding: 2 }}
       />
     ),
-    value: ProviderSettingsKeys.OPENAI_CHAT_COMPLETION,
-    label: "OpenAI",
+    value: PromptService.OpenAiChatCompletion,
+    label: promptProvidersMapping[PromptService.OpenAiChatCompletion].name,
   },
   {
-    image: (
-      <Icon
-        src={AzureOpenAILogo}
-        style={{ backgroundColor: "#74AA9C", padding: 2 }}
-      />
-    ),
-    value: ProviderSettingsKeys.AZURE_OPENAI_CHAT_COMPLETION,
-    label: "Azure OpenAI",
+    image: <Icon src={AzureOpenAILogo} style={{ padding: 2 }} />,
+    value: PromptService.AzureOpenAiChatCompletion,
+    label: promptProvidersMapping[PromptService.AzureOpenAiChatCompletion].name,
   },
 ];
 
@@ -42,9 +38,7 @@ export const providersList: ProviderProps[] = [
  * @param providersKeys Array of provider keys that are managed
  * @returns
  */
-export const sortRenderedProviders = (
-  providersKeys: ProviderSettingsKeys[]
-) => {
+export const sortRenderedProviders = (providersKeys: PromptService[]) => {
   const managed = providersList.filter((provider) =>
     providersKeys.includes(provider.value)
   );

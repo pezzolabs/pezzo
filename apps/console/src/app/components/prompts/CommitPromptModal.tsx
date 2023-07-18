@@ -22,10 +22,11 @@ export const CommitPromptModal = ({ open, onClose, onCommitted }: Props) => {
   const { mutateAsync: createPromptVersion, error } = useCreatePromptVersion();
 
   const handleFormFinish = async (values: Inputs) => {
-    const { settings, content } = formValues;
+    const { settings, content, service } = formValues;
 
     const data = {
       message: values.message,
+      service: service,
       content,
       settings: settings || {},
       promptId: prompt.id,
