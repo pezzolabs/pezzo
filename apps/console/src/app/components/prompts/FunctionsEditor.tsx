@@ -123,7 +123,7 @@ export const FunctionsEditor = ({ onClose }: Props) => {
     form.setFieldsValue({
       settings: {
         [PromptService.OpenAIChatCompletion]: {
-          functions: parsedFunctions,
+          functions: parsedFunctions.length ? parsedFunctions : undefined,
         },
       },
     });
