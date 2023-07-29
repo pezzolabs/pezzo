@@ -1,7 +1,7 @@
 export const FILTER_FIELDS_LIST = [
   {
     value: "request.timestamp",
-    type: "string",
+    type: "date",
     label: "Timestamp",
   },
   {
@@ -23,11 +23,6 @@ export const FILTER_FIELDS_LIST = [
     value: "calculated.duration",
     type: "number",
     label: "Duration (ms)",
-  },
-  {
-    value: "metadata.conversationId",
-    type: "string",
-    label: "Conversation ID",
   },
 ];
 

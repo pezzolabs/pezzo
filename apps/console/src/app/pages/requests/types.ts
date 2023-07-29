@@ -1,10 +1,11 @@
+import { AllPrimitiveTypes } from "@pezzo/types";
+
 export interface RequestReportItem {
   key: string;
   timestamp: string;
   status: JSX.Element;
-  request: string;
-  response: JSX.Element;
-  latency: string;
+  duration: string;
   totalTokens?: number;
   cost?: string;
+  promptId?: AllPrimitiveTypes;
 }

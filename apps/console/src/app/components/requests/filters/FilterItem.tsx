@@ -85,7 +85,7 @@ export const AddFilterForm = ({
     >
       <Form.Item
         name="field"
-        style={{ margin: 0, width: 120 }}
+        style={{ margin: 0 }}
         rules={[
           {
             required: true,
@@ -123,11 +123,7 @@ export const AddFilterForm = ({
 
           return (
             <Form.Item noStyle name="operator">
-              <Select
-                placeholder="Select an operator"
-                style={{ width: 120 }}
-                options={options}
-              />
+              <Select placeholder="Select an operator" options={options} />
             </Form.Item>
           );
         }}

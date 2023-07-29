@@ -1,8 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import { ReportData } from "../types";
 import { Prompt } from "../types/prompts";
-import { interpolateVariables } from "../utils";
-import { PromptType } from "../@generated/graphql/graphql";
 
 export interface PezzoClientOptions {
   serverUrl?: string;

@@ -5,10 +5,9 @@ import {
 } from "openai";
 import { InjectPezzoProps, ReportData } from "../types";
 import { Pezzo } from "./Pezzo";
-import { PromptType } from "../@generated/graphql/graphql";
 import { PromptExecutionType, Provider } from "@pezzo/types";
 import { merge } from "../utils/helpers";
-import { interpolateVariables } from "../utils";
+import { interpolateVariablesRecursively } from "../utils";
 
 type CreateChatCompletionRequest = Omit<
   OriginalCreateChatCompletionRequest,
@@ -37,7 +36,7 @@ export class PezzoOpenAIApi extends OpenAIApi {
   // @ts-expect-error Overriding the 2nd argument of the OpenAI createChatCompletion API
   override async createChatCompletion(
     _arg1: PezzoCreateChatCompletionRequest | CreateChatCompletionRequest,
-    pezzoProps?: PezzoProps,
+    pezzoOptions?: PezzoProps,
     ...rest: Parameters<OpenAIApi["createChatCompletion"]>[1] extends infer P
       ? P[]
       : never[]
@@ -48,34 +47,25 @@ export class PezzoOpenAIApi extends OpenAIApi {
     const nativeOptions = { ...arg1 };
     delete nativeOptions["pezzo"];
 
-    const settings = pezzoPrompt.settings;
+    let managedMessages: ChatCompletionRequestMessage[] = [];
 
-    let interpolatedContent: any = {};
-
-    if (pezzoProps?.variables) {
-      if (pezzoPrompt.metadata.type === PromptType.Prompt) {
-        interpolatedContent = {
-          prompt: interpolateVariables(
-            pezzoPrompt.content.prompt,
-            pezzoProps.variables
-          ),
-        };
-      }
-    }
-
-    let messages: ChatCompletionRequestMessage[] = [];
-
-    if (pezzoPrompt.metadata.type === PromptType.Prompt) {
-      messages = [{ role: "user", content: interpolatedContent.prompt }];
-    } else if (pezzoPrompt.type === PromptType.Chat) {
-      // TODO: support chat type in the future
+    if (pezzoPrompt) {
+      managedMessages = [{ role: "user", content: pezzoPrompt.content.prompt }];
     }
 
     const requestBody: Partial<CreateChatCompletionRequest> = {
+      messages: managedMessages,
+      ...(pezzoPrompt?.settings ?? {}),
       ...nativeOptions,
-      ...settings,
-      messages,
     };
+
+    if (pezzoOptions?.variables) {
+      const messages = interpolateVariablesRecursively<
+        ChatCompletionRequestMessage[]
+      >(requestBody.messages, pezzoOptions.variables);
+
+      requestBody.messages = messages;
+    }
 
     let result;
     let error;
@@ -87,6 +77,17 @@ export class PezzoOpenAIApi extends OpenAIApi {
 
     const requestTimestamp = new Date().toISOString();
 
+    const baseReport = {
+      provider: Provider.OpenAI,
+      type: PromptExecutionType.ChatCompletion,
+      metadata: merge(baseMetadata, pezzoPrompt?.metadata), // TODO: merge pezzo metadata
+      properties: pezzoOptions?.properties,
+      request: {
+        timestamp: requestTimestamp,
+        body: requestBody,
+      },
+    };
+
     try {
       result = await super.createChatCompletion.call(
         this,
@@ -95,14 +96,7 @@ export class PezzoOpenAIApi extends OpenAIApi {
       const { _request, ...response } = result;
 
       reportPayload = {
-        provider: Provider.OpenAI,
-        type: PromptExecutionType.ChatCompletion,
-        metadata: merge(baseMetadata, pezzoPrompt.metadata), // TODO: merge pezzo metadata
-        properties: pezzoProps?.properties,
-        request: {
-          timestamp: requestTimestamp,
-          body: requestBody,
-        },
+        ...baseReport,
         response: {
           timestamp: new Date().toISOString(),
           body: response.data ?? response.response.data,
@@ -113,14 +107,7 @@ export class PezzoOpenAIApi extends OpenAIApi {
       error = err;
 
       reportPayload = {
-        provider: Provider.OpenAI,
-        type: PromptExecutionType.ChatCompletion,
-        metadata: merge(baseMetadata, pezzoPrompt.metadata), // TODO: merge pezzo metadata
-        properties: pezzoProps?.properties,
-        request: {
-          timestamp: requestTimestamp,
-          body: requestBody,
-        },
+        ...baseReport,
         response: {
           timestamp: new Date().toISOString(),
           body: err.data ?? err.response.data,

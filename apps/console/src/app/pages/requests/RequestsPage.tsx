@@ -1,9 +1,7 @@
 import { Divider, Drawer, Space, Table, Tag, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useGetRequestReports } from "../../graphql/hooks/queries";
-import ms from "ms";
 import { useMemo, useState } from "react";
-import { Loading3QuartersOutlined } from "@ant-design/icons";
 import {
   DEFAULT_PAGE_SIZE,
   PAGE_SIZE_OPTIONS,
@@ -12,43 +10,48 @@ import { RequestDetails } from "../../components/requests/RequestDetails";
 import { toDollarSign } from "../../lib/utils/currency-utils";
 import { RequestFilters } from "../../components/requests/RequestFilters";
 import { RequestReportItem } from "./types";
+import { UnmanagedPromptWarning } from "./UnmanagedPromptWarning";
 
-const columns: ColumnsType<RequestReportItem> = [
-  {
-    title: "Timestamp",
-    dataIndex: "timestamp",
-    width: "20%",
-  },
-  {
-    title: "Status",
-    dataIndex: "status",
-  },
-  {
-    title: "Request",
-    dataIndex: "request",
-    width: "20%",
-    ellipsis: true,
-  },
-  {
-    title: "Response",
-    dataIndex: "response",
+const getTableColumns = (
+  data: RequestReportItem[]
+): ColumnsType<RequestReportItem> => {
+  const columns: ColumnsType<RequestReportItem> = [
+    {
+      title: "Timestamp",
+      dataIndex: "timestamp",
+      width: "20%",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+    },
+    {
+      title: "Duration",
+      dataIndex: "duration",
+    },
+    {
+      title: "Total Tokens",
+      dataIndex: "totalTokens",
+    },
+    {
+      title: "Cost",
+      dataIndex: "cost",
+    },
+  ];
 
-    width: "20%",
-    ellipsis: true,
-  },
-  {
-    title: "Latency",
-    dataIndex: "latency",
-  },
-  {
-    title: "Total Tokens",
-    dataIndex: "totalTokens",
-  },
-  {
-    title: "Cost",
-    dataIndex: "cost",
-  },
-];
+  const hasUnmanagedPrompts = data.some((r) => !r.promptId);
+
+  if (hasUnmanagedPrompts) {
+    columns.unshift({
+      title: "",
+      dataIndex: "promptId",
+      render: (promptId?: string) => !promptId && <UnmanagedPromptWarning />,
+      width: "40px",
+      align: "center",
+    });
+  }
+  return columns;
+};
 
 export const RequestsPage = () => {
   const [size, setSize] = useState(DEFAULT_PAGE_SIZE);
@@ -68,9 +71,6 @@ export const RequestsPage = () => {
 
   const tableData = data?.map((report) => {
     const isError = report.response.status >= 400;
-    const response = isError
-      ? JSON.stringify(report.response.body.error ?? {})
-      : report.response.body?.choices?.[0].message.content;
 
     return {
       key: report.reportId,
@@ -80,18 +80,19 @@ export const RequestsPage = () => {
       ) : (
         <Tag color="green">Success</Tag>
       ),
-      request: report.request.body?.messages?.[0]?.content ?? "N/A",
-      response: <code>{response}</code>,
-      latency: ms(report.calculated.duration),
+      duration: `${(report.calculated.duration / 1000).toFixed(2)}s`,
       totalTokens: report.calculated.totalTokens ?? 0,
       cost: report.calculated.totalCost
         ? toDollarSign(report.calculated.totalCost)
         : "$0.0000",
+      promptId: report.metadata?.promptId,
     };
   });
 
   const handleShowDetails = (record: RequestReportItem) => () =>
     setCurrentReportId(record.key);
+
+  const columns = getTableColumns(tableData);
 
   return (
     <div>
