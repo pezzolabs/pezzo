@@ -3,7 +3,11 @@ import {
   CreateChatCompletionRequest as OriginalCreateChatCompletionRequest,
   OpenAIApi,
 } from "openai";
-import { InjectPezzoProps, ReportData } from "../types";
+import {
+  InjectPezzoProps,
+  ObservabilityReportMetadata,
+  ReportData,
+} from "../types";
 import { Pezzo } from "./Pezzo";
 import { PromptExecutionType, Provider } from "@pezzo/types";
 import { merge } from "../utils/helpers";
@@ -71,15 +75,15 @@ export class PezzoOpenAIApi extends OpenAIApi {
     let error;
     let reportPayload: ReportData;
 
-    const baseMetadata = {
+    const baseMetadata: Partial<ObservabilityReportMetadata> = {
       environment: this.pezzo.options.environment,
+      provider: Provider.OpenAI,
+      type: PromptExecutionType.ChatCompletion,
     };
 
     const requestTimestamp = new Date().toISOString();
 
     const baseReport = {
-      provider: Provider.OpenAI,
-      type: PromptExecutionType.ChatCompletion,
       metadata: merge(baseMetadata, pezzoPrompt?.metadata), // TODO: merge pezzo metadata
       properties: pezzoOptions?.properties,
       request: {

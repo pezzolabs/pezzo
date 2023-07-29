@@ -10,12 +10,6 @@ export class RequestReport {
   @Field(() => GraphQLJSONObject, { nullable: true })
   calculated!: Record<string, AllPrimitiveTypes>;
 
-  @Field(() => String, { nullable: false })
-  provider!: string;
-
-  @Field(() => String, { nullable: false })
-  type!: string;
-
   @Field(() => GraphQLJSONObject, { nullable: true })
   properties!: Record<string, AllPrimitiveTypes>;
 

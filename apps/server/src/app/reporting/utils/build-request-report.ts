@@ -6,7 +6,7 @@ export const buildRequestReport = (dto: ReportRequestDto) => {
   const requestTimestamp = new Date(dto.request.timestamp);
   const responseTimestamp = new Date(dto.response.timestamp);
   const duration = responseTimestamp.getTime() - requestTimestamp.getTime();
-  switch (dto.provider) {
+  switch (dto.metadata.provider) {
     case Provider.OpenAI:
       return buildOpenAIReport(dto, duration);
     default:

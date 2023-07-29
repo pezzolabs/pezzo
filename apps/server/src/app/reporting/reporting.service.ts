@@ -24,16 +24,15 @@ export class ReportingService {
     const reportId = randomUUID();
     const { report, calculated } = buildRequestReport(dto);
 
-    const { provider, type, properties, metadata, request, response } = report;
+    const { properties, metadata, request, response } = report;
 
     return this.openSearchService.client.index({
       index: OpenSearchIndex.Requests,
       body: {
+        timestamp: request.timestamp,
         ownership,
         reportId,
         calculated,
-        provider,
-        type,
         properties,
         metadata,
         request,

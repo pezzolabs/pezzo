@@ -102,7 +102,7 @@ export const useGetPromptVersion = (
 };
 
 const buildTypedRequestReportObject = (requestReport: RequestReport) => {
-  switch (requestReport.provider) {
+  switch (requestReport.metadata.providers) {
     case Provider.OpenAI:
       return requestReport as ReportRequestResponse<Provider.OpenAI>;
     default:

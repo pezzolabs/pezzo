@@ -113,7 +113,7 @@ export const RequestsPage = () => {
               id={currentReportId}
               request={currentReport.request}
               response={currentReport.response}
-              provider={currentReport.provider}
+              provider={currentReport.metadata.provider}
               calculated={currentReport.calculated}
               metadata={currentReport.metadata}
               properties={currentReport.properties}

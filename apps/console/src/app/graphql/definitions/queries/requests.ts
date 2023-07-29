@@ -7,11 +7,9 @@ export const GET_ALL_REQUESTS = graphql(/* GraphQL */ `
         reportId
         request
         response
-        provider
         calculated
         properties
         metadata
-        type
       }
       pagination {
         page
