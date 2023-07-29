@@ -16,6 +16,7 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
+    console.log("Failed to fetch prompt from Pezzo", error);
     return NextResponse.json(
       {
         message: error.message,
@@ -28,14 +29,13 @@ export async function POST(request: Request) {
 
   try {
     const result = await openai.createChatCompletion(prompt);
-    console.log("result", result.data.choices);
 
     const parsed = JSON.parse(result.data.choices[0].message.content);
     return NextResponse.json(parsed, {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error(error);
+    console.error(error.response.data);
     return NextResponse.json(
       {
         message:
