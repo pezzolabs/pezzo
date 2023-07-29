@@ -86,7 +86,7 @@ export const RequestDetails = (props: Props) => {
             ),
           },
           {
-            title: "Latency",
+            title: "Duration",
             description: ms(props.calculated.duration),
           },
         ]}
