@@ -28,7 +28,14 @@ export async function POST(request: Request) {
   }
 
   try {
-    const result = await openai.createChatCompletion(prompt);
+    const result = await openai.createChatCompletion(prompt, {
+      variables: {
+        goal: "Become a chef",
+      },
+      properties: {
+        traceId: "SomeTraceId123",
+      },
+    });
 
     const parsed = JSON.parse(result.data.choices[0].message.content);
     return NextResponse.json(parsed, {

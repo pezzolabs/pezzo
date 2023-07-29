@@ -38,10 +38,7 @@ export class Pezzo {
     });
   }
 
-  async getPrompt(
-    promptName: string,
-    options?: GetPromptOptions
-  ): Promise<{ pezzo: Prompt }> {
+  async getPrompt(promptName: string): Promise<{ pezzo: Prompt }> {
     const url = new URL(`${this.options.serverUrl}/api/prompts/v2/deployment`);
     url.searchParams.append("name", promptName);
     url.searchParams.append("environmentName", this.options.environment);
@@ -63,23 +60,14 @@ export class Pezzo {
       }
     }
 
-    let interpolatedContent: any = {};
-
-    if (options?.variables) {
-      if (data.type === PromptType.Prompt) {
-        interpolatedContent = {
-          prompt: interpolateVariables(data.content.prompt, options?.variables),
-        };
-      }
-    }
-
     const pezzoPrompt: Prompt = {
-      promptId: data.promptId,
-      promptVersionSha: data.promptVersionSha,
-      type: data.type,
+      metadata: {
+        promptId: data.promptId,
+        promptVersionSha: data.promptVersionSha,
+        type: data.type,
+      },
       settings: data.settings,
       content: data.content,
-      interpolatedContent,
     };
 
     return {
@@ -87,7 +75,7 @@ export class Pezzo {
     };
   }
 
-  async reportPromptExecutionV2(dto: ReportData) {
+  async reportPromptExecution(dto: ReportData) {
     await axios.post(
       `${this.options.serverUrl}/api/reporting/v2/request`,
       dto,
