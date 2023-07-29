@@ -18,6 +18,8 @@ import {
 import { GraphQLErrorResponse, ReportRequestResponse } from "../types";
 import { Provider } from "@pezzo/types";
 import { GET_PROMPT, GET_PROMPT_VERSION } from "../definitions/queries/prompts";
+import { useEffect } from "react";
+import { useFiltersAndSortParams } from "../../lib/hooks/useFiltersAndSortParams";
 
 export const useProviderApiKeys = () => {
   const { organization } = useCurrentOrganization();
@@ -116,14 +118,15 @@ export const useGetRequestReports = ({
   page: number;
 }) => {
   const { project } = useCurrentProject();
+  const { filters, sort } = useFiltersAndSortParams();
 
-  const response = useQuery({
-    queryKey: ["requestReports", project?.id, page, size],
+  const { refetch, ...response } = useQuery({
+    queryKey: ["requestReports", project?.id, page, size, filters, sort],
     queryFn: () =>
       gqlClient.request<{
         paginatedRequests: { pagination: Pagination; data: RequestReport[] };
       }>(GET_ALL_REQUESTS, {
-        data: { projectId: project?.id, size, page },
+        data: { projectId: project?.id, size, page, filters, sort },
       }),
     enabled: !!project,
   });
@@ -132,8 +135,13 @@ export const useGetRequestReports = ({
     response.data?.paginatedRequests.data?.map(buildTypedRequestReportObject) ??
     [];
 
+  useEffect(() => {
+    refetch();
+  }, [refetch, sort, filters]);
+
   return {
     ...response,
+    refetch,
     data: {
       ...response.data,
       paginatedRequests: {

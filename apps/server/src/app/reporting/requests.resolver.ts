@@ -29,8 +29,9 @@ export class RequestReportsResolver {
     @Args("data") data: GetRequestsInput,
     @CurrentUser() user: RequestUser
   ): Promise<RequestReportResult> {
+    let project;
     try {
-      const project = await this.projectsService.getProjectById(data.projectId);
+      project = await this.projectsService.getProjectById(data.projectId);
 
       if (!project) {
         throw new NotFoundException();
@@ -45,8 +46,11 @@ export class RequestReportsResolver {
     try {
       const response = await this.reportingService.getReports({
         projectId: data.projectId,
+        organizationId: project.organizationId,
         page: data.page,
         size: data.size,
+        filters: data.filters,
+        sort: data.sort,
       });
 
       return {
