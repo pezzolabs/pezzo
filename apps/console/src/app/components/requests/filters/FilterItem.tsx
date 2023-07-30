@@ -26,6 +26,7 @@ interface Props {
   field: string;
   operator: string;
   value: string;
+  property?: string;
 }
 
 export const FilterItem = ({
@@ -59,6 +60,10 @@ const StyledForm = styled(Form)`
   }
 `;
 
+interface FilterForm extends FilterInput {
+  property?: string;
+}
+
 export const AddFilterForm = ({
   onAdd,
   onCancel,
@@ -66,11 +71,26 @@ export const AddFilterForm = ({
   onAdd: (input: FilterInput) => void;
   onCancel: () => void;
 }) => {
-  const [form] = Form.useForm<FilterInput>();
+  const [form] = Form.useForm<FilterForm>();
+  Form.useWatch(["field"], form);
+  const field = form.getFieldValue("field");
+
   const [_, setTrigger] = useState(0);
 
   const handleFormSubmit = () => {
-    onAdd(form.getFieldsValue());
+    const formValues = form.getFieldsValue();
+
+    const filterValue: FilterInput = {
+      field:
+        formValues.field !== "property"
+          ? formValues.field
+          : `properties.${formValues.property}.keyword`,
+      operator: formValues.operator,
+      value: formValues.value,
+    };
+
+    console.log("value", filterValue);
+    onAdd(filterValue);
     form.resetFields();
   };
 
@@ -85,7 +105,7 @@ export const AddFilterForm = ({
     >
       <Form.Item
         name="field"
-        style={{ margin: 0 }}
+        style={{ margin: 0, minWidth: 160 }}
         rules={[
           {
             required: true,
@@ -97,6 +117,27 @@ export const AddFilterForm = ({
       >
         <Select placeholder="Select a field" options={FILTER_FIELDS_LIST} />
       </Form.Item>
+
+      {/*
+        If the user is searching for a custom property, we display an additional field to
+        allow them to specify the property name.
+      */}
+      {field === "property" && (
+        <Form.Item
+          name="property"
+          style={{ margin: 0 }}
+          rules={[
+            {
+              required: true,
+              type: "string",
+              validateTrigger: "onSubmit",
+              message: "Must be a valid property name",
+            },
+          ]}
+        >
+          <Input placeholder="Property name" />
+        </Form.Item>
+      )}
 
       <Form.Item
         fieldId="operator"
