@@ -1,9 +1,22 @@
 import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
-import { Button, Card, Col, Row, Space } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Popover,
+  Row,
+  Space,
+  Tooltip,
+  Typography,
+} from "antd";
 import { CommitPromptModal } from "../CommitPromptModal";
 import { PublishPromptModal } from "../PublishPromptModal";
 import { useState } from "react";
-import { PlayCircleOutlined } from "@ant-design/icons";
+import {
+  InfoCircleFilled,
+  InfoCircleOutlined,
+  PlayCircleOutlined,
+} from "@ant-design/icons";
 import { PromptVersionSelector } from "../PromptVersionSelector";
 import { PromptType } from "../../../../@generated/graphql/graphql";
 import { ChatEditMode } from "../editor/chat/ChatEditMode";
@@ -13,6 +26,8 @@ import { CommitButton } from "../editor/CommitButton";
 import { Variables } from "../editor/Variables";
 import { ProviderSettingsCard } from "../editor/ProviderSettingsCard";
 import { FunctionsFormModal } from "../FormModal";
+import { InlineCodeSnippet } from "../../common/InlineCodeSnippet";
+import { colors } from "../../../lib/theme/colors";
 
 const FUNCTIONS_FEATURE_FLAG = true;
 
@@ -69,8 +84,38 @@ export const PromptEditView = () => {
                 }
               />
             </Card>
-            <Card title="Variables">
-              <Variables />
+            <Card
+              title={
+                <>
+                  Variables
+                  <Tooltip
+                    title={
+                      <Typography.Text>
+                        You can specify variables using curly braces. For
+                        example - {`{someVariable}`}.
+                      </Typography.Text>
+                    }
+                  >
+                    <InfoCircleFilled
+                      style={{ marginLeft: 12, color: colors.neutral[500] }}
+                    />
+                  </Tooltip>
+                </>
+              }
+            >
+              <Popover
+                title="Vairblaes"
+                content={
+                  <>
+                    <Typography.Text>
+                      You can specify variables using curly braces. For example,{" "}
+                    </Typography.Text>{" "}
+                    <InlineCodeSnippet>{`{someVariable}`}</InlineCodeSnippet>
+                  </>
+                }
+              >
+                <Variables />
+              </Popover>
             </Card>
           </Col>
         </Row>
