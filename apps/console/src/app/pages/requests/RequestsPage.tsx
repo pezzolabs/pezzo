@@ -19,7 +19,7 @@ const getTableColumns = (
     {
       title: "Timestamp",
       dataIndex: "timestamp",
-      width: "20%",
+      width: "auto",
     },
     {
       title: "Status",
