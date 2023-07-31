@@ -53,7 +53,7 @@ export const ApiKeysView = () => {
         </div>
       )}
 
-      {providerApiKeysData && (
+      {/* {providerApiKeysData && (
         <div>
           <Typography.Title level={2}>Provider API Keys</Typography.Title>
 
@@ -67,7 +67,7 @@ export const ApiKeysView = () => {
             {providers.map((item, index) => renderProviderApiKey(item))}
           </Space>
         </div>
-      )}
+      )} */}
     </>
   );
 };
