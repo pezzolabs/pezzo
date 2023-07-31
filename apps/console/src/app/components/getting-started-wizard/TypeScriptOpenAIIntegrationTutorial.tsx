@@ -8,6 +8,7 @@ import {
 } from "../../lib/providers/GettingStartedWizardProvider";
 import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
 import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
+import { usePezzoApiKeys } from "../../graphql/hooks/queries";
 
 const StyledPre = styled.pre`
   background: #000;
@@ -24,6 +25,8 @@ const getVariablesString = (variables: string[]) => {
 export const TypeScriptOpenAIIntegrationTutorial = () => {
   const { variables } = usePromptVersionEditorContext();
   const { prompt } = useCurrentPrompt();
+  const { data: pezzoApiKeysData } = usePezzoApiKeys();
+  const API_KEY = pezzoApiKeysData?.apiKeys[0].id;
 
   const { project } = useCurrentProject();
   const codeSetupClients = `import { Pezzo, PezzoOpenAIApi } from "@pezzo/client";
@@ -36,7 +39,7 @@ const configuration = new Configuration({
 
 // Initialize the Pezzo client
 export const pezzo = new Pezzo({
-  apiKey: "<YOUR_PEZZO_API_KEY>", // Can be found in your organization page
+  apiKey: "${API_KEY}",
   projectId: "${project.id}",
   environment: "Production", // Your desired environment
 });
