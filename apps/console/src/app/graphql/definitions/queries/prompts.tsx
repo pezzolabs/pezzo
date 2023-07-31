@@ -17,6 +17,11 @@ export const GET_PROMPT = graphql(/* GraphQL */ `
       type
       latestVersion {
         sha
+        message
+        createdBy {
+          name
+          photoUrl
+        }
       }
     }
   }

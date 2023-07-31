@@ -6,7 +6,7 @@ import { usePromptVersions } from "../../lib/hooks/usePromptVersions";
 import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
 
 export const PromptVersionSelector = () => {
-  const { currentVersionSha, setCurrentVersionSha, isDraft } =
+  const { currentVersionSha, setCurrentVersionSha } =
     usePromptVersionEditorContext();
   const { prompt } = useCurrentPrompt();
   const latestVersion = prompt.latestVersion;
@@ -19,7 +19,9 @@ export const PromptVersionSelector = () => {
         .filter((version) => version.sha !== latestVersion.sha)
         .map((version) => ({
           key: version.sha,
-          label: version.sha.slice(0, 7),
+          label: `${version.sha.slice(0, 7)} - ${version.message} (by ${
+            version.createdBy.name
+          })`,
           onClick: () => setCurrentVersionSha(version.sha),
         }))) ||
     [];
@@ -28,7 +30,9 @@ export const PromptVersionSelector = () => {
     items: [
       {
         key: "latest",
-        label: `Latest (${latestVersion.sha.slice(0, 7)})`,
+        label: `Latest (${latestVersion.sha.slice(0, 7)}) - ${
+          latestVersion.message
+        } (by ${latestVersion.createdBy.name}))`,
         onClick: () => setCurrentVersionSha(latestVersion.sha),
       },
       ...itemsFromVersionsList,
