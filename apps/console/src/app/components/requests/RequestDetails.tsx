@@ -5,7 +5,7 @@ import {
   Provider,
   ObservabilityReportProperties,
 } from "@pezzo/types";
-import { List, Space, Tag, Tooltip, Typography, Segmented } from "antd";
+import { List, Space, Tag, Tooltip, Typography, Segmented, Card } from "antd";
 import { toDollarSign } from "../../lib/utils/currency-utils";
 import { InfoCircleFilled } from "@ant-design/icons";
 import ms from "ms";
@@ -42,66 +42,67 @@ export const RequestDetails = (props: Props) => {
     return null;
   }
 
-  return (
-    <div>
-      <List
-        dataSource={[
-          {
-            title: "Model",
-            description: <Tag>{request.body.model}</Tag>,
-          },
-          {
-            title: "Tokens",
-            description: (
-              <Space direction="horizontal">
-                <div>{props.calculated.totalTokens}</div>
-                <Tooltip
-                  title={
-                    <>
-                      Completion tokens:{" "}
-                      {response.body.usage?.completion_tokens}
-                      <br />
-                      Prompt tokens: {response.body.usage?.prompt_tokens}
-                    </>
-                  }
-                  overlayStyle={{ fontSize: 12 }}
-                  placement="right"
-                >
-                  <InfoCircleFilled />
-                </Tooltip>
-              </Space>
-            ),
-          },
-
-          {
-            title: "Cost",
-            description: toDollarSign(props.calculated.totalCost),
-          },
-          {
-            title: "Status",
-            description: isSuccess ? (
-              <Tag color="green">Success</Tag>
-            ) : (
-              <Tag color="red">{response.status} Error</Tag>
-            ),
-          },
-          {
-            title: "Duration",
-            description: ms(props.calculated.duration),
-          },
-        ]}
-        renderItem={(item) => (
-          <List.Item>
-            <List.Item.Meta title={item.title} />
-            <div>{item.description}</div>
-          </List.Item>
-        )}
-      />
-      <Space
-        direction="horizontal"
-        style={{ width: "100%", justifyContent: "space-between" }}
-      >
-        <Typography.Text strong>Chat</Typography.Text>
+  const listData = [
+    {
+      title: "Provider",
+      description: <Tag>{props.provider}</Tag>,
+    },
+    {
+      title: "Model",
+      description: <Tag>{request.body.model}</Tag>,
+    },
+    {
+      title: "Tokens",
+      description: (
+        <Space direction="horizontal">
+          <div>{props.calculated.totalTokens}</div>
+          <Tooltip
+            title={
+              <>
+                Completion tokens: {response.body.usage?.completion_tokens}
+                <br />
+                Prompt tokens: {response.body.usage?.prompt_tokens}
+              </>
+            }
+            overlayStyle={{ fontSize: 12 }}
+            placement="right"
+          >
+            <InfoCircleFilled />
+          </Tooltip>
+        </Space>
+      ),
+    },
+    {
+      title: "Cost",
+      description: toDollarSign(props.calculated.totalCost),
+    },
+    {
+      title: "Status",
+      description: isSuccess ? (
+        <Tag color="green">Success</Tag>
+      ) : (
+        <Tag color="red">{response.status} Error</Tag>
+      ),
+    },
+    {
+      title: "Duration",
+      description: ms(props.calculated.duration),
+    },
+    {
+      title: "Properties",
+      description: props.properties ? (
+        <Card size="small">
+          <pre>{JSON.stringify(props.properties, null, 2)}</pre>
+        </Card>
+      ) : (
+        <Typography.Text italic type="secondary">
+          No properties specified
+        </Typography.Text>
+      ),
+    },
+    {
+      title: "Display mode",
+      description: (
         <Segmented
           options={[
             {
@@ -118,8 +119,23 @@ export const RequestDetails = (props: Props) => {
           value={selectedMode}
           onChange={(value) => setSelectedMode(value as Mode)}
         />
-      </Space>
-      <br /> <br />
+      ),
+    },
+  ];
+
+  return (
+    <div>
+      <List
+        style={{ borderBottom: "1px solid rgba(253, 253, 253, 0.12)" }}
+        dataSource={listData}
+        renderItem={(item) => (
+          <List.Item style={{ alignItems: "flex-start" }}>
+            <List.Item.Meta title={item.title} />
+            <div>{item.description}</div>
+          </List.Item>
+        )}
+      />
+      <br />
       {selectedMode === "json" && (
         <RequestResponseViewJsonView request={request} response={response} />
       )}

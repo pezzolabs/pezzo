@@ -24,6 +24,11 @@ export const FILTER_FIELDS_LIST = [
     type: "number",
     label: "Duration (ms)",
   },
+  {
+    value: "property",
+    type: "string",
+    label: "Property",
+  },
 ];
 
 export const NUMBER_FILTER_OPERATORS: { value: string; label: string }[] = [
