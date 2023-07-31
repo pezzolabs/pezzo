@@ -103,19 +103,7 @@ export const PromptEditView = () => {
                 </>
               }
             >
-              <Popover
-                title="Vairblaes"
-                content={
-                  <>
-                    <Typography.Text>
-                      You can specify variables using curly braces. For example,{" "}
-                    </Typography.Text>{" "}
-                    <InlineCodeSnippet>{`{someVariable}`}</InlineCodeSnippet>
-                  </>
-                }
-              >
-                <Variables />
-              </Popover>
+              <Variables />
             </Card>
           </Col>
         </Row>
