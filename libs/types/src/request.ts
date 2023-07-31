@@ -9,6 +9,7 @@ import {
   CreateChatCompletionRequest,
   ChatCompletionRequestMessage,
 } from "openai";
+import { PromptExecutionType } from "./prompt-execution-type";
 
 type ExtractModelNames<T> = T extends { model: infer M } ? M : never;
 export type AcceptedModels = ExtractModelNames<
@@ -17,7 +18,8 @@ export type AcceptedModels = ExtractModelNames<
 
 export type ObservabilityReportProperties = RecursiveObject<Primitive>;
 export type ObservabilityReportMetadata = {
-  conversationId: string;
+  provider: Provider;
+  type: PromptExecutionType;
   [key: string]: AllPrimitiveTypes;
 };
 

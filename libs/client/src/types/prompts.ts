@@ -13,12 +13,13 @@ export type GetPromptResult<TSettings = unknown> = {
 };
 
 export interface Prompt<TSettings = unknown> {
-  promptId: string;
-  promptVersionSha: string;
-  type: PromptType;
+  metadata: {
+    promptId: string;
+    promptVersionSha: string;
+    type: PromptType;
+  };
   settings: TSettings;
   content: PrompContent;
-  interpolatedContent: PrompContent;
 }
 
 export interface ReportPromptExecutionResult<TResult> {

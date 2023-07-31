@@ -1,3 +1,3 @@
 export enum OpenSearchIndex {
-  Requests = "requests",
+  Requests = "requests-v1",
 }

@@ -9,13 +9,9 @@ export async function POST(request: Request) {
   let prompt: GetPromptResult;
 
   try {
-    prompt = await pezzo.getPrompt("GenerateTasks", {
-      variables: {
-        goal,
-        numTasks,
-      },
-    });
+    prompt = await pezzo.getPrompt("GenerateTasks");
   } catch (error) {
+    console.log("Failed to fetch prompt from Pezzo", error);
     return NextResponse.json(
       {
         message: error.message,
@@ -27,8 +23,15 @@ export async function POST(request: Request) {
   }
 
   try {
-    const result = await openai.createChatCompletion(prompt);
-    console.log("result", result.data.choices);
+    const result = await openai.createChatCompletion(prompt, {
+      variables: {
+        goal,
+        numTasks,
+      },
+      properties: {
+        traceId: "SomeTraceId123",
+      },
+    });
 
     const parsed = JSON.parse(result.data.choices[0].message.content);
     return NextResponse.json(parsed, {

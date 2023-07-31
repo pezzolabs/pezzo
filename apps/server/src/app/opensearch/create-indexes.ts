@@ -74,12 +74,6 @@ export async function createRequestsIndex(
             },
           },
         },
-        provider: {
-          type: "keyword",
-        },
-        type: {
-          type: "keyword",
-        },
         properties: {
           type: "object",
         },
@@ -91,7 +85,10 @@ export async function createRequestsIndex(
             promptVersionSha: {
               type: "keyword",
             },
-            conversationId: {
+            provider: {
+              type: "keyword",
+            },
+            type: {
               type: "keyword",
             },
           },

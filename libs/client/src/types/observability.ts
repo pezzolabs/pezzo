@@ -2,14 +2,13 @@ import { ValueType, PromptExecutionType, ProviderType } from "../types";
 
 export type ObservabilityReportProperties = Record<string, ValueType>;
 export type ObservabilityReportMetadata = {
-  conversationId?: string;
+  provider: ProviderType;
+  type: PromptExecutionType;
   [key: string]: ValueType;
 };
 
 export interface ReportData {
-  provider: ProviderType;
-  type: PromptExecutionType;
-  metadata?: ObservabilityReportMetadata;
+  metadata: ObservabilityReportMetadata;
   properties?: ObservabilityReportProperties;
   request: {
     timestamp: string;

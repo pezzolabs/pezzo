@@ -1,7 +1,6 @@
-import { IsEnum, IsObject, IsOptional } from "class-validator";
+import { IsObject, IsOptional } from "class-validator";
 import {
   Provider,
-  PromptExecutionType,
   ObservabilityReportProperties,
   ObservabilityReportMetadata,
   ObservabilityRequest,
@@ -11,19 +10,13 @@ import {
 export class ReportRequestDto<
   TProviderType extends Provider | unknown = unknown
 > {
-  @IsEnum(Provider)
-  provider: Provider;
-
-  @IsEnum(PromptExecutionType)
-  type: PromptExecutionType;
-
   @IsObject()
   @IsOptional()
   properties?: ObservabilityReportProperties;
 
   @IsObject()
   @IsOptional()
-  metadata?: ObservabilityReportMetadata;
+  metadata: ObservabilityReportMetadata;
 
   @IsObject()
   request: ObservabilityRequest<Provider>;
