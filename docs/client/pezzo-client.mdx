@@ -1,0 +1,89 @@
+---
+title: "Pezzo Client"
+---
+
+The Pezzo client is an NPM package that allows you to easily integrate your application with Pezzo.
+
+## Getting Started
+
+### Intall the Pezzo Client
+
+Install the [@pezzo/client](https://www.npmjs.com/package/@pezzo/client) NPM package:
+
+<CodeGroup>
+  ```bash npm
+  npm i @pezzo/client
+  ``` 
+  ```bash yarn
+  yarn add @pezzo/client
+  ```
+  ```bash pnpm
+  pnpm add @pezzo/client
+  ```
+</CodeGroup>
+
+### Initialize the Pezzo Client
+
+You only need to initialize the Pezzo client once, and then you can use it throughout your application.
+
+<CodeGroup>
+```ts libs/pezzo.ts
+import { Pezzo } from "@pezzo/client";
+
+// Initialize the Pezzo client and export it
+export const pezzo = new Pezzo({
+apiKey: "<Your Pezzo API key>",
+projectId: "<Your Pezzo project ID>",
+environment: "<Your desired environment>",
+});
+
+// Initialize OpenAI
+const configuration = new Configuration({
+apiKey: "<Your OpenAI API key>",
+});
+
+```
+</CodeGroup>
+
+In the above example, we created a `libs/pezzo.ts` file in which we instantiate the Pezzo client and export it. We can then import it in other areas of our application.
+
+<CardGroup cols={2}>
+  <Card
+    title="Use Pezzo with OpenAI"
+    icon="bolt-lightning"
+    href="/client/integrations/openai"
+  >
+    Learn how to use Pezzo to observe and manage your OpenAI API calls.
+  </Card>
+</CardGroup>
+
+## API Reference
+
+<ResponseField name="Pezzo.constructor(options: PezzoOptions)" type="Function">
+  <div style={{ marginLeft: 20 }}>
+  <ParamField path="options" type="PezzoOptions">
+    <div style={{ marginLeft: 20 }}>
+      <ParamField path="apiKey" type="string" required="true">
+        Pezzo API key
+      </ParamField>
+      <ParamField path="projectId" type="string" required="true">
+        Pezzo project ID
+      </ParamField>
+      <ParamField path="environment" type="string" required="true">
+        Pezzo environment name
+      </ParamField>
+      <ParamField path="serverUrl" type="string" required="false" default="https://api.pezzo.ai">
+        Pezzo server URL
+      </ParamField>
+    </div>
+  </ParamField>
+  </div>
+</ResponseField>
+
+<ResponseField name="Pezzo.getPrompt(promptName: string)" type="Function">
+  <div style={{ marginLeft: 20 }}>
+    <ParamField path="promptName" type="string">
+      The name of the prompt to retrieve. The prompt must be deployed to the current environment specified when initializing the Pezzo client.
+    </ParamField>
+  </div>
+</ResponseField>
