@@ -15,3 +15,4 @@ export const SUPERTOKENS_WEBSITE_DOMAIN = getEnvVariable(
   "NX_SUPERTOKENS_WEBSITE_DOMAIN"
 );
 export const SENTRY_DSN_URL = getEnvVariable("NX_SENTRY_DSN_URL");
+export const SEGMENT_WRITE_KEY = getEnvVariable("NX_SEGMENT_WRITE_KEY");
