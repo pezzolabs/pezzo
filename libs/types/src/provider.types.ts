@@ -29,7 +29,7 @@ export const promptProvidersMapping = {
     defaultSettings: {},
   },
   [PromptService.AzureOpenAIChatCompletion]: {
-    name: "Azure OpenAI (coming soon)",
+    name: "Azure OpenAI (Coming Soon)",
     provider: Provider.Azure,
     defaultSettings: {},
   },
