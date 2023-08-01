@@ -1,0 +1,150 @@
+---
+title: "OpenAI"
+description: "Learn how to use OpenAI with Pezzo."
+---
+
+## Using OpenAI With Pezzo
+
+Ensure that you have the latest version of the Pezzo Client installed, as well as the OpenAI NPM package.
+
+<CodeGroup>
+  ```bash npm
+  npm i @pezzo/client openai
+  ```
+  ```bash yarn
+  yarn add @pezzo/client openai
+  ```
+  ```bash pnpm
+  pnpm add @pezzo/client openai
+  ```
+</CodeGroup>
+
+### Initialize Pezzo and PezzoOpenAIApi
+
+```ts
+import { Pezzo, PezzoOpenAIApi } from "@pezzo/client";
+import { Configuration } from "openai";
+
+// Initialize the Pezzo client
+export const pezzo = new Pezzo({
+  apiKey: "<Your Pezzo API key>",
+  projectId: "<Your Pezzo project ID>",
+  environment: "Production",
+});
+
+// Initialize OpenAI
+const configuration = new Configuration({
+  apiKey: "<Your OpenAI API key>",
+});
+
+// Initialize the Pezzo OpenAI API
+export const openai = new PezzoOpenAIApi(pezzo, configuration);
+```
+
+<Tip>
+  The `PezzoOpenAIApi` class extends the native `OpenAIApi` class. This ensures a seamless experience, and allows you to use all OpenAI features.
+</Tip>
+
+You are now ready to interact with the OpenAI API through Pezzo, as you normally would. Let's give it a try!
+
+### Making Requests to OpenAI
+
+#### Option 1: With Prompt Management (Recommended)
+
+We recommend you to manage your AI prompts through Pezzo. This allows you to easily manage your prompts, and keep track of your AI requests. [Click here to learn about Prompt Management in Pezzo](platform/prompt-management).
+
+Below is an example of how you can use Pezzo to retrieve a prompt, and then use it to make a request to OpenAI.
+
+```ts
+const prompt = await pezzo.getPrompt("GenerateTasks");
+
+// Provide the prompt as-is to OpenAI
+const response = await openai.createChatCompletion(prompt);
+
+// Or you can override specific properties if you wish
+const response = await openai.createChatCompletion({
+  ...prompt,
+  model: "gpt-4",
+});
+```
+
+Congratulations! You've benefitted from seamless prompt version management and request tracking. Your request will now be visible in the **Requests** page of your Pezzo project.
+
+#### Option 2: Without Prompt Management
+
+If you don't want to manage your prompts through Pezzo, you can still use Pezzo to make requests to OpenAI and benefit from Pezzo's [Observability features](features/observability/overview).
+
+You will consume the make request to the OpenAI exactly as you normally would. The only difference is that you will use the `PezzoOpenAIApi` instance we created above. Here is an example:
+
+```ts
+const response = await openai.createChatCompletion({
+  model: "gpt-3.5-turbo",
+  temperature: 0,
+  messages: [
+    {
+      role: "user",
+      content: "Hey, how are you doing?",
+    },
+  ],
+});
+```
+
+You should now be able to see your request in the **Requests** page of your Pezzo project.
+
+### Additional Capabilities
+
+The Pezzo client enhances your developer experience by providing additional functionality to the OpenAI API. This is done through the second argument of the `createChatCompletion` method.
+
+#### Variables
+
+You can specify variables that will be interpolated by the Pezzo client before sending the request to OpenAI. This is useful if you want to use the same prompt for multiple requests, but with different variables.
+
+<Tabs>
+  <Tab title="With Prompt Management">
+    ```ts
+    const prompt = await pezzo.getPrompt("CheckAge");
+    const response = await openai.createChatCompletion(prompt, {
+      variables: {
+        age: 22,
+        country: "France"
+      }
+    });
+    ```
+  </Tab>
+  <Tab title="Without Propmt Management">
+    ```ts
+    const response = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      temperature: 0,
+      messages: [
+        {
+          role: "user",
+          content: "Hey, my age is {age}. Am I allowed to buy alcohol in {country}?"
+        }
+      ]
+    }, {
+      variables: {
+        age: 22,
+        country: "France"
+      }
+    });
+    ```
+  </Tab>
+</Tabs>
+
+Notice the variables in the prompt. The Pezzo client will replace them with the values you specified in the `variables` object.
+
+#### Custom Properties
+
+You can also specify custom properties that will be sent to Pezzo. This is useful if you want to add additional information to your request, such as the user ID, or the request ID. This information will be visible in the **Requests** page of your Pezzo project, and you will be able to filter requests based on these properties.
+
+```ts
+const response = await openai.createChatCompletion({
+  ...
+}, {
+  properties: {
+    userId: "some-user-id",
+    traceId: "some-trace-id"
+  }
+});
+```

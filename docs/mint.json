@@ -1,0 +1,98 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Pezzo",
+  "logo": {
+    "dark": "/logo/dark.svg",
+    "light": "/logo/light.svg"
+  },
+  "favicon": "/favicon.png",
+  "colors": {
+    "primary": "#059669",
+    "light": "#10b981",
+    "dark": "#065f46"
+  },
+  "modeToggle": {
+    "default": "dark",
+    "isHidden": true
+  },
+  "topbarLinks": [
+    {
+      "name": "🌟 Pezzo on GitHub",
+      "url": "https://github.com/pezzolabs/pezzo?ref=docs"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "🕹️ Pezzo Console",
+    "url": "https://app.pezzo.ai?ref=docs"
+  },
+  "primaryTab": {
+    "name": "Pezzo Platform"
+  },
+  "tabs": [
+    {
+      "name": "Pezzo Client (SDK)",
+      "url": "client"
+    }
+  ],
+  "anchors": [
+    {
+      "name": "What is Pezzo?",
+      "icon": "rocket",
+      "url": "introduction/what-is-pezzo"
+    },
+    {
+      "name": "Plaform Features",
+      "icon": "bolt",
+      "url": "platform"
+    },
+    {
+      "name": "Recipe: OpenAI With Pezzo",
+      "icon": "code",
+      "url": "client/integrations"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Introduction",
+      "pages": [
+        "introduction/what-is-pezzo"
+      ]
+    },
+    {
+      "group": "Observability",
+      "pages": [
+        "platform/observability/overview",
+        "platform/observability/requests",
+        "platform/observability/metrics"
+      ]
+    },
+    {
+      "group": "Prompt Management",
+      "pages": [
+        "platform/prompt-management/overview",
+        "platform/prompt-management/environments",
+        "platform/prompt-management/prompt-editor",
+        "platform/prompt-management/versioning-and-deployments"
+      ]
+    },
+    {
+      "group": "Pezzo Client (SDK)",
+      "pages": [
+        "client/pezzo-client"
+      ]
+    },
+    {
+      "group": "Integrations",
+      "pages": [
+        "client/integrations/openai"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "github": "https://github.com/pezzolabs/pezzo",
+    "discord": "https://discord.gg/h5nBW5ySqQ",
+    "twitter": "https://twitter.com/pezzoai",
+    "linkedin": "https://linkedin.com/company/pezzo"
+  },
+  "backgroundImage": "/background.png"
+}
