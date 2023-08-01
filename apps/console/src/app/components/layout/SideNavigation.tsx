@@ -14,11 +14,6 @@ import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 
 const topMenuItems = [
   {
-    key: "overview",
-    label: "Overview",
-    icon: <ChartBarIcon height={18} />,
-  },
-  {
     key: "prompts",
     label: "Prompts",
     icon: <BoltIcon height={18} />,
@@ -78,8 +73,8 @@ export const SideNavigation = () => {
     <SidebarContainer>
       <TopMenu
         onClick={handleTopMenuClick}
-        defaultSelectedKeys={["overview"]}
-        selectedKeys={selectedKeys.length ? selectedKeys : ["overview"]}
+        defaultSelectedKeys={["prompts"]}
+        selectedKeys={selectedKeys.length ? selectedKeys : ["prompts"]}
         items={topMenuItems}
       />
     </SidebarContainer>

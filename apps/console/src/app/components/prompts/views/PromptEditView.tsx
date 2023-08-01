@@ -13,6 +13,7 @@ import { CommitPromptModal } from "../CommitPromptModal";
 import { PublishPromptModal } from "../PublishPromptModal";
 import { useState } from "react";
 import {
+  CodeOutlined,
   InfoCircleFilled,
   InfoCircleOutlined,
   PlayCircleOutlined,
@@ -28,6 +29,7 @@ import { ProviderSettingsCard } from "../editor/ProviderSettingsCard";
 import { FunctionsFormModal } from "../FormModal";
 import { InlineCodeSnippet } from "../../common/InlineCodeSnippet";
 import { colors } from "../../../lib/theme/colors";
+import { ConsumePromptModal } from "../ConsumePromptModal";
 
 const FUNCTIONS_FEATURE_FLAG = true;
 
@@ -37,6 +39,8 @@ export const PromptEditView = () => {
     usePromptVersionEditorContext();
 
   const [isCommitModalOpen, setIsCommitModalOpen] = useState(false);
+  const [isConsumePromptModalOpen, setIsConsumePromptModalOpen] =
+    useState(false);
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
   const [isFunctionsModalOpen, setIsFunctionsModalOpen] = useState(false);
 
@@ -51,6 +55,14 @@ export const PromptEditView = () => {
               style={{ display: "flex", justifyContent: "flex-end" }}
             >
               <Space>
+                {isPublishEnabled && (
+                  <Button
+                    onClick={() => setIsConsumePromptModalOpen(true)}
+                    icon={<CodeOutlined />}
+                  >
+                    How to Consume
+                  </Button>
+                )}
                 {isPublishEnabled && (
                   <Button
                     onClick={() => setIsPublishModalOpen(true)}
@@ -107,6 +119,11 @@ export const PromptEditView = () => {
             </Card>
           </Col>
         </Row>
+
+        <ConsumePromptModal
+          open={isConsumePromptModalOpen}
+          onClose={() => setIsConsumePromptModalOpen(false)}
+        />
 
         <CommitPromptModal
           open={isCommitModalOpen}
