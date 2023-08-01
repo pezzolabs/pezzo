@@ -17,6 +17,9 @@ export const providerDetails = {
   [Provider.Azure]: {
     name: "Azure",
   },
+  [Provider.Anthropic]: {
+    name: "Anthropic",
+  },
 };
 
 export const promptProvidersMapping = {
@@ -26,8 +29,13 @@ export const promptProvidersMapping = {
     defaultSettings: {},
   },
   [PromptService.AzureOpenAIChatCompletion]: {
-    name: "Azure OpenAI Chat Completion",
+    name: "Azure OpenAI (Coming Soon)",
     provider: Provider.Azure,
+    defaultSettings: {},
+  },
+  [PromptService.AnthropicCompletion]: {
+    name: "Anthropic (Coming Soon)",
+    provider: Provider.Anthropic,
     defaultSettings: {},
   },
 };

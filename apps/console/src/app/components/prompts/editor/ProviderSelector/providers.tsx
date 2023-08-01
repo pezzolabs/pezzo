@@ -6,6 +6,7 @@ import { PromptService } from "../../../../../@generated/graphql/graphql";
 // Logos
 import OpenAILogo from "../../../../../assets/providers/openai-logo.svg";
 import AzureOpenAILogo from "../../../../../assets/providers/azure-logo.svg";
+import AnthropicOpenAILogo from "../../../../../assets/providers/anthropic-logo.svg";
 
 const Icon = styled.img`
   border-radius: 2px;
@@ -27,6 +28,11 @@ export const providersList: ProviderProps[] = [
     image: <Icon src={AzureOpenAILogo} style={{ padding: 2 }} />,
     value: PromptService.AzureOpenAiChatCompletion,
     label: promptProvidersMapping[PromptService.AzureOpenAiChatCompletion].name,
+  },
+  {
+    image: <Icon src={AnthropicOpenAILogo} style={{ padding: 2 }} />,
+    value: PromptService.AnthropicCompletion,
+    label: promptProvidersMapping[PromptService.AnthropicCompletion].name,
   },
 ];
 
