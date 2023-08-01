@@ -57,19 +57,19 @@ export const PromptEditView = () => {
               <Space>
                 {isPublishEnabled && (
                   <Button
+                    onClick={() => setIsConsumePromptModalOpen(true)}
+                    icon={<CodeOutlined />}
+                  >
+                    How to Consume
+                  </Button>
+                )}
+                {isPublishEnabled && (
+                  <Button
                     onClick={() => setIsPublishModalOpen(true)}
                     icon={<PlayCircleOutlined />}
                     type="primary"
                   >
                     Publish
-                  </Button>
-                )}
-                {isPublishEnabled && (
-                  <Button
-                    onClick={() => setIsConsumePromptModalOpen(true)}
-                    icon={<CodeOutlined />}
-                  >
-                    Consume
                   </Button>
                 )}
                 <CommitButton onClick={() => setIsCommitModalOpen(true)} />
