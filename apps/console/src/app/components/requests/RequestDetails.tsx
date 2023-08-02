@@ -5,7 +5,16 @@ import {
   Provider,
   ObservabilityReportProperties,
 } from "@pezzo/types";
-import { List, Space, Tag, Tooltip, Typography, Segmented, Card } from "antd";
+import {
+  List,
+  Space,
+  Tag,
+  Tooltip,
+  Typography,
+  Segmented,
+  Card,
+  Alert,
+} from "antd";
 import { toDollarSign } from "../../lib/utils/currency-utils";
 import { InfoCircleFilled } from "@ant-design/icons";
 import ms from "ms";
@@ -125,6 +134,13 @@ export const RequestDetails = (props: Props) => {
 
   return (
     <div>
+      {props.metadata?.isTestPrompt && (
+        <Alert
+          type="info"
+          showIcon
+          message="This is a test request from the Pezzo platform"
+        />
+      )}
       <List
         style={{ borderBottom: "1px solid rgba(253, 253, 253, 0.12)" }}
         dataSource={listData}

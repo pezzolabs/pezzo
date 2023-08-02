@@ -13,6 +13,7 @@ import { PromptVersionsView } from "../../components/prompts/views/PromptVersion
 import { PromptSettingsView } from "../../components/prompts/views/PromptSettingsView";
 import { PromptEditView } from "../../components/prompts/views/PromptEditView";
 import { PromptVersionEditorProvider } from "../../lib/providers/PromptVersionEditorContext";
+import { PromptTesterProvider } from "../../lib/providers/PromptTesterContext";
 
 const TabLabel = styled.div`
   display: inline-block;
@@ -70,7 +71,9 @@ export const PromptPage = () => {
         <>
           {activeView === "edit" && (
             <PromptVersionEditorProvider>
-              <PromptEditView />
+              <PromptTesterProvider>
+                <PromptEditView />
+              </PromptTesterProvider>
             </PromptVersionEditorProvider>
           )}
           {activeView === "metrics" && <MetricsView />}

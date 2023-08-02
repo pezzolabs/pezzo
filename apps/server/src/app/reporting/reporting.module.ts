@@ -9,6 +9,7 @@ import { RequestReportsResolver } from "./requests.resolver";
 
 @Module({
   imports: [OpenSearchModule, LoggerModule, AuthModule, IdentityModule],
+  exports: [ReportingService],
   controllers: [ReportingController],
   providers: [ReportingService, RequestReportsResolver],
 })

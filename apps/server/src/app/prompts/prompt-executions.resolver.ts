@@ -1,24 +1,16 @@
-import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, Query, Resolver } from "@nestjs/graphql";
 import { Prompt } from "../../@generated/prompt/prompt.model";
 import { PrismaService } from "../prisma.service";
 import { PromptExecution } from "../../@generated/prompt-execution/prompt-execution.model";
 import { PromptExecutionWhereInput } from "../../@generated/prompt-execution/prompt-execution-where.input";
 import { PromptExecutionWhereUniqueInput } from "../../@generated/prompt-execution/prompt-execution-where-unique.input";
-import { PromptExecutionStatus } from "../../@generated/prisma/prompt-execution-status.enum";
-import { TestPromptInput } from "./inputs/test-prompt.input";
 import { PromptsService } from "./prompts.service";
 import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
 import { AuthGuard } from "../auth/auth.guard";
-import {
-  InternalServerErrorException,
-  NotFoundException,
-  UseGuards,
-} from "@nestjs/common";
+import { NotFoundException, UseGuards } from "@nestjs/common";
 import { isOrgMemberOrThrow } from "../identity/identity.utils";
-import { AnalyticsService } from "../analytics/analytics.service";
 import { PinoLogger } from "../logger/pino-logger";
-import { TestPromptResult } from "@pezzo/client";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Prompt)
@@ -26,8 +18,7 @@ export class PromptExecutionsResolver {
   constructor(
     private prisma: PrismaService,
     private promptsService: PromptsService,
-    private logger: PinoLogger,
-    private analytics: AnalyticsService
+    private logger: PinoLogger
   ) {}
 
   @Query(() => PromptExecution)

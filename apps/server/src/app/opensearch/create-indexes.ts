@@ -91,6 +91,9 @@ export async function createRequestsIndex(
             type: {
               type: "keyword",
             },
+            isTestPrompt: {
+              type: "boolean",
+            },
           },
         },
         request: {

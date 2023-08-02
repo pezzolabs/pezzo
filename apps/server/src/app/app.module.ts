@@ -16,12 +16,12 @@ import { AuthModule } from "./auth/auth.module";
 import { IdentityModule } from "./identity/identity.module";
 import { MetricsModule } from "./metrics/metrics.module";
 import { LoggerModule } from "./logger/logger.module";
-import { PinoLogger } from "./logger/pino-logger";
 import { AnalyticsModule } from "./analytics/analytics.module";
 import { ReportingModule } from "./reporting/reporting.module";
 import { OpenSearchModule } from "./opensearch/opensearch.module";
 import { NotificationsModule } from "./notifications/notifications.module";
 import { getConfigSchema } from "./config/common-config-schema";
+import { PromptTesterModule } from "./prompt-tester/prompt-tester.module";
 
 const isCloud = process.env.PEZZO_CLOUD === "true";
 const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
@@ -58,12 +58,14 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
         CredentialsModule,
         IdentityModule,
         MetricsModule,
+        PromptTesterModule,
       ],
       formatError,
     }),
     AuthModule.forRoot(),
     AnalyticsModule,
     PromptsModule,
+    PromptTesterModule,
     PromptEnvironmentsModule,
     CredentialsModule,
     IdentityModule,

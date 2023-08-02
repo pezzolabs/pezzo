@@ -8,4 +8,5 @@ export interface RequestReportItem {
   totalTokens?: number;
   cost?: string;
   promptId?: AllPrimitiveTypes;
+  isTestPrompt?: boolean;
 }

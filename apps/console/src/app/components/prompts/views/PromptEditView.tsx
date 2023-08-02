@@ -1,21 +1,12 @@
 import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
-import {
-  Button,
-  Card,
-  Col,
-  Popover,
-  Row,
-  Space,
-  Tooltip,
-  Typography,
-} from "antd";
+import { Button, Card, Col, Row, Space, Tooltip, Typography } from "antd";
 import { CommitPromptModal } from "../CommitPromptModal";
 import { PublishPromptModal } from "../PublishPromptModal";
 import { useState } from "react";
 import {
+  ExperimentOutlined,
   CodeOutlined,
   InfoCircleFilled,
-  InfoCircleOutlined,
   PlayCircleOutlined,
 } from "@ant-design/icons";
 import { PromptVersionSelector } from "../PromptVersionSelector";
@@ -27,16 +18,18 @@ import { CommitButton } from "../editor/CommitButton";
 import { Variables } from "../editor/Variables";
 import { ProviderSettingsCard } from "../editor/ProviderSettingsCard";
 import { FunctionsFormModal } from "../FormModal";
-import { InlineCodeSnippet } from "../../common/InlineCodeSnippet";
 import { colors } from "../../../lib/theme/colors";
+import { PromptTesterModal } from "../prompt-tester/PromptTesterModal";
+import { usePromptTester } from "../../../lib/providers/PromptTesterContext";
 import { ConsumePromptModal } from "../ConsumePromptModal";
 import { trackEvent } from "../../../lib/utils/analytics";
 
 const FUNCTIONS_FEATURE_FLAG = true;
 
 export const PromptEditView = () => {
+  const { openTestModal } = usePromptTester();
   const { prompt, isLoading: isPromptLoading } = useCurrentPrompt();
-  const { currentVersion, isPublishEnabled, isDraft } =
+  const { currentVersion, isPublishEnabled, isDraft, form } =
     usePromptVersionEditorContext();
 
   const [isCommitModalOpen, setIsCommitModalOpen] = useState(false);
@@ -44,6 +37,11 @@ export const PromptEditView = () => {
     useState(false);
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
   const [isFunctionsModalOpen, setIsFunctionsModalOpen] = useState(false);
+
+  const handleRunTest = () => {
+    const formValues = form.getFieldsValue();
+    openTestModal(formValues);
+  };
 
   const onConsumeClick = () => {
     setIsConsumePromptModalOpen(true);
@@ -61,6 +59,9 @@ export const PromptEditView = () => {
               style={{ display: "flex", justifyContent: "flex-end" }}
             >
               <Space>
+                <Button icon={<ExperimentOutlined />} onClick={handleRunTest}>
+                  Test
+                </Button>
                 {isPublishEnabled && (
                   <Button onClick={onConsumeClick} icon={<CodeOutlined />}>
                     How to Consume
@@ -122,6 +123,8 @@ export const PromptEditView = () => {
             </Card>
           </Col>
         </Row>
+
+        <PromptTesterModal />
 
         <ConsumePromptModal
           open={isConsumePromptModalOpen}

@@ -14,10 +14,9 @@ import {
 } from "../../../@generated/graphql/graphql";
 import { Form, FormInstance } from "antd";
 import { useGetPromptVersion } from "../../graphql/hooks/queries";
-import { openAIChatCompletionSettingsDefinition } from "../../components/prompts/editor/ProviderSettings/providers/openai-chat-completion";
 import { getServiceDefaultSettings } from "../../components/prompts/editor/ProviderSettings/providers";
 
-interface FormInputs {
+export interface PromptVersionFormInputs {
   service: PromptService;
   settings: any;
   content: any;
@@ -32,10 +31,10 @@ interface PromptVersionEditorContext {
   isDraft: boolean;
   isFetched: boolean;
   form: FormInstance;
-  initialValues: MutableRefObject<FormInputs>;
+  initialValues: MutableRefObject<PromptVersionFormInputs>;
   variables: string[];
   setVariables: (variables: string[]) => void;
-  formValues: FormInputs;
+  formValues: PromptVersionFormInputs;
 }
 
 const PromptVersionEditorContext =
@@ -47,11 +46,11 @@ export const usePromptVersionEditorContext = () => {
 
 export const PromptVersionEditorProvider = ({ children }) => {
   const { prompt } = useCurrentPrompt();
-  const [form] = Form.useForm<FormInputs>();
+  const [form] = Form.useForm<PromptVersionFormInputs>();
 
   const formValues = Form.useWatch(null, { form, preserve: true });
 
-  const initialValues = useRef<FormInputs>(undefined);
+  const initialValues = useRef<PromptVersionFormInputs>(undefined);
   const isDraft = !prompt?.latestVersion;
   const [currentVersionSha, setCurrentVersionSha] = useState<string>(
     prompt?.latestVersion?.sha
