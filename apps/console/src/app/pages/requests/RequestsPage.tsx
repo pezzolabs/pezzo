@@ -11,6 +11,7 @@ import { toDollarSign } from "../../lib/utils/currency-utils";
 import { RequestFilters } from "../../components/requests/RequestFilters";
 import { RequestReportItem } from "./types";
 import { UnmanagedPromptWarning } from "./UnmanagedPromptWarning";
+import { colors } from "../../lib/theme/colors";
 
 const getTableColumns = (
   data: RequestReportItem[]
@@ -39,8 +40,8 @@ const getTableColumns = (
     },
   ];
 
+  // Handle unmanaged prompts
   const hasUnmanagedPrompts = data.some((r) => !r.promptId);
-
   if (hasUnmanagedPrompts) {
     columns.unshift({
       title: "",
@@ -50,6 +51,21 @@ const getTableColumns = (
       align: "center",
     });
   }
+
+  // Handle test prompt executions
+  const hasTestPrompts = data.some((r) => r.isTestPrompt);
+  if (hasTestPrompts) {
+    columns.unshift({
+      title: "",
+      dataIndex: "isTestPrompt",
+      render: (isTestPrmopt: string) => (
+        <Tag color={colors.neutral[600]}>TEST</Tag>
+      ),
+      width: "40px",
+      align: "center",
+    });
+  }
+
   return columns;
 };
 
@@ -86,6 +102,7 @@ export const RequestsPage = () => {
         ? toDollarSign(report.calculated.totalCost)
         : "$0.0000",
       promptId: report.metadata?.promptId,
+      isTestPrompt: (report.metadata?.isTestPrompt as boolean) || false,
     };
   });
 
