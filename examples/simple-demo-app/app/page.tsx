@@ -17,28 +17,28 @@ import * as apiClient from "./lib/apiClient";
 import { useState } from "react";
 
 interface FormInputs {
-  goal: string;
-  numTasks: number;
+  topic: string;
+  numFacts: number;
 }
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [tasks, setTasks] = useState<apiClient.TasksResult["tasks"] | null>(
+  const [facts, setFacts] = useState<apiClient.FactsResult["facts"] | null>(
     null
   );
 
   const handleFormFinish = async (values: FormInputs) => {
     setError(null);
-    setTasks(null);
+    setFacts(null);
     setIsLoading(true);
     try {
-      const { tasks } = await apiClient.generateTasks(
-        values.goal,
-        values.numTasks
+      const { facts } = await apiClient.generateFacts(
+        values.topic,
+        values.numFacts
       );
 
-      setTasks(tasks);
+      setFacts(facts);
     } catch (error) {
       setError((error as any).response.data.message);
     }
@@ -63,13 +63,13 @@ export default function Home() {
         >
           <div style={{ textAlign: "center" }}>
             <Typography.Title level={1} style={{ marginBottom: 0 }}>
-              Taskly 🦾
+              Factly 🤓
             </Typography.Title>
             <Typography.Title
               level={2}
               style={{ marginTop: 20, fontSize: 20, fontWeight: 400 }}
             >
-              The limitless AI task generator
+              The limitless AI fact machine
             </Typography.Title>
           </div>
 
@@ -85,8 +85,7 @@ export default function Home() {
           )}
 
           <Typography.Paragraph style={{ textAlign: "center" }}>
-            Let me know your goal and {`I'll`} generate you some tasks, so you
-            can get started right away!
+            Let me know a topic and {`I'll`} generate some facts, so you can enrich your knowledge!
           </Typography.Paragraph>
 
           <Form
@@ -96,18 +95,18 @@ export default function Home() {
             onFinish={handleFormFinish}
           >
             <Form.Item
-              name="goal"
-              label="Goal"
+              name="topic"
+              label="Topic"
               rules={[
                 { required: true, message: "This field is required" },
                 { max: 250, message: "Maximum 250 characters" },
               ]}
             >
-              <Input placeholder="e.g. Bathroom Renovation Project" />
+              <Input placeholder="e.g. France" />
             </Form.Item>
             <Form.Item
-              name="numTasks"
-              label="Number of tasks"
+              name="numFacts"
+              label="Number of facts"
               initialValue={5}
               rules={[{ required: true, message: "This field is required" }]}
             >
@@ -115,21 +114,21 @@ export default function Home() {
             </Form.Item>
             <Form.Item style={{ display: "flex", justifyContent: "flex-end" }}>
               <Button loading={isLoading} type="primary" htmlType="submit">
-                Generate Tasks ⚡️
+                Generate Facts 🌍
               </Button>
             </Form.Item>
           </Form>
 
-          {tasks && (
+          {facts && (
             <>
               <hr style={{ marginTop: 20, marginBottom: 20, opacity: 0.2 }} />
               <>
                 <Typography.Title level={3} style={{ textAlign: "center" }}>
-                  Your Tasks
+                  Here are some facts about this topic:
                 </Typography.Title>
                 <List
                   itemLayout="horizontal"
-                  dataSource={tasks.map((task: string) => ({ task }))}
+                  dataSource={facts.map((task: string) => ({ task }))}
                   renderItem={(item, index) => (
                     <List.Item key={index}>
                       <List.Item.Meta

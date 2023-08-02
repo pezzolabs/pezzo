@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Taskly | Pezzo Example App",
+  title: "Pezzo Example App",
   description:
     "Example app utilizing Pezzo to manage AI prompts (https://pezzo.ai)",
 };

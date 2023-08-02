@@ -4,12 +4,12 @@ import { GetPromptResult } from "@pezzo/client";
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { goal, numTasks } = body;
+  const { topic, numFacts } = body;
 
   let prompt: GetPromptResult;
 
   try {
-    prompt = await pezzo.getPrompt("GenerateTasks");
+    prompt = await pezzo.getPrompt("FactGenerator");
   } catch (error) {
     console.log("Failed to fetch prompt from Pezzo", error);
     return NextResponse.json(
@@ -25,8 +25,8 @@ export async function POST(request: Request) {
   try {
     const result = await openai.createChatCompletion(prompt, {
       variables: {
-        goal,
-        numTasks,
+        numFacts,
+        topic,
       },
       properties: {
         traceId: "SomeTraceId123",

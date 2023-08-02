@@ -1,7 +1,7 @@
 {
-  "name": "examples-task-generator-app",
+  "name": "examples-simple-demo-app",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "examples/task-generator-app",
+  "sourceRoot": "examples/simple-demo-app",
   "projectType": "application",
   "targets": {
     "build": {
@@ -11,12 +11,12 @@
       "options": {
         "buildLibsFromSource": true,
         "includeDevDependenciesInPackageJson": false,
-        "root": "examples/task-generator-app",
-        "outputPath": "dist/examples/task-generator-app"
+        "root": "examples/simple-demo-app",
+        "outputPath": "dist/examples/simple-demo-app"
       },
       "configurations": {
         "development": {
-          "outputPath": "examples/task-generator-app"
+          "outputPath": "examples/simple-demo-app"
         },
         "production": {}
       }
@@ -25,17 +25,17 @@
       "executor": "@nrwl/next:server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "examples-task-generator-app:build",
+        "buildTarget": "examples-simple-demo-app:build",
         "dev": true
       },
       "configurations": {
         "development": {
           "port": 3100,
-          "buildTarget": "examples-task-generator-app:build:development",
+          "buildTarget": "examples-simple-demo-app:build:development",
           "dev": true
         },
         "production": {
-          "buildTarget": "examples-task-generator-app:build:production",
+          "buildTarget": "examples-simple-demo-app:build:production",
           "dev": false
         }
       }
@@ -43,14 +43,14 @@
     "export": {
       "executor": "@nrwl/next:export",
       "options": {
-        "buildTarget": "examples-task-generator-app:build:production"
+        "buildTarget": "examples-simple-demo-app:build:production"
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "examples/task-generator-app/jest.config.ts",
+        "jestConfig": "examples/simple-demo-app/jest.config.ts",
         "passWithNoTests": true
       },
       "configurations": {
@@ -64,7 +64,7 @@
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["examples/task-generator-app/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": ["examples/simple-demo-app/**/*.{ts,tsx,js,jsx}"]
       }
     }
   },

@@ -9,18 +9,18 @@ export async function askQuestion(document: string, question: string) {
   return data;
 }
 
-export interface TasksResult {
-  tasks: string[];
+export interface FactsResult {
+  facts: string[];
 }
 
-export async function generateTasks(
+export async function generateFacts(
   goal: string,
-  numTasks: number
-): Promise<TasksResult> {
-  const { data } = await axios.post("/api/tasks", {
+  numFacts: number
+): Promise<FactsResult> {
+  const { data } = await axios.post("/api/facts", {
     goal,
-    numTasks,
+    numFacts,
   });
 
-  return data as TasksResult;
+  return data as FactsResult;
 }

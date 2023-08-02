@@ -12,7 +12,7 @@
       "rules": {
         "@next/next/no-html-link-for-pages": [
           "error",
-          "apps/examples/task-generator-app/pages"
+          "apps/examples/simple-demo-app/pages"
         ]
       }
     },
