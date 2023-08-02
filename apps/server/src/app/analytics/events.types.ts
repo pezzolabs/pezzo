@@ -46,7 +46,7 @@ export type AnalyticsPayloads = {
   "PROMPT_EXECUTION:REPORTED": {
     projectId: string;
     promptId: string;
-    reportId: string;
+    executionId: string;
     data: Partial<PromptExecution>;
   };
   "PROMPT:TESTED": {
