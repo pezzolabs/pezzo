@@ -85,7 +85,8 @@ export default function Home() {
           )}
 
           <Typography.Paragraph style={{ textAlign: "center" }}>
-            Let me know a topic and {`I'll`} generate some facts, so you can enrich your knowledge!
+            Let me know a topic and {`I'll`} generate some facts, so you can
+            enrich your knowledge!
           </Typography.Paragraph>
 
           <Form
