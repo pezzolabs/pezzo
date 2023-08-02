@@ -47,7 +47,10 @@ export const useIdentify = (user: GetMeQuery["me"]) => {
   }, [user]);
 };
 
-export const trackEvent = (event: keyof AnalyticsEvent, properties?: any) => {
+export const trackEvent = (
+  event: keyof AnalyticsEvent,
+  properties?: Record<string, any>
+) => {
   const groupId = JSON.parse(localStorage.getItem("currentOrgId"));
   const context = { groupId };
   window.analytics.track(
