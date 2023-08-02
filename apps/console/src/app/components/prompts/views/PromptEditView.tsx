@@ -122,7 +122,7 @@ export const PromptEditView = () => {
         </Row>
 
         <PromptTesterModal />
-        
+
         <ConsumePromptModal
           open={isConsumePromptModalOpen}
           onClose={() => setIsConsumePromptModalOpen(false)}

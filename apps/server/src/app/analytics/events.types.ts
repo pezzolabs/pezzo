@@ -42,7 +42,7 @@ export type AnalyticsPayloads = {
     organizationId: string;
     isTestReport: boolean;
     reportId: string;
-  },
+  };
   "PROMPT_EXECUTION:REPORTED": {
     projectId: string;
     promptId: string;

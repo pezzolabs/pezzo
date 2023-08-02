@@ -13,7 +13,10 @@ import { AnalyticsService } from "../analytics/analytics.service";
 
 @Injectable()
 export class ReportingService {
-  constructor(private openSearchService: OpenSearchService, private analytics: AnalyticsService) {}
+  constructor(
+    private openSearchService: OpenSearchService,
+    private analytics: AnalyticsService
+  ) {}
 
   async saveReport(
     dto: ReportRequestDto,
@@ -47,7 +50,7 @@ export class ReportingService {
       reportId,
       isTestReport: dto.metadata.isTestReport as boolean,
       promptId: dto.metadata.promptId as string,
-    })
+    });
 
     return {
       reportId,
