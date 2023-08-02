@@ -44,11 +44,34 @@ export const useIdentify = (user: GetMeQuery["me"]) => {
   }, [user]);
 };
 
+interface ContextProps {
+  organizationId?: string;
+  projectId?: string;
+  promptId?: string;
+}
+
+const getContextPropsFromPathIfExists = () => {
+  const contextProps: ContextProps = {};
+  const path = window.location.pathname;
+  const [, projectsPath, projectId, promptsPath, promptId] = path.split("/");
+  if (projectsPath === "projects" && projectId) {
+    contextProps.projectId = projectId;
+  }
+  if (promptsPath === "prompts" && promptId) {
+    contextProps.promptId = promptId;
+  }
+  return contextProps;
+};
+
 export const trackEvent = (
   event: keyof AnalyticsEvent,
   properties?: Record<string, any>
 ) => {
   const groupId = JSON.parse(localStorage.getItem("currentOrgId"));
   const context = { groupId };
-  analytics.track(event, { ...properties, organizationId: groupId }, context);
+  const contextProps = {
+    ...getContextPropsFromPathIfExists(),
+    organizationId: groupId,
+  };
+  analytics.track(event, { ...contextProps, ...properties }, context);
 };
