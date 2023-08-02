@@ -25,7 +25,7 @@ export class PromptTesterResolver {
   async testPrompt(
     @Args("data") data: TestPromptInput,
     @CurrentUser() user: RequestUser
-  ) {
+  ): Promise<RequestReport> {
     this.logger
       .assign({
         projectId: data.projectId,
@@ -39,18 +39,11 @@ export class PromptTesterResolver {
 
     isOrgMemberOrThrow(user, project.organizationId);
 
-    let result: RequestReport;
-
-    try {
-      result = await this.promptTesterService.runTest(
-        data,
-        project.id,
-        project.organizationId
-      );
-    } catch (error) {
-      this.logger.error({ error }, "Error testing prompt");
-      throw new InternalServerErrorException("Could not test prompt");
-    }
+    const result = await this.promptTesterService.runTest(
+      data,
+      project.id,
+      project.organizationId
+    );
 
     return result;
   }

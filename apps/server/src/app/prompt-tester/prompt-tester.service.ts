@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { TestPromptInput } from "../prompts/inputs/test-prompt.input";
 import {
   Pezzo,
@@ -59,13 +63,27 @@ export class PromptTesterService {
       },
     };
 
-    await pezzoOpenAI.createChatCompletion(mockRequest, {
-      variables: testData.variables,
-    });
+    let error;
+
+    try {
+      await pezzoOpenAI.createChatCompletion(mockRequest, {
+        variables: testData.variables,
+      });
+    } catch (err) {
+      error = err;
+    }
+
     const report = await this.reportingService.saveReport(promptExecutionData, {
       organizationId,
       projectId,
     });
+
+    if (error) {
+      throw new BadRequestException(
+        "Prompt execution failed, check the Requests page for more information"
+      );
+    }
+
     return report;
   }
 }

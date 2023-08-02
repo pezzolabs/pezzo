@@ -16,6 +16,7 @@ interface PromptTesterContextValue {
   testVariablesForm: FormInstance<Record<string, string>>;
   runTest: () => void;
   isTestLoading: boolean;
+  testError: any;
   testResult: RequestReport;
 }
 
@@ -26,6 +27,7 @@ const PromptTesterContext = createContext<PromptTesterContextValue>({
   testVariablesForm: undefined,
   runTest: () => void 0,
   isTestLoading: undefined,
+  testError: undefined,
   testResult: undefined,
 });
 
@@ -36,11 +38,16 @@ export const usePromptTester = () => {
 export const PromptTesterProvider = ({ children }) => {
   const { prompt } = useCurrentPrompt();
   const { project } = useCurrentProject();
-  const { mutateAsync: testPrompt, isLoading: isTestLoading } = useTestPrompt();
+  const {
+    mutate: testPrompt,
+    isLoading: isTestLoading,
+    error: testError,
+    data,
+    reset,
+  } = useTestPrompt();
   const { form: promptVersionForm } = usePromptVersionEditorContext();
   const [isOpen, setIsOpen] = useState(false);
   const [testVariablesForm] = Form.useForm<Record<string, string>>();
-  const [testResult, setTestResult] = useState<RequestReport>(null);
 
   const handleOpenTestModal = () => {
     setIsOpen(true);
@@ -48,21 +55,20 @@ export const PromptTesterProvider = ({ children }) => {
 
   const handleCloseTestModal = () => {
     setIsOpen(false);
-    setTestResult(null);
+    reset();
   };
 
   const handleRunTest = async () => {
     const { content, settings } = promptVersionForm.getFieldsValue();
     const variables = testVariablesForm.getFieldsValue();
 
-    const { testPrompt: result } = await testPrompt({
+    testPrompt({
       content,
       settings,
       variables,
       projectId: project.id,
       promptId: prompt.id,
     });
-    setTestResult(result);
   };
 
   const value = {
@@ -72,7 +78,8 @@ export const PromptTesterProvider = ({ children }) => {
     testVariablesForm,
     runTest: handleRunTest,
     isTestLoading,
-    testResult,
+    testError: testError?.response.errors[0].message,
+    testResult: data?.testPrompt,
   };
 
   return (

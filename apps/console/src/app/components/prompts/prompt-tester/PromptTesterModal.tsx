@@ -1,25 +1,17 @@
-import { Modal } from "antd";
+import { Alert, Modal } from "antd";
 import { usePromptTester } from "../../../lib/providers/PromptTesterContext";
-import { useState } from "react";
 import { VariablesStep } from "./VariablesStep";
 import { RequestDetails } from "../../requests";
 
-enum Step {
-  DEFINE_VARIABLES = "DEFINE_VARIABLES",
-  VIEW_RESULTS = "VIEW_RESULTS",
-}
-
 export const PromptTesterModal = () => {
-  const { isOpen, closeTestModal, runTest, testResult } = usePromptTester();
-  const [step, setStep] = useState<Step>(Step.DEFINE_VARIABLES);
+  const { isOpen, closeTestModal, runTest, testResult, testError } =
+    usePromptTester();
 
   const handleSubmitVariables = async () => {
-    await runTest();
-    setStep(Step.VIEW_RESULTS);
+    runTest();
   };
 
   const handleCancel = () => {
-    setStep(Step.DEFINE_VARIABLES);
     closeTestModal();
   };
 
@@ -30,10 +22,12 @@ export const PromptTesterModal = () => {
       open={isOpen}
       footer={false}
     >
-      {step === Step.DEFINE_VARIABLES && (
-        <VariablesStep onSubmit={handleSubmitVariables} />
+      {testError && (
+        <Alert style={{ marginBottom: 12 }} type="error" message={testError} />
       )}
-      {step === Step.VIEW_RESULTS && (
+
+      {!testResult && <VariablesStep onSubmit={handleSubmitVariables} />}
+      {testResult && (
         <RequestDetails
           id={testResult.reportId}
           request={testResult.request}
