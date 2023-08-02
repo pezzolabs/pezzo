@@ -1,4 +1,4 @@
-import { PromptType } from "../@generated/graphql/graphql";
+import { PromptType } from "@prisma/client";
 
 export type InjectPezzoProps<TSettings> = TSettings & {
   pezzo: Prompt<TSettings>;
