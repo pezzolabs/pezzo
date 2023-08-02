@@ -30,6 +30,7 @@ import { FunctionsFormModal } from "../FormModal";
 import { InlineCodeSnippet } from "../../common/InlineCodeSnippet";
 import { colors } from "../../../lib/theme/colors";
 import { ConsumePromptModal } from "../ConsumePromptModal";
+import { trackEvent } from "../../../lib/utils/analytics";
 
 const FUNCTIONS_FEATURE_FLAG = true;
 
@@ -44,6 +45,11 @@ export const PromptEditView = () => {
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
   const [isFunctionsModalOpen, setIsFunctionsModalOpen] = useState(false);
 
+  const onConsumeClick = () => {
+    setIsConsumePromptModalOpen(true);
+    trackEvent("how_to_consume_modal_open");
+  };
+
   return (
     !isPromptLoading && (
       <>
@@ -56,10 +62,7 @@ export const PromptEditView = () => {
             >
               <Space>
                 {isPublishEnabled && (
-                  <Button
-                    onClick={() => setIsConsumePromptModalOpen(true)}
-                    icon={<CodeOutlined />}
-                  >
+                  <Button onClick={onConsumeClick} icon={<CodeOutlined />}>
                     How to Consume
                   </Button>
                 )}
