@@ -9,6 +9,7 @@
   },
   "private": true,
   "dependencies": {
+    "@analytics/segment": "^1.1.4",
     "@ant-design/icons": "^5.0.1",
     "@ant-design/icons-svg": "^4.2.1",
     "@apollo/server": "^4.7.0",
@@ -45,6 +46,7 @@
     "@uiw/codemirror-extensions-classname": "^4.21.3",
     "@uiw/codemirror-theme-material": "^4.19.16",
     "@uiw/react-codemirror": "^4.19.16",
+    "analytics": "^0.8.9",
     "antd": "^5.4.5",
     "apollo-server-errors": "^3.3.1",
     "apollo-server-express": "^3.12.0",

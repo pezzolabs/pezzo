@@ -22,6 +22,7 @@ import { colors } from "../../../lib/theme/colors";
 import { PromptTesterModal } from "../prompt-tester/PromptTesterModal";
 import { usePromptTester } from "../../../lib/providers/PromptTesterContext";
 import { ConsumePromptModal } from "../ConsumePromptModal";
+import { trackEvent } from "../../../lib/utils/analytics";
 
 const FUNCTIONS_FEATURE_FLAG = true;
 
@@ -42,6 +43,11 @@ export const PromptEditView = () => {
     openTestModal(formValues);
   };
 
+  const onConsumeClick = () => {
+    setIsConsumePromptModalOpen(true);
+    trackEvent("how_to_consume_modal_open");
+  };
+
   return (
     !isPromptLoading && (
       <>
@@ -57,10 +63,7 @@ export const PromptEditView = () => {
                   Test
                 </Button>
                 {isPublishEnabled && (
-                  <Button
-                    onClick={() => setIsConsumePromptModalOpen(true)}
-                    icon={<CodeOutlined />}
-                  >
+                  <Button onClick={onConsumeClick} icon={<CodeOutlined />}>
                     How to Consume
                   </Button>
                 )}
