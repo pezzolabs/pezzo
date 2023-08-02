@@ -42,7 +42,7 @@ export class PromptTesterService {
     const pezzoOpenAI = new PezzoOpenAIApi(
       mockPezzo as unknown as Pezzo,
       new Configuration({
-        apiKey: "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",
+        apiKey: testerApiKey,
       })
     );
 

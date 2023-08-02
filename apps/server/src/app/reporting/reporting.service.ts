@@ -9,10 +9,11 @@ import { MAX_PAGE_SIZE } from "../../lib/pagination";
 import { FilterInput } from "../common/filters/filter.input";
 import { SortInput } from "../common/filters/sort.input";
 import { mapFiltersToDql } from "./utils/dql-utils";
+import { AnalyticsService } from "../analytics/analytics.service";
 
 @Injectable()
 export class ReportingService {
-  constructor(private openSearchService: OpenSearchService) {}
+  constructor(private openSearchService: OpenSearchService, private analytics: AnalyticsService) {}
 
   async saveReport(
     dto: ReportRequestDto,
@@ -39,6 +40,14 @@ export class ReportingService {
         response,
       },
     });
+
+    this.analytics.track("REQUEST:REPORTED", "api", {
+      organizationId: ownership.organizationId,
+      projectId: ownership.projectId,
+      reportId,
+      isTestReport: dto.metadata.isTestReport as boolean,
+      promptId: dto.metadata.promptId as string,
+    })
 
     return {
       reportId,
