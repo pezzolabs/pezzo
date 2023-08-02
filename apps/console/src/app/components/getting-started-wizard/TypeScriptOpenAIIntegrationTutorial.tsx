@@ -1,11 +1,10 @@
-import { Typography } from "antd";
+import { Alert, Typography } from "antd";
 import { HighlightCode } from "./HighlightCode";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 import styled from "@emotion/styled";
-import {
-  Usage,
-  useGettingStartedWizard,
-} from "../../lib/providers/GettingStartedWizardProvider";
+import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
+import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
+import { usePezzoApiKeys } from "../../graphql/hooks/queries";
 
 const StyledPre = styled.pre`
   background: #000;
@@ -13,10 +12,23 @@ const StyledPre = styled.pre`
   padding: 14px;
 `;
 
-export const TypeScriptOpenAIIntegrationTutorial = () => {
-  const { project } = useCurrentProject();
-  const { usage } = useGettingStartedWizard();
+const getVariablesString = (variables: string[]) => {
+  if (!variables.length) return "";
+  const varStrings = variables.map((v) => `    "${v}": "value"`).join(",\n");
+  return `, {
+  variables: {
+${varStrings}
+  }
+}`;
+};
 
+export const TypeScriptOpenAIIntegrationTutorial = () => {
+  const { variables } = usePromptVersionEditorContext();
+  const { prompt } = useCurrentPrompt();
+  const { data: pezzoApiKeysData } = usePezzoApiKeys();
+  const API_KEY = pezzoApiKeysData?.apiKeys[0].id;
+
+  const { project } = useCurrentProject();
   const codeSetupClients = `import { Pezzo, PezzoOpenAIApi } from "@pezzo/client";
 import { Configuration } from "openai";
 
@@ -27,7 +39,7 @@ const configuration = new Configuration({
 
 // Initialize the Pezzo client
 export const pezzo = new Pezzo({
-  apiKey: "<YOUR_PEZZO_API_KEY>", // Can be found in your organization page
+  apiKey: "${API_KEY}",
   projectId: "${project.id}",
   environment: "Production", // Your desired environment
 });
@@ -36,69 +48,72 @@ export const pezzo = new Pezzo({
 const openai = new PezzoOpenAIApi(pezzo, configuration);
 `;
 
+  const variablesString = getVariablesString(variables);
+
   const codeWithPromptManagement = `${codeSetupClients}
 // Fetch the prompt payload from Pezzo
-const prompt = await pezzo.getOpenAIPrompt("<PROMPT_NAME>", {
-  variables: { ... }, // If your prompt has variables, you can pass them here
-});
-
-// Retrieve the settings for the chat completion
-const settings = prompt.getChatCompletionSettings();
+const prompt = await pezzo.getPrompt("${prompt.name}");
 
 // Use the OpenAI API as you normally would
-const response = await openai.createChatCompletion(settings);
+const result = await openai.createChatCompletion(prompt${variablesString});
 `;
-
-  const codeObservabilityOnly = `${codeSetupClients}
-// Use the OpenAI API as you normally would
-const response = await openai.createChatCompletion({ ... });
-  `;
-
-  const code =
-    usage === Usage.ObservabilityAndPromptManagement
-      ? codeWithPromptManagement
-      : codeObservabilityOnly;
 
   return (
     <>
-      {usage === Usage.ObservabilityAndPromptManagement && (
-        <>
-          <Typography.Title level={3}>
-            Create and publish a prompt
-          </Typography.Title>
-          <Typography.Paragraph>
-            Create your first prompt and publish it to your desired environment.
-            <br />
-            Not sure how to start? Follow the{" "}
+      <Typography.Title level={3}>Want to know more?</Typography.Title>
+
+      <Alert
+        showIcon
+        type="info"
+        message="Need some more help?"
+        description={
+          <Typography.Paragraph style={{ marginBottom: 0 }}>
+            Check out the{" "}
             <a
-              href="https://docs.pezzo.ai/docs/tutorial/prompt-engineering"
+              href="https://docs.pezzo.ai/client/integrations/openai"
               target="_blank"
               rel="noreferrer"
             >
-              tutorial on our documentation site
-            </a>
-            .
+              Using OpenAI With Pezzo
+            </a>{" "}
+            page on our documentation to learn more.
           </Typography.Paragraph>
-        </>
-      )}
+        }
+        style={{ marginBottom: 12 }}
+      />
 
       <Typography.Title level={3}>Installation</Typography.Title>
       <Typography.Paragraph>
         Pezzo provides a fully-typed NPM package for integration with TypeScript
-        projects. server.
+        projects.
       </Typography.Paragraph>
       <StyledPre>
-        <code>{`npm install openai @pezzo/client`}</code>
+        <code>{"npm install @pezzo/client openai"}</code>
       </StyledPre>
       <Typography.Title level={3} style={{ marginTop: 24 }}>
         Usage
       </Typography.Title>
       <Typography.Paragraph>
-        {usage === Usage.Observability
-          ? "Initialize the OpenAI client as shown below, and consume the OpenAI API as you normally would. As soon as you interact with OpenAI, your requests will be available in the Requests view."
-          : "Managing your prompts with Pezzo is easy. You will fetch the prompt payload from Pezzo, and then pass it to the OpenAI client as an argument. As soon as you interact with OpenAI, your requests will be available in the Requests view."}
+        Managing your prompts with Pezzo is easy. You will fetch the prompt
+        payload from Pezzo, and then pass it to the OpenAI client as an
+        argument. As soon as you interact with OpenAI, your requests will be
+        available in the Requests view.
       </Typography.Paragraph>
-      <HighlightCode code={code} />
+      <HighlightCode code={codeWithPromptManagement} />
+
+      <Typography.Paragraph>
+        In addition to vriables, you can also provide{" "}
+        <strong>custom properties</strong> when executing prompts. These
+        properties will be available in the Requests view.{" "}
+        <a
+          href="https://docs.pezzo.ai/client/integrations/openai#custom-properties"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Read more about Properties in the Pezzo Documentation
+        </a>
+        .
+      </Typography.Paragraph>
     </>
   );
 };

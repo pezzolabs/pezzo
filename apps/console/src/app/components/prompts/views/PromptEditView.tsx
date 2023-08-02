@@ -5,6 +5,7 @@ import { PublishPromptModal } from "../PublishPromptModal";
 import { useState } from "react";
 import {
   ExperimentOutlined,
+  CodeOutlined,
   InfoCircleFilled,
   PlayCircleOutlined,
 } from "@ant-design/icons";
@@ -20,6 +21,7 @@ import { FunctionsFormModal } from "../FormModal";
 import { colors } from "../../../lib/theme/colors";
 import { PromptTesterModal } from "../prompt-tester/PromptTesterModal";
 import { usePromptTester } from "../../../lib/providers/PromptTesterContext";
+import { ConsumePromptModal } from "../ConsumePromptModal";
 
 const FUNCTIONS_FEATURE_FLAG = true;
 
@@ -30,6 +32,8 @@ export const PromptEditView = () => {
     usePromptVersionEditorContext();
 
   const [isCommitModalOpen, setIsCommitModalOpen] = useState(false);
+  const [isConsumePromptModalOpen, setIsConsumePromptModalOpen] =
+    useState(false);
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
   const [isFunctionsModalOpen, setIsFunctionsModalOpen] = useState(false);
 
@@ -52,6 +56,14 @@ export const PromptEditView = () => {
                 <Button icon={<ExperimentOutlined />} onClick={handleRunTest}>
                   Test
                 </Button>
+                {isPublishEnabled && (
+                  <Button
+                    onClick={() => setIsConsumePromptModalOpen(true)}
+                    icon={<CodeOutlined />}
+                  >
+                    How to Consume
+                  </Button>
+                )}
                 {isPublishEnabled && (
                   <Button
                     onClick={() => setIsPublishModalOpen(true)}
@@ -110,6 +122,11 @@ export const PromptEditView = () => {
         </Row>
 
         <PromptTesterModal />
+        
+        <ConsumePromptModal
+          open={isConsumePromptModalOpen}
+          onClose={() => setIsConsumePromptModalOpen(false)}
+        />
 
         <CommitPromptModal
           open={isCommitModalOpen}
