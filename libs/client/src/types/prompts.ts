@@ -17,6 +17,7 @@ export interface Prompt<TSettings = unknown> {
     promptId: string;
     promptVersionSha: string;
     type: PromptType;
+    isTestPrompt?: boolean;
   };
   settings: TSettings;
   content: PrompContent;

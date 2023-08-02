@@ -11,6 +11,7 @@ const commonConfigSchema = {
   SUPERTOKENS_WEBSITE_DOMAIN: Joi.string().default("http://localhost:4200"),
   OPENSEARCH_URL: Joi.string().required(),
   OPENSEARCH_AUTH: Joi.string().valid("insecure", "aws").default("insecure"),
+  TESTER_OPENAI_API_KEY: Joi.string().required(),
 };
 
 const cloudConfigSchema = {

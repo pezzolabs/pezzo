@@ -10,6 +10,9 @@ import {
   DeletePromptMutation,
   EnvironmentWhereUniqueInput,
   InvitationWhereUniqueInput,
+  RequestReport,
+  TestPromptInput,
+  TestPromptMutation,
   UpdateOrgInvitationInput,
   UpdateOrgInvitationMutation,
   UpdateOrgMemberRoleInput,
@@ -39,6 +42,7 @@ import {
 import { DELETE_ENVIRONMENT } from "../definitions/mutations/environments";
 import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
 import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
+import { TEST_PROMPT } from "../definitions/queries/prompt-executions";
 
 export const useUpdateCurrentUserMutation = () =>
   useMutation({
@@ -246,4 +250,16 @@ export const useCreatePromptVersion = () => {
       setCurrentVersionSha(sha);
     },
   });
+};
+
+export const useTestPrompt = () => {
+  return useMutation<TestPromptMutation, GraphQLErrorResponse, TestPromptInput>(
+    {
+      mutationFn: (data: TestPromptInput) => {
+        return gqlClient.request(TEST_PROMPT, {
+          data,
+        });
+      },
+    }
+  );
 };

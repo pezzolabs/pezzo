@@ -20,13 +20,13 @@ export class ReportingService {
       organizationId: string;
       projectId: string;
     }
-  ) {
+  ): Promise<RequestReport> {
     const reportId = randomUUID();
     const { report, calculated } = buildRequestReport(dto);
 
     const { properties, metadata, request, response } = report;
 
-    return this.openSearchService.client.index({
+    await this.openSearchService.client.index({
       index: OpenSearchIndex.Requests,
       body: {
         timestamp: request.timestamp,
@@ -39,6 +39,15 @@ export class ReportingService {
         response,
       },
     });
+
+    return {
+      reportId,
+      calculated,
+      properties,
+      metadata,
+      request: request as any,
+      response: response as any,
+    };
   }
 
   async getReports({
