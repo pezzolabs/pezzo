@@ -4,11 +4,10 @@ import {
   usePromptVersionEditorContext,
 } from "./PromptVersionEditorContext";
 import { Form, FormInstance } from "antd";
-import { OpenAIApi, Configuration } from "openai";
 import { useTestPrompt } from "../../graphql/hooks/mutations";
 import { useCurrentProject } from "../hooks/useCurrentProject";
 import { useCurrentPrompt } from "./CurrentPromptContext";
-import { RequestReport } from "apps/console/src/@generated/graphql/graphql";
+import { RequestReport } from "../../../@generated/graphql/graphql";
 
 interface PromptTesterContextValue {
   isOpen: boolean;
