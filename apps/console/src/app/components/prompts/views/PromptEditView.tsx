@@ -47,7 +47,7 @@ export const PromptEditView = () => {
 
   const onConsumeClick = () => {
     setIsConsumePromptModalOpen(true);
-    trackEvent("how_to_consume_prompt");
+    trackEvent("how_to_consume_modal_open");
   };
 
   return (

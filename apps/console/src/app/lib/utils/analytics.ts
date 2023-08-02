@@ -3,7 +3,7 @@ import Analytics from "analytics";
 import segmentPlugin from "@analytics/segment";
 import { GetMeQuery } from "../../../@generated/graphql/graphql";
 import { SEGMENT_WRITE_KEY } from "../../../env";
-import { AnalyticsEvent } from "./event.types";
+import { AnalyticsEvent } from "./events.types";
 
 const shouldTrack = !!SEGMENT_WRITE_KEY;
 
