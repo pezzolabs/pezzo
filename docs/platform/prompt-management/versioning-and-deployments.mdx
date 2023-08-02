@@ -1,0 +1,50 @@
+---
+title: 'Versioning & Deployments'
+---
+Pezzo allows you to create multiple versions of your prompts and deploy them to your environments.
+
+## Commiting a New Version
+
+After making changes to a prompt, you can commit a new version by clicking the **Commit** button in the top right corner of the prompt editor. A pop-up will appear, where you will provide a commit message.
+
+<Frame caption="Commit Popup">
+  <img src="/platform/prompt-management/commit-modal.png" />
+</Frame>
+
+After confirming, a new version will be created and is ready for deployment.
+
+## Publishing a Version
+
+To publish a version, click the **Publish** button in the top right corner of the prompt editor. A pop-up will appear, where you will select the environment you want to deploy to.
+
+<Frame caption="Publish Popup">
+  <img src="/platform/prompt-management/publish-modal.png" />
+</Frame>
+
+After clicking **Publish**, the prompt will be deployed to the selected environment instantly.
+
+<Note>
+The ability to instantly publish changes is powerful. However, it can lead to issues if you are not careful. It is advised to set up a pre-production environment to test your changes before deploying to Production. [Learn about Environments in Pezzo](/prompt-management/environments).
+</Note>
+
+## Rolling Back a Version
+
+You can always publish an older version of a prompt. To do this, simply click on the version selector in the editor and select the desired version. Then, publish as usual.
+
+<Frame>
+  <img src="/platform/prompt-management/version-selector.png" />
+</Frame>
+
+## Commit History
+
+When selecting a prompt, you can navigate to the **Versions** tab to see a full list of versions for the prompt.
+
+<Frame caption="Prompt Versions Tab">
+  <img src="/platform/prompt-management/prompt-versions.png" />
+</Frame>
+
+<br />
+
+<Info>
+We are working on a feature that will allows you to view the differences between versions. This will be available soon.
+</Info>

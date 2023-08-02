@@ -5,7 +5,8 @@
   "scripts": {
     "graphql:codegen": "nx graphql:codegen:offline server",
     "graphql:codegen:watch": "nx graphql:codegen server --watch",
-    "format": "prettier --write /Users/arielweinberger/Development/pezzo/pezzo/libs/kafka/src/lib/kafka.module.ts"
+    "format": "prettier --write /Users/arielweinberger/Development/pezzo/pezzo/libs/kafka/src/lib/kafka.module.ts",
+    "docs:dev": "cd docs && mintlify dev --port 3200"
   },
   "private": true,
   "dependencies": {
