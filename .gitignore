@@ -47,5 +47,5 @@ Thumbs.db
 .env.local
 schema.graphql
 
-# playground
-playground
+# temp
+temp
