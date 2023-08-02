@@ -14,11 +14,11 @@ export interface FactsResult {
 }
 
 export async function generateFacts(
-  goal: string,
+  topic: string,
   numFacts: number
 ): Promise<FactsResult> {
   const { data } = await axios.post("/api/facts", {
-    goal,
+    topic,
     numFacts,
   });
 

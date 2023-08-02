@@ -63,7 +63,7 @@ export default function Home() {
         >
           <div style={{ textAlign: "center" }}>
             <Typography.Title level={1} style={{ marginBottom: 0 }}>
-              Factly 🤓
+              The Fact Machine 🤓
             </Typography.Title>
             <Typography.Title
               level={2}
