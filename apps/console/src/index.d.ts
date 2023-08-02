@@ -18,52 +18,9 @@ declare global {
 
     /* The track method lets you record the actions your users perform. */
     track(
-      message: Identity & {
-        event: string;
-        properties?: any;
-        timestamp?: Date | undefined;
-        context?: any;
-        integrations?: Integrations | undefined;
-      },
-      callback?: (err: Error) => void
-    ): Analytics;
-
-    /* The page method lets you record page views on your website, along with
-       optional extra information about the page being viewed. */
-    page(
-      message: Identity & {
-        category?: string | undefined;
-        name?: string | undefined;
-        properties?: any;
-        timestamp?: Date | undefined;
-        context?: any;
-        integrations?: Integrations | undefined;
-        messageId?: string | undefined;
-      },
-      callback?: (err: Error) => void
-    ): Analytics;
-
-    /* The screen method lets you record whenever a user sees a screen,
-       the mobile equivalent of page, in your mobile app, along with
-       any properties about the screen. */
-    screen(
-      message: Identity & {
-        name?: string | undefined;
-        properties?: any;
-        timestamp?: Date | undefined;
-        context?: any;
-        integrations?: Integrations | undefined;
-      },
-      callback?: (err: Error) => void
-    ): Analytics;
-
-    /* alias is how you associate one identity with another. */
-    alias(
-      message: Identity & {
-        previousId: string | number;
-        integrations?: Integrations | undefined;
-      },
-      callback?: (err: Error) => void
+      event: string,
+      properties: any,
+      context: { groupId: string; projectId?: string }
     ): Analytics;
 
     /* Group calls can be used to associate individual users with shared

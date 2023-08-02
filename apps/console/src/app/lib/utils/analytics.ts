@@ -1,6 +1,7 @@
 import React from "react";
 import { GetMeQuery } from "../../../@generated/graphql/graphql";
 import { SEGMENT_WRITE_KEY } from "../../../env";
+import { AnalyticsEvent } from "./event.types";
 
 const shouldTrack = !!SEGMENT_WRITE_KEY;
 if (!shouldTrack) {
@@ -10,9 +11,6 @@ if (!shouldTrack) {
     group: (...args: never) => null,
     track: (...args: never) => null,
     load: (...args: never) => null,
-    page: (...args: never) => null,
-    screen: (...args: never) => null,
-    alias: (...args: never) => null,
     flush: (...args: never) => null,
   };
 }
@@ -34,26 +32,27 @@ export const useTrackInit = (userId: string) => {
 export const useIdentify = (user: GetMeQuery["me"]) => {
   React.useEffect(() => {
     if (!user) return;
-    // const orgId = user.organizationIds[0];
+    const groupId = JSON.parse(localStorage.getItem("currentOrgId"));
+
     const identifyRequest = {
       userId: user.id,
       name: user.name,
       email: user.email,
       avatar: user.photoUrl,
-      // company: { id: orgId },
+      groupId,
     };
 
     window.analytics.identify(identifyRequest);
-    // window.analytics.group(orgId);
+    window.analytics.group(groupId);
   }, [user]);
 };
 
-export type AnalyticsEvent = {
-  login: "login";
-  logout: "logout";
-  how_to_consume_prompt: "how_to_consume_prompt";
-};
-
 export const trackEvent = (event: keyof AnalyticsEvent, properties?: any) => {
-  window.analytics.track({ event, properties });
+  const groupId = JSON.parse(localStorage.getItem("currentOrgId"));
+  const context = { groupId };
+  window.analytics.track(
+    event,
+    { ...properties, organizationId: groupId },
+    context
+  );
 };
