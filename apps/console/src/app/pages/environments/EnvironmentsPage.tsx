@@ -5,6 +5,7 @@ import { DeleteEnvironmentModal } from "../../components/environments/DeleteEnvi
 import { useState } from "react";
 import { useEnvironments } from "../../lib/hooks/useEnvironments";
 import { EnvironmentsQuery } from "../../../@generated/graphql/graphql";
+import { trackEvent } from "../../lib/utils/analytics";
 
 type Environment = EnvironmentsQuery["environments"][0];
 
@@ -15,6 +16,16 @@ export const EnvironmentsPage = () => {
   const [environmentToDelete, setEnvironmentToDelete] =
     useState<Environment | null>(null);
   const { token } = theme.useToken();
+
+  const onCreateEnvironmentModalOpen = () => {
+    setIsCreateEnvironmentModalOpen(true);
+    trackEvent("environment_create_modal_open");
+  };
+
+  const onDeleteEnvironmentModalOpen = (environment: Environment) => () => {
+    setEnvironmentToDelete(environment);
+    trackEvent("environment_delete_modal_open", { name: environment.name });
+  };
 
   return (
     <>
@@ -35,7 +46,7 @@ export const EnvironmentsPage = () => {
         <div style={{ marginBottom: token.marginLG }}>
           <Button
             icon={<PlusOutlined />}
-            onClick={() => setIsCreateEnvironmentModalOpen(true)}
+            onClick={onCreateEnvironmentModalOpen}
           >
             New Environment
           </Button>
@@ -52,7 +63,7 @@ export const EnvironmentsPage = () => {
                 <Col>{environment.name}</Col>
                 <Col>
                   <Button
-                    onClick={() => setEnvironmentToDelete(environment)}
+                    onClick={onDeleteEnvironmentModalOpen(environment)}
                     type="text"
                     danger
                     icon={<DeleteOutlined />}

@@ -33,4 +33,10 @@ export enum AnalyticsEvent {
   request_details_pagination_change,
   request_details_filter_added,
   request_details_filter_removed,
+  environment_create_modal_open,
+  environment_delete_modal_open,
+  environment_form_submitted,
+  environment_form_cancelled,
+  environment_delete_confirmed,
+  environment_delete_cancelled,
 }
