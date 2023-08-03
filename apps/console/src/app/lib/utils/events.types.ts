@@ -39,4 +39,8 @@ export enum AnalyticsEvent {
   environment_form_cancelled,
   environment_delete_confirmed,
   environment_delete_cancelled,
+  project_create_modal_open,
+  project_form_submitted,
+  project_form_cancelled,
+  project_nav_click,
 }

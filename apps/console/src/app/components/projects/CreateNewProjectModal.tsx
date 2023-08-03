@@ -2,6 +2,8 @@ import { Alert, Form, Input, Modal, Space, Typography, theme } from "antd";
 import { useCallback } from "react";
 import { useCreateProjectMutation } from "../../graphql/hooks/mutations";
 import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
+import { trackEvent } from "../../lib/utils/analytics";
+import { tr } from "date-fns/locale";
 
 interface Props {
   open: boolean;
@@ -31,7 +33,13 @@ export const CreateNewProjectModal = ({ open, onClose, onCreated }: Props) => {
     }).catch(() => {
       form.resetFields();
     });
+    trackEvent("project_form_submitted");
   }, [createProject, form, organization.id]);
+
+  const onCancel = () => {
+    onClose();
+    trackEvent("project_form_cancelled");
+  };
 
   return (
     <Modal
@@ -41,7 +49,7 @@ export const CreateNewProjectModal = ({ open, onClose, onCreated }: Props) => {
         </Typography.Title>
       }
       open={open}
-      onCancel={onClose}
+      onCancel={onCancel}
       okText="Create"
       okButtonProps={{
         form: "create-project-form",

@@ -1,6 +1,7 @@
 import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
 import { Card, Row, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
+import { trackEvent } from "../../lib/utils/analytics";
 
 interface ProjectCardProps {
   name: string;
@@ -9,11 +10,15 @@ interface ProjectCardProps {
 }
 export const ProjectCard = ({ name, slug, id }: ProjectCardProps) => {
   const navigate = useNavigate();
+  const onCardClick = () => {
+    navigate(`/projects/${id}`);
+    trackEvent("project_nav_click", { projectId: id });
+  };
 
   return (
     <Card
       hoverable
-      onClick={() => navigate(`/projects/${id}`)}
+      onClick={onCardClick}
       style={{ marginBottom: 16, height: 122 }}
     >
       <Row justify="space-between" align="middle">
