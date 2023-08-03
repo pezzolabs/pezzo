@@ -8,6 +8,7 @@ export enum AnalyticsEvent {
   prompt_publish_modal_open,
   prompt_commit_modal_open,
   prompt_functions_modal_open,
+  prompt_provider_selector_open,
   prompt_publish_clicked,
   prompt_environment_selected,
   prompt_version_selected,
