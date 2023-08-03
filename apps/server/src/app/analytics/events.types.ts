@@ -13,10 +13,6 @@ export type AnalyticsPayloads = {
     name: string;
   };
   "PROJECT:CREATED": { projectId: string; name: string };
-  "PROMPT:CREATED": {
-    projectId: string;
-    promptId: string;
-  };
   "PROMPT:DELETED": {
     promptId: string;
     projectId: string;
@@ -55,4 +51,8 @@ export type AnalyticsPayloads = {
     reportId: string;
     data: Partial<PromptExecution>;
   };
+};
+
+export type AnalyticsEvent = {
+  prompt_created: "prompt_created";
 };

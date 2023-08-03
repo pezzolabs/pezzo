@@ -1,12 +1,13 @@
 import {
   CanActivate,
   ExecutionContext,
+  Inject,
   Injectable,
   InternalServerErrorException,
   Scope,
   UnauthorizedException,
 } from "@nestjs/common";
-import { GqlExecutionContext } from "@nestjs/graphql";
+import { CONTEXT, GqlExecutionContext } from "@nestjs/graphql";
 import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
 import { UsersService } from "../identity/users.service";
 import { RequestUser } from "../identity/users.types";
@@ -22,7 +23,9 @@ export enum AuthMethod {
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly usersService: UsersService,
-    private readonly logger: PinoLogger
+    private readonly logger: PinoLogger,
+    @Inject(CONTEXT)
+    private readonly context = { eventContext: null }
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -76,6 +79,11 @@ export class AuthGuard implements CanActivate {
           memberSince: m.createdAt,
           role: m.role,
         })),
+      };
+
+      this.context.eventContext = {
+        userId: reqUser.id,
+        organizationId: reqUser.orgMemberships[0].organizationId,
       };
 
       req["user"] = reqUser;
