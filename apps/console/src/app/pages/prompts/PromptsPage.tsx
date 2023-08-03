@@ -9,6 +9,7 @@ import { css } from "@emotion/css";
 import { Button, Space, Spin, Typography, theme } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
+import { trackEvent } from "../../lib/utils/analytics";
 
 export const PromptsPage = () => {
   const { project, isLoading: isProjectsLoading } = useCurrentProject();
@@ -23,6 +24,16 @@ export const PromptsPage = () => {
   });
 
   const isLoading = isLoadingPrompts || isProjectsLoading;
+
+  const onCreatePromptModalOpen = () => {
+    setIsCreatePromptModalOpen(true);
+    trackEvent("prompt_modal_open");
+  };
+
+  const onPromptClick = (promptId: string) => () => {
+    navigate(`/projects/${project.id}/prompts/${promptId}`);
+    trackEvent("prompt_nav_click", { promptId });
+  };
 
   return (
     <>
@@ -48,7 +59,7 @@ export const PromptsPage = () => {
               style={{
                 marginBottom: token.marginLG,
               }}
-              onClick={() => setIsCreatePromptModalOpen(true)}
+              onClick={onCreatePromptModalOpen}
             >
               New Prompt
             </Button>
@@ -57,9 +68,7 @@ export const PromptsPage = () => {
               <div key={prompt.id} style={{ marginBottom: 14 }}>
                 <PromptListItem
                   name={prompt.name}
-                  onClick={() =>
-                    navigate(`/projects/${project.id}/prompts/${prompt.id}`)
-                  }
+                  onClick={onPromptClick(prompt.id)}
                 />
               </div>
             ))}

@@ -3,6 +3,8 @@
 export enum AnalyticsEvent {
   login,
   logout,
+  prompt_modal_open,
+  prompt_nav_click,
   prompt_run_test_clicked,
   prompt_how_to_consume_modal_open,
   prompt_publish_modal_open,
