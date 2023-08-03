@@ -18,17 +18,12 @@ const analytics = Analytics({
     : [],
 });
 
-export const useTrackInit = (userId: string) => {
-  React.useEffect(() => {
-    if (!userId) return;
-    analytics.identify(userId);
-  }, [userId]);
-};
-
 // Can be handled on backend
 export const useIdentify = (user: GetMeQuery["me"]) => {
   React.useEffect(() => {
     if (!user) return;
+    const segmentUserId = JSON.parse(localStorage.getItem("ajs_user_id"));
+    if (segmentUserId === user.id) return;
     const groupId = JSON.parse(localStorage.getItem("currentOrgId"));
 
     const identifyRequest = {

@@ -8,7 +8,7 @@ import { LayoutWrapper } from "../../components/layout/LayoutWrapper";
 import { Loading3QuartersOutlined } from "@ant-design/icons";
 import { colors } from "../theme/colors";
 import { Loader } from "../../components/common/Loader";
-import { useIdentify, useTrackInit } from "../utils/analytics";
+import { useIdentify } from "../utils/analytics";
 
 const SpinnerOverlay = styled(Row)`
   height: 100%;
@@ -49,7 +49,6 @@ export const AuthProvider = ({ children }) => {
     }
   }, [value.currentUser]);
 
-  useTrackInit(value.currentUser?.id);
   useIdentify(value.currentUser);
 
   return (
