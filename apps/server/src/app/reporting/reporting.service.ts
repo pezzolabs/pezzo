@@ -44,7 +44,7 @@ export class ReportingService {
       },
     });
 
-    this.analytics.track("REQUEST:REPORTED", "api", {
+    this.analytics.trackEvent("request_reported", {
       organizationId: ownership.organizationId,
       projectId: ownership.projectId,
       reportId,

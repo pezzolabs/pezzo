@@ -94,7 +94,7 @@ export class PromptVersionsResolver {
         data,
         user.id
       );
-      this.analytics.track("PROMPT_VERSION:CREATED", user.id, {
+      this.analytics.trackEvent("prompt_version_created", {
         projectId: prompt.projectId,
         promptId: prompt.id,
       });

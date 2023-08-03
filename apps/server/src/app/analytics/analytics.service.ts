@@ -1,7 +1,7 @@
 import { Inject, Injectable, Scope } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Analytics } from "@segment/analytics-node";
-import { AnalyticsEvent, AnalyticsPayloads } from "./events.types";
+import { AnalyticsEvent } from "./events.types";
 import { CONTEXT } from "@nestjs/graphql";
 
 export interface EventContextProps {
@@ -42,24 +42,8 @@ export class AnalyticsService {
     }
   }
 
-  track<K extends keyof AnalyticsPayloads>(
-    event: K,
-    userId: string,
-    properties: AnalyticsPayloads[K]
-  ) {
-    if (!this.analytics) {
-      return;
-    }
-
-    try {
-      return this.analytics.track({ userId, event, properties });
-    } catch (error) {
-      console.error("Error tracking event", error);
-    }
-  }
-
   trackEvent = (
-    event: keyof AnalyticsEvent,
+    event: keyof typeof AnalyticsEvent,
     properties?: Record<string, any> & EventContextProps
   ) => {
     const { userId, organizationId, projectId, promptId } =

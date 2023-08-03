@@ -257,7 +257,7 @@ export class PromptsResolver {
       throw new InternalServerErrorException();
     }
 
-    this.analytics.track("PROMPT:DELETED", user.id, {
+    this.analytics.trackEvent("prompt_deleted", {
       promptId: id,
       projectId: prompt.projectId,
       organizationId: org.id,
