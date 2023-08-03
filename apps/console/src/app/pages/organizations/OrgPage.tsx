@@ -14,6 +14,7 @@ import { MembersView } from "./MembersView";
 import { SettingsView } from "./SettingsView";
 import { ApiKeysView } from "./ApiKeysView";
 import { useCurrentOrgMembership } from "../../lib/hooks/useCurrentOrgMembership";
+import { trackEvent } from "../../lib/utils/analytics";
 
 const TabLabel = styled.div`
   display: inline-block;
@@ -83,13 +84,18 @@ export const OrgPage = () => {
     [tabsItems, isOrgAdmin]
   );
 
+  const onTabChange = (key: string) => {
+    setActiveView(key);
+    trackEvent("organization_tab_changed", { tab: key });
+  };
+
   return organization ? (
     <>
       <Typography.Title level={1} style={{ marginTop: 0 }}>
         {organization.name}
       </Typography.Title>
 
-      <Tabs items={availableTabItems} onChange={setActiveView} />
+      <Tabs items={availableTabItems} onChange={onTabChange} />
 
       {activeView === TabItemKey.Projects && <ProjectsPage />}
       {activeView === TabItemKey.Members && <MembersView />}

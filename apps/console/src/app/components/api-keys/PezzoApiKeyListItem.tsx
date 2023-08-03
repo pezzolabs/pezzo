@@ -2,6 +2,7 @@ import { useCopyToClipboard } from "usehooks-ts";
 import styled from "@emotion/styled";
 import { Button, Card, Col, Row, Typography } from "antd";
 import { CheckOutlined, CopyOutlined } from "@ant-design/icons";
+import { trackEvent } from "../../lib/utils/analytics";
 
 const APIKeyContainer = styled.div`
   display: flex;
@@ -14,6 +15,11 @@ interface Props {
 
 export const PezzoApiKeyListItem = ({ value }: Props) => {
   const [copied, copy] = useCopyToClipboard();
+
+  const onCopy = () => {
+    copy(value);
+    trackEvent("organization_api_key_copy");
+  };
 
   return (
     <Card size="small" key={value}>
@@ -37,10 +43,7 @@ export const PezzoApiKeyListItem = ({ value }: Props) => {
             style={{ display: "flex", justifyContent: "flex-end" }}
           >
             {!copied ? (
-              <Button
-                onClick={() => copy(value)}
-                icon={<CopyOutlined height={18} />}
-              />
+              <Button onClick={onCopy} icon={<CopyOutlined height={18} />} />
             ) : (
               <Button disabled icon={<CheckOutlined height={18} />} />
             )}

@@ -43,4 +43,8 @@ export enum AnalyticsEvent {
   project_form_submitted,
   project_form_cancelled,
   project_nav_click,
+  organization_tab_changed,
+  organization_member_invite_modal_open,
+  organization_api_key_copy,
+  organization_settings_form_submitted,
 }
