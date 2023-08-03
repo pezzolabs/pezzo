@@ -1,9 +1,9 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Scope } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Analytics } from "@segment/analytics-node";
 import { AnalyticsPayloads } from "./events.types";
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class AnalyticsService {
   analytics: Analytics;
   segmentEnabled: boolean;
