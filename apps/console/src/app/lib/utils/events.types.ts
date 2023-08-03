@@ -29,4 +29,8 @@ export enum AnalyticsEvent {
   prompt_test_submitted,
   prompt_test_cancelled,
   prompt_test_display_mode_changed,
+  request_details_view,
+  request_details_pagination_change,
+  request_details_filter_added,
+  request_details_filter_removed,
 }
