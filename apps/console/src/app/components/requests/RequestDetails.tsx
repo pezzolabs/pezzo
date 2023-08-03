@@ -25,6 +25,7 @@ import {
 import { useState } from "react";
 import { RequestResponseChatView } from "./RequestResponseChatView";
 import { RequestResponseViewJsonView } from "./RequestResponseViewJsonView";
+import { trackEvent } from "../../lib/utils/analytics";
 
 type Mode = "chat" | "json";
 
@@ -46,6 +47,11 @@ export const RequestDetails = (props: Props) => {
   const [selectedMode, setSelectedMode] = useState<Mode>(
     isSuccess ? "chat" : "json"
   );
+
+  const handleDisplayModeChange = (mode: Mode) => {
+    setSelectedMode(mode);
+    trackEvent("prompt_test_display_mode_changed", { mode });
+  };
 
   if (props.provider !== Provider.OpenAI) {
     return null;
@@ -126,7 +132,7 @@ export const RequestDetails = (props: Props) => {
             },
           ]}
           value={selectedMode}
-          onChange={(value) => setSelectedMode(value as Mode)}
+          onChange={handleDisplayModeChange}
         />
       ),
     },

@@ -4,6 +4,8 @@ import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 import { useNavigate } from "react-router-dom";
 import { useDeletePromptMutation } from "../../graphql/hooks/mutations";
 import { useEffect } from "react";
+import { tr } from "date-fns/locale";
+import { trackEvent } from "../../lib/utils/analytics";
 
 interface Props {
   open: boolean;
@@ -19,6 +21,12 @@ export const DeletePromptConfirmationModal = ({ open, onClose }: Props) => {
 
   const handleDelete = () => {
     mutate(prompt.id);
+    trackEvent("prompt_delete_confirmed");
+  };
+
+  const onCancel = () => {
+    trackEvent("prompt_delete_cancelled");
+    onClose();
   };
 
   useEffect(() => {
@@ -31,7 +39,7 @@ export const DeletePromptConfirmationModal = ({ open, onClose }: Props) => {
     <Modal
       title="Delete prompt"
       open={open}
-      onCancel={onClose}
+      onCancel={onCancel}
       footer={[
         <Button key="cancel" onClick={onClose}>
           Cancel

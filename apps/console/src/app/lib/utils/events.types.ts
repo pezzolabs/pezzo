@@ -1,7 +1,29 @@
 // Pattern snake_case, Context => Object => Action
 
-export type AnalyticsEvent = {
-  login: "login";
-  logout: "logout";
-  how_to_consume_modal_open: "how_to_consume_modal_open";
-};
+export enum AnalyticsEvent {
+  login,
+  logout,
+  prompt_run_test_clicked,
+  prompt_how_to_consume_modal_open,
+  prompt_publish_modal_open,
+  prompt_commit_modal_open,
+  prompt_functions_modal_open,
+  prompt_publish_clicked,
+  prompt_environment_selected,
+  prompt_version_selected,
+  prompt_functions_edited,
+  prompt_delete_confirmed,
+  prompt_delete_cancelled,
+  prompt_form_submitted,
+  prompt_form_cancelled,
+  prompt_form_chat_clicked,
+  prompt_commit_submitted,
+  prompt_commit_cancelled,
+  prompt_versions_view,
+  prompt_settings_view,
+  prompt_metrics_view,
+  prompt_metric_view_changed,
+  prompt_test_submitted,
+  prompt_test_cancelled,
+  prompt_test_display_mode_changed,
+}

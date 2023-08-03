@@ -44,7 +44,7 @@ export const useIdentify = (user: GetMeQuery["me"]) => {
   }, [user]);
 };
 
-interface ContextProps {
+export interface ContextProps {
   organizationId?: string;
   projectId?: string;
   promptId?: string;
@@ -64,8 +64,8 @@ const getContextPropsFromPathIfExists = () => {
 };
 
 export const trackEvent = (
-  event: keyof AnalyticsEvent,
-  properties?: Record<string, any>
+  event: keyof typeof AnalyticsEvent,
+  properties?: Record<string, any> & ContextProps
 ) => {
   const groupId = JSON.parse(localStorage.getItem("currentOrgId"));
   const context = { groupId };
