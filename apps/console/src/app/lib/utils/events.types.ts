@@ -1,8 +1,8 @@
 // Pattern snake_case, Context => Object => Action
 
 export enum AnalyticsEvent {
-  login,
-  logout,
+  user_login,
+  user_logout,
   prompt_modal_open,
   prompt_nav_click,
   prompt_run_test_clicked,
