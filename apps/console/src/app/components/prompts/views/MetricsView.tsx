@@ -12,7 +12,7 @@ export const MetricsView = () => {
   const { token } = theme.useToken();
 
   React.useEffect(() => {
-    trackEvent("prompt_metrics_view");
+    trackEvent("prompt_metrics_viewed");
   }, []);
 
   return (
