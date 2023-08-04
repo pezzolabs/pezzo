@@ -24,7 +24,7 @@ export const MembersView = () => {
 
   const onOpenInviteModal = () => {
     setIsInviteModalOpen(true);
-    trackEvent("organization_member_invite_modal_open");
+    trackEvent("organization_member_invite_modal_opened");
   };
 
   return (
