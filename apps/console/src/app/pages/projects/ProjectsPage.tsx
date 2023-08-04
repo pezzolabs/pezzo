@@ -40,7 +40,7 @@ export const ProjectsPage = () => {
 
   const onOpenCreateNewProjectModal = (placement: "button" | "card") => () => {
     setIsCreateNewProjectModalOpen(true);
-    trackEvent("project_create_modal_open", { placement });
+    trackEvent("project_create_modal_opened", { placement });
   };
 
   return (
