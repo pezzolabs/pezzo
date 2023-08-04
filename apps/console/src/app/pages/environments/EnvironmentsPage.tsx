@@ -24,7 +24,7 @@ export const EnvironmentsPage = () => {
 
   const onDeleteEnvironmentModalOpen = (environment: Environment) => () => {
     setEnvironmentToDelete(environment);
-    trackEvent("environment_delete_modal_open", { name: environment.name });
+    trackEvent("environment_delete_modal_opened", { name: environment.name });
   };
 
   return (
