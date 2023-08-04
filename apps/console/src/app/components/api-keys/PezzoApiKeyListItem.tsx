@@ -18,7 +18,7 @@ export const PezzoApiKeyListItem = ({ value }: Props) => {
 
   const onCopy = () => {
     copy(value);
-    trackEvent("organization_api_key_copy");
+    trackEvent("organization_api_key_copied");
   };
 
   return (
