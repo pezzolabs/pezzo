@@ -52,7 +52,7 @@ export const ProviderSelector = () => {
   const onProviderSelectClick = () => {
     if (!open) {
       setOpen(true);
-      trackEvent("prompt_provider_selector_open");
+      trackEvent("prompt_provider_selector_opened");
     }
   };
 
