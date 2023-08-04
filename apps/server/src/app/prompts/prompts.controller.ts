@@ -77,7 +77,7 @@ export class PromptsController {
       throw new NotFoundException(`Prompt "${name}" not found`);
     }
 
-    this.analytics.track("PROMPT:FIND_WITH_API_KEY", "api", {
+    this.analytics.trackEvent("prompt_find_with_api_key", {
       organizationId,
       projectId,
       promptId: prompt.id,
@@ -187,7 +187,7 @@ export class PromptsController {
       return { success: false };
     }
 
-    this.analytics.track("PROMPT_EXECUTION:REPORTED", "api", {
+    this.analytics.trackEvent("prompt_execution_reported", {
       projectId: project.id,
       promptId,
       executionId: execution.id,

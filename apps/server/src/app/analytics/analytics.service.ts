@@ -1,7 +1,15 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable, Scope } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Analytics } from "@segment/analytics-node";
-import { AnalyticsPayloads } from "./events.types";
+import { AnalyticsEvent } from "./events.types";
+import { CONTEXT } from "@nestjs/graphql";
+
+export interface EventContextProps {
+  userId?: string;
+  organizationId?: string;
+  projectId?: string;
+  promptId?: string;
+}
 
 @Injectable()
 export class AnalyticsService {
@@ -10,7 +18,11 @@ export class AnalyticsService {
 
   constructor(
     private configService: ConfigService,
-    private config: ConfigService
+    private config: ConfigService,
+    @Inject(CONTEXT)
+    private readonly context: { eventContext: EventContextProps } = {
+      eventContext: null,
+    }
   ) {
     const segmentApiKey = this.config.get("SEGMENT_KEY");
 
@@ -30,19 +42,26 @@ export class AnalyticsService {
     }
   }
 
-  track<K extends keyof AnalyticsPayloads>(
-    event: K,
-    userId: string,
-    properties: AnalyticsPayloads[K]
-  ) {
-    if (!this.analytics) {
-      return;
-    }
+  trackEvent = (
+    event: keyof typeof AnalyticsEvent,
+    properties?: Record<string, any> & EventContextProps
+  ) => {
+    const { userId, organizationId, projectId, promptId } =
+      this.context.eventContext;
+    const eventPayload = {
+      event,
+      userId,
+      properties: {
+        organizationId,
+        projectId,
+        promptId,
+        ...properties,
+      },
+      context: {
+        groupId: organizationId,
+      },
+    };
 
-    try {
-      return this.analytics.track({ userId, event, properties });
-    } catch (error) {
-      console.error("Error tracking event", error);
-    }
-  }
+    this.analytics.track(eventPayload);
+  };
 }

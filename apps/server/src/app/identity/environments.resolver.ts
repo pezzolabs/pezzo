@@ -92,7 +92,7 @@ export class EnvironmentsResolver {
         name,
         projectId
       );
-      this.analytics.track("ENVIRONMENT:CREATED", user.id, {
+      this.analytics.trackEvent("environment_created", {
         projectId,
         name,
         environmentId: environment.id,

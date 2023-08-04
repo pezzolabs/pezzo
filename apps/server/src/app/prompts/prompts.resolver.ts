@@ -227,9 +227,9 @@ export class PromptsResolver {
       throw new InternalServerErrorException();
     }
 
-    this.analytics.track("PROMPT:CREATED", user.id, {
-      projectId,
+    this.analytics.trackEvent("prompt_created", {
       promptId: prompt.id,
+      projectId,
     });
 
     return prompt;
@@ -257,7 +257,7 @@ export class PromptsResolver {
       throw new InternalServerErrorException();
     }
 
-    this.analytics.track("PROMPT:DELETED", user.id, {
+    this.analytics.trackEvent("prompt_deleted", {
       promptId: id,
       projectId: prompt.projectId,
       organizationId: org.id,
