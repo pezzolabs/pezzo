@@ -32,7 +32,7 @@ export const PromptsPage = () => {
 
   const onPromptClick = (promptId: string) => () => {
     navigate(`/projects/${project.id}/prompts/${promptId}`);
-    trackEvent("prompt_nav_click", { promptId });
+    trackEvent("prompt_nav_clicked", { promptId });
   };
 
   return (
