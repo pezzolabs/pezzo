@@ -12,7 +12,7 @@ export const ProjectCard = ({ name, slug, id }: ProjectCardProps) => {
   const navigate = useNavigate();
   const onCardClick = () => {
     navigate(`/projects/${id}`);
-    trackEvent("project_nav_click", { projectId: id });
+    trackEvent("project_nav_clicked", { projectId: id });
   };
 
   return (
