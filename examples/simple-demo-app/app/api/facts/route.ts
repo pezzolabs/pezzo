@@ -9,7 +9,7 @@ export async function POST(request: Request) {
   let prompt: GetPromptResult;
 
   try {
-    prompt = await pezzo.getPrompt("FactGenerator");
+    prompt = await pezzo.getPrompt("GenerateFacts");
   } catch (error) {
     console.log("Failed to fetch prompt from Pezzo", error);
     return NextResponse.json(

@@ -89,7 +89,6 @@ export const AddFilterForm = ({
       value: formValues.value,
     };
 
-    console.log("value", filterValue);
     onAdd(filterValue);
     form.resetFields();
   };
