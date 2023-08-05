@@ -1,7 +1,7 @@
 {
   "name": "@pezzo/client",
   "description": "TypeScript API client for Pezzo",
-  "version": "0.3.1-alpha-1",
+  "version": "0.3.1-alpha-2",
   "type": "commonjs",
   "author": "Ariel Weinberger",
   "keywords": [
@@ -20,7 +20,8 @@
   ],
   "dependencies": {
     "axios": "^1.4.0",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "reflect-metadata": "^0.1.13"
   },
   "repository": {
     "type": "git",
