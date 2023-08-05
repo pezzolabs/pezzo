@@ -1,13 +1,13 @@
 //@ts-check
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { withNx } = require("@nrwl/next/plugins/with-nx");
+const { withNx } = require("@nx/next/plugins/with-nx");
 
 // https://github.com/vercel/next.js/issues/49169
 process.env.__NEXT_PRIVATE_PREBUNDLED_REACT = "next";
 
 /**
- * @type {import('@nrwl/next/plugins/with-nx').WithNxOptions}
+ * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
  **/
 const nextConfig = {
   nx: {

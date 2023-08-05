@@ -1,4 +1,4 @@
-const { composePlugins, withNx } = require("@nrwl/webpack");
+const { composePlugins, withNx } = require("@nx/webpack");
 const GeneratePackageJsonPlugin = require("generate-package-json-webpack-plugin");
 const path = require("path");
 const packageJson = require("../../package.json");
