@@ -1,4 +1,3 @@
-import axios, { AxiosInstance } from "axios";
 import { ReportData } from "../types";
 import { Prompt } from "../types/prompts";
 
@@ -19,21 +18,12 @@ const defaultOptions: Partial<PezzoClientOptions> = {
 
 export class Pezzo {
   options: PezzoClientOptions;
-  private readonly axios: AxiosInstance; // TODO: swap with fetch for Vercel AI
 
   constructor(options: PezzoClientOptions) {
     this.options = {
       ...defaultOptions,
       ...options,
     };
-
-    this.axios = axios.create({
-      baseURL: `${this.options.serverUrl}/api`,
-      headers: {
-        "x-pezzo-api-key": this.options.apiKey,
-        "x-pezzo-client-version": "0.0.1", // TODO: make dynamic, handdle in backend
-      },
-    });
   }
 
   async getPrompt(promptName: string): Promise<{ pezzo: Prompt }> {
@@ -74,15 +64,22 @@ export class Pezzo {
   }
 
   async reportPromptExecution(dto: ReportData) {
-    await axios.post(
+    const response = await fetch(
       `${this.options.serverUrl}/api/reporting/v2/request`,
-      dto,
       {
+        method: "POST",
         headers: {
+          "Content-Type": "application/json",
           "x-pezzo-api-key": this.options.apiKey,
           "x-pezzo-project-id": this.options.projectId,
         },
+        body: JSON.stringify(dto),
       }
     );
+
+    if (!response.ok) {
+      const json = await response.json();
+      console.warn("Could not report prompt execution", json);
+    }
   }
 }
