@@ -1,6 +1,5 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "npmScope": "pezzo",
   "tasksRunnerOptions": {
     "default": {
       "runner": "nx-cloud",
@@ -42,12 +41,6 @@
     "sharedGlobals": ["{workspaceRoot}/babel.config.json"]
   },
   "generators": {
-    "@nx/next": {
-      "application": {
-        "style": "css",
-        "linter": "eslint"
-      }
-    },
     "@nx/react": {
       "application": {
         "style": "@emotion/styled",
@@ -60,6 +53,12 @@
       },
       "library": {
         "style": "@emotion/styled",
+        "linter": "eslint"
+      }
+    },
+    "@nx/next": {
+      "application": {
+        "style": "css",
         "linter": "eslint"
       }
     }

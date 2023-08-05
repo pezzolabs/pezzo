@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@pezzo/client": ["libs/client/src/index.ts"],
+      "@pezzo/client-new": ["libs/client-new/src/index.ts"],
       "@pezzo/common": ["libs/common/src/index.ts"],
       "@pezzo/common/components": ["libs/common/src/components"],
       "@pezzo/kafka": ["libs/kafka/src/index.ts"],
