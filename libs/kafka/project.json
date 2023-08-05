@@ -13,7 +13,8 @@
         "outputPath": "dist/libs/kafka",
         "main": "libs/kafka/src/index.ts",
         "tsConfig": "libs/kafka/tsconfig.lib.json",
-        "assets": ["libs/kafka/*.md"]
+        "assets": ["libs/kafka/*.md"],
+        "updateBuildableProjectDepsInPackageJson": true
       }
     },
     "lint": {
