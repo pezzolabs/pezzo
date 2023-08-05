@@ -27,12 +27,11 @@ module.exports = (config, context) => {
     },
     external: isExternal,
     plugins: [
-      commonjs,
       typescript2({
         tsconfig: context.tsConfig,
         compilerOptions: { outDir: config.output.dir, sourceMap: true },
       }),
-      // commonjs(),
+      commonjs(),
       generatePackageJson({
         baseContents: () => ({
           ...localPkg,
@@ -40,6 +39,9 @@ module.exports = (config, context) => {
           module: "./index.esm.js",
           types: "./libs/client/src/index.d.ts",
         }),
+        additionalDependencies: {
+          ...localPkg.dependencies,
+        },
       }),
       sizes({ details: true }),
     ],
