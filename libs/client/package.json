@@ -1,7 +1,7 @@
 {
   "name": "@pezzo/client",
   "description": "TypeScript API client for Pezzo",
-  "version": "0.3.1-alpha-2",
+  "version": "0.3.1-alpha-4",
   "type": "commonjs",
   "author": "Ariel Weinberger",
   "keywords": [
@@ -18,11 +18,7 @@
     "gpt-4",
     "gpt-3.5-turbo"
   ],
-  "dependencies": {
-    "axios": "^1.4.0",
-    "tslib": "^2.3.0",
-    "reflect-metadata": "^0.1.13"
-  },
+  "dependencies": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/pezzolabs/pezzo.git"
