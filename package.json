@@ -31,8 +31,8 @@
     "@nestjs/event-emitter": "^2.0.0",
     "@nestjs/graphql": "^11.0.5",
     "@nestjs/platform-express": "^9.0.0",
-    "@nx/nest": "^16.6.0",
-    "@nx/next": "^16.6.0",
+    "@nx/nest": "16.6.0",
+    "@nx/next": "16.6.0",
     "@opensearch-project/opensearch": "^1.2.0",
     "@pezzo/llm-toolkit": "^0.1.0",
     "@prisma/client": "^3.14.0",
@@ -95,14 +95,14 @@
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
     "@nx/cypress": "16.6.0",
-    "@nx/eslint-plugin": "^16.6.0",
+    "@nx/eslint-plugin": "16.6.0",
     "@nx/jest": "16.6.0",
     "@nx/js": "16.6.0",
     "@nx/linter": "16.6.0",
     "@nx/node": "16.6.0",
-    "nx-cloud": "^16.2.0",
+    "nx-cloud": "16.2.0",
     "@nx/react": "16.6.0",
-    "@nx/webpack": "^16.6.0",
+    "@nx/webpack": "16.6.0",
     "@nx/workspace": "16.6.0",
     "@nx-tools/container-metadata": "^4.0.3",
     "@nx-tools/nx-container": "^4.0.3",
@@ -156,3 +156,4 @@
     "includedScripts": []
   }
 }
+
