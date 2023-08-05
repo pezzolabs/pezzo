@@ -25,7 +25,7 @@ env:
 jobs:
   ci:
     name: Continuous Integration
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     permissions:
       packages: write
     steps:
