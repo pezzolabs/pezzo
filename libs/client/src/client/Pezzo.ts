@@ -20,8 +20,11 @@ export class Pezzo {
   options: PezzoClientOptions;
 
   constructor(options: PezzoClientOptions) {
+
+    const serverUrl = options.serverUrl || process.env["PEZZO_SERVER_URL"] || defaultOptions.serverUrl;
+
     this.options = {
-      ...defaultOptions,
+      serverUrl,
       ...options,
     };
   }
