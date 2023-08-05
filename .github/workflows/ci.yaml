@@ -74,17 +74,6 @@ jobs:
           name: dist-artifact
           path: ./dist
 
-      - name: "Dispatch CI"
-        uses: octokit/request-action@v2.x
-        with:
-          route: POST /repos/{owner}/{repo}/dispatches
-          owner: pezzolabs
-          repo: pezzo-private
-          event_type: "CI (Dispatched)"
-          client_payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "shortSha": "${{ steps.variables.outputs.short_sha }}"}'
-        env:
-          GITHUB_TOKEN: ${{ secrets.REPO_DISPATCH_TOKEN }}
-
   dockerize:
     name: Dockerize
     needs: ci
