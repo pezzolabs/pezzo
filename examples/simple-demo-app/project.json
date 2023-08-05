@@ -5,13 +5,14 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nrwl/next:build",
-      "outputs": ["{options.outputPath}"],
+      "executor": "@nx/next:build",
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "defaultConfiguration": "production",
       "options": {
         "buildLibsFromSource": true,
         "includeDevDependenciesInPackageJson": false,
-        "root": "examples/simple-demo-app",
         "outputPath": "dist/examples/simple-demo-app"
       },
       "configurations": {
@@ -22,7 +23,7 @@
       }
     },
     "serve": {
-      "executor": "@nrwl/next:server",
+      "executor": "@nx/next:server",
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "examples-simple-demo-app:build",
@@ -41,14 +42,16 @@
       }
     },
     "export": {
-      "executor": "@nrwl/next:export",
+      "executor": "@nx/next:export",
       "options": {
         "buildTarget": "examples-simple-demo-app:build:production"
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
       "options": {
         "jestConfig": "examples/simple-demo-app/jest.config.ts",
         "passWithNoTests": true
@@ -61,10 +64,14 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "executor": "@nx/linter:eslint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["examples/simple-demo-app/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": [
+          "examples/simple-demo-app/**/*.{ts,tsx,js,jsx}"
+        ]
       }
     }
   },
