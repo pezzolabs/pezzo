@@ -33,7 +33,9 @@ export class PromptExecutionsResolver {
 
     try {
       promptExecution = await this.prisma.promptExecution.findUnique({
-        where: data,
+        where: {
+          id: data.id
+        },
       });
     } catch (error) {
       this.logger.error({ error }, "Error getting prompt execution");
