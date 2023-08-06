@@ -55,7 +55,7 @@ export class PromptTesterService {
         metadata: {
           promptId: testData.promptId,
           promptVersionSha: "test-prompt",
-          type: "Propmt" as any,
+          type: "Prompt" as any,
           isTestPrompt: true,
         },
         settings: testData.settings,

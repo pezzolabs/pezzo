@@ -44,13 +44,13 @@ export class ReportingService {
       },
     });
 
-    this.analytics.track("REQUEST:REPORTED", "api", {
-      organizationId: ownership.organizationId,
-      projectId: ownership.projectId,
-      reportId,
-      isTestReport: dto.metadata.isTestReport as boolean,
-      promptId: dto.metadata.promptId as string,
-    });
+    // this.analytics.trackEvent("request_reported", {
+    //   organizationId: ownership.organizationId,
+    //   projectId: ownership.projectId,
+    //   reportId,
+    //   isTestReport: dto.metadata.isTestReport as boolean,
+    //   promptId: dto.metadata.promptId as string,
+    // });
 
     return {
       reportId,

@@ -16,7 +16,7 @@ import {
   NotFoundException,
   UseGuards,
 } from "@nestjs/common";
-import { isOrgAdminOrThrow, isOrgMemberOrThrow } from "./identity.utils";
+import { isOrgMemberOrThrow } from "./identity.utils";
 import { CurrentUser } from "./current-user.decorator";
 import { RequestUser } from "./users.types";
 import { slugify } from "@pezzo/common";
@@ -77,10 +77,7 @@ export class ProjectsResolver {
   }
 
   @Mutation(() => Project)
-  async createProject(
-    @Args("data") data: CreateProjectInput,
-    @CurrentUser() user: RequestUser
-  ) {
+  async createProject(@Args("data") data: CreateProjectInput) {
     const { organizationId, name } = data;
 
     this.logger.assign({ organizationId, name }).info("Creating project");
@@ -109,7 +106,7 @@ export class ProjectsResolver {
         data.organizationId
       );
 
-      this.analytics.track("PROJECT:CREATED", user.id, {
+      this.analytics.trackEvent("project_created", {
         projectId: project.id,
         name,
       });

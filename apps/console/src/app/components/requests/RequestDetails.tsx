@@ -139,7 +139,7 @@ export const RequestDetails = (props: Props) => {
   ];
 
   return (
-    <div>
+    <>
       {props.metadata?.isTestPrompt && (
         <Alert
           type="info"
@@ -164,6 +164,6 @@ export const RequestDetails = (props: Props) => {
       {selectedMode === "chat" && (
         <RequestResponseChatView request={request} response={response} />
       )}
-    </div>
+    </>
   );
 };
