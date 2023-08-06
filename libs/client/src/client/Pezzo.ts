@@ -1,3 +1,4 @@
+import fetch from "cross-fetch";
 import { ReportData } from "../types";
 import { Prompt } from "../types/prompts";
 
