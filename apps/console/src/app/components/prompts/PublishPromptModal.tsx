@@ -7,6 +7,7 @@ import { gqlClient, queryClient } from "../../lib/graphql";
 import { PUBLISH_PROMPT } from "../../graphql/definitions/mutations/prompt-environments";
 import { PublishPromptInput } from "../../../@generated/graphql/graphql";
 import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
+import { trackEvent } from "../../lib/utils/analytics";
 
 interface Props {
   open: boolean;
@@ -37,6 +38,7 @@ export const PublishPromptModal = ({ open, onClose }: Props) => {
       environmentId: selectedEnvironmentId,
       promptVersionSha: currentVersion.sha,
     });
+    trackEvent("prompt_publish_clicked");
   };
 
   useEffect(() => {
@@ -100,6 +102,9 @@ export const PublishPromptModal = ({ open, onClose }: Props) => {
                   onClick={() => {
                     setSelectedEnvironmentId(env.id);
                     setSelectedEnvironmentName(env.name);
+                    trackEvent("prompt_environment_selected", {
+                      environment: env.name,
+                    });
                   }}
                 >
                   <Typography.Text>{env.name}</Typography.Text>

@@ -3,10 +3,16 @@ import { usePromptVersions } from "../../../lib/hooks/usePromptVersions";
 import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
 import { Avatar } from "../../common/Avatar";
 import { InlineCodeSnippet } from "../../common/InlineCodeSnippet";
+import { trackEvent } from "../../../lib/utils/analytics";
+import React from "react";
 
 export const PromptVersionsView = () => {
   const { prompt } = useCurrentPrompt();
   const { promptVersions } = usePromptVersions(prompt.id);
+
+  React.useEffect(() => {
+    trackEvent("prompt_versions_viewed");
+  }, [prompt.id]);
 
   const columns = [
     {

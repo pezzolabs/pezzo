@@ -4,6 +4,7 @@ import { TutimWizard, TutimProvider } from "@tutim/headless";
 import { defaultFields } from "@tutim/fields";
 import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
 import { PromptService } from "@pezzo/types";
+import { trackEvent } from "../../lib/utils/analytics";
 
 interface Props {
   onClose: () => void;
@@ -128,6 +129,7 @@ export const FunctionsEditor = ({ onClose }: Props) => {
       },
     });
     onClose();
+    trackEvent("prompt_functions_edited");
   };
   return (
     <Row style={{ padding: "8px" }}>

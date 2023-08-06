@@ -9,6 +9,8 @@ import {
 } from "../../../@generated/graphql/graphql";
 import { GraphQLErrorResponse } from "../../graphql/types";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
+import { trackEvent } from "../../lib/utils/analytics";
+import React from "react";
 
 interface Props {
   open: boolean;
@@ -19,6 +21,29 @@ interface Props {
 type Inputs = {
   name: string;
   type: PromptType;
+};
+
+const ShadowButtonChat = () => {
+  const [isClicked, setIsClicked] = React.useState(false);
+  const onClick = () => {
+    setIsClicked(true);
+    trackEvent("prompt_form_chat_clicked");
+  };
+  return (
+    <Radio.Button
+      disabled={isClicked}
+      onClick={onClick}
+      value={PromptType.Chat}
+    >
+      {isClicked ? (
+        <>
+          Chat <span style={{ fontSize: "12px" }}>(Coming Soon)</span>
+        </>
+      ) : (
+        "Chat"
+      )}
+    </Radio.Button>
+  );
 };
 
 export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
@@ -47,10 +72,16 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
   const handleFormFinish = (data: Inputs) => {
     mutate(data);
     form.resetFields();
+    trackEvent("prompt_form_submitted");
+  };
+
+  const onCancel = () => {
+    trackEvent("prompt_form_cancelled");
+    onClose();
   };
 
   return (
-    <Modal title="New Prompt" open={open} onCancel={onClose} footer={false}>
+    <Modal title="New Prompt" open={open} onCancel={onCancel} footer={false}>
       {error && (
         <Alert type="error" message={error.response.errors[0].message} />
       )}
@@ -76,9 +107,7 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
         <Form.Item required label="Type" name="type">
           <Radio.Group>
             <Radio.Button value={PromptType.Prompt}>Prompt</Radio.Button>
-            <Radio.Button disabled value={PromptType.Chat}>
-              Chat <span style={{ fontSize: "12px" }}>(Coming Soon)</span>
-            </Radio.Button>
+            <ShadowButtonChat />
           </Radio.Group>
         </Form.Item>
 

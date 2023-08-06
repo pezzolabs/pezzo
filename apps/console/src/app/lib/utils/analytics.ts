@@ -8,7 +8,7 @@ import { AnalyticsEvent } from "./events.types";
 const shouldTrack = !!SEGMENT_WRITE_KEY;
 
 const analytics = Analytics({
-  app: "awesome-app",
+  app: "pezzo-console",
   plugins: shouldTrack
     ? [
         segmentPlugin({
@@ -18,17 +18,12 @@ const analytics = Analytics({
     : [],
 });
 
-export const useTrackInit = (userId: string) => {
-  React.useEffect(() => {
-    if (!userId) return;
-    analytics.identify(userId);
-  }, [userId]);
-};
-
 // Can be handled on backend
 export const useIdentify = (user: GetMeQuery["me"]) => {
   React.useEffect(() => {
     if (!user) return;
+    const segmentUserId = JSON.parse(localStorage.getItem("ajs_user_id"));
+    if (segmentUserId === user.id) return;
     const groupId = JSON.parse(localStorage.getItem("currentOrgId"));
 
     const identifyRequest = {
@@ -44,7 +39,7 @@ export const useIdentify = (user: GetMeQuery["me"]) => {
   }, [user]);
 };
 
-interface ContextProps {
+export interface ContextProps {
   organizationId?: string;
   projectId?: string;
   promptId?: string;
@@ -64,8 +59,8 @@ const getContextPropsFromPathIfExists = () => {
 };
 
 export const trackEvent = (
-  event: keyof AnalyticsEvent,
-  properties?: Record<string, any>
+  event: keyof typeof AnalyticsEvent,
+  properties?: Record<string, any> & ContextProps
 ) => {
   const groupId = JSON.parse(localStorage.getItem("currentOrgId"));
   const context = { groupId };

@@ -41,12 +41,30 @@ export const PromptEditView = () => {
   const handleRunTest = () => {
     const formValues = form.getFieldsValue();
     openTestModal(formValues);
+    trackEvent("prompt_run_test_clicked");
   };
 
   const onConsumeClick = () => {
     setIsConsumePromptModalOpen(true);
-    trackEvent("how_to_consume_modal_open");
+    trackEvent("prompt_how_to_consume_modal_opened");
   };
+
+  const onPublishClick = () => {
+    setIsPublishModalOpen(true);
+    trackEvent("prompt_publish_modal_opened");
+  };
+
+  const onCommitClick = () => {
+    setIsCommitModalOpen(true);
+    trackEvent("prompt_commit_modal_opened");
+  };
+
+  const onOpenFunctionsModal = FUNCTIONS_FEATURE_FLAG
+    ? () => {
+        setIsFunctionsModalOpen(true);
+        trackEvent("prompt_functions_modal_opened");
+      }
+    : null;
 
   return (
     !isPromptLoading && (
@@ -69,14 +87,14 @@ export const PromptEditView = () => {
                 )}
                 {isPublishEnabled && (
                   <Button
-                    onClick={() => setIsPublishModalOpen(true)}
+                    onClick={onPublishClick}
                     icon={<PlayCircleOutlined />}
                     type="primary"
                   >
                     Publish
                   </Button>
                 )}
-                <CommitButton onClick={() => setIsCommitModalOpen(true)} />
+                <CommitButton onClick={onCommitClick} />
               </Space>
             </Col>
           </Row>
@@ -93,11 +111,7 @@ export const PromptEditView = () => {
           <Col span={7}>
             <Card title="Settings" style={{ marginBottom: 24 }}>
               <ProviderSettingsCard
-                onOpenFunctionsModal={
-                  FUNCTIONS_FEATURE_FLAG
-                    ? () => setIsFunctionsModalOpen(true)
-                    : null
-                }
+                onOpenFunctionsModal={onOpenFunctionsModal}
               />
             </Card>
             <Card

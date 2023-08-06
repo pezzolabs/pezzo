@@ -4,6 +4,7 @@ import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
 import { useState } from "react";
 import { usePromptVersions } from "../../lib/hooks/usePromptVersions";
 import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
+import { trackEvent } from "../../lib/utils/analytics";
 
 export const PromptVersionSelector = () => {
   const { currentVersionSha, setCurrentVersionSha } =
@@ -22,7 +23,10 @@ export const PromptVersionSelector = () => {
           label: `${version.sha.slice(0, 7)} - ${version.message} (by ${
             version.createdBy.name
           })`,
-          onClick: () => setCurrentVersionSha(version.sha),
+          onClick: () => {
+            setCurrentVersionSha(version.sha);
+            trackEvent("prompt_version_selected");
+          },
         }))) ||
     [];
 
@@ -33,7 +37,12 @@ export const PromptVersionSelector = () => {
         label: `Latest (${latestVersion.sha.slice(0, 7)}) - ${
           latestVersion.message
         } (by ${latestVersion.createdBy.name}))`,
-        onClick: () => setCurrentVersionSha(latestVersion.sha),
+        onClick: () => {
+          setCurrentVersionSha(latestVersion.sha);
+          trackEvent("prompt_version_selected", {
+            version: "latest",
+          });
+        },
       },
       ...itemsFromVersionsList,
     ],

@@ -2,7 +2,6 @@ import { Button, Divider, Form } from "antd";
 import { usePromptVersionEditorContext } from "../../../lib/providers/PromptVersionEditorContext";
 import { ProviderSelector } from "./ProviderSelector/ProviderSelector";
 import { PromptService } from "@pezzo/types";
-import { useState } from "react";
 import { SendOutlined } from "@ant-design/icons";
 import { ProviderSettingsSchemaRenderer } from "./ProviderSettings/ProviderSettingsSchemaRenderer";
 import { openAIChatCompletionSettingsDefinition } from "./ProviderSettings/providers/openai-chat-completion";

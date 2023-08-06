@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { useCallback, useEffect, useMemo } from "react";
 import { extractSortAndFiltersFromSearchParams } from "../utils/filters-utils";
 import { FilterInput } from "../../../@generated/graphql/graphql";
+import { trackEvent } from "../utils/analytics";
 
 export const useFiltersAndSortParams = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -19,6 +20,11 @@ export const useFiltersAndSortParams = () => {
     ({ field, operator, value }: FilterInput) => {
       searchParams.append("f", `${field}:${operator}:${value}`);
       setSearchParams(searchParams);
+      trackEvent("request_details_filter_added", {
+        field,
+        operator,
+        value,
+      });
     },
     [searchParams, setSearchParams]
   );
@@ -34,6 +40,8 @@ export const useFiltersAndSortParams = () => {
           filter !==
           `${filterToRemove.field}:${filterToRemove.operator}:${filterToRemove.value}`
       );
+
+      trackEvent("request_details_filter_removed");
 
       // Delete all instances of the parameter from searchParams
       searchParams.delete("f");

@@ -6,6 +6,7 @@ import styled from "@emotion/styled";
 import { ProjectCard } from "../../components/projects";
 import { PlusOutlined } from "@ant-design/icons";
 import { CreateNewProjectModal } from "../../components/projects/CreateNewProjectModal";
+import { trackEvent } from "../../lib/utils/analytics";
 
 const Spinner = styled(Row)`
   height: 100%;
@@ -37,6 +38,11 @@ export const ProjectsPage = () => {
 
   if (isLoading) return <Spinner />;
 
+  const onOpenCreateNewProjectModal = (placement: "button" | "card") => () => {
+    setIsCreateNewProjectModalOpen(true);
+    trackEvent("project_create_modal_opened", { placement });
+  };
+
   return (
     <Paper>
       <CreateNewProjectModal
@@ -48,7 +54,7 @@ export const ProjectsPage = () => {
       <Row justify="end">
         <Button
           icon={<PlusOutlined />}
-          onClick={() => setIsCreateNewProjectModalOpen(true)}
+          onClick={onOpenCreateNewProjectModal("button")}
           style={{
             marginBottom: token.marginLG,
           }}
@@ -70,10 +76,7 @@ export const ProjectsPage = () => {
         ))}
         {!isOdd(projects?.length) && (
           <Col span={12}>
-            <Card
-              hoverable
-              onClick={() => setIsCreateNewProjectModalOpen(true)}
-            >
+            <Card hoverable onClick={onOpenCreateNewProjectModal("card")}>
               <Row justify="center">
                 <Col>
                   <Button type="dashed" icon={<PlusOutlined />} size="large" />

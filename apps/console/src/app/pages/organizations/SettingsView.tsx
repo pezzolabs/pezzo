@@ -3,6 +3,7 @@ import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
 import { SaveOutlined } from "@ant-design/icons";
 import { useMemo, useState } from "react";
 import { useUpdateOrgSettingsMutation } from "../../graphql/hooks/mutations";
+import { trackEvent } from "../../lib/utils/analytics";
 
 type Inputs = {
   name: string;
@@ -25,6 +26,8 @@ export const SettingsView = () => {
         },
       }
     );
+
+    trackEvent("organization_settings_form_submitted");
   };
 
   const initialValues = useMemo(

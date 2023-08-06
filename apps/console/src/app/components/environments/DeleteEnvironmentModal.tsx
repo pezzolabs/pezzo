@@ -1,6 +1,7 @@
 import { Alert, Modal, Typography } from "antd";
 import { EnvironmentsQuery } from "../../../@generated/graphql/graphql";
 import { useDeleteEnvironmentMutation } from "../../graphql/hooks/mutations";
+import { trackEvent } from "../../lib/utils/analytics";
 
 interface Props {
   environmentToDelete: EnvironmentsQuery["environments"][0] | null;
@@ -21,13 +22,23 @@ export const DeleteEnvironmentModal = ({
     }
 
     onDelete();
+    trackEvent("environment_delete_confirmed", {
+      name: environmentToDelete?.name,
+    });
+  };
+
+  const onCancel = () => {
+    onClose();
+    trackEvent("environment_delete_cancelled", {
+      name: environmentToDelete?.name,
+    });
   };
 
   return (
     <Modal
       title="Are You Sure?"
       open={environmentToDelete !== null}
-      onCancel={onClose}
+      onCancel={onCancel}
       okType="danger"
       okText="Delete"
       onOk={handleDelete}

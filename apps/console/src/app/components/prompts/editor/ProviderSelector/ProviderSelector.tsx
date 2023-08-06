@@ -6,6 +6,7 @@ import { ProviderProps } from "./types";
 import { usePromptVersionEditorContext } from "../../../../lib/providers/PromptVersionEditorContext";
 import { getServiceDefaultSettings } from "../ProviderSettings/providers";
 import { PromptService } from "../../../../../@generated/graphql/graphql";
+import { trackEvent } from "../../../../lib/utils/analytics";
 
 const StyledSelect = styled(Select)`
   .actions {
@@ -48,12 +49,19 @@ export const ProviderSelector = () => {
     };
   };
 
+  const onProviderSelectClick = () => {
+    if (!open) {
+      setOpen(true);
+      trackEvent("prompt_provider_selector_opened");
+    }
+  };
+
   return (
     <Form.Item name="service" style={{ marginBottom: 0 }}>
       <StyledSelect
         className="selector"
         open={open}
-        onClick={() => !open && setOpen(true)}
+        onClick={onProviderSelectClick}
         onBlur={() => setOpen(false)}
         onSelect={handleSelect}
         size="large"

@@ -6,6 +6,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { InviteOrgMemberModal } from "../../components/organizations/InviteOrgMemberModal";
 import { useState } from "react";
 import { useCurrentOrgMembership } from "../../lib/hooks/useCurrentOrgMembership";
+import { trackEvent } from "../../lib/utils/analytics";
 
 export const MembersView = () => {
   const { organization } = useCurrentOrganization({
@@ -20,6 +21,11 @@ export const MembersView = () => {
   }
 
   const { members, invitations } = organization;
+
+  const onOpenInviteModal = () => {
+    setIsInviteModalOpen(true);
+    trackEvent("organization_member_invite_modal_opened");
+  };
 
   return (
     <>
@@ -37,7 +43,7 @@ export const MembersView = () => {
           {isOrgAdmin && (
             <Col>
               <Button
-                onClick={() => setIsInviteModalOpen(true)}
+                onClick={onOpenInviteModal}
                 type="primary"
                 icon={<PlusOutlined />}
               >

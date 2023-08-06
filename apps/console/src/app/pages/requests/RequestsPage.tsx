@@ -12,6 +12,7 @@ import { RequestFilters } from "../../components/requests/RequestFilters";
 import { RequestReportItem } from "./types";
 import { UnmanagedPromptWarning } from "./UnmanagedPromptWarning";
 import { colors } from "../../lib/theme/colors";
+import { trackEvent } from "../../lib/utils/analytics";
 
 const getTableColumns = (
   data: RequestReportItem[]
@@ -106,8 +107,12 @@ export const RequestsPage = () => {
     };
   });
 
-  const handleShowDetails = (record: RequestReportItem) => () =>
+  const handleShowDetails = (record: RequestReportItem) => () => {
     setCurrentReportId(record.key);
+    trackEvent("request_details_viewed", {
+      request_id: record.key,
+    });
+  };
 
   const columns = getTableColumns(tableData);
 
@@ -157,6 +162,10 @@ export const RequestsPage = () => {
             onChange: (page, size) => {
               setPage(page);
               setSize(size ?? DEFAULT_PAGE_SIZE);
+              trackEvent("request_details_pagination_change", {
+                page,
+                size,
+              });
             },
           }}
         />

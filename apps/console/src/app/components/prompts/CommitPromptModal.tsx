@@ -3,6 +3,8 @@ import { css } from "@emotion/css";
 import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
 import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
 import { useCreatePromptVersion } from "../../graphql/hooks/mutations";
+import { tr } from "date-fns/locale";
+import { trackEvent } from "../../lib/utils/analytics";
 
 interface Props {
   open: boolean;
@@ -35,11 +37,13 @@ export const CommitPromptModal = ({ open, onClose, onCommitted }: Props) => {
     await createPromptVersion(data);
     form.resetFields();
     onCommitted();
+    trackEvent("prompt_commit_submitted");
   };
 
   const handleCancel = () => {
     form.resetFields();
     onClose();
+    trackEvent("prompt_commit_cancelled");
   };
 
   return (
