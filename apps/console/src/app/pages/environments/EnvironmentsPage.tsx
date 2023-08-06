@@ -19,7 +19,7 @@ export const EnvironmentsPage = () => {
 
   const onCreateEnvironmentModalOpen = () => {
     setIsCreateEnvironmentModalOpen(true);
-    trackEvent("environment_create_modal_open");
+    trackEvent("environment_create_modal_opened");
   };
 
   const onDeleteEnvironmentModalOpen = (environment: Environment) => () => {

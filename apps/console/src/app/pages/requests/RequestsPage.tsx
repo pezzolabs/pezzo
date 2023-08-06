@@ -109,7 +109,7 @@ export const RequestsPage = () => {
 
   const handleShowDetails = (record: RequestReportItem) => () => {
     setCurrentReportId(record.key);
-    trackEvent("request_details_view", {
+    trackEvent("request_details_viewed", {
       request_id: record.key,
     });
   };
