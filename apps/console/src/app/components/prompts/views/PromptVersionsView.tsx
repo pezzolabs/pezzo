@@ -11,7 +11,7 @@ export const PromptVersionsView = () => {
   const { promptVersions } = usePromptVersions(prompt.id);
 
   React.useEffect(() => {
-    trackEvent("prompt_versions_view");
+    trackEvent("prompt_versions_viewed");
   }, [prompt.id]);
 
   const columns = [

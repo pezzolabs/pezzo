@@ -8,7 +8,7 @@ import { AnalyticsEvent } from "./events.types";
 const shouldTrack = !!SEGMENT_WRITE_KEY;
 
 const analytics = Analytics({
-  app: "awesome-app",
+  app: "pezzo-console",
   plugins: shouldTrack
     ? [
         segmentPlugin({

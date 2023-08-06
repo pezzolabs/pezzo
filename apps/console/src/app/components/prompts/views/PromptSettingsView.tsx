@@ -9,7 +9,7 @@ export const PromptSettingsView = () => {
     useState(false);
 
   React.useEffect(() => {
-    trackEvent("prompt_settings_view");
+    trackEvent("prompt_settings_viewed");
   }, []);
 
   return (

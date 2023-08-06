@@ -162,7 +162,7 @@ export const RequestsPage = () => {
             onChange: (page, size) => {
               setPage(page);
               setSize(size ?? DEFAULT_PAGE_SIZE);
-              trackEvent("request_details_pagination_changed", {
+              trackEvent("request_details_pagination_change", {
                 page,
                 size,
               });

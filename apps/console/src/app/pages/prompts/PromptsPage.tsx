@@ -27,7 +27,7 @@ export const PromptsPage = () => {
 
   const onCreatePromptModalOpen = () => {
     setIsCreatePromptModalOpen(true);
-    trackEvent("prompt_modal_open");
+    trackEvent("prompt_modal_opened");
   };
 
   const onPromptClick = (promptId: string) => () => {

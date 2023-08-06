@@ -51,18 +51,18 @@ export const PromptEditView = () => {
 
   const onPublishClick = () => {
     setIsPublishModalOpen(true);
-    trackEvent("prompt_publish_modal_open");
+    trackEvent("prompt_publish_modal_opened");
   };
 
   const onCommitClick = () => {
     setIsCommitModalOpen(true);
-    trackEvent("prompt_commit_modal_open");
+    trackEvent("prompt_commit_modal_opened");
   };
 
   const onOpenFunctionsModal = FUNCTIONS_FEATURE_FLAG
     ? () => {
         setIsFunctionsModalOpen(true);
-        trackEvent("prompt_functions_modal_open");
+        trackEvent("prompt_functions_modal_opened");
       }
     : null;
 
