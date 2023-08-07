@@ -50,7 +50,7 @@ export class AnalyticsService {
       this.context.eventContext;
     const eventPayload = {
       event,
-      userId,
+      userId: userId || organizationId ? `org:${organizationId}` : "anonymous",
       properties: {
         organizationId,
         projectId,
