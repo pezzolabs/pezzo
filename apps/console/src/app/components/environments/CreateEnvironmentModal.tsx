@@ -6,6 +6,7 @@ import { CREATE_ENVIRONMENT } from "../../graphql/definitions/mutations/environm
 import { CreateEnvironmentMutation } from "../../../@generated/graphql/graphql";
 import { GraphQLErrorResponse } from "../../graphql/types";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
+import { trackEvent } from "../../lib/utils/analytics";
 
 interface Props {
   open: boolean;
@@ -42,13 +43,19 @@ export const CreateEnvironmentModal = ({ open, onClose, onCreated }: Props) => {
   const handleFormFinish = async (values: Inputs) => {
     mutate(values);
     form.resetFields();
+    trackEvent("environment_form_submitted");
+  };
+
+  const onCancel = () => {
+    onClose();
+    trackEvent("environment_form_cancelled");
   };
 
   return (
     <Modal
       title="New Environment"
       open={open}
-      onCancel={onClose}
+      onCancel={onCancel}
       footer={false}
     >
       {error && (

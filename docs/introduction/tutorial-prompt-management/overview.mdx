@@ -1,0 +1,188 @@
+---
+title: "Tutorial: Prompt Management"
+description: "Learn how to manage your AI prompts for streamlined delivery with Pezzo in less than 5 minutes!"
+---
+<Tip>
+This tutorial is for users who want to manage their AI operations in Pezzo end-to-end. From prompt management, version control and instant delivery, all the way to monitoring and observability.
+
+If you wish to only use Pezzo for monitoring and observability, check out the [Observability Tutorial](/introduction/tutorial-observability/overview).
+</Tip>
+
+## What you'll learn
+You're going to learn how to manage your AI prompts with Pezzo, so you can streamline delivery and collaborate with your team. This includes:
+
+- Creating a prompt
+- Basic Prompt Engineering
+- Testing your prompt in the Pezzo Platform
+- Committing and publishing your prompt
+- Consuming your prompt using TypeScript
+
+Are you ready? Let's go!
+
+## Create your first prompt
+<Note>
+This tutorial assumes you already signed up to Pezzo Cloud and created a new project. If you haven't done so, please [sign up to Pezzo Cloud](https://app.pezzo.ai).
+</Note>
+
+In the Prompts page, click the **+ New Prompt** button. This will open a modal where you can create a new Prompt.
+
+It's best to choose a descriptive name for your prompt. Let's call it `FactGenerator`.
+
+<Frame caption="New Prompt Modal" style={{ maxWidth: 500 }}>
+  <img src="/introduction/tutorial-prompt-management/modal-new-prompt.png" />
+</Frame>
+
+Hit **Create** and you will be taken to the Prompt page.
+
+## Prompt Engineering
+
+The Prompt Editor is the first screen you will see after selecting/creating a new prompt. This is wehere you will do some prompt engineering, commit and publish your prompts. You can find two main sections in the prompt editor - the **Content** and the **Settings**.
+
+### Prompt content
+
+The Prompt Content is where you will write your prompt. In our case, we want to ask the LLM (in our case, OpenAI) to generate facts about a topic.
+
+Simply copy and paste the following:
+
+```plaintext
+Generate {numFacts} facts about the following topic: "{topic}"
+```
+
+<Tip>
+You can define variables in the prompt content by using curly braces. In our case, we define the `numFacts` and `topic` variables.
+</Tip>
+
+### Prompt settings
+Depending on the LLM provider, the settings will vary. In our case, we will use the OpenAI API. Feel free to adjust the settings to your liking.
+
+For this tutorial, make the following adjustments:
+- Temperate: `0`
+- Max Response Length: `1000`
+
+<Tip>
+When expecting a structured response or strictly factual data, it's best to set the temperature to 0. This reduces the chance of "hallucinations".
+</Tip>
+
+<Frame caption="The Prompt Editor after defining the content and settings">
+  <img src="/introduction/tutorial-prompt-management/before-commit.png" />
+</Frame>
+
+## Testing the prompt
+Pezzo allows you to test your prompts before publishing them. This is a great way to quickly iterate on your prompts and make sure they're working as expected.
+
+To test your prompt, simply click the **Test** button. This will open a modal where you can enter the values for the variables you defined in the prompt content.
+
+For example, if you want to generate 3 facts about cats, enter the following:
+
+<Frame style={{ maxWidth: 500 }}>
+  <img src="/introduction/tutorial-prompt-management/test-variables-modal.png" />
+</Frame>
+
+Then, hit **Test** and wait for the results. You should see something like this:
+
+<Frame caption="Prompt Test Results" style={{ maxWidth: 500 }}>
+  <img src="/introduction/tutorial-prompt-management/prompt-test-results.png" />
+</Frame>
+
+In the test results you can find plenty of useful information such as:
+- Token usage
+- Cost
+- Status (success, error)
+- Duration
+- Request body
+- Response body
+
+This is extremely useful when debugging prompts and making sure they're working as expected. Performing tests in Pezzo allows you to ensure that whatever prompt you publish will work as expected, without having to write a single line of code!
+
+## Commiting and publishing
+
+Once you're happy with the prompt, there is one more step you need to do before you can consume it in our application. You need to **commit and publish** the prompt.
+
+Simply click the **Commit** button at the top right, and provide a message, such as `Initial version`. Then, hit **Commit**.
+
+<Frame caption="Commit Modal" style={{ maxWidth: 500 }}>
+  <img src="/introduction/tutorial-prompt-management/commit-modal.png" />
+</Frame>
+
+Now that you've committed the prompt, go ahead and publish it. Click the **Publish** button at the top right, and choose the desired environment. In our case, we will choose the **Production** environment.
+
+<Frame caption="Publish Modal" style={{ maxWidth: 500 }}>
+  <img src="/introduction/tutorial-prompt-management/publish-modal.png" />
+</Frame>
+<br />
+<Info>
+Every Pezzo project comes built in with a Production environment. You can manage your environments in the **Environments** page of your project.
+</Info>
+
+Congratulations! You've just created your first prompt and published it to production. In the next step you'll learn how to consume it in your application.
+
+## Consuming the prompt
+
+In this part of the tutorial, you'll learn how to consume the prompt you just published in a TypeScript application. For the full Pezzo Client documentation, you can [click here](http://localhost:3200/client/pezzo-client).
+
+### Install depdendencies
+
+Install the Pezzo Client and the OpenAI SDK:
+
+```bash
+npm i @pezzo/client openai
+```
+
+### Consume prompt via Pezzo Client
+
+Here is a code example:
+
+```ts app.ts
+import { Pezzo, PezzoOpenAIApi } from "@pezzo/client";
+import { Configuration } from "openai";
+
+// Initialize the Pezzo client
+export const pezzo = new Pezzo({
+  apiKey: "<your Pezzo API key>",
+  projectId: "<your Pezzo project ID>",
+  environment: "Production",
+});
+
+// Initialize the OpenAI client
+const configuration = new Configuration({
+  apiKey: "<your OpenAI API key>",
+});
+
+export const openai = new PezzoOpenAIApi(pezzo, configuration);
+
+async function main() {
+  // Get the deployed "GenerateFacts" prompt version
+  const prompt = await pezzo.getPrompt("GenerateFacts");
+
+  // Call the OpenAI API, passing the prompt as an argument. You can override parameters if you wish.
+  const response = await openai.createChatCompletion(prompt, {
+    variables: {
+      // You can define variables that will be interpolated during execution.
+      numFacts: 3,
+      topic: "Artificial Intelligence",
+    },
+    properties: {
+      // You can optionally specify custom properties that will be associated with the request.
+      someProperty: "someValue",
+    },
+  });
+  console.log("response", response);
+}
+
+main();
+```
+
+[Click here to run this example on CodeSandbox](https://codesandbox.io/p/sandbox/pezzo-example-observability-forked-qv5f86?file=%2Fsrc%2Fapp.ts%3A1%2C1)
+
+**Let's explain what's going on here:**
+
+- First, we initialize the Pezzo client and the OpenAI client. We pass the Pezzo client to the OpenAI client so it can use it to fetch the prompt.
+- Then, we fetch the prompt from Pezzo using the `getPrompt` method. This method returns the latest version of the prompt for the desired environment.
+- Finally, we call the OpenAI API using the `createChatCompletion` method. This method takes the prompt as an argument and returns the response from the OpenAI API.
+
+Congratulations! You've just consumed your first prompt using Pezzo. The Pezzo Client has many more useful capabilities such as variables
+
+## Monitoring Requests
+
+Now that you've made a request, you should be able to monitor your results in the **Requests** page. [Check it out here](/platform/observability/requests).
+

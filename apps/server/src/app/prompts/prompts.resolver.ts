@@ -80,8 +80,8 @@ export class PromptsResolver {
     @Args("data") data: GetPromptInput,
     @CurrentUser() user: RequestUser
   ) {
-    const { promptId, version } = data;
-    this.logger.assign({ promptId, version }).info("Getting prompt");
+    const { promptId } = data;
+    this.logger.assign({ promptId }).info("Getting prompt");
 
     let prompt: Prompt;
 
@@ -191,10 +191,8 @@ export class PromptsResolver {
     @Args("data") data: CreatePromptInput,
     @CurrentUser() user: RequestUser
   ) {
-    const { name, integrationId, projectId } = data;
-    this.logger
-      .assign({ name, integrationId, projectId })
-      .info("Creating prompt");
+    const { name, projectId } = data;
+    this.logger.assign({ name, projectId }).info("Creating prompt");
 
     const project = await this.prisma.project.findUnique({
       where: {
@@ -223,19 +221,15 @@ export class PromptsResolver {
     let prompt: Prompt;
 
     try {
-      prompt = await this.promptsService.createPrompt(
-        name,
-        integrationId,
-        projectId
-      );
+      prompt = await this.promptsService.createPrompt(data);
     } catch (error) {
       this.logger.error({ error }, "Error creating prompt");
       throw new InternalServerErrorException();
     }
 
-    this.analytics.track("PROMPT:CREATED", user.id, {
-      projectId,
+    this.analytics.trackEvent("prompt_created", {
       promptId: prompt.id,
+      projectId,
     });
 
     return prompt;
@@ -263,7 +257,7 @@ export class PromptsResolver {
       throw new InternalServerErrorException();
     }
 
-    this.analytics.track("PROMPT:DELETED", user.id, {
+    this.analytics.trackEvent("prompt_deleted", {
       promptId: id,
       projectId: prompt.projectId,
       organizationId: org.id,
@@ -299,26 +293,6 @@ export class PromptsResolver {
       return this.promptsService.getPromptVersions(prompt.id);
     } catch (error) {
       this.logger.error({ error }, "Error getting prompt versions");
-      throw new InternalServerErrorException();
-    }
-  }
-
-  @ResolveField(() => PromptVersion, { nullable: true })
-  async version(
-    @Parent() prompt: PrismaPrompt,
-    @Args("data") data: GetPromptInput
-  ) {
-    this.logger.assign({ ...data }).info("Resolving prompt version");
-    const { version } = data;
-
-    try {
-      if (version === "latest") {
-        return this.promptsService.getLatestPromptVersion(prompt.id);
-      }
-
-      return this.promptsService.getPromptVersion(data.version);
-    } catch (error) {
-      this.logger.error({ error }, "Error getting prompt version");
       throw new InternalServerErrorException();
     }
   }

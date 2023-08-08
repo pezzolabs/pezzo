@@ -1,7 +1,7 @@
 import { Inject, Injectable, Scope } from "@nestjs/common";
 import { CONTEXT } from "@nestjs/graphql";
 import { pino } from "pino";
-import pretty from "pino-pretty";
+import { createLogger } from "./create-logger";
 
 @Injectable({ scope: Scope.REQUEST })
 export class PinoLogger {
@@ -11,20 +11,8 @@ export class PinoLogger {
     @Inject(CONTEXT)
     private readonly context = { requestId: null, logger: null }
   ) {
-    let logger: pino.Logger;
-
-    if (process.env.PINO_PRETTIFY === "true") {
-      const prettyStream = pretty({
-        levelFirst: true,
-        colorize: true,
-      });
-      logger = pino({ redact: ["pid", "hostname", "res"] }, prettyStream);
-    } else {
-      logger = pino({ redact: ["pid", "hostname", "res"] });
-    }
-
-    const child = logger.child({ requestId: this.context.requestId });
-    this.setLogger(child);
+    const logger = createLogger({ requestId: this.context.requestId });
+    this.setLogger(logger);
   }
 
   private setLogger(logger: pino.Logger) {
@@ -54,6 +42,14 @@ export class PinoLogger {
     if (typeof obj === "string") {
       this.logger.error(obj);
     } else {
+      if (obj.error && obj.error instanceof Error) {
+        obj = {
+          ...obj,
+          message: obj.error.message,
+          stack: obj.error.stack,
+        };
+      }
+
       this.logger.error(obj, msg);
     }
   }

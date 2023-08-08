@@ -13,6 +13,13 @@ generator nestgraphql {
   binaryTargets = ["native", "debian-openssl-1.1.x", "linux-arm64-openssl-1.1.x"]
   purgeOutput   = true
 
+  // PromptService
+  fields_PromptService_from        = "../../app/prompts/models/prompt-version-service.enum"
+  fields_PromptService_input       = true
+  fields_PromptService_models      = true
+  fields_PromptService_output      = true
+  fields_PromptService_namedImport = true
+
   // ExtendedUser
   fields_ExtendedUser_from        = "../../app/identity/models/extended-user.model"
   fields_ExtendedUser_input       = false
@@ -28,8 +35,11 @@ datasource db {
 
 model PromptVersion {
   sha                String              @id
-  content            String
-  settings           Json
+  /// @FieldType('PromptService')
+  /// @PropertyType('PromptService')
+  service            String
+  settings           Json                @default("{}")         
+  content            Json
   promptId           String
   prompt             Prompt              @relation(fields: [promptId], references: [id], onDelete: Cascade)
   createdAt          DateTime            @default(now())
@@ -128,11 +138,16 @@ model ApiKey {
   createdAt      DateTime     @default(now())
 }
 
+enum PromptType {
+  Prompt
+  Chat
+}
+
 model Prompt {
   id                 String              @id @default(cuid())
-  integrationId      String
   projectId          String
   name               String
+  type               PromptType
   executions         PromptExecution[]
   promptEnvironments PromptEnvironment[]
   versions           PromptVersion[]
@@ -148,7 +163,7 @@ model PromptEnvironment {
   prompt           Prompt         @relation(fields: [promptId], references: [id], onDelete: Cascade)
   promptVersionSha String
   promptVersion    PromptVersion? @relation(fields: [promptVersionSha], references: [sha])
-  environment      Environment    @relation(fields: [environmentId], references: [id])
+  environment      Environment    @relation(fields: [environmentId], references: [id], onDelete: Cascade)
   publishedById    String
   publishedBy      User           @relation(fields: [publishedById], references: [id])
 }

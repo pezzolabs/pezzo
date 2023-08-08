@@ -25,37 +25,13 @@
     "name": "🕹️ Pezzo Console",
     "url": "https://app.pezzo.ai?ref=docs"
   },
-  "primaryTab": {
-    "name": "Pezzo Platform"
-  },
-  "tabs": [
-    {
-      "name": "Pezzo Client (SDK)",
-      "url": "client"
-    }
-  ],
-  "anchors": [
-    {
-      "name": "What is Pezzo?",
-      "icon": "rocket",
-      "url": "introduction/what-is-pezzo"
-    },
-    {
-      "name": "Plaform Features",
-      "icon": "bolt",
-      "url": "platform"
-    },
-    {
-      "name": "Recipe: OpenAI With Pezzo",
-      "icon": "code",
-      "url": "client/integrations"
-    }
-  ],
   "navigation": [
     {
-      "group": "Introduction",
+      "group": "Getting Started",
       "pages": [
-        "introduction/what-is-pezzo"
+        "introduction/what-is-pezzo",
+        "introduction/tutorial-prompt-management/overview",
+        "introduction/tutorial-observability/overview"
       ]
     },
     {

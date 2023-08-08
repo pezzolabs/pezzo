@@ -9,11 +9,12 @@ import {
 import { useParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
-import { ProjectsPage } from "../projects";
+import { ProjectsPage } from "../projects/ProjectsPage";
 import { MembersView } from "./MembersView";
 import { SettingsView } from "./SettingsView";
 import { ApiKeysView } from "./ApiKeysView";
 import { useCurrentOrgMembership } from "../../lib/hooks/useCurrentOrgMembership";
+import { trackEvent } from "../../lib/utils/analytics";
 
 const TabLabel = styled.div`
   display: inline-block;
@@ -83,20 +84,23 @@ export const OrgPage = () => {
     [tabsItems, isOrgAdmin]
   );
 
-  return (
-    organization && (
-      <>
-        <Typography.Title level={1} style={{ marginTop: 0 }}>
-          {organization.name}
-        </Typography.Title>
+  const onTabChange = (key: string) => {
+    setActiveView(key);
+    trackEvent("organization_tab_changed", { tab: key });
+  };
 
-        <Tabs items={availableTabItems} onChange={setActiveView} />
+  return organization ? (
+    <>
+      <Typography.Title level={1} style={{ marginTop: 0 }}>
+        {organization.name}
+      </Typography.Title>
 
-        {activeView === TabItemKey.Projects && <ProjectsPage />}
-        {activeView === TabItemKey.Members && <MembersView />}
-        {activeView === TabItemKey.ApiKeys && <ApiKeysView />}
-        {activeView === TabItemKey.Settings && isOrgAdmin && <SettingsView />}
-      </>
-    )
-  );
+      <Tabs items={availableTabItems} onChange={onTabChange} />
+
+      {activeView === TabItemKey.Projects && <ProjectsPage />}
+      {activeView === TabItemKey.Members && <MembersView />}
+      {activeView === TabItemKey.ApiKeys && <ApiKeysView />}
+      {activeView === TabItemKey.Settings && isOrgAdmin && <SettingsView />}
+    </>
+  ) : null;
 };

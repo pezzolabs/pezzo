@@ -5,25 +5,30 @@ import { PrismaClient } from "@prisma/client";
 import supertokens from "supertokens-node";
 import { AppModule } from "../src/app/app.module";
 import { KafkaConsumerService, KafkaProducerService } from "@pezzo/kafka";
+import { OpenSearchService } from "../src/app/opensearch/opensearch.service";
 
 // This script only runs in GitHub Actions
 if (process.env.GITHUB_ACTIONS !== "true") {
   process.exit(0);
 }
 
+/**
+ * When generating the GraphQL schema in offline mode (CI), we don't want to connect to all
+ * external services, and we also don't want to serve the server. Therefore, we need to generate
+ * a static `schenma.gql` file to be used by `graphql-codegen`. To achieve this, we need to mock
+ * all external-facing services to prevent them from trying to establish connections.
+ */
 export default async function generateGraphQLSchema(): Promise<void> {
-  // Override PrismaClient $connect to prevent connections to the database
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   PrismaClient.prototype.$connect = async () => {};
-
-  // Prevent SuperTokens init
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   supertokens.init = async () => {};
-
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   KafkaConsumerService.prototype.connect = async () => {};
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   KafkaProducerService.prototype.connect = async () => {};
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  OpenSearchService.prototype.onModuleInit = async () => {};
 
   // Use the side effect of initializing the nest application for generating
   // the Nest.js schema
@@ -34,7 +39,6 @@ export default async function generateGraphQLSchema(): Promise<void> {
 if (require.main === module) {
   generateGraphQLSchema()
     .then(() => {
-      console.log("Schema generated");
       process.exit(0);
     })
     .catch((error) => {

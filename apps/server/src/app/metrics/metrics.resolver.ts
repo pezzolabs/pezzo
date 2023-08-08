@@ -1,7 +1,5 @@
 import { Args, Query, Resolver } from "@nestjs/graphql";
 import { Metric } from "./models/metric.model";
-import { InfluxDbService } from "../influxdb/influxdb.service";
-import { InfluxQueryResult } from "./types";
 import { GetMetricsInput, Granularity } from "./inputs/get-metrics.input";
 import { AuthGuard } from "../auth/auth.guard";
 import {
@@ -16,19 +14,19 @@ import { isOrgMemberOrThrow } from "../identity/identity.utils";
 import { PromptsService } from "../prompts/prompts.service";
 import { Prompt } from "@prisma/client";
 import { PrismaService } from "../prisma.service";
-
-interface PromptExecutionQueryResult extends InfluxQueryResult {
-  prompt_id: string;
-  prompt_version_sha: string;
-  prompt_integration_id: string;
-  prompt_name: string;
-}
+import { OpenSearchService } from "../opensearch/opensearch.service";
+import { ApiResponse } from "@opensearch-project/opensearch/.";
+import {
+  MsearchBody,
+  SearchResponse,
+} from "@opensearch-project/opensearch/api/types";
+import { OpenSearchIndex } from "../opensearch/types";
 
 const granularityMapping = {
   [Granularity.hour]: "1h",
   [Granularity.day]: "1d",
   [Granularity.week]: "1w",
-  [Granularity.month]: "1mo",
+  [Granularity.month]: "1M",
 };
 
 @UseGuards(AuthGuard)
@@ -36,7 +34,7 @@ const granularityMapping = {
 export class MetricsResolver {
   constructor(
     private prismaService: PrismaService,
-    private influxService: InfluxDbService,
+    private openSearchService: OpenSearchService,
     private promptService: PromptsService,
     private readonly logger: PinoLogger
   ) {}
@@ -69,43 +67,78 @@ export class MetricsResolver {
     });
 
     isOrgMemberOrThrow(user, project.organizationId);
-    const queryClient = this.influxService.getQueryApi("primary");
 
-    const {
-      start,
-      stop,
-      field,
-      aggregation,
-      granularity,
-      promptId,
-      fillEmpty,
-    } = data;
+    const { start, stop, field, aggregation, granularity, promptId } = data;
 
-    let query = `from(bucket: "primary")
-    |> range(start: ${start}, stop: ${stop})
-    |> filter(fn: (r) => r["_measurement"] == "prompt_execution")
-    |> filter(fn: (r) => r["prompt_id"] == "${promptId}")
-    |> filter(fn: (r) => r["_field"] == "${field}")
-    `;
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 7);
 
-    query += `|> aggregateWindow(every: ${
-      granularityMapping[granularity]
-    }, fn: ${aggregation}, createEmpty: ${fillEmpty ? "true" : "false"})`;
+    let aggs: any = {};
 
-    if (fillEmpty) {
-      query += `|> fill(value: ${fillEmpty})`;
+    if (aggregation !== "count") {
+      aggs = {
+        field_aggregation: {
+          [aggregation]: { field: `calculated.${field}` },
+        },
+      };
+    } else {
+      aggs = {
+        field_aggregation: {
+          value_count: {
+            field: "_index",
+          },
+        },
+      };
     }
 
-    const queryResults: InfluxQueryResult[] = await queryClient.collectRows(
-      query
-    );
-
-    return queryResults.map((r: PromptExecutionQueryResult) => ({
-      value: r._value,
-      time: new Date(r._time),
-      metadata: {
-        prompt_version_sha: r.prompt_version_sha,
+    const body: MsearchBody = {
+      query: {
+        bool: {
+          filter: [
+            {
+              term: { "metadata.promptId": promptId },
+            },
+            {
+              range: {
+                "request.timestamp": {
+                  gte: start,
+                  lte: stop,
+                },
+              },
+            },
+          ],
+        },
       },
+      size: 0,
+      aggs: {
+        time_buckets: {
+          date_histogram: {
+            field: "request.timestamp",
+            interval: granularityMapping[granularity],
+            extended_bounds: {
+              min: start,
+              max: stop,
+            },
+          },
+          aggs,
+        },
+      },
+    };
+
+    const query = {
+      index: OpenSearchIndex.Requests,
+      body,
+    };
+
+    const osResponse: ApiResponse<SearchResponse<any>> =
+      await this.openSearchService.client.search(query);
+
+    const { aggregations } = osResponse.body;
+    const metrics = aggregations.time_buckets["buckets"].map((bucket) => ({
+      value: bucket.field_aggregation.value || 0,
+      time: new Date(bucket.key_as_string),
     }));
+
+    return metrics;
   }
 }

@@ -59,7 +59,7 @@ export class ProviderApiKeysResolver {
         organizationId
       );
 
-      this.analytics.track("PROVIDER_API_KEY:CREATED", user.id, {
+      this.analytics.trackEvent("provider_api_key_created", {
         organizationId,
         provider,
       });

@@ -10,7 +10,7 @@ export const useBreadcrumbItems = () => {
   const location = useLocation();
   const { organization } = useCurrentOrganization();
   const { project } = useCurrentProject();
-  const { prompt, integration } = useCurrentPrompt();
+  const { prompt } = useCurrentPrompt();
 
   const resolvers = useMemo(
     () => ({
@@ -20,33 +20,30 @@ export const useBreadcrumbItems = () => {
       },
       ":projectId": {
         title: project?.name,
-        link: `/projects/${project?.id}/prompts`,
+        link: `/projects/${project?.id}`,
+      },
+      overview: {
+        title: "Overview",
+        link: `/projects/${project?.id}/overview`,
+      },
+      environments: {
+        title: "Environments",
+        link: `/projects/${project?.id}/environments`,
+      },
+      requests: {
+        title: "Requests",
+        link: `/projects/${project?.id}/requests`,
       },
       prompts: {
         title: "Prompts",
         link: `/projects/${project?.id}/prompts`,
       },
       ":promptId": {
-        title: prompt && integration && (
-          <Row align="middle" gutter={8}>
-            <Col>
-              <img
-                src={integration.iconBase64}
-                width={20}
-                height={20}
-                style={{ borderRadius: 2 }}
-                alt="prompt-icon"
-              />
-            </Col>
-            <Col>
-              <Typography.Text>{prompt.name}</Typography.Text>
-            </Col>
-          </Row>
-        ),
+        title: prompt && prompt.name,
         link: `/projects/${project?.id}/prompts/${prompt?.id}`,
       },
     }),
-    [organization, project, prompt, integration]
+    [organization, project, prompt]
   );
 
   const getBreadcrumbParts = () => {
@@ -57,7 +54,7 @@ export const useBreadcrumbItems = () => {
     if (!matchingPath) return [];
 
     const matchingSplit = matchingPath.split("/").filter((i) => i);
-    const parts = [];
+    const parts: { title: string | React.ReactNode; key: string }[] = [];
 
     for (const [idx, item] of matchingSplit.entries()) {
       const resolvedBreadcrumb = resolvers[item];

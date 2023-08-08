@@ -1,11 +1,16 @@
-import axios, { AxiosInstance } from "axios";
-import { IntegrationBaseSettings, PromptExecutionStatus } from "../types";
-import type { CreatePromptExecutionDto } from "./create-prompt-execution.dto";
+import fetch from "cross-fetch";
+import { ReportData } from "../types";
+import { Prompt } from "../types/prompts";
 
 export interface PezzoClientOptions {
   serverUrl?: string;
   apiKey: string;
   environment: string;
+  projectId: string;
+}
+
+export interface GetPromptOptions {
+  variables?: Record<string, boolean | number | string>;
 }
 
 const defaultOptions: Partial<PezzoClientOptions> = {
@@ -14,66 +19,73 @@ const defaultOptions: Partial<PezzoClientOptions> = {
 
 export class Pezzo {
   options: PezzoClientOptions;
-  private readonly axios: AxiosInstance;
 
   constructor(options: PezzoClientOptions) {
+    const serverUrl =
+      options.serverUrl ||
+      process.env["PEZZO_SERVER_URL"] ||
+      defaultOptions.serverUrl;
+
     this.options = {
-      ...defaultOptions,
+      serverUrl,
       ...options,
     };
-
-    this.axios = axios.create({
-      baseURL: `${this.options.serverUrl}/api`,
-      headers: {
-        "x-api-key": this.options.apiKey,
-      },
-    });
   }
 
-  async reportPromptExecution<T>(
-    dto: CreatePromptExecutionDto,
-    autoParseJSON?: boolean
-  ): Promise<{
-    id: string;
-    promptId: string;
-    status: PromptExecutionStatus;
-    result?: T;
-    totalCost: number;
-    totalTokens: number;
-    duration: number;
-  }> {
-    const { data } = await this.axios.post(`prompts/execution`, {
-      ...dto,
-    });
-
-    if (data.result) {
-      const report = {
-        ...data,
-        result: autoParseJSON
-          ? (JSON.parse(data.result) as T)
-          : (data.result as T),
-      };
-
-      return report;
-    } else {
-      return data;
-    }
-  }
-
-  async getDeployedPromptVersion<T>(promptName: string) {
-    const url = new URL(`${this.options.serverUrl}/api/prompts/deployment`);
+  async getPrompt(promptName: string): Promise<{ pezzo: Prompt }> {
+    const url = new URL(`${this.options.serverUrl}/api/prompts/v2/deployment`);
     url.searchParams.append("name", promptName);
     url.searchParams.append("environmentName", this.options.environment);
 
-    const { data } = await this.axios.get(url.toString());
+    const response = await fetch(url.toString(), {
+      headers: {
+        "Content-Type": "application/json",
+        "x-pezzo-api-key": this.options.apiKey,
+      },
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      if (data?.message) {
+        throw new Error(data.message);
+      } else {
+        throw new Error(
+          `Error fetching prompt "${promptName}" for environment "${this.options.environment}" (${data.statusCode}).`
+        );
+      }
+    }
+
+    const pezzoPrompt: Prompt = {
+      metadata: {
+        promptId: data.promptId,
+        promptVersionSha: data.promptVersionSha,
+        type: data.type,
+      },
+      settings: data.settings,
+      content: data.content,
+    };
 
     return {
-      id: data.promptId,
-      deployedVersion: {
-        sha: data.sha,
-        content: data.content,
-        settings: data.settings as IntegrationBaseSettings<T>,
-      },
+      pezzo: pezzoPrompt,
     };
+  }
+
+  async reportPromptExecution(dto: ReportData) {
+    const response = await fetch(
+      `${this.options.serverUrl}/api/reporting/v2/request`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-pezzo-api-key": this.options.apiKey,
+          "x-pezzo-project-id": this.options.projectId,
+        },
+        body: JSON.stringify(dto),
+      }
+    );
+
+    if (!response.ok) {
+      const json = await response.json();
+      console.warn("Could not report prompt execution", json);
+    }
   }
 }

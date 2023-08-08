@@ -7,3 +7,11 @@ export const CREATE_ENVIRONMENT = graphql(/* GraphQL */ `
     }
   }
 `);
+
+export const DELETE_ENVIRONMENT = graphql(/* GraphQL */ `
+  mutation DeleteEnvironment($data: EnvironmentWhereUniqueInput!) {
+    deleteEnvironment(data: $data) {
+      id
+    }
+  }
+`);

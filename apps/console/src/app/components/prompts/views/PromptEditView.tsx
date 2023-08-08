@@ -1,195 +1,171 @@
-import { Form, Space, Button, Row, Col, Card, Tooltip } from "antd";
-import { PromptEditor } from "../PromptEditor";
-import { PromptSettings } from "../PromptSettings";
-import {
-  CodeOutlined,
-  ExperimentOutlined,
-  PlayCircleOutlined,
-  SendOutlined,
-} from "@ant-design/icons";
-import { css } from "@emotion/css";
-import {
-  PromptEditFormInputs,
-  getDraftPromptData,
-  usePromptEdit,
-} from "../../../lib/hooks/usePromptEdit";
 import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
-import { useEffect, useState } from "react";
-import { PromptTester } from "../PromptTester";
-import { PromptVariables } from "../PromptVariables";
-import { usePromptTester } from "../../../lib/providers/PromptTesterContext";
-import { PromptVersionSelector } from "../PromptVersionSelector";
+import { Button, Card, Col, Row, Space, Tooltip, Typography } from "antd";
 import { CommitPromptModal } from "../CommitPromptModal";
 import { PublishPromptModal } from "../PublishPromptModal";
+import { useState } from "react";
+import {
+  ExperimentOutlined,
+  CodeOutlined,
+  InfoCircleFilled,
+  PlayCircleOutlined,
+} from "@ant-design/icons";
+import { PromptVersionSelector } from "../PromptVersionSelector";
+import { PromptType } from "../../../../@generated/graphql/graphql";
+import { ChatEditMode } from "../editor/chat/ChatEditMode";
+import { PromptEditMode } from "../editor/prompt/PromptEditMode";
+import { usePromptVersionEditorContext } from "../../../lib/providers/PromptVersionEditorContext";
+import { CommitButton } from "../editor/CommitButton";
+import { Variables } from "../editor/Variables";
+import { ProviderSettingsCard } from "../editor/ProviderSettingsCard";
+import { FunctionsFormModal } from "../FormModal";
+import { colors } from "../../../lib/theme/colors";
+import { PromptTesterModal } from "../prompt-tester/PromptTesterModal";
+import { usePromptTester } from "../../../lib/providers/PromptTesterContext";
 import { ConsumePromptModal } from "../ConsumePromptModal";
-import { useProviderApiKeys } from "../../../graphql/hooks/queries";
+import { trackEvent } from "../../../lib/utils/analytics";
+
+const FUNCTIONS_FEATURE_FLAG = true;
 
 export const PromptEditView = () => {
-  const {
-    form,
-    handleFormValuesChange,
-    isChangesToCommit,
-    variables,
-    setVariable,
-  } = usePromptEdit();
-  const { prompt, currentPromptVersion, integration, isDraft } =
-    useCurrentPrompt();
-  const { openTester, runTest, isTestInProgress, isTesterOpen } =
-    usePromptTester();
+  const { openTestModal } = usePromptTester();
+  const { prompt, isLoading: isPromptLoading } = useCurrentPrompt();
+  const { currentVersion, isPublishEnabled, isDraft, form } =
+    usePromptVersionEditorContext();
+
   const [isCommitModalOpen, setIsCommitModalOpen] = useState(false);
-  const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
   const [isConsumePromptModalOpen, setIsConsumePromptModalOpen] =
     useState(false);
+  const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
+  const [isFunctionsModalOpen, setIsFunctionsModalOpen] = useState(false);
 
-  const { data: providerApiKeysData } = useProviderApiKeys();
-
-  const isTestEnabled = !!providerApiKeysData?.providerApiKeys.find(
-    (apiKey) => apiKey.provider === integration.provider
-  );
-
-  useEffect(() => {
-    form.resetFields();
-  }, [prompt.id, currentPromptVersion]);
-
-  const handleTest = async (values: PromptEditFormInputs) => {
-    await runTest({
-      content: values.content,
-      settings: values.settings,
-      variables,
-    });
-    openTester();
+  const handleRunTest = () => {
+    const formValues = form.getFieldsValue();
+    openTestModal(formValues);
+    trackEvent("prompt_run_test_clicked");
   };
 
-  const initialValues = {
-    settings: isDraft
-      ? getDraftPromptData(prompt.integrationId).settings
-      : currentPromptVersion.settings,
-    content: isDraft
-      ? getDraftPromptData(prompt.integrationId).content
-      : currentPromptVersion.content,
+  const onConsumeClick = () => {
+    setIsConsumePromptModalOpen(true);
+    trackEvent("prompt_how_to_consume_modal_opened");
   };
+
+  const onPublishClick = () => {
+    setIsPublishModalOpen(true);
+    trackEvent("prompt_publish_modal_opened");
+  };
+
+  const onCommitClick = () => {
+    setIsCommitModalOpen(true);
+    trackEvent("prompt_commit_modal_opened");
+  };
+
+  const onOpenFunctionsModal = FUNCTIONS_FEATURE_FLAG
+    ? () => {
+        setIsFunctionsModalOpen(true);
+        trackEvent("prompt_functions_modal_opened");
+      }
+    : null;
 
   return (
-    <>
-      <CommitPromptModal
-        form={form}
-        open={isCommitModalOpen}
-        onClose={() => setIsCommitModalOpen(false)}
-        onCommitted={() => {
-          form.resetFields();
-          setIsCommitModalOpen(false);
-        }}
-      />
-      {currentPromptVersion && (
-        <PublishPromptModal
-          onClose={() => setIsPublishModalOpen(false)}
-          open={isPublishModalOpen}
-        />
-      )}
-      {isTesterOpen && <PromptTester />}
-
-      <ConsumePromptModal
-        open={isConsumePromptModalOpen}
-        onClose={() => setIsConsumePromptModalOpen(false)}
-        variables={variables}
-      />
-
-      <Row gutter={[12, 12]}>
-        <Col span={12}>{!isDraft && <PromptVersionSelector />}</Col>
-        <Col
-          span={12}
-          className={css`
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 16px;
-          `}
-        >
-          <Space wrap>
-            <Button
-              onClick={() => setIsConsumePromptModalOpen(true)}
-              icon={<CodeOutlined />}
+    !isPromptLoading && (
+      <>
+        <div style={{ marginBottom: 14, border: 0 }}>
+          <Row>
+            <Col span={12}>{!isDraft && <PromptVersionSelector />}</Col>
+            <Col
+              span={12}
+              style={{ display: "flex", justifyContent: "flex-end" }}
             >
-              Consume
-            </Button>
-            {currentPromptVersion && (
-              <Button
-                onClick={() => setIsPublishModalOpen(true)}
-                icon={<PlayCircleOutlined />}
-                type="primary"
-              >
-                Publish
-              </Button>
+              <Space>
+                <Button icon={<ExperimentOutlined />} onClick={handleRunTest}>
+                  Test
+                </Button>
+                {isPublishEnabled && (
+                  <Button onClick={onConsumeClick} icon={<CodeOutlined />}>
+                    How to Consume
+                  </Button>
+                )}
+                {isPublishEnabled && (
+                  <Button
+                    onClick={onPublishClick}
+                    icon={<PlayCircleOutlined />}
+                    type="primary"
+                  >
+                    Publish
+                  </Button>
+                )}
+                <CommitButton onClick={onCommitClick} />
+              </Space>
+            </Col>
+          </Row>
+        </div>
+
+        <Row gutter={24}>
+          <Col span={17}>
+            {prompt.type === PromptType.Prompt ? (
+              <PromptEditMode />
+            ) : (
+              <ChatEditMode />
             )}
-            <Button
-              disabled={!isChangesToCommit}
-              onClick={() => setIsCommitModalOpen(true)}
-              icon={<SendOutlined />}
-            >
-              Commit
-            </Button>
-
-            <Tooltip
+          </Col>
+          <Col span={7}>
+            <Card title="Settings" style={{ marginBottom: 24 }}>
+              <ProviderSettingsCard
+                onOpenFunctionsModal={onOpenFunctionsModal}
+              />
+            </Card>
+            <Card
               title={
-                !isTestEnabled &&
-                `Configure an API key for the ${integration.provider} to use the Test feature.`
+                <>
+                  Variables
+                  <Tooltip
+                    title={
+                      <Typography.Text>
+                        You can specify variables using curly braces. For
+                        example - {`{someVariable}`}.
+                      </Typography.Text>
+                    }
+                  >
+                    <InfoCircleFilled
+                      style={{ marginLeft: 12, color: colors.neutral[500] }}
+                    />
+                  </Tooltip>
+                </>
               }
             >
-              <Button
-                loading={isTestInProgress}
-                icon={<ExperimentOutlined />}
-                disabled={!isTestEnabled}
-                htmlType="submit"
-                form="prompt-form"
-              >
-                Test
-              </Button>
-            </Tooltip>
-          </Space>
-        </Col>
-      </Row>
-
-      <Form
-        onValuesChange={handleFormValuesChange}
-        onFinish={handleTest}
-        initialValues={initialValues}
-        form={form}
-        layout="vertical"
-        name="prompt-form"
-        autoComplete="off"
-      >
-        <Row>
-          <Col flex={"1"}>
-            <div style={{ paddingRight: 8, height: "100%" }}>
-              <Card style={{}}>
-                <PromptEditor />
-              </Card>
-            </div>
-          </Col>
-          <Col flex="280px">
-            <div style={{ paddingLeft: 8, height: "100%" }}>
-              <Space
-                style={{ width: "100%" }}
-                direction="vertical"
-                size="middle"
-              >
-                <Card title="Settings">
-                  <PromptSettings
-                    integrationId={prompt.integrationId}
-                    model={form.getFieldsValue().settings?.model}
-                  />
-                </Card>
-
-                <Card title="Variables">
-                  <PromptVariables
-                    variables={variables}
-                    onVariableChange={setVariable}
-                  />
-                </Card>
-              </Space>
-            </div>
+              <Variables />
+            </Card>
           </Col>
         </Row>
-      </Form>
-    </>
+
+        <PromptTesterModal />
+
+        <ConsumePromptModal
+          open={isConsumePromptModalOpen}
+          onClose={() => setIsConsumePromptModalOpen(false)}
+        />
+
+        <CommitPromptModal
+          open={isCommitModalOpen}
+          onClose={() => setIsCommitModalOpen(false)}
+          onCommitted={() => {
+            setIsCommitModalOpen(false);
+          }}
+        />
+        {currentVersion && (
+          <PublishPromptModal
+            onClose={() => setIsPublishModalOpen(false)}
+            open={isPublishModalOpen}
+          />
+        )}
+
+        {FUNCTIONS_FEATURE_FLAG && (
+          <FunctionsFormModal
+            onClose={() => setIsFunctionsModalOpen(false)}
+            open={isFunctionsModalOpen}
+          />
+        )}
+      </>
+    )
   );
 };

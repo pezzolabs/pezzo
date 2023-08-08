@@ -1,5 +1,6 @@
 import {
   Args,
+  Query,
   Mutation,
   Parent,
   ResolveField,
@@ -23,6 +24,8 @@ import { PromptsService } from "./prompts.service";
 import { AuthGuard } from "../auth/auth.guard";
 import { ExtendedUser } from "../identity/models/extended-user.model";
 import { UsersService } from "../identity/users.service";
+import { PromptVersionWhereUniqueInput } from "../../@generated/prompt-version/prompt-version-where-unique.input";
+import { ProjectsService } from "../identity/projects.service";
 
 @UseGuards(AuthGuard)
 @Resolver(() => PromptVersion)
@@ -32,8 +35,32 @@ export class PromptVersionsResolver {
     private logger: PinoLogger,
     private analytics: AnalyticsService,
     private promptsService: PromptsService,
+    private projectsService: ProjectsService,
     private usersService: UsersService
   ) {}
+
+  @Query(() => PromptVersion)
+  async promptVersion(
+    @Args("data") data: PromptVersionWhereUniqueInput,
+    @CurrentUser() user: RequestUser
+  ) {
+    this.logger.assign({ ...data });
+    this.logger.info("Getting prompt version");
+    const { sha } = data;
+
+    const promptVersion = await this.promptsService.getPromptVersion(sha);
+
+    if (!promptVersion) {
+      throw new NotFoundException(`Prompt version "${sha}" not found`);
+    }
+
+    const prompt = await this.promptsService.getPrompt(promptVersion.promptId);
+    const project = await this.projectsService.getProjectById(prompt.projectId);
+
+    isOrgMemberOrThrow(user, project.organizationId);
+
+    return promptVersion;
+  }
 
   @Mutation(() => PromptVersion)
   async createPromptVersion(
@@ -67,7 +94,7 @@ export class PromptVersionsResolver {
         data,
         user.id
       );
-      this.analytics.track("PROMPT_VERSION:CREATED", user.id, {
+      this.analytics.trackEvent("prompt_version_created", {
         projectId: prompt.projectId,
         promptId: prompt.id,
       });

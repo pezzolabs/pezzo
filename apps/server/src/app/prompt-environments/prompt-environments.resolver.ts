@@ -95,7 +95,7 @@ export class PromptEnvironmentsResolver {
       throw new InternalServerErrorException();
     }
 
-    this.analytics.track("PROMPT:PUBLISHED", user.id, {
+    this.analytics.trackEvent("prompt_published", {
       projectId: environment.projectId,
       promptId: data.promptId,
       environmentId: environment.id,
