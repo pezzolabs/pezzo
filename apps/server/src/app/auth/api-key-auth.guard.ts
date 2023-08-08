@@ -7,6 +7,7 @@ import {
 } from "@nestjs/common";
 import { ApiKeysService } from "../identity/api-keys.service";
 import { PinoLogger } from "../logger/pino-logger";
+import { updateRequestContext } from "../cls.utils";
 
 export enum AuthMethod {
   ApiKey = "ApiKey",
@@ -46,6 +47,7 @@ export class ApiKeyAuthGuard implements CanActivate {
     this.logger.assign({
       organizationId: organization.id,
     });
+    updateRequestContext({ organizationId: organization.id });
 
     return true;
   }
