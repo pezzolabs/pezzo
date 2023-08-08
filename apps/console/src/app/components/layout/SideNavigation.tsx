@@ -3,6 +3,7 @@ import {
   ChartBarIcon,
   QueueListIcon,
   ServerStackIcon,
+  DocumentMagnifyingGlassIcon,
 } from "@heroicons/react/24/solid";
 import { Menu } from "antd";
 import { useMemo } from "react";
@@ -49,6 +50,18 @@ const TopMenu = styled(BaseMenu)`
   flex: 100%;
 `;
 
+const DocsMenu = () => {
+  return (
+    <BaseMenu>
+      <Menu.Item key="docs" icon={<DocumentMagnifyingGlassIcon height={18} />}>
+        <a href="https://docs.pezzo.ai/" target="_blank">
+          <span>Read Docs</span>
+        </a>
+      </Menu.Item>
+    </BaseMenu>
+  );
+};
+
 export const SideNavigation = () => {
   const { project } = useCurrentProject();
   const location = useLocation();
@@ -77,6 +90,7 @@ export const SideNavigation = () => {
         selectedKeys={selectedKeys.length ? selectedKeys : ["prompts"]}
         items={topMenuItems}
       />
+      <DocsMenu />
     </SidebarContainer>
   );
 };
