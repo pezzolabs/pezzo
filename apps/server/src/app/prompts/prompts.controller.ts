@@ -77,11 +77,11 @@ export class PromptsController {
       throw new NotFoundException(`Prompt "${name}" not found`);
     }
 
-    // this.analytics.trackEvent("prompt_find_with_api_key", {
-    //   organizationId,
-    //   projectId,
-    //   promptId: prompt.id,
-    // });
+    this.analytics.trackEvent("prompt_find_with_api_key", {
+      organizationId,
+      projectId,
+      promptId: prompt.id,
+    });
 
     const environment = await this.prisma.environment.findFirst({
       where: { name: environmentName, projectId },
@@ -187,15 +187,15 @@ export class PromptsController {
       return { success: false };
     }
 
-    // this.analytics.trackEvent("prompt_execution_reported", {
-    //   projectId: project.id,
-    //   promptId,
-    //   executionId: execution.id,
-    //   data: {
-    //     status: execution.status,
-    //     duration: execution.duration / 1000,
-    //   },
-    // });
+    this.analytics.trackEvent("prompt_execution_reported", {
+      projectId: project.id,
+      promptId,
+      executionId: execution.id,
+      data: {
+        status: execution.status,
+        duration: execution.duration / 1000,
+      },
+    });
 
     return { success: true };
   }
