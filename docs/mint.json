@@ -30,15 +30,8 @@
       "group": "Getting Started",
       "pages": [
         "introduction/what-is-pezzo",
-        {
-          "group": "Tutorial: Build an AI Fact Machine in 5 Minutes",
-          "pages": [
-            "introduction/tutorial/overview",
-            "introduction/tutorial/step-1-project-setup",
-            "introduction/tutorial/step-2-prompt-engineering",
-            "introduction/tutorial/step-3-consume-prompt"
-          ]
-        }
+        "introduction/tutorial-prompt-management/overview",
+        "introduction/tutorial-observability/overview"
       ]
     },
     {
