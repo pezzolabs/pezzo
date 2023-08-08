@@ -2,15 +2,15 @@ version: "3"
 
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:15
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data1:/var/lib/postgresql/data
 
   supertokens:
     image: supertokens/supertokens-postgresql:5.0
@@ -20,64 +20,50 @@ services:
     environment:
       POSTGRES_CONNECTION_URI: postgres://postgres:postgres@postgres:5432/supertokens
 
-  influxdb:
-    image: bitnami/influxdb:2.7.1
-    restart: always
+  opensearch-node1:
+    image: opensearchproject/opensearch:2.5.0
+    container_name: opensearch-node1
     environment:
-      INFLUXDB_ADMIN_USER_TOKEN: "token123"
-      INFLUXDB_ADMIN_USER_PASSWORD: "influxdb-admin"
-      INFLUXDB_USER: "admin"
-      INFLUXDB_USER_PASSWORD: "influxdb-admin"
-    ports:
-      - "8086:8086"
+      - cluster.name=opensearch-cluster
+      - node.name=opensearch-node1
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "plugins.security.disabled=true"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
     volumes:
-      - influxdb_data:/bitnami/influxdb
-
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.3.1
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
+      - opensearch-data1:/usr/share/opensearch/data
     ports:
-      - "2181:2181"
+      - 9200:9200 # REST API
+      - 9600:9600 # Performance Analyzer
+    networks:
+      - opensearch-net
+    deploy:
+      resources:
+        limits:
+          memory: 3g
 
-  kafka:
-    image: confluentinc/cp-kafka:7.3.1
-    depends_on:
-      - zookeeper
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:2.5.0
+    container_name: opensearch-dashboards
     ports:
-      - "9092:9092"
-      - "9997:9997"
+      - 5601:5601
+    expose:
+      - "5601"
     environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      JMX_PORT: 9997
-      KAFKA_JMX_OPTS: -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=kafka -Dcom.sun.management.jmxremote.rmi.port=9997
-    healthcheck:
-      test: nc -z localhost 9092 || exit -1
-      start_period: 15s
-      interval: 30s
-      timeout: 10s
-      retries: 10
-
-  kafka-ui:
-    container_name: kafka-ui
-    image: provectuslabs/kafka-ui:latest
-    ports:
-      - "8889:8080"
-    depends_on:
-      - zookeeper
-      - kafka
-    environment:
-      KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
-      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
-      KAFKA_CLUSTERS_0_JMXPORT: 9997
+      - "DISABLE_SECURITY_DASHBOARDS_PLUGIN=true"
+      - "OPENSEARCH_HOSTS=http://opensearch-node1:9200"
+    networks:
+      - opensearch-net
 
 volumes:
-  postgres_data: ~
-  influxdb_data: ~
+  postgres_data1: ~
+  opensearch-data1:
+
+networks:
+  opensearch-net:

@@ -19,21 +19,18 @@ import {
   PromptExecution,
   PromptVersion,
 } from "@prisma/client";
-import { InfluxDbService } from "../influxdb/influxdb.service";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { PrismaService } from "../prisma.service";
-import { Point } from "@influxdata/influxdb-client";
 import { ApiKeyOrgId } from "../identity/api-key-org-id.decoator";
 import { GetPromptDeploymentDto } from "./dto/get-prompt-deployment.dto";
 
 @UseGuards(ApiKeyAuthGuard)
-@Controller("prompts")
+@Controller("prompts/v2")
 export class PromptsController {
   constructor(
     private logger: PinoLogger,
     private prisma: PrismaService,
     private promptsService: PromptsService,
-    private influxService: InfluxDbService,
     private analytics: AnalyticsService
   ) {}
 
@@ -43,10 +40,12 @@ export class PromptsController {
     @ApiKeyOrgId() organizationId: string
   ) {
     const { name, environmentName } = query;
-    this.logger.info(
-      { name, organizationId, environmentName },
-      "Getting prompt deployment"
-    );
+    this.logger.assign({
+      name,
+      organizationId,
+      environmentName,
+    });
+    this.logger.info("Getting prompt deployment");
     let prompt: Prompt;
 
     const orgProjects = await this.prisma.project.findMany({
@@ -78,7 +77,7 @@ export class PromptsController {
       throw new NotFoundException(`Prompt "${name}" not found`);
     }
 
-    this.analytics.track("PROMPT:FIND_WITH_API_KEY", "api", {
+    this.analytics.trackEvent("prompt_find_with_api_key", {
       organizationId,
       projectId,
       promptId: prompt.id,
@@ -88,6 +87,12 @@ export class PromptsController {
       where: { name: environmentName, projectId },
     });
 
+    if (!environment) {
+      throw new NotFoundException(
+        "Could not find environment matching the provided name and project ID"
+      );
+    }
+
     let deployedPrompt: PromptEnvironment;
 
     try {
@@ -96,7 +101,7 @@ export class PromptsController {
         orderBy: { createdAt: "desc" },
       });
     } catch (error) {
-      this.logger.error({ error }, "Error getting deployed prompt environment");
+      this.logger.error({ error }, "Error getting deployed prompt");
       throw new InternalServerErrorException();
     }
 
@@ -117,7 +122,13 @@ export class PromptsController {
       throw new InternalServerErrorException();
     }
 
-    return promptVersion;
+    return {
+      promptId: prompt.id,
+      type: prompt.type,
+      promptVersionSha: promptVersion.sha,
+      settings: promptVersion.settings,
+      content: promptVersion.content,
+    };
   }
 
   @Post("execution")
@@ -176,43 +187,15 @@ export class PromptsController {
       return { success: false };
     }
 
-    this.analytics.track("PROMPT_EXECUTION:REPORTED", "api", {
+    this.analytics.trackEvent("prompt_execution_reported", {
       projectId: project.id,
       promptId,
       executionId: execution.id,
-      integrationId: prompt.integrationId,
       data: {
         status: execution.status,
         duration: execution.duration / 1000,
       },
     });
-
-    try {
-      const writeClient = this.influxService.getWriteApi("primary", "primary");
-      const point = new Point("prompt_execution")
-        .tag("prompt_id", execution.promptId)
-        .tag("prompt_version_sha", execution.promptVersionSha)
-        .tag("project_id", prompt.projectId)
-        .tag("prompt_name", prompt.name)
-        .tag("prompt_integration_id", prompt.integrationId)
-        .stringField("status", execution.status)
-        .floatField("duration", execution.duration / 1000)
-        .floatField("prompt_cost", execution.promptCost)
-        .floatField("completion_cost", execution.completionCost)
-        .floatField("total_cost", execution.totalCost)
-        .intField("prompt_tokens", execution.promptTokens)
-        .intField("completion_tokens", execution.completionTokens)
-        .intField("total_tokens", execution.totalTokens);
-
-      writeClient.writePoint(point);
-      writeClient.flush();
-    } catch (error) {
-      this.logger.error(
-        { error },
-        "Error reporting prompt execution to influxdb"
-      );
-      return { success: false };
-    }
 
     return { success: true };
   }

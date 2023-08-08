@@ -7,17 +7,18 @@
   "targets": {
     "build": {
       "dependsOn": ["^build"],
-      "executor": "@nrwl/js:tsc",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/kafka",
         "main": "libs/kafka/src/index.ts",
         "tsConfig": "libs/kafka/tsconfig.lib.json",
-        "assets": ["libs/kafka/*.md"]
+        "assets": ["libs/kafka/*.md"],
+        "updateBuildableProjectDepsInPackageJson": true
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["libs/kafka/**/*.ts"]

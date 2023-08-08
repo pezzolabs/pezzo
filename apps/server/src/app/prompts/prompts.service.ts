@@ -2,6 +2,7 @@ import { PrismaService } from "../prisma.service";
 import sha256 from "sha256";
 import { Injectable } from "@nestjs/common";
 import { CreatePromptVersionInput } from "./inputs/create-prompt-version.input";
+import { CreatePromptInput } from "./inputs/create-prompt.input";
 
 @Injectable()
 export class PromptsService {
@@ -26,10 +27,11 @@ export class PromptsService {
     return prompt;
   }
 
-  async createPrompt(name: string, integrationId: string, projectId: string) {
+  async createPrompt(data: CreatePromptInput) {
+    const { name, projectId, type } = data;
     const prompt = await this.prisma.prompt.create({
       data: {
-        integrationId,
+        type,
         projectId,
         name,
         versions: {
@@ -52,7 +54,7 @@ export class PromptsService {
     data: CreatePromptVersionInput,
     createdByUserId: string
   ) {
-    const { content, settings, promptId, message } = data;
+    const { promptId, service, content, settings, message } = data;
 
     const sha = sha256(
       `${JSON.stringify({ content, settings })}-${promptId}-${Date.now()}`
@@ -61,6 +63,7 @@ export class PromptsService {
     const version = await this.prisma.promptVersion.create({
       data: {
         sha,
+        service,
         content,
         settings: settings as any, // eslint-disable-line @typescript-eslint/no-explicit-any
         promptId,

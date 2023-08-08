@@ -1,17 +1,15 @@
 import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
 import { Card, Col, Row, Typography } from "antd";
 import { css } from "@emotion/css";
-import { getIntegration } from "@pezzo/integrations";
+import { BoltIcon } from "@heroicons/react/24/solid";
+import { colorPrimary } from "../../lib/theme/ant-theme";
 
 interface Props {
   name: string;
-  integrationId: string;
   onClick: () => void;
 }
 
-export const PromptListItem = ({ name, integrationId, onClick }: Props) => {
-  const integration = getIntegration(integrationId);
-
+export const PromptListItem = ({ name, onClick }: Props) => {
   return (
     <Card hoverable={true} onClick={onClick} size="small">
       <Row gutter={[12, 12]} align="middle">
@@ -20,13 +18,10 @@ export const PromptListItem = ({ name, integrationId, onClick }: Props) => {
             className={css`
               width: 46px;
               margin: auto;
+              padding: 4px;
             `}
           >
-            <img
-              src={integration.iconBase64}
-              alt={integration.name}
-              style={{ width: "100%", height: "100%", borderRadius: 6 }}
-            />
+            <BoltIcon height={"80%"} width={"80%"} color={colorPrimary} />
           </div>
         </Col>
         <Col flex="auto">

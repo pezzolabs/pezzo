@@ -46,3 +46,16 @@ export const GET_PROMPT_EXECUTION = graphql(/* GraphQL */ `
     }
   }
 `);
+
+export const TEST_PROMPT = graphql(/* GraphQL */ `
+  mutation testPrompt($data: TestPromptInput!) {
+    testPrompt(data: $data) {
+      reportId
+      calculated
+      properties
+      metadata
+      request
+      response
+    }
+  }
+`);

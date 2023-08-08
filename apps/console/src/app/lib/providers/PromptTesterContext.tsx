@@ -1,88 +1,90 @@
 import { createContext, useContext, useState } from "react";
-import { TEST_PROMPT } from "../../graphql/definitions/mutations/prompts";
-import { gqlClient } from "../graphql";
 import {
-  GetPromptExecutionQuery,
-  PromptExecution,
-} from "../../../@generated/graphql/graphql";
-import { TestPromptResult } from "@pezzo/client";
-import { useCurrentPrompt } from "./CurrentPromptContext";
+  PromptVersionFormInputs,
+  usePromptVersionEditorContext,
+} from "./PromptVersionEditorContext";
+import { Form, FormInstance } from "antd";
+import { useTestPrompt } from "../../graphql/hooks/mutations";
 import { useCurrentProject } from "../hooks/useCurrentProject";
-
-export interface PromptTestInput {
-  content: string;
-  settings: any;
-  variables: Record<string, string>;
-}
+import { useCurrentPrompt } from "./CurrentPromptContext";
+import { RequestReport } from "../../../@generated/graphql/graphql";
 
 interface PromptTesterContextValue {
-  openTester: () => void;
-  closeTester: () => void;
-  isTesterOpen: boolean;
-  runTest: (input: PromptTestInput) => Promise<void>;
-  testResult: Partial<GetPromptExecutionQuery["promptExecution"]>;
-  isTestInProgress: boolean;
-  loadTestResult: (
-    data: Partial<GetPromptExecutionQuery["promptExecution"]>
-  ) => void;
+  isOpen: boolean;
+  openTestModal: (value: PromptVersionFormInputs) => void;
+  closeTestModal: () => void;
+  testVariablesForm: FormInstance<Record<string, string>>;
+  runTest: () => void;
+  isTestLoading: boolean;
+  testError: any;
+  testResult: RequestReport;
 }
 
-const CurrentPromptContext = createContext<PromptTesterContextValue>({
-  openTester: () => void 0,
-  closeTester: () => void 0,
-  isTesterOpen: false,
+const PromptTesterContext = createContext<PromptTesterContextValue>({
+  isOpen: undefined,
+  openTestModal: () => void 0,
+  closeTestModal: () => void 0,
+  testVariablesForm: undefined,
   runTest: () => void 0,
+  isTestLoading: undefined,
+  testError: undefined,
   testResult: undefined,
-  isTestInProgress: false,
-  loadTestResult: () => void 0,
 });
 
 export const usePromptTester = () => {
-  return useContext(CurrentPromptContext);
+  return useContext(PromptTesterContext);
 };
 
 export const PromptTesterProvider = ({ children }) => {
+  const { prompt } = useCurrentPrompt();
   const { project } = useCurrentProject();
-  const [isTesterOpen, setIsTesterOpen] = useState<boolean>(false);
-  const [testResult, setTestResult] =
-    useState<Partial<TestPromptResult>>(undefined);
-  const [isTestInProgress, setIsTestInProgress] = useState<boolean>(false);
-  const { integration } = useCurrentPrompt();
+  const {
+    mutate: testPrompt,
+    isLoading: isTestLoading,
+    error: testError,
+    data,
+    reset,
+  } = useTestPrompt();
+  const { form: promptVersionForm } = usePromptVersionEditorContext();
+  const [isOpen, setIsOpen] = useState(false);
+  const [testVariablesForm] = Form.useForm<Record<string, string>>();
+
+  const handleOpenTestModal = () => {
+    setIsOpen(true);
+  };
+
+  const handleCloseTestModal = () => {
+    setIsOpen(false);
+    reset();
+  };
+
+  const handleRunTest = async () => {
+    const { content, settings } = promptVersionForm.getFieldsValue();
+    const variables = testVariablesForm.getFieldsValue();
+
+    testPrompt({
+      content,
+      settings,
+      variables,
+      projectId: project.id,
+      promptId: prompt.id,
+    });
+  };
 
   const value = {
-    isTesterOpen,
-    setIsTesterOpen,
-    openTester: () => {
-      setIsTesterOpen(true);
-    },
-    closeTester: () => {
-      setTestResult(null);
-      setIsTesterOpen(false);
-    },
-    runTest: async (input: PromptTestInput) => {
-      setIsTestInProgress(true);
-      const result = await gqlClient.request(TEST_PROMPT, {
-        data: {
-          projectId: project.id,
-          integrationId: integration.id,
-          content: input.content,
-          settings: input.settings,
-          variables: input.variables,
-        },
-      });
-      setTestResult(result.testPrompt);
-      setIsTestInProgress(false);
-    },
-    testResult,
-    isTestInProgress: isTestInProgress,
-    loadTestResult: (data: Partial<PromptExecution>) => {
-      setTestResult(data);
-    },
+    isOpen,
+    openTestModal: handleOpenTestModal,
+    closeTestModal: handleCloseTestModal,
+    testVariablesForm,
+    runTest: handleRunTest,
+    isTestLoading,
+    testError: testError?.response.errors[0].message,
+    testResult: data?.testPrompt,
   };
 
   return (
-    <CurrentPromptContext.Provider value={value}>
+    <PromptTesterContext.Provider value={value}>
       {children}
-    </CurrentPromptContext.Provider>
+    </PromptTesterContext.Provider>
   );
 };

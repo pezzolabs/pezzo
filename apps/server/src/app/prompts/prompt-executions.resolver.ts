@@ -1,25 +1,16 @@
-import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, Query, Resolver } from "@nestjs/graphql";
 import { Prompt } from "../../@generated/prompt/prompt.model";
 import { PrismaService } from "../prisma.service";
 import { PromptExecution } from "../../@generated/prompt-execution/prompt-execution.model";
 import { PromptExecutionWhereInput } from "../../@generated/prompt-execution/prompt-execution-where.input";
 import { PromptExecutionWhereUniqueInput } from "../../@generated/prompt-execution/prompt-execution-where-unique.input";
-import { PromptExecutionStatus } from "../../@generated/prisma/prompt-execution-status.enum";
-import { TestPromptInput } from "./inputs/test-prompt.input";
 import { PromptsService } from "./prompts.service";
-import { PromptTesterService } from "./prompt-tester.service";
 import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
 import { AuthGuard } from "../auth/auth.guard";
-import {
-  InternalServerErrorException,
-  NotFoundException,
-  UseGuards,
-} from "@nestjs/common";
+import { NotFoundException, UseGuards } from "@nestjs/common";
 import { isOrgMemberOrThrow } from "../identity/identity.utils";
-import { AnalyticsService } from "../analytics/analytics.service";
 import { PinoLogger } from "../logger/pino-logger";
-import { TestPromptResult } from "@pezzo/client";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Prompt)
@@ -27,9 +18,7 @@ export class PromptExecutionsResolver {
   constructor(
     private prisma: PrismaService,
     private promptsService: PromptsService,
-    private promptTesterService: PromptTesterService,
-    private logger: PinoLogger,
-    private analytics: AnalyticsService
+    private logger: PinoLogger
   ) {}
 
   @Query(() => PromptExecution)
@@ -44,7 +33,9 @@ export class PromptExecutionsResolver {
 
     try {
       promptExecution = await this.prisma.promptExecution.findUnique({
-        where: data,
+        where: {
+          id: data.id,
+        },
       });
     } catch (error) {
       this.logger.error({ error }, "Error getting prompt execution");
@@ -102,73 +93,5 @@ export class PromptExecutionsResolver {
       this.logger.error({ error }, "Error getting prompt executions");
       throw new NotFoundException();
     }
-  }
-
-  @UseGuards(AuthGuard)
-  @Mutation(() => PromptExecution)
-  async testPrompt(
-    @Args("data") data: TestPromptInput,
-    @CurrentUser() user: RequestUser
-  ) {
-    this.logger
-      .assign({
-        projectId: data.projectId,
-        integrationId: data.integrationId,
-        settings: data.settings,
-      })
-      .info("Testing prompt");
-
-    const project = await this.prisma.project.findUnique({
-      where: { id: data.projectId },
-    });
-
-    isOrgMemberOrThrow(user, project.organizationId);
-
-    let result: TestPromptResult;
-
-    try {
-      result = await this.promptTesterService.testPrompt(
-        data,
-        project.organizationId
-      );
-    } catch (error) {
-      this.logger.error({ error }, "Error testing prompt");
-      throw new InternalServerErrorException();
-    }
-
-    const execution = new PromptExecution();
-    execution.id = "test";
-    execution.prompt = null;
-    execution.promptId = "test";
-    execution.timestamp = new Date();
-    execution.status = result.success
-      ? PromptExecutionStatus.Success
-      : PromptExecutionStatus.Error;
-    execution.content = result.content;
-    execution.interpolatedContent = result.interpolatedContent;
-    execution.settings = result.settings;
-    execution.result = result.result;
-    execution.duration = result.duration;
-    execution.promptTokens = result.promptTokens;
-    execution.completionTokens = result.completionTokens;
-    execution.totalTokens = result.totalTokens;
-    execution.promptCost = result.promptCost;
-    execution.completionCost = result.completionCost;
-    execution.totalCost = result.totalCost;
-    execution.error = result.error;
-    execution.variables = result.variables;
-
-    this.analytics.track("PROMPT:TESTED", user.id, {
-      organizationId: project.organizationId,
-      projectId: data.projectId,
-      integrationId: data.integrationId,
-      executionId: "test",
-      data: {
-        status: execution.status,
-        duration: execution.duration / 1000,
-      },
-    });
-
-    return execution;
   }
 }

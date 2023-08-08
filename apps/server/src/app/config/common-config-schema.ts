@@ -9,8 +9,9 @@ const commonConfigSchema = {
   SUPERTOKENS_API_KEY: Joi.string().optional(),
   SUPERTOKENS_API_DOMAIN: Joi.string().default("http://localhost:3000"),
   SUPERTOKENS_WEBSITE_DOMAIN: Joi.string().default("http://localhost:4200"),
-  INFLUXDB_URL: Joi.string().required(),
-  INFLUXDB_TOKEN: Joi.string().required(),
+  OPENSEARCH_URL: Joi.string().required(),
+  OPENSEARCH_AUTH: Joi.string().valid("insecure", "aws").default("insecure"),
+  TESTER_OPENAI_API_KEY: Joi.string().required(),
 };
 
 const cloudConfigSchema = {

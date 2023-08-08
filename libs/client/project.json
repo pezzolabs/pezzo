@@ -6,33 +6,32 @@
   "targets": {
     "build": {
       "dependsOn": ["^build"],
-      "executor": "@nrwl/js:tsc",
+      "executor": "@nx/rollup:rollup",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/client",
-        "tsConfig": "libs/client/tsconfig.lib.json",
-        "packageJson": "libs/client/package.json",
-        "updateBuildableProjectDepsInPackageJson": false,
         "main": "libs/client/src/index.ts",
-        "assets": ["libs/client/README.md", "libs/client/LICENSE"]
+        "tsConfig": "libs/client/tsconfig.lib.json",
+        "assets": [],
+        "project": "libs/client/package.json",
+        "compiler": "swc",
+        "format": ["cjs", "esm"],
+        "rollupConfig": ["libs/client/rollup.config.js"]
       }
     },
     "publish": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "node tools/scripts/publish.mjs client {args.ver} {args.tag}"
-      },
+      "command": "node tools/scripts/publish.mjs client {args.ver} {args.tag}",
       "dependsOn": ["build"]
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/client/**/*.ts"]
+        "lintFilePatterns": ["libs/client/**/*.ts", "libs/client/package.json"]
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "libs/client/jest.config.ts",

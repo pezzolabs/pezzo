@@ -1,0 +1,97 @@
+---
+title: "Tutorial: Observability"
+description: "In just a few lines of code, monitor your AI operations seamlessly."
+---
+
+<Tip>
+This tutorial is for users who want to use Pezzo for observability and monitoring only.
+
+If you also want to use Pezzo to manage your prompts, version control and prompt deployment, check out the [Prompt Management tutorial](/introduction/tutorial-prompt-management/overview).
+</Tip>
+
+## What you'll learn
+You're going to learn how to easily use Pezzo to supercharge your AI operations with monitoring and observability. It takes just a few lines of code!
+
+<Note>
+This tutorial assumes you already signed up to Pezzo Cloud and created a new project. If you haven't done so, please [sign up to Pezzo Cloud](https://app.pezzo.ai).
+</Note>
+
+## Install depdendencies
+Install the Pezzo Client and the OpenAI SDK:
+
+```bash
+npm i @pezzo/client openai
+```
+
+## Making calls to OpenAI
+
+Here is a code example:
+```ts app.ts
+import { Pezzo, PezzoOpenAIApi } from "@pezzo/client";
+import { Configuration } from "openai";
+
+// Initialize the Pezzo client
+export const pezzo = new Pezzo({
+  apiKey: "<your Pezzo API key>",
+  projectId: "<your Pezzo project ID>",
+  environment: "Production",
+});
+
+// Initialize the OpenAI client
+const configuration = new Configuration({
+  apiKey: "<your OpenAI API key>",
+});
+
+export const openai = new PezzoOpenAIApi(pezzo, configuration);
+
+async function main() {
+  // Make calls to the OpenAI API as you normally would!
+  const response = await openai.createChatCompletion(
+    {
+      model: "gpt-3.5-turbo",
+      temperature: 0,
+      messages: [
+        {
+          role: "user",
+          content: "Tell me {numFacts} fun facts about {topic}",
+        },
+      ],
+    },
+    {
+      variables: {
+        // You can define variables that will be interpolated during execution.
+        numFacts: 3,
+        topic: "Artificial Intelligence",
+      },
+      properties: {
+        // You can optionally specify custom properties that will be associated with the request.
+        someProperty: "someValue",
+      },
+    }
+  );
+
+  console.log("response", response);
+}
+
+main();
+```
+
+[Click here to run this example on CodeSandbox](https://codesandbox.io/p/sandbox/pezzo-example-observability-forked-3fhjh2?file=%2Fsrc%2Fapp.ts%3A1%2C1)
+
+**Let's explain what's going on here:**
+
+- First, we initialize the Pezzo client and the OpenAI client. We pass the Pezzo client to the OpenAI client so it can use it to fetch the prompt.
+- Then, we make a call to the OpenAI API as we normally would.
+- (Optional) We specify additional parameters in the second argument, these are `variables` and `properties`.
+
+The result will go directly to OpenAI and the response will be reported to Pezzo.
+
+## Monitoring Requests
+
+After integrating with Pezzo and making some requests to OpenAI, you should see all historical requests in the **Requests** view in Pezzo.
+
+If you want to learn more about Pezzo's observability feature, check out the [Observability section in the docs](/platform/observability/overview).
+
+<Frame caption="Pezzo Project Requests View">
+  <img src="/platform/observability/requests-view.png" />
+</Frame>

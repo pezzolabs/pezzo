@@ -10,6 +10,8 @@ import { useGetPromptExecutionMetric } from "../hooks/useGetPromptExecutionMetri
 import { format } from "date-fns";
 import { Card, Col, Empty, Radio, Row, Select, Typography, theme } from "antd";
 import { Loading3QuartersOutlined } from "@ant-design/icons";
+import ms from "ms";
+import { trackEvent } from "../utils/analytics";
 
 interface MetricContextValue {
   data: GetMetricsQuery["metrics"];
@@ -23,40 +25,45 @@ export const MetricContext = createContext<MetricContextValue>({
 
 export const useMetric = () => useContext(MetricContext);
 
+const calculateStartDate = (start: string): Date => {
+  const startDate = new Date();
+  const subtractMs = ms(start);
+  startDate.setMilliseconds(startDate.getMilliseconds() + subtractMs);
+  return startDate;
+};
+
 interface Props {
   children: React.ReactNode;
   title: string;
-  field: PromptExecutionMetricField;
-  fillEmpty?: string;
+  field?: PromptExecutionMetricField;
   aggregation: Aggregation;
 }
 
 export const MetricProvider = ({
   children,
   title,
-  field,
-  fillEmpty,
+  field = null,
   aggregation,
 }: Props) => {
   const { token } = theme.useToken();
   const { prompt } = useCurrentPrompt();
   const [granularity, setGranularity] = useState<Granularity>(Granularity.Day);
   const [start, setStart] = useState<string>("-7d");
+  const startDate = calculateStartDate(start);
 
   const { data: metricsData, isLoading } = useGetPromptExecutionMetric(
     [prompt.id, "metrics", title, granularity, start],
     {
       promptId: prompt.id,
-      start,
-      stop: "now()",
       field,
-      granularity,
       aggregation,
-      fillEmpty,
+      start: startDate.toISOString(),
+      stop: new Date().toISOString(),
+      granularity,
     }
   );
 
-  if (isLoading || !metricsData) {
+  if (!startDate || isLoading || !metricsData) {
     return <Loading3QuartersOutlined spin />;
   }
 
@@ -75,6 +82,19 @@ export const MetricProvider = ({
     }
   };
 
+  const onGranularityChange = (granularity: Granularity) => {
+    setGranularity(granularity);
+    trackEvent("prompt_metric_view_changed", {
+      type: "granularity",
+      granularity,
+    });
+  };
+
+  const onTimeRangeChange = (start: string) => {
+    setStart(start);
+    trackEvent("prompt_metric_view_changed", { type: "time_range", start });
+  };
+
   return (
     <MetricContext.Provider
       value={{
@@ -90,7 +110,7 @@ export const MetricProvider = ({
               <Select
                 defaultValue={start}
                 style={{ width: 140 }}
-                onSelect={setStart}
+                onSelect={onTimeRangeChange}
               >
                 <Select.Option value="-1h">Past Hour</Select.Option>
                 <Select.Option value="-1d">Past Day</Select.Option>
@@ -105,7 +125,7 @@ export const MetricProvider = ({
             >
               <Radio.Group
                 value={granularity}
-                onChange={(e) => setGranularity(e.target.value)}
+                onChange={(e) => onGranularityChange(e.target.value)}
               >
                 <Radio.Button value={Granularity.Hour}>Hour</Radio.Button>
                 <Radio.Button value={Granularity.Day}>Day</Radio.Button>

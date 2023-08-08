@@ -39,12 +39,17 @@ export class KafkaConsumerService
     topic: K,
     handler: (data: KafkaSchemas[K]) => Promise<void> | void
   ): Promise<Consumer> {
+    if (!this.kafkaConfig.consumer) {
+      throw new Error("Kafka consumer not initialized");
+    }
+
     const consumer = this.kafka.consumer(this.kafkaConfig.consumer);
     await consumer.connect();
     await consumer.subscribe({ topic: topic as string });
 
     const config: ConsumerRunConfig = {
       eachMessage: async (payload: EachMessagePayload) => {
+        if (!payload.message.value) return;
         const data = JSON.parse(payload.message.value.toString());
         await handler(data);
       },

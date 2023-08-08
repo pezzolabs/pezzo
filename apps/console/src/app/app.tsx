@@ -3,15 +3,15 @@ import * as reactRouterDom from "react-router-dom";
 import { hotjar } from "react-hotjar";
 import "antd/dist/reset.css";
 import "./styles.css";
+import "./form.css";
 
 import { ThemeProvider } from "./lib/providers/ThemeProvider";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/graphql";
 import { CurrentPromptProvider } from "./lib/providers/CurrentPromptContext";
-import { PromptTesterProvider } from "./lib/providers/PromptTesterContext";
-import { EnvironmentsPage } from "./pages/environments";
-import { PromptsPage } from "./pages/prompts";
-import { PromptPage } from "./pages/prompts/[promptId]";
+import { EnvironmentsPage } from "./pages/environments/EnvironmentsPage";
+import { PromptsPage } from "./pages/prompts/PromptsPage";
+import { PromptPage } from "./pages/prompts/PromptPage";
 import { initSuperTokens } from "./lib/auth/supertokens";
 import { SuperTokensWrapper } from "supertokens-auth-react";
 import { getSuperTokensRoutesForReactRouterDom } from "supertokens-auth-react/ui";
@@ -20,16 +20,17 @@ import { InfoPage } from "./pages/InfoPage";
 import { ProjectsPage } from "./pages/projects/ProjectsPage";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
 import { LayoutWrapper } from "./components/layout/LayoutWrapper";
-import { OnboardingPage } from "./pages/onboarding";
+import { OnboardingPage } from "./pages/organizations/onboarding";
 import { AuthProvider } from "./lib/providers/AuthProvider";
 import { ThirdpartyEmailPasswordComponentsOverrideProvider } from "supertokens-auth-react/recipe/thirdpartyemailpassword";
-import LogoSquare from "../assets/logo.svg";
 import LogoVertical from "../assets/logo-vertical.svg";
 import { OptionalIntercomProvider } from "./lib/providers/OptionalIntercomProvider";
 import { HOTJAR_SITE_ID, HOTJAR_VERSION } from "../env";
 import { OrgPage } from "./pages/organizations/OrgPage";
 import { AcceptInvitationPage } from "./pages/invitations/AcceptInvitationPage";
 import { LogoutPage } from "./pages/LogoutPage";
+import { ProjectPage } from "./pages/projects/ProjectPage";
+import { RequestsPage } from "./pages/requests/RequestsPage";
 
 initSuperTokens();
 
@@ -47,6 +48,8 @@ export const paths = {
   "/info": "/info",
   "/orgs/:orgId": "/orgs/:orgId",
   "/projects/:projectId": "/projects/:projectId",
+  "/projects/:projectId/overview": "/projects/:projectId/overview",
+  "/projects/:projectId/requests": "/projects/:projectId/reqeusts",
   "/projects/:projectId/prompts": "/projects/:projectId/prompts",
   "/projects/:projectId/prompts/:promptId":
     "/projects/:projectId/prompts/:promptId",
@@ -166,16 +169,26 @@ export function App() {
                     path={paths["/projects/:projectId"]}
                     element={
                       <CurrentPromptProvider>
-                        <PromptTesterProvider>
-                          <LayoutWrapper withSideNav={true}>
-                            <Outlet />
-                          </LayoutWrapper>
-                        </PromptTesterProvider>
+                        <LayoutWrapper withSideNav={true}>
+                          <Outlet />
+                        </LayoutWrapper>
                       </CurrentPromptProvider>
                     }
                   >
                     <Route
                       index
+                      path={paths["/projects/:projectId/"]}
+                      element={<PromptsPage />}
+                    />
+                    <Route
+                      path={"/projects/:projectId/overview"}
+                      element={<ProjectPage />}
+                    />
+                    <Route
+                      path={"/projects/:projectId/requests"}
+                      element={<RequestsPage />}
+                    />
+                    <Route
                       path={paths["/projects/:projectId/prompts"]}
                       element={<PromptsPage />}
                     />

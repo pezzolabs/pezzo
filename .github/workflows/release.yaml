@@ -115,7 +115,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        library: ["client", "integrations"]
+        library: ["client"]
     steps:
       - uses: actions/checkout@v2
         with:

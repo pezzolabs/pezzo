@@ -1,10 +1,9 @@
 import { Field, InputType, registerEnumType } from "@nestjs/graphql";
 
 export enum PromptExecutionMetricField {
-  total_cost = "total_cost",
+  totalCost = "totalCost",
+  totalTokens = "totalTokens",
   duration = "duration",
-  total_tokens = "total_tokens",
-  status = "status",
 }
 
 registerEnumType(PromptExecutionMetricField, {
@@ -13,7 +12,7 @@ registerEnumType(PromptExecutionMetricField, {
 
 export enum Aggregation {
   sum = "sum",
-  mean = "mean",
+  avg = "avg",
   min = "min",
   max = "max",
   count = "count",
