@@ -13,6 +13,7 @@ import { UsersService } from "../identity/users.service";
 import { RequestUser } from "../identity/users.types";
 import Session, { SessionContainer } from "supertokens-node/recipe/session";
 import { PinoLogger } from "../logger/pino-logger";
+import { updateRequestContext } from "../cls.utils";
 
 export enum AuthMethod {
   ApiKey = "ApiKey",
@@ -80,6 +81,12 @@ export class AuthGuard implements CanActivate {
           role: m.role,
         })),
       };
+      const eventContext = {
+        userId: reqUser.id,
+        organizationId: reqUser.orgMemberships[0].organizationId,
+      };
+      this.context.eventContext = eventContext;
+      updateRequestContext(eventContext);
 
       this.context.eventContext = {
         userId: reqUser.id,

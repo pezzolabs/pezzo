@@ -3,6 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { Analytics } from "@segment/analytics-node";
 import { AnalyticsEvent } from "./events.types";
 import { CONTEXT } from "@nestjs/graphql";
+import { getRequestContext } from "../cls.utils";
 
 export interface EventContextProps {
   userId?: string;
@@ -10,6 +11,13 @@ export interface EventContextProps {
   projectId?: string;
   promptId?: string;
 }
+
+const getId = (context: EventContextProps) => {
+  if (context.userId) return context.userId;
+  if (context.organizationId) return `org:${context.organizationId}`;
+  if (context.projectId) return `project:${context.projectId}`;
+  return "anonymous";
+};
 
 @Injectable()
 export class AnalyticsService {
@@ -46,11 +54,15 @@ export class AnalyticsService {
     event: keyof typeof AnalyticsEvent,
     properties?: Record<string, any> & EventContextProps
   ) => {
-    const { userId, organizationId, projectId, promptId } =
-      this.context.eventContext;
+    const eventContext = {
+      ...this.context.eventContext,
+      ...getRequestContext(),
+    };
+
+    const { organizationId, projectId, promptId } = eventContext;
     const eventPayload = {
       event,
-      userId: userId || organizationId ? `org:${organizationId}` : "anonymous",
+      userId: getId(eventContext),
       properties: {
         organizationId,
         projectId,

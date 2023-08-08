@@ -22,6 +22,7 @@ import { OpenSearchModule } from "./opensearch/opensearch.module";
 import { NotificationsModule } from "./notifications/notifications.module";
 import { getConfigSchema } from "./config/common-config-schema";
 import { PromptTesterModule } from "./prompt-tester/prompt-tester.module";
+import { ClsModule } from "./cls.module";
 
 const isCloud = process.env.PEZZO_CLOUD === "true";
 const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
@@ -71,6 +72,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
     MetricsModule,
     ReportingModule,
     ...(isCloud ? [NotificationsModule] : []),
+    ClsModule,
   ],
   controllers: [HealthController],
 })

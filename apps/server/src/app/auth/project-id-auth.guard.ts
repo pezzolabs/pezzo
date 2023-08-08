@@ -7,6 +7,7 @@ import {
 } from "@nestjs/common";
 import { PinoLogger } from "../logger/pino-logger";
 import { ProjectsService } from "../identity/projects.service";
+import { updateRequestContext } from "../cls.utils";
 
 @Injectable({ scope: Scope.REQUEST })
 export class ProjectIdAuthGuard implements CanActivate {
@@ -34,6 +35,7 @@ export class ProjectIdAuthGuard implements CanActivate {
     }
 
     req.projectId = projectId;
+    updateRequestContext({ projectId });
 
     this.logger.assign({
       projectId,
