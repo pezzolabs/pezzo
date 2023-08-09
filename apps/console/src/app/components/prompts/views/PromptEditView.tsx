@@ -24,7 +24,7 @@ import { usePromptTester } from "../../../lib/providers/PromptTesterContext";
 import { ConsumePromptModal } from "../ConsumePromptModal";
 import { trackEvent } from "../../../lib/utils/analytics";
 
-const FUNCTIONS_FEATURE_FLAG = true;
+const FUNCTIONS_FEATURE_FLAG = false;
 
 export const PromptEditView = () => {
   const { openTestModal } = usePromptTester();
