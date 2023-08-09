@@ -59,9 +59,8 @@ const getTableColumns = (
     columns.unshift({
       title: "",
       dataIndex: "isTestPrompt",
-      render: (isTestPrmopt: string) => (
-        <Tag color={colors.neutral[600]}>TEST</Tag>
-      ),
+      render: (isTestPrompt: boolean) =>
+        isTestPrompt && <Tag color={colors.neutral[600]}>TEST</Tag>,
       width: "40px",
       align: "center",
     });
