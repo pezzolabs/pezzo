@@ -70,5 +70,10 @@
     "twitter": "https://twitter.com/pezzoai",
     "linkedin": "https://linkedin.com/company/pezzo"
   },
-  "backgroundImage": "/background.png"
+  "backgroundImage": "/background.png",
+  "analytics": {
+    "gtm": {
+      "tagId": "GTM-M338ZV95"
+    }
+  }
 }
