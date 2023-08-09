@@ -9,6 +9,7 @@ on:
     paths-ignore:
       - "**/*.md"
       - ".github/workflows/release.yaml"
+      - "docs"
   push:
     branches:
       - "main"
@@ -16,6 +17,7 @@ on:
     paths-ignore:
       - "**/*.md"
       - ".github/workflows/release.yaml"
+      - "docs"
 
 env:
   NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
