@@ -12,6 +12,7 @@ import styled from "@emotion/styled";
 
 import { colors } from "../../lib/theme/colors";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
+import { ProjectCopy } from "../projects/ProjectCopy";
 
 const topMenuItems = [
   {
@@ -90,6 +91,7 @@ export const SideNavigation = () => {
         selectedKeys={selectedKeys.length ? selectedKeys : ["prompts"]}
         items={topMenuItems}
       />
+      <ProjectCopy />
       <DocsMenu />
     </SidebarContainer>
   );
