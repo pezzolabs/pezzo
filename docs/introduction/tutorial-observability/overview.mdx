@@ -9,14 +9,35 @@ This tutorial is for users who want to use Pezzo for observability and monitorin
 If you also want to use Pezzo to manage your prompts, version control and prompt deployment, check out the [Prompt Management tutorial](/introduction/tutorial-prompt-management/overview).
 </Tip>
 
+**Prefer a video tutorial?** We've prepared a 5-minute video for you! Check it out:
+
+<div style={{
+  position: "relative",
+  paddingBottom: "62.5%",
+  height: 0
+}}>
+  <iframe
+    src="https://www.loom.com/embed/dc207f2047444d48b78ef5911f0b9fa1?sid=55a9094a-5e46-4848-9874-563b3d7eb296"
+    frameborder="0"
+    webkitallowfullscreen
+    mozallowfullscreen
+    allowfullscreen
+    style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
+  ></iframe>
+</div>
+
 ## What you'll learn
+
 You're going to learn how to easily use Pezzo to supercharge your AI operations with monitoring and observability. It takes just a few lines of code!
 
 <Note>
-This tutorial assumes you already signed up to Pezzo Cloud and created a new project. If you haven't done so, please [sign up to Pezzo Cloud](https://app.pezzo.ai).
+  This tutorial assumes you already signed up to Pezzo Cloud and created a new
+  project. If you haven't done so, please [sign up to Pezzo
+  Cloud](https://app.pezzo.ai).
 </Note>
 
 ## Install depdendencies
+
 Install the Pezzo Client and the OpenAI SDK:
 
 ```bash
@@ -26,6 +47,7 @@ npm i @pezzo/client openai
 ## Making calls to OpenAI
 
 Here is a code example:
+
 ```ts app.ts
 import { Pezzo, PezzoOpenAIApi } from "@pezzo/client";
 import { Configuration } from "openai";
