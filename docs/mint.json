@@ -52,14 +52,9 @@
       ]
     },
     {
-      "group": "Pezzo Client (SDK)",
+      "group": "Pezzo SDK",
       "pages": [
-        "client/pezzo-client"
-      ]
-    },
-    {
-      "group": "Integrations",
-      "pages": [
+        "client/pezzo-client",
         "client/integrations/openai"
       ]
     }
