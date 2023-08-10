@@ -1,4 +1,4 @@
-import { PromptType } from "@prisma/client";
+import type { PromptType } from "@prisma/client";
 
 export type InjectPezzoProps<TSettings> = TSettings & {
   pezzo: Prompt<TSettings>;

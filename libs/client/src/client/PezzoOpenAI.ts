@@ -32,18 +32,15 @@ interface PezzoProps {
 export class PezzoOpenAIApi extends OpenAIApi {
   constructor(
     private readonly pezzo: Pezzo,
-    ...args: ConstructorParameters<typeof OpenAIApi>
+    configuration: ConstructorParameters<typeof OpenAIApi>[0]
   ) {
-    super(...args);
+    super(configuration);
   }
-
-  // @ts-expect-error Overriding the 2nd argument of the OpenAI createChatCompletion API
   override async createChatCompletion(
     _arg1: PezzoCreateChatCompletionRequest | CreateChatCompletionRequest,
-    pezzoOptions?: PezzoProps,
-    ...rest: Parameters<OpenAIApi["createChatCompletion"]>[1] extends infer P
-      ? P[]
-      : never[]
+    optionsOrPezzoProps?:
+      | Parameters<OpenAIApi["createChatCompletion"]>[1]
+      | PezzoProps
   ) {
     const arg1 = _arg1 as PezzoCreateChatCompletionRequest;
 
@@ -62,6 +59,15 @@ export class PezzoOpenAIApi extends OpenAIApi {
       ...(pezzoPrompt?.settings ?? {}),
       ...nativeOptions,
     };
+
+    let pezzoOptions: PezzoProps | undefined;
+
+    if (
+      "variables" in optionsOrPezzoProps ||
+      "properties" in optionsOrPezzoProps
+    ) {
+      pezzoOptions = optionsOrPezzoProps as PezzoProps;
+    }
 
     if (pezzoOptions?.variables) {
       const messages = interpolateVariablesRecursively<
@@ -84,7 +90,7 @@ export class PezzoOpenAIApi extends OpenAIApi {
     const requestTimestamp = new Date().toISOString();
 
     const baseReport = {
-      metadata: merge(baseMetadata, pezzoPrompt?.metadata), // TODO: merge pezzo metadata
+      metadata: merge(baseMetadata, pezzoPrompt?.metadata),
       properties: pezzoOptions?.properties,
       request: {
         timestamp: requestTimestamp,
@@ -93,9 +99,15 @@ export class PezzoOpenAIApi extends OpenAIApi {
     };
 
     try {
-      result = await super.createChatCompletion.call(
-        this,
-        ...[requestBody, ...rest.slice(1)]
+      result = await super.createChatCompletion(
+        {
+          ...(requestBody as OriginalCreateChatCompletionRequest),
+        },
+        "variables" in optionsOrPezzoProps
+          ? undefined
+          : (optionsOrPezzoProps as Parameters<
+              OpenAIApi["createChatCompletion"]
+            >[1])
       );
       const { _request, ...response } = result;
 
