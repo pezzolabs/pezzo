@@ -14,7 +14,7 @@
         "tsConfig": "libs/client/tsconfig.lib.json",
         "assets": [],
         "project": "libs/client/package.json",
-        "compiler": "swc",
+        "compiler": "tsc",
         "format": ["cjs", "esm"],
         "rollupConfig": ["libs/client/rollup.config.js"]
       }
