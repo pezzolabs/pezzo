@@ -32,9 +32,9 @@ interface PezzoProps {
 export class PezzoOpenAIApi extends OpenAIApi {
   constructor(
     private readonly pezzo: Pezzo,
-    ...args: ConstructorParameters<typeof OpenAIApi>
+    configuration: ConstructorParameters<typeof OpenAIApi>[0]
   ) {
-    super(...args);
+    super(configuration);
   }
   override async createChatCompletion(
     _arg1: PezzoCreateChatCompletionRequest | CreateChatCompletionRequest,
@@ -101,9 +101,7 @@ export class PezzoOpenAIApi extends OpenAIApi {
     try {
       result = await super.createChatCompletion(
         {
-          ...(requestBody as CreateChatCompletionRequest),
-          model: nativeOptions.model ?? pezzoPrompt?.settings.model,
-          messages: nativeOptions.messages ?? pezzoPrompt?.settings.messages,
+          ...(requestBody as OriginalCreateChatCompletionRequest),
         },
         "variables" in optionsOrPezzoProps
           ? undefined
