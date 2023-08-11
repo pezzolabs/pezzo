@@ -1,8 +1,11 @@
-import type { PromptType } from "@prisma/client";
+import { CreateChatCompletionRequest } from "openai";
 
 export type InjectPezzoProps<TSettings> = TSettings & {
   pezzo: Prompt<TSettings>;
 };
+
+export type PezzoCreateChatCompletionRequest =
+  InjectPezzoProps<CreateChatCompletionRequest>;
 
 type PrompContent =
   | { prompt: string }
@@ -16,7 +19,7 @@ export interface Prompt<TSettings = unknown> {
   metadata: {
     promptId: string;
     promptVersionSha: string;
-    type: PromptType;
+    type: "Prompt" | "Chat";
     isTestPrompt?: boolean;
   };
   settings: TSettings;

@@ -4,9 +4,9 @@ import {
   OpenAIApi,
 } from "openai";
 import {
-  InjectPezzoProps,
   ObservabilityReportMetadata,
   ReportData,
+  PezzoCreateChatCompletionRequest,
 } from "../types";
 import { Pezzo } from "./Pezzo";
 import { PromptExecutionType, Provider } from "@pezzo/types";
@@ -20,9 +20,6 @@ type CreateChatCompletionRequest = Omit<
   model?: OriginalCreateChatCompletionRequest["model"];
   messages?: OriginalCreateChatCompletionRequest["messages"];
 };
-
-export type PezzoCreateChatCompletionRequest =
-  InjectPezzoProps<CreateChatCompletionRequest>;
 
 interface PezzoProps {
   variables?: Record<string, string | number | boolean>;
@@ -38,9 +35,9 @@ export class PezzoOpenAIApi extends OpenAIApi {
   }
   override async createChatCompletion(
     _arg1: PezzoCreateChatCompletionRequest | CreateChatCompletionRequest,
-    optionsOrPezzoProps?:
+    optionsOrPezzoProps:
       | Parameters<OpenAIApi["createChatCompletion"]>[1]
-      | PezzoProps
+      | PezzoProps = {}
   ) {
     const arg1 = _arg1 as PezzoCreateChatCompletionRequest;
 
