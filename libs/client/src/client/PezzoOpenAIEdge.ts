@@ -103,6 +103,7 @@ export class PezzoOpenAIApiEdge extends OpenAIApi {
             OpenAIApi["createChatCompletion"]
           >[1])
     );
+    if (requestBody.stream) return result;
 
     const data = await result.json();
 
