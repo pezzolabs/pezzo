@@ -38,9 +38,9 @@ export class PezzoOpenAIApi extends OpenAIApi {
   }
   override async createChatCompletion(
     _arg1: PezzoCreateChatCompletionRequest | CreateChatCompletionRequest,
-    optionsOrPezzoProps?:
+    optionsOrPezzoProps:
       | Parameters<OpenAIApi["createChatCompletion"]>[1]
-      | PezzoProps
+      | PezzoProps = {}
   ) {
     const arg1 = _arg1 as PezzoCreateChatCompletionRequest;
 
