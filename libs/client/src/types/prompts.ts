@@ -1,5 +1,3 @@
-import type { PromptType } from "@prisma/client";
-
 export type InjectPezzoProps<TSettings> = TSettings & {
   pezzo: Prompt<TSettings>;
 };
@@ -16,7 +14,7 @@ export interface Prompt<TSettings = unknown> {
   metadata: {
     promptId: string;
     promptVersionSha: string;
-    type: PromptType;
+    type: "Prompt" | "Chat";
     isTestPrompt?: boolean;
   };
   settings: TSettings;
