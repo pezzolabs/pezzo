@@ -21,7 +21,7 @@ type CreateChatCompletionRequest = Omit<
   messages?: OriginalCreateChatCompletionRequest["messages"];
 };
 
-type PezzoCreateChatCompletionRequest =
+export type PezzoCreateChatCompletionRequest =
   InjectPezzoProps<CreateChatCompletionRequest>;
 
 interface PezzoProps {
