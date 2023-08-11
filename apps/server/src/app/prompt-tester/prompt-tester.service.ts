@@ -4,11 +4,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { TestPromptInput } from "../prompts/inputs/test-prompt.input";
-import {
-  Pezzo,
-  PezzoCreateChatCompletionRequest,
-  PezzoOpenAIApi,
-} from "@pezzo/client";
+import { Pezzo, PezzoOpenAIApi } from "@pezzo/client";
 import { Configuration } from "openai";
 import { ReportingService } from "../reporting/reporting.service";
 import { ConfigService } from "@nestjs/config";
@@ -50,7 +46,7 @@ export class PromptTesterService {
       })
     );
 
-    const mockRequest: PezzoCreateChatCompletionRequest = {
+    const mockRequest: any = {
       pezzo: {
         metadata: {
           promptId: testData.promptId,
