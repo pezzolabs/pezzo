@@ -1,8 +1,9 @@
 import {
   ChatCompletionRequestMessage,
   CreateChatCompletionRequest as OriginalCreateChatCompletionRequest,
+  Configuration,
   OpenAIApi,
-} from "openai";
+} from "openai-edge";
 import {
   InjectPezzoProps,
   ObservabilityReportMetadata,
@@ -29,11 +30,8 @@ interface PezzoProps {
   properties?: Record<string, string | number | boolean>;
 }
 
-export class PezzoOpenAIApi extends OpenAIApi {
-  constructor(
-    private readonly pezzo: Pezzo,
-    configuration: ConstructorParameters<typeof OpenAIApi>[0]
-  ) {
+export class PezzoOpenAIApiEdge extends OpenAIApi {
+  constructor(private readonly pezzo: Pezzo, configuration: Configuration) {
     super(configuration);
   }
   override async createChatCompletion(
@@ -77,10 +75,6 @@ export class PezzoOpenAIApi extends OpenAIApi {
       requestBody.messages = messages;
     }
 
-    let result;
-    let error;
-    let reportPayload: ReportData;
-
     const baseMetadata: Partial<ObservabilityReportMetadata> = {
       environment: this.pezzo.options.environment,
       provider: Provider.OpenAI,
@@ -98,36 +92,36 @@ export class PezzoOpenAIApi extends OpenAIApi {
       },
     };
 
-    try {
-      result = await super.createChatCompletion(
-        {
-          ...(requestBody as OriginalCreateChatCompletionRequest),
-        },
-        "variables" in optionsOrPezzoProps
-          ? undefined
-          : (optionsOrPezzoProps as Parameters<
-              OpenAIApi["createChatCompletion"]
-            >[1])
-      );
-      const { _request, ...response } = result;
+    let reportPayload: ReportData;
+    const result = await super.createChatCompletion(
+      {
+        ...(requestBody as OriginalCreateChatCompletionRequest),
+      },
+      "variables" in optionsOrPezzoProps
+        ? undefined
+        : (optionsOrPezzoProps as Parameters<
+            OpenAIApi["createChatCompletion"]
+          >[1])
+    );
 
+    const data = await result.json();
+
+    if (!result.ok) {
       reportPayload = {
         ...baseReport,
         response: {
           timestamp: new Date().toISOString(),
-          body: response.data ?? response.response.data,
-          status: response.status ?? response.response.status,
+          body: data,
+          status: result.status,
         },
       };
-    } catch (err) {
-      error = err;
-
+    } else {
       reportPayload = {
         ...baseReport,
         response: {
           timestamp: new Date().toISOString(),
-          body: err.data ?? err.response.data,
-          status: err.status ?? err.response.status,
+          body: data,
+          status: result.status,
         },
       };
     }
@@ -136,10 +130,6 @@ export class PezzoOpenAIApi extends OpenAIApi {
       await this.pezzo.reportPromptExecution(reportPayload);
     } catch (error) {
       console.error("Failed to report prompt execution", error);
-    }
-
-    if (error) {
-      throw error;
     }
 
     return result;
