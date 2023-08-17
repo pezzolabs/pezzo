@@ -150,29 +150,24 @@ npm i @pezzo/client openai
 Here is a code example:
 
 ```ts app.ts
-import { Pezzo, PezzoOpenAIApi } from "@pezzo/client";
-import { Configuration } from "openai";
+import { Pezzo, PezzoOpenAI } from "@pezzo/client";
 
 // Initialize the Pezzo client
-export const pezzo = new Pezzo({
-  apiKey: "<your Pezzo API key>",
-  projectId: "<your Pezzo project ID>",
+const pezzo = new Pezzo({
+  apiKey: "<Your Pezzo API key>",
+  projectId: "<Your Pezzo project ID>",
   environment: "Production",
 });
 
 // Initialize the OpenAI client
-const configuration = new Configuration({
-  apiKey: "<your OpenAI API key>",
-});
-
-export const openai = new PezzoOpenAIApi(pezzo, configuration);
+const openai = new PezzoOpenAI(pezzo);
 
 async function main() {
   // Get the deployed "GenerateFacts" prompt version
   const prompt = await pezzo.getPrompt("GenerateFacts");
 
   // Call the OpenAI API, passing the prompt as an argument. You can override parameters if you wish.
-  const response = await openai.createChatCompletion(prompt, {
+  const response = await openai.chat.completions.create(prompt, {
     variables: {
       // You can define variables that will be interpolated during execution.
       numFacts: 3,

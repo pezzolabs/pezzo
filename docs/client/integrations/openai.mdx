@@ -19,11 +19,10 @@ Ensure that you have the latest version of the Pezzo Client installed, as well a
   ```
 </CodeGroup>
 
-### Initialize Pezzo and PezzoOpenAIApi
+### Initialize Pezzo and PezzoOpenAI
 
 ```ts
-import { Pezzo, PezzoOpenAIApi } from "@pezzo/client";
-import { Configuration } from "openai";
+import { Pezzo, PezzoOpenAI } from "@pezzo/client";
 
 // Initialize the Pezzo client
 export const pezzo = new Pezzo({
@@ -32,17 +31,12 @@ export const pezzo = new Pezzo({
   environment: "Production",
 });
 
-// Initialize OpenAI
-const configuration = new Configuration({
-  apiKey: "<Your OpenAI API key>",
-});
-
-// Initialize the Pezzo OpenAI API
-export const openai = new PezzoOpenAIApi(pezzo, configuration);
+// Initialize the Pezzo OpenAI client
+export const openai = new PezzoOpenAI(pezzo, configuration);
 ```
 
 <Tip>
-  The `PezzoOpenAIApi` class extends the native `OpenAIApi` class. This ensures a seamless experience, and allows you to use all OpenAI features.
+  The `PezzoOpenAI` class wraps the native `OpenAI` class. This ensures a seamless experience, and allows you to use all OpenAI features.
 </Tip>
 
 You are now ready to interact with the OpenAI API through Pezzo, as you normally would. Let's give it a try!
@@ -74,7 +68,7 @@ Congratulations! You've benefitted from seamless prompt version management and r
 
 If you don't want to manage your prompts through Pezzo, you can still use Pezzo to make requests to OpenAI and benefit from Pezzo's [Observability features](platform/observability/overview).
 
-You will consume the make request to the OpenAI exactly as you normally would. The only difference is that you will use the `PezzoOpenAIApi` instance we created above. Here is an example:
+You will consume the make request to the OpenAI exactly as you normally would. The only difference is that you will use the `PezzoOpenAI` instance we created above. Here is an example:
 
 ```ts
 const response = await openai.createChatCompletion({
