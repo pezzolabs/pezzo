@@ -4,8 +4,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { TestPromptInput } from "../prompts/inputs/test-prompt.input";
-import { Pezzo, PezzoOpenAIApi } from "@pezzo/client";
-import { Configuration } from "openai";
+import { Pezzo, PezzoOpenAI } from "@pezzo/client";
 import { ReportingService } from "../reporting/reporting.service";
 import { ConfigService } from "@nestjs/config";
 import { RequestReport } from "../reporting/object-types/request-report.model";
@@ -39,12 +38,9 @@ export class PromptTesterService {
       reportPromptExecution: (data) => (promptExecutionData = data),
     };
 
-    const pezzoOpenAI = new PezzoOpenAIApi(
-      mockPezzo as unknown as Pezzo,
-      new Configuration({
-        apiKey: testerApiKey,
-      })
-    );
+    const pezzoOpenAI = new PezzoOpenAI(mockPezzo as unknown as Pezzo, {
+      apiKey: testerApiKey,
+    });
 
     const mockRequest: any = {
       pezzo: {
@@ -62,7 +58,7 @@ export class PromptTesterService {
     let error;
 
     try {
-      await pezzoOpenAI.createChatCompletion(mockRequest, {
+      await pezzoOpenAI.chat.completions.create(mockRequest, {
         variables: testData.variables,
       });
     } catch (err) {

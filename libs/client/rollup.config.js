@@ -40,7 +40,7 @@ module.exports = (config, context) => {
           types: "./libs/client/src/index.d.ts",
         }),
         additionalDependencies: {
-          ...localPkg.dependencies,
+          // ...localPkg.dependencies,
         },
       }),
       sizes({ details: true }),

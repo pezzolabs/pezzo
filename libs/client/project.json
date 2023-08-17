@@ -4,7 +4,7 @@
   "sourceRoot": "libs/client/src",
   "projectType": "library",
   "targets": {
-    "build": {
+    "rollup": {
       "dependsOn": ["^build"],
       "executor": "@nx/rollup:rollup",
       "outputs": ["{options.outputPath}"],
@@ -17,6 +17,13 @@
         "compiler": "tsc",
         "format": ["cjs", "esm"],
         "rollupConfig": ["libs/client/rollup.config.js"]
+      }
+    },
+    "build": {
+      "dependsOn": ["rollup"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node libs/client/scripts/postbuild.js"
       }
     },
     "publish": {

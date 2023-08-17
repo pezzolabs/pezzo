@@ -28,7 +28,7 @@ You only need to initialize the Pezzo client once, and then you can use it throu
 
 <CodeGroup>
 ```ts libs/pezzo.ts
-import { Pezzo } from "@pezzo/client";
+import { Pezzo, PezzoOpenAI } from "@pezzo/client";
 
 // Initialize the Pezzo client and export it
 export const pezzo = new Pezzo({
@@ -37,11 +37,8 @@ projectId: "<Your Pezzo project ID>",
 environment: "<Your desired environment>",
 });
 
-// Initialize OpenAI
-const configuration = new Configuration({
-apiKey: "<Your OpenAI API key>",
-});
-
+// Initialize PezzoOpenAI
+const openai = new PezzoOpenAI(pezzo);
 ```
 </CodeGroup>
 

@@ -19,11 +19,10 @@ Ensure that you have the latest version of the Pezzo Client installed, as well a
   ```
 </CodeGroup>
 
-### Initialize Pezzo and PezzoOpenAIApi
+### Initialize Pezzo and PezzoOpenAI
 
 ```ts
-import { Pezzo, PezzoOpenAIApi } from "@pezzo/client";
-import { Configuration } from "openai";
+import { Pezzo, PezzoOpenAI } from "@pezzo/client";
 
 // Initialize the Pezzo client
 export const pezzo = new Pezzo({
@@ -32,17 +31,12 @@ export const pezzo = new Pezzo({
   environment: "Production",
 });
 
-// Initialize OpenAI
-const configuration = new Configuration({
-  apiKey: "<Your OpenAI API key>",
-});
-
-// Initialize the Pezzo OpenAI API
-export const openai = new PezzoOpenAIApi(pezzo, configuration);
+// Initialize the Pezzo OpenAI client
+export const openai = new PezzoOpenAI(pezzo, configuration);
 ```
 
 <Tip>
-  The `PezzoOpenAIApi` class extends the native `OpenAIApi` class. This ensures a seamless experience, and allows you to use all OpenAI features.
+  The `PezzoOpenAI` class wraps the native `OpenAI` class. This ensures a seamless experience, and allows you to use all OpenAI features.
 </Tip>
 
 You are now ready to interact with the OpenAI API through Pezzo, as you normally would. Let's give it a try!
@@ -59,10 +53,10 @@ Below is an example of how you can use Pezzo to retrieve a prompt, and then use 
 const prompt = await pezzo.getPrompt("GenerateTasks");
 
 // Provide the prompt as-is to OpenAI
-const response = await openai.createChatCompletion(prompt);
+const response = await openai.chat.completions.create(prompt);
 
 // Or you can override specific properties if you wish
-const response = await openai.createChatCompletion({
+const response = await openai.chat.completions.create({
   ...prompt,
   model: "gpt-4",
 });
@@ -72,12 +66,12 @@ Congratulations! You've benefitted from seamless prompt version management and r
 
 #### Option 2: Without Prompt Management
 
-If you don't want to manage your prompts through Pezzo, you can still use Pezzo to make requests to OpenAI and benefit from Pezzo's [Observability features](features/observability/overview).
+If you don't want to manage your prompts through Pezzo, you can still use Pezzo to make requests to OpenAI and benefit from Pezzo's [Observability features](platform/observability/overview).
 
-You will consume the make request to the OpenAI exactly as you normally would. The only difference is that you will use the `PezzoOpenAIApi` instance we created above. Here is an example:
+You will consume the make request to the OpenAI exactly as you normally would. The only difference is that you will use the `PezzoOpenAI` instance we created above. Here is an example:
 
 ```ts
-const response = await openai.createChatCompletion({
+const response = await openai.chat.completions.create({
   model: "gpt-3.5-turbo",
   temperature: 0,
   messages: [
@@ -103,7 +97,7 @@ You can specify variables that will be interpolated by the Pezzo client before s
   <Tab title="With Prompt Management">
     ```ts
     const prompt = await pezzo.getPrompt("CheckAge");
-    const response = await openai.createChatCompletion(prompt, {
+    const response = await openai.chat.completions.create(prompt, {
       variables: {
         age: 22,
         country: "France"
@@ -113,7 +107,7 @@ You can specify variables that will be interpolated by the Pezzo client before s
   </Tab>
   <Tab title="Without Prompt Management">
     ```ts
-    const response = await openai.createChatCompletion({
+    const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       temperature: 0,
       messages: [
@@ -139,7 +133,7 @@ Notice the variables in the prompt. The Pezzo client will replace them with the 
 You can also specify custom properties that will be sent to Pezzo. This is useful if you want to add additional information to your request, such as the user ID, or the request ID. This information will be visible in the **Requests** page of your Pezzo project, and you will be able to filter requests based on these properties.
 
 ```ts
-const response = await openai.createChatCompletion({
+const response = await openai.chat.completions.create({
   ...
 }, {
   properties: {
