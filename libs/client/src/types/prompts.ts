@@ -1,11 +1,6 @@
-import { CreateChatCompletionRequest } from "openai";
-
-export type InjectPezzoProps<TSettings> = TSettings & {
-  pezzo: Prompt<TSettings>;
+export type PezzoCreateChatCompletionRequest = {
+  pezzo: Prompt;
 };
-
-export type PezzoCreateChatCompletionRequest =
-  InjectPezzoProps<CreateChatCompletionRequest>;
 
 type PrompContent =
   | { prompt: string }

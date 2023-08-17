@@ -50,26 +50,21 @@ npm i @pezzo/client openai
 Here is a code example:
 
 ```ts app.ts
-import { Pezzo, PezzoOpenAIApi } from "@pezzo/client";
-import { Configuration } from "openai";
+import { Pezzo, PezzoOpenAI } from "@pezzo/client";
 
 // Initialize the Pezzo client
-export const pezzo = new Pezzo({
-  apiKey: "<your Pezzo API key>",
-  projectId: "<your Pezzo project ID>",
+const pezzo = new Pezzo({
+  apiKey: "<Your Pezzo API key>",
+  projectId: "<Your Pezzo project ID>",
   environment: "Production",
 });
 
 // Initialize the OpenAI client
-const configuration = new Configuration({
-  apiKey: "<your OpenAI API key>",
-});
-
-export const openai = new PezzoOpenAIApi(pezzo, configuration);
+const openai = new PezzoOpenAI(pezzo);
 
 async function main() {
   // Make calls to the OpenAI API as you normally would!
-  const response = await openai.createChatCompletion(
+  const completion = await openai.chat.completions.create(
     {
       model: "gpt-3.5-turbo",
       temperature: 0,
@@ -92,11 +87,10 @@ async function main() {
       },
     }
   );
-
-  console.log("response", response);
 }
 
 main();
+
 ```
 
 [Click here to run this example on CodeSandbox](https://codesandbox.io/p/sandbox/pezzo-example-observability-6d2qp6?file=%2Fsrc%2Fapp.ts%3A1%2C1)
