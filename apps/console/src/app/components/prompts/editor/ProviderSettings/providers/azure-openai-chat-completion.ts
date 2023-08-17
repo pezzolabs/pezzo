@@ -1,7 +1,10 @@
-import { CreateChatCompletionRequest } from "openai";
+import OpenAI from "openai";
 import { FormSchema, ProviderSettingsDefinition } from "../types";
 
-type OpenAIProviderSettings = Omit<CreateChatCompletionRequest, "messages">;
+type OpenAIProviderSettings = Omit<
+  OpenAI.Chat.Completions.CompletionCreateParams,
+  "messages"
+>;
 
 const defaultSettings: OpenAIProviderSettings = {
   model: "gpt-35-turbo",

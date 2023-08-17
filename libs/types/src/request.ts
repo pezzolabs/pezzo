@@ -2,13 +2,7 @@ import { OpenAIToolkit } from "@pezzo/llm-toolkit";
 import { Provider } from "./provider.types";
 import { Type } from "class-transformer";
 import { AllPrimitiveTypes, Primitive, RecursiveObject } from "./ts-helpers";
-import {
-  CreateChatCompletionResponse,
-  CreateChatCompletionResponseChoicesInner,
-  CreateCompletionResponseUsage,
-  CreateChatCompletionRequest,
-  ChatCompletionRequestMessage,
-} from "openai";
+import OpenAI from "openai";
 import { PromptExecutionType } from "./prompt-execution-type";
 
 type ExtractModelNames<T> = T extends { model: infer M } ? M : never;
@@ -28,27 +22,27 @@ export class GenericObservabilityRequestResponseBody {
 }
 
 export class OpenAIObservabilityRequestBody
-  implements Partial<CreateChatCompletionRequest>
+  implements Partial<OpenAI.Chat.Completions.ChatCompletion>
 {
   model: AcceptedModels;
-  messages: ChatCompletionRequestMessage[];
+  messages: OpenAI.Chat.CompletionCreateParams["messages"];
   max_tokens: number;
   temperature: number;
   top_p: number;
 }
 
 export class OpenAIObservabilityResponseBody
-  implements CreateChatCompletionResponse
+  implements OpenAI.Chat.Completions.ChatCompletion
 {
   id: string;
   object: string;
   created: number;
   model: AcceptedModels;
-  choices: CreateChatCompletionResponseChoicesInner[];
+  choices: OpenAI.Chat.Completions.ChatCompletion["choices"];
   completion: string;
   stream: boolean;
   stop: string;
-  usage?: CreateCompletionResponseUsage;
+  usage?: OpenAI.Chat.Completions.ChatCompletion["usage"];
   error?: AllPrimitiveTypes;
 }
 

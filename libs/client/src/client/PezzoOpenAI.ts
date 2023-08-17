@@ -1,24 +1,20 @@
+import OpenAI from "openai";
+import { Pezzo } from "./Pezzo";
 import {
-  ChatCompletionRequestMessage,
-  CreateChatCompletionRequest as OriginalCreateChatCompletionRequest,
-  OpenAIApi,
-} from "openai";
-import {
+  PezzoCreateChatCompletionRequest,
   ObservabilityReportMetadata,
   ReportData,
-  PezzoCreateChatCompletionRequest,
 } from "../types";
-import { Pezzo } from "./Pezzo";
-import { PromptExecutionType, Provider } from "@pezzo/types";
-import { merge } from "../utils/helpers";
 import { interpolateVariablesRecursively } from "../utils";
+import { merge } from "../utils/helpers";
+import { PromptExecutionType, Provider } from "@pezzo/types";
 
-type CreateChatCompletionRequest = Omit<
-  OriginalCreateChatCompletionRequest,
+type OpenAIChatCompletionCreateParams = Omit<
+  OpenAI.Chat.CompletionCreateParamsNonStreaming,
   "model" | "messages"
 > & {
-  model?: OriginalCreateChatCompletionRequest["model"];
-  messages?: OriginalCreateChatCompletionRequest["messages"];
+  model?: OpenAI.Chat.CompletionCreateParams["model"];
+  messages?: OpenAI.Chat.CompletionCreateParams["messages"];
 };
 
 interface PezzoProps {
@@ -26,36 +22,53 @@ interface PezzoProps {
   properties?: Record<string, string | number | boolean>;
 }
 
-export class PezzoOpenAIApi extends OpenAIApi {
+export class PezzoOpenAI {
+  private openai: OpenAI;
+  chat: Chat;
+
   constructor(
     private readonly pezzo: Pezzo,
-    configuration: ConstructorParameters<typeof OpenAIApi>[0]
+    configuration?: ConstructorParameters<typeof OpenAI>[0]
   ) {
-    super(configuration);
+    this.openai = new OpenAI(configuration);
+    this.chat = new Chat(pezzo, this.openai);
   }
-  override async createChatCompletion(
-    _arg1: PezzoCreateChatCompletionRequest | CreateChatCompletionRequest,
+}
+
+class Chat {
+  completions: Completions;
+
+  constructor(pezzo: Pezzo, openai: OpenAI) {
+    this.completions = new Completions(pezzo, openai);
+  }
+}
+class Completions {
+  constructor(private readonly pezzo: Pezzo, private openai: OpenAI) {}
+
+  async create(
+    _arg1: PezzoCreateChatCompletionRequest | OpenAIChatCompletionCreateParams,
     optionsOrPezzoProps:
-      | Parameters<OpenAIApi["createChatCompletion"]>[1]
+      | Parameters<OpenAI["chat"]["completions"]["create"]>[1]
       | PezzoProps = {}
   ) {
     const arg1 = _arg1 as PezzoCreateChatCompletionRequest;
 
-    const pezzoPrompt = arg1.pezzo as any; // TODO: Fix this type;
+    const pezzoPrompt = arg1.pezzo as any; // TODO: Fix this type
     const nativeOptions = { ...arg1 };
     delete nativeOptions["pezzo"];
 
-    let managedMessages: ChatCompletionRequestMessage[] = [];
+    let managedMessages: OpenAI.Chat.CompletionCreateParams["messages"] = [];
 
     if (pezzoPrompt) {
       managedMessages = [{ role: "user", content: pezzoPrompt.content.prompt }];
     }
 
-    const requestBody: Partial<CreateChatCompletionRequest> = {
-      messages: managedMessages,
-      ...(pezzoPrompt?.settings ?? {}),
-      ...nativeOptions,
-    };
+    const requestBody: Partial<OpenAI.Chat.CompletionCreateParamsNonStreaming> =
+      {
+        messages: managedMessages,
+        ...(pezzoPrompt?.settings ?? {}),
+        ...nativeOptions,
+      };
 
     let pezzoOptions: PezzoProps | undefined;
 
@@ -68,13 +81,12 @@ export class PezzoOpenAIApi extends OpenAIApi {
 
     if (pezzoOptions?.variables) {
       const messages = interpolateVariablesRecursively<
-        ChatCompletionRequestMessage[]
+        OpenAI.Chat.CompletionCreateParams["messages"]
       >(requestBody.messages, pezzoOptions.variables);
-
       requestBody.messages = messages;
     }
 
-    let result;
+    let response;
     let error;
     let reportPayload: ReportData;
 
@@ -96,24 +108,23 @@ export class PezzoOpenAIApi extends OpenAIApi {
     };
 
     try {
-      result = await super.createChatCompletion(
+      response = await this.openai.chat.completions.create(
         {
-          ...(requestBody as OriginalCreateChatCompletionRequest),
+          ...(requestBody as OpenAI.Chat.CompletionCreateParamsNonStreaming),
         },
         "variables" in optionsOrPezzoProps
           ? undefined
           : (optionsOrPezzoProps as Parameters<
-              OpenAIApi["createChatCompletion"]
+              OpenAI["chat"]["completions"]["create"]
             >[1])
       );
-      const { _request, ...response } = result;
 
       reportPayload = {
         ...baseReport,
         response: {
           timestamp: new Date().toISOString(),
-          body: response.data ?? response.response.data,
-          status: response.status ?? response.response.status,
+          body: response,
+          status: 200,
         },
       };
     } catch (err) {
@@ -123,8 +134,8 @@ export class PezzoOpenAIApi extends OpenAIApi {
         ...baseReport,
         response: {
           timestamp: new Date().toISOString(),
-          body: err.data ?? err.response.data,
-          status: err.status ?? err.response.status,
+          body: err.error,
+          status: err.status,
         },
       };
     }
@@ -139,6 +150,6 @@ export class PezzoOpenAIApi extends OpenAIApi {
       throw error;
     }
 
-    return result;
+    return response;
   }
 }
