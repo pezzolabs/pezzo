@@ -29,13 +29,7 @@ export const TypeScriptOpenAIIntegrationTutorial = () => {
   const API_KEY = pezzoApiKeysData?.apiKeys[0].id;
 
   const { project } = useCurrentProject();
-  const codeSetupClients = `import { Pezzo, PezzoOpenAIApi } from "@pezzo/client";
-import { Configuration } from "openai";
-
-// Initialize the OpenAI client
-const configuration = new Configuration({
-  apiKey: "<YOUR_OPENAI_API_KEY>"
-});
+  const codeSetupClients = `import { Pezzo, PezzoOpenAI } from "@pezzo/client";
 
 // Initialize the Pezzo client
 export const pezzo = new Pezzo({
@@ -44,18 +38,18 @@ export const pezzo = new Pezzo({
   environment: "Production", // Your desired environment
 });
 
-// Create a Pezzo-aware OpenAI client
-const openai = new PezzoOpenAIApi(pezzo, configuration);
+// Initialize the PezzoOpenAI client
+const openai = new PezzoOpenAI(pezzo);
 `;
 
   const variablesString = getVariablesString(variables);
 
   const codeWithPromptManagement = `${codeSetupClients}
-// Fetch the prompt payload from Pezzo
+// Fetch the prompt from Pezzo
 const prompt = await pezzo.getPrompt("${prompt.name}");
 
 // Use the OpenAI API as you normally would
-const result = await openai.createChatCompletion(prompt${variablesString});
+const response = await openai.chat.completions.create(prompt${variablesString});
 `;
 
   return (
