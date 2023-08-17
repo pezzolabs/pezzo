@@ -27,7 +27,7 @@ export class PezzoOpenAI {
   chat: Chat;
 
   constructor(
-    private readonly pezzo: Pezzo,
+    pezzo: Pezzo,
     configuration?: ConstructorParameters<typeof OpenAI>[0]
   ) {
     this.openai = new OpenAI(configuration);
