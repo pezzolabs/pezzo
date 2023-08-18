@@ -48,7 +48,7 @@ export class ReportingService {
       organizationId: ownership.organizationId,
       projectId: ownership.projectId,
       reportId,
-      isTestReport: dto.metadata.isTestReport as boolean,
+      isTestPrompt: dto.metadata.isTestPrompt as boolean,
       promptId: dto.metadata.promptId as string,
     });
 
