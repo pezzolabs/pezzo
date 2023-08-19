@@ -1,15 +1,4 @@
 <p align="center">
-  <img src=".github/assets/logo-square.svg" width="180px">
-  <br />
-  <strong>
-  <br />
-  Pezzo is an open-source AI development toolkit designed to streamline prompt design, version management, publishing, collaboration, troubleshooting, observability and more. Our mission is to empower individuals and teams to harness the power of AI with confidence.
-  </strong>
-  <br />
-</p>
-
-<br />
-<p align="center">
   <a href="https://bit.ly/pezzo-demo-github" target="_blank">
   <img src=".github/assets/banner.png" width="900px">
 </p>
@@ -18,10 +7,6 @@
   <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a69f118df70ad7828d4_icon_clyde_blurple_RGB.svg" width="40px" style="margin-bottom: 10px;">
   <br />
   <a href="https://discord.gg/h5nBW5ySqQ">Join Pezzo on Discord</a>
-</p>
-
-<p align="center">
-  <a href="https://forms.gle/dg7fXnG5WKkeAUb59"><strong>Click here to sign up for early access to Pezzo Cloud! 🌩️</strong></a>
 </p>
 
 <p align="center">
@@ -47,7 +32,7 @@
 
 💰 **Cost Transparency**: Gain comprehensive cost transparency across all prompts and AI models.
 
-💡 **Simplified Integration:** Reduce code overhead by 90% by consuming your AI prompts using the Pezzo Client, regardless of the model provider.
+💡 **Simplified Integration:** It takes just two line of code to get started with Pezzo.
 
 # Documentation
 
