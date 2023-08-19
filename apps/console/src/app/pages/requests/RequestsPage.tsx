@@ -118,8 +118,7 @@ export const RequestsPage = () => {
   return (
     <div>
       <Space direction="vertical" style={{ width: "100%" }}>
-        <Typography.Title level={4}>Requests</Typography.Title>
-        <Divider style={{ margin: 0 }} />
+        <Typography.Title level={2}>Requests</Typography.Title>
         <RequestFilters requests={tableData} />
         <Drawer
           title="Request Details"

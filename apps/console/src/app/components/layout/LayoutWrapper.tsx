@@ -1,14 +1,16 @@
-import { Breadcrumb, Layout, theme } from "antd";
+import { Breadcrumb, Col, Layout, Row, theme } from "antd";
 import { SideNavigation } from "./SideNavigation";
 import styled from "@emotion/styled";
 import { Header } from "./Header";
 import { useBreadcrumbItems } from "../../lib/hooks/useBreadcrumbItems";
-import { colors } from "../../lib/theme/colors";
+import { ProjectCopy } from "../projects/ProjectCopy";
+import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
+import { useRef } from "react";
 
 const StyledContent = styled(Layout.Content)`
   padding: 18px;
-  max-width: 1280px;
-  margin-inline: auto;
+  margin-inline: 24px;
 
   max-height: calc(100vh - 64px);
   overflow-y: auto;
@@ -37,6 +39,7 @@ export const LayoutWrapper = ({
 }: Props) => {
   const { token } = theme.useToken();
   const breadcrumbItems = useBreadcrumbItems();
+  const location = useLocation();
 
   return (
     <Layout
@@ -49,16 +52,36 @@ export const LayoutWrapper = ({
       {withHeader && <Header />}
       <div style={{ display: "flex", flexDirection: "row", height: "100%" }}>
         {withSideNav && <SideNavigation />}
+
         <StyledContent>
-          {withBreadcrumbs && (
-            <Breadcrumb
-              items={breadcrumbItems}
-              style={{
-                marginBottom: token.marginLG,
-              }}
-            />
-          )}
-          {children}
+          <Row gutter={[24, 24]}>
+            <Col span={18}>
+              {withBreadcrumbs && (
+                <Breadcrumb
+                  items={breadcrumbItems}
+                  style={{
+                    marginBottom: token.marginLG,
+                  }}
+                />
+              )}
+            </Col>
+            <Col
+              span={6}
+              style={{ display: "flex", justifyContent: "flex-end" }}
+            >
+              <ProjectCopy />
+            </Col>
+          </Row>
+
+          <motion.div
+            key={location.pathname}
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -10, opacity: 0 }}
+            transition={{ duration: 0.1 }}
+          >
+            {children}
+          </motion.div>
         </StyledContent>
       </div>
     </Layout>
