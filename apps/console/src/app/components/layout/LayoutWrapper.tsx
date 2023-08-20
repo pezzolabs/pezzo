@@ -6,7 +6,7 @@ import { useBreadcrumbItems } from "../../lib/hooks/useBreadcrumbItems";
 import { ProjectCopy } from "../projects/ProjectCopy";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
-import { useRef } from "react";
+import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 
 const StyledContent = styled(Layout.Content)`
   padding: 18px;
@@ -38,6 +38,7 @@ export const LayoutWrapper = ({
   withBreadcrumbs = true,
 }: Props) => {
   const { token } = theme.useToken();
+  const { project } = useCurrentProject();
   const breadcrumbItems = useBreadcrumbItems();
   const location = useLocation();
 
@@ -69,7 +70,7 @@ export const LayoutWrapper = ({
               span={6}
               style={{ display: "flex", justifyContent: "flex-end" }}
             >
-              <ProjectCopy />
+              {project && <ProjectCopy />}
             </Col>
           </Row>
 
