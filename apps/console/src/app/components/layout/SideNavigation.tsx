@@ -1,6 +1,4 @@
-import {
-  ChatBubbleBottomCenterIcon,
-} from "@heroicons/react/24/outline";
+import { ChatBubbleBottomCenterIcon } from "@heroicons/react/24/outline";
 import { Menu } from "antd";
 import { useMemo, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
