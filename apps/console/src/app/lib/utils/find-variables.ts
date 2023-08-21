@@ -5,7 +5,5 @@ export function findVariables(text: string): string[] {
   const foundVariables = matches
     ? matches.map((match) => match.replace(/[{}]/g, ""))
     : [];
-  return Array.from(new Set(foundVariables)).sort((a, b) =>
-    a.toLowerCase() > b.toLowerCase() ? 1 : -1
-  );
+  return Array.from(new Set(foundVariables));
 }

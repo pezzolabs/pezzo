@@ -104,18 +104,6 @@ export const RequestDetails = (props: Props) => {
       description: ms(props.calculated.duration),
     },
     {
-      title: "Properties",
-      description: props.properties ? (
-        <Card size="small">
-          <pre>{JSON.stringify(props.properties, null, 2)}</pre>
-        </Card>
-      ) : (
-        <Typography.Text italic type="secondary">
-          No properties specified
-        </Typography.Text>
-      ),
-    },
-    {
       title: "Display mode",
       description: (
         <Segmented
@@ -157,6 +145,20 @@ export const RequestDetails = (props: Props) => {
           </List.Item>
         )}
       />
+      <br />
+      <Space direction="vertical" style={{ width: "100%" }}>
+        <Typography.Text strong>Properties</Typography.Text>
+        {props.properties ? (
+          <Card size="small" style={{ maxWidth: "100%" }}>
+            <pre>{JSON.stringify(props.properties, null, 2)}</pre>
+          </Card>
+        ) : (
+          <Typography.Text italic type="secondary">
+            No properties specified
+          </Typography.Text>
+        )}
+      </Space>
+      <br />
       <br />
       {selectedMode === "json" && (
         <RequestResponseViewJsonView request={request} response={response} />
