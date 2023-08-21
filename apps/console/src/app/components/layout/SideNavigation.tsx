@@ -1,34 +1,31 @@
-import {
-  BoltIcon,
-  ChartBarIcon,
-  QueueListIcon,
-  ServerStackIcon,
-  DocumentMagnifyingGlassIcon,
-} from "@heroicons/react/24/solid";
+import { ChatBubbleBottomCenterIcon } from "@heroicons/react/24/outline";
 import { Menu } from "antd";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
 
-import { colors } from "../../lib/theme/colors";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
-import { ProjectCopy } from "../projects/ProjectCopy";
+import {
+  AcademicCapIcon,
+  CubeIcon,
+  ServerIcon,
+} from "@heroicons/react/24/outline";
 
 const topMenuItems = [
   {
     key: "prompts",
     label: "Prompts",
-    icon: <BoltIcon height={18} />,
+    icon: <CubeIcon height={18} />,
   },
   {
     key: "requests",
     label: "Requests",
-    icon: <QueueListIcon height={18} width={18} />,
+    icon: <ChatBubbleBottomCenterIcon height={18} width={18} />,
   },
   {
     key: "environments",
     label: "Environments",
-    icon: <ServerStackIcon height={18} />,
+    icon: <ServerIcon height={18} />,
   },
 ];
 
@@ -39,7 +36,6 @@ const BaseMenu = styled(Menu)`
   border-right: 1px solid red;
 `;
 const SidebarContainer = styled.div`
-  border-inline-end: 1px solid ${colors.neutral["800"]};
   height: 100%;
 
   display: flex;
@@ -51,22 +47,11 @@ const TopMenu = styled(BaseMenu)`
   flex: 100%;
 `;
 
-const DocsMenu = () => {
-  return (
-    <BaseMenu>
-      <Menu.Item key="docs" icon={<DocumentMagnifyingGlassIcon height={18} />}>
-        <a href="https://docs.pezzo.ai/" target="_blank">
-          <span>Read Docs</span>
-        </a>
-      </Menu.Item>
-    </BaseMenu>
-  );
-};
-
 export const SideNavigation = () => {
   const { project } = useCurrentProject();
   const location = useLocation();
   const navigate = useNavigate();
+  const [isCollapsed] = useState(true);
 
   const handleTopMenuClick = (item) => {
     navigate(`/projects/${project.id}/${item.key}`);
@@ -86,13 +71,21 @@ export const SideNavigation = () => {
   return (
     <SidebarContainer>
       <TopMenu
+        mode="inline"
         onClick={handleTopMenuClick}
         defaultSelectedKeys={["prompts"]}
         selectedKeys={selectedKeys.length ? selectedKeys : ["prompts"]}
         items={topMenuItems}
+        inlineCollapsed={isCollapsed}
       />
-      <ProjectCopy />
-      <DocsMenu />
+      {/* Bottom Menu */}
+      <BaseMenu inlineCollapsed={isCollapsed} mode="inline">
+        <Menu.Item key="docs" icon={<AcademicCapIcon height={18} />}>
+          <a href="https://docs.pezzo.ai/" target="_blank" rel="noreferrer">
+            <span>Docs</span>
+          </a>
+        </Menu.Item>
+      </BaseMenu>
     </SidebarContainer>
   );
 };

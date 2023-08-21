@@ -1,7 +1,6 @@
-import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
+import { ArrowRightCircleIcon, CubeIcon } from "@heroicons/react/24/outline";
 import { Card, Col, Row, Typography } from "antd";
 import { css } from "@emotion/css";
-import { BoltIcon } from "@heroicons/react/24/solid";
 import { colorPrimary } from "../../lib/theme/ant-theme";
 
 interface Props {
@@ -21,7 +20,7 @@ export const PromptListItem = ({ name, onClick }: Props) => {
               padding: 4px;
             `}
           >
-            <BoltIcon height={"80%"} width={"80%"} color={colorPrimary} />
+            <CubeIcon height={"80%"} width={"80%"} color={colorPrimary} />
           </div>
         </Col>
         <Col flex="auto">
