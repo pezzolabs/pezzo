@@ -52,21 +52,15 @@
 # ✨ Features
 
 <p align="center">
-    <img width="49%" src="./.github/assets/features/no-blind-spots.png" alt="observability-and-monitoring"/>
-&nbsp;
-    <img width="49%" src="./.github/assets/features/version-control.png" alt="version-control"/>
+    <img width="99%" src="./.github/assets/features/features-1.png"/>
 </p>
 
 <p align="center">
-    <img width="49%" src="./.github/assets/features/easy-integration.png" alt="easy-integration"/>
-&nbsp;
-    <img width="49%" src="./.github/assets/features/troubleshoot.png" alt="troubleshooting"/>
+    <img width="99%" src="./.github/assets/features/features-2.png"/>
 </p>
 
 <p align="center">
-    <img width="49%" src="./.github/assets/features/prompt-engineering.png" alt="prompt-engineering"/>
-&nbsp;
-    <img width="49%" src="./.github/assets/features/open-source.png" alt="open-source"/>
+    <img width="99%" src="./.github/assets/features/features-3.png"/>
 </p>
 
 # Documentation
