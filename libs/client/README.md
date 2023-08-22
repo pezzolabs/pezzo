@@ -38,10 +38,12 @@ The Pezzo Documentation contains useful information on how to use the Pezzo clie
 [Check out the Pezzo Documentation](https://pezzo.cc/3YILPCw)
 
 ## Learn more
+
 - 💡 [What is Pezzo?](https://docs.pezzo.ai/introduction/what-is-pezzo)
 - 🕹️ [Tutorial: Prompt Management](https://docs.pezzo.ai/introduction/tutorial-prompt-management/overview)
 - 📈 [Tutorial: Observability](https://docs.pezzo.ai/introduction/tutorial-observability/overview)
 - 📚 [Pezzo SDK Documentation](https://docs.pezzo.ai/client/pezzo-client)
+
 ## License
 
 The `@pezzo/client` library is provided under the Apache 2.0 licesnse.
