@@ -1,15 +1,4 @@
-<p align="center">
-
-  <h1 align="center">
-  <a href="https://pezzo.ai/#gh-light-mode-only" target="_blank">
-    <img src="https://cdn.pezzo.ai/logo-light-mode.svg" alt="logo" width="150">
-  </a>
-
-  <a href="https://pezzo.ai/#gh-dark-mode-only" target="_blank">
-    <img src="https://cdn.pezzo.ai/logo-dark-mode.svg"" alt="logo" width="150">
-  </a>
-  </h1>
-</p>
+# Pezzo Client
 
 <p align="center">
   <strong>
@@ -32,8 +21,6 @@
   </a>
 </p>
 
-# Pezzo Client
-
 ## Installation
 
 To use the Pezzo client with OpenAI:
@@ -50,6 +37,11 @@ The Pezzo Documentation contains useful information on how to use the Pezzo clie
 
 [Check out the Pezzo Documentation](https://pezzo.cc/3YILPCw)
 
+## Learn more
+- 💡 [What is Pezzo?](https://docs.pezzo.ai/introduction/what-is-pezzo)
+- 🕹️ [Tutorial: Prompt Management](https://docs.pezzo.ai/introduction/tutorial-prompt-management/overview)
+- 📈 [Tutorial: Observability](https://docs.pezzo.ai/introduction/tutorial-observability/overview)
+- 📚 [Pezzo SDK Documentation](https://docs.pezzo.ai/client/pezzo-client)
 ## License
 
 The `@pezzo/client` library is provided under the Apache 2.0 licesnse.
