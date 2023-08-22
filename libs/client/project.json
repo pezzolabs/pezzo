@@ -12,11 +12,15 @@
         "outputPath": "dist/libs/client",
         "main": "libs/client/src/index.ts",
         "tsConfig": "libs/client/tsconfig.lib.json",
-        "assets": [],
         "project": "libs/client/package.json",
         "compiler": "tsc",
         "format": ["cjs", "esm"],
         "rollupConfig": ["libs/client/rollup.config.js"]
+      },
+      "configurations": {
+        "watch": {
+          "watch": true
+        }
       }
     },
     "build": {
