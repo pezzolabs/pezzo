@@ -3,6 +3,10 @@ const generatePackageJson = require("rollup-plugin-generate-package-json");
 const commonjs = require("@rollup/plugin-commonjs");
 const sizes = require("rollup-plugin-sizes");
 const typescript2 = require("rollup-plugin-typescript2");
+const copy = require("rollup-plugin-copy");
+
+const LIB_PATH = `libs/client`;
+const DIST_PATH = `dist/libs/client`;
 
 module.exports = (config, context) => {
   function isExternal(moduleName) {
@@ -42,6 +46,18 @@ module.exports = (config, context) => {
         additionalDependencies: {
           // ...localPkg.dependencies,
         },
+      }),
+      copy({
+        targets: [
+          {
+            src: "./LICENSE",
+            dest: DIST_PATH,
+          },
+          {
+            src: path.resolve(LIB_PATH, "README.md"),
+            dest: DIST_PATH,
+          },
+        ],
       }),
       sizes({ details: true }),
     ],

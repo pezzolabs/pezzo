@@ -2,11 +2,11 @@
 
   <h1 align="center">
   <a href="https://pezzo.ai/#gh-light-mode-only" target="_blank">
-    <img src="./.github/assets/logo-light-mode.svg" alt="logo" width="150">
+    <img src="https://cdn.pezzo.ai/logo-light-mode.svg" alt="logo" width="150">
   </a>
 
   <a href="https://pezzo.ai/#gh-dark-mode-only" target="_blank">
-    <img src="./.github/assets/logo-dark-mode.svg" alt="logo" width="150">
+    <img src="https://cdn.pezzo.ai/logo-dark-mode.svg"" alt="logo" width="150">
   </a>
   </h1>
 </p>
@@ -16,13 +16,13 @@
     Pezzo is the open-source LLMOps platform built for developers and teams. In just two lines of code, you can seamlessly troubleshoot your AI operations, collaborate and manage your prompts in one place, and instantly deploy changes to any environment.
   </strong><br/><br/>
   <a href="https://pezzo.cc/discord" target="_blank">
-    <img src="./.github/assets/join-discord-button.png" height="32" />
+    <img src="https://cdn.pezzo.ai/discord-button.png" height="32" />
   </a>&nbsp;
   <a href="https://pezzo.cc/3qzMpGb" target="_blank">
-    <img src="./.github/assets/read-the-docs-button.png" height="32" />
+    <img src="https://cdn.pezzo.ai/read-the-docs-button.png"" height="32" />
   </a>&nbsp;
   <a href="https://pezzo.cc/3qy415j" target="_blank">
-    <img src="./.github/assets/pezzo-cloud-button.png" height="32" />
+    <img src="https://cdn.pezzo.ai/pezzo-cloud-button.png"" height="32" />
   </a>&nbsp;
 </p>
 
@@ -41,7 +41,7 @@
 
 <p align="center">
   <a href="https://pezzo.cc/demo-video-gh" target="_blank">
-  <img src=".github/assets/banner-with-play-button.png" width="900px">
+  <img src="https://cdn.pezzo.ai/banner-with-play-button.png" width="900px">
   </a>
 </p>
 
