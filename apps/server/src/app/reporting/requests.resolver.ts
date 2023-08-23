@@ -53,8 +53,6 @@ export class RequestReportsResolver {
         sort: data.sort,
       });
 
-      console.log("response", response);
-
       return {
         data: response.body.hits.hits.map((hit) => hit._source),
         pagination: {

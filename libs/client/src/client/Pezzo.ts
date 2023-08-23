@@ -88,4 +88,50 @@ export class Pezzo {
       console.warn("Could not report prompt execution", json);
     }
   }
+
+  async fetchCachedRequest(request: object): Promise<any | null> {
+    const url = new URL(`${this.options.serverUrl}/api/cache/v1/request`);
+    url.searchParams.append(
+      "request",
+      Buffer.from(JSON.stringify(request)).toString("base64")
+    );
+
+    const response = await fetch(url.toString(), {
+      headers: {
+        "Content-Type": "application/json",
+        "x-pezzo-api-key": this.options.apiKey,
+      },
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      const json = await response.json();
+      console.warn("Could not fetch request fro mcache", json);
+    }
+
+    return data;
+  }
+
+  async cacheRequest(request: object, _response: object): Promise<void> {
+    const response = await fetch(
+      `${this.options.serverUrl}/api/cache/v1/request`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-pezzo-api-key": this.options.apiKey,
+          "x-pezzo-project-id": this.options.projectId,
+        },
+        body: JSON.stringify({
+          request,
+          response: _response,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const json = await response.json();
+      console.warn("Could not cache request", json);
+    }
+  }
 }
