@@ -82,6 +82,7 @@
     "react-router-dom": "6.11.2",
     "react-use-intercom": "^5.1.4",
     "recharts": "^2.5.0",
+    "redis": "^4.6.8",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.0.0",
     "sha256": "^0.2.0",

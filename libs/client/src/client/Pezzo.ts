@@ -1,5 +1,5 @@
 import fetch from "cross-fetch";
-import { ReportData } from "../types";
+import { FetchCachedRequestResult, ReportData } from "../types";
 import { Prompt } from "../types/prompts";
 
 export interface PezzoClientOptions {
@@ -89,7 +89,9 @@ export class Pezzo {
     }
   }
 
-  async fetchCachedRequest(request: object): Promise<any | null> {
+  async fetchCachedRequest(
+    request: object
+  ): Promise<FetchCachedRequestResult | null> {
     const url = new URL(`${this.options.serverUrl}/api/cache/v1/request`);
     url.searchParams.append(
       "request",
@@ -100,6 +102,7 @@ export class Pezzo {
       headers: {
         "Content-Type": "application/json",
         "x-pezzo-api-key": this.options.apiKey,
+        "x-pezzo-project-id": this.options.projectId,
       },
     });
 

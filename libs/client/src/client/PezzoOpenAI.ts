@@ -167,20 +167,19 @@ class Completions {
       }
     }
 
-    const promises = [];
-
-    if (
+    const shouldWriteToCache =
       pezzoOptions.cache &&
       reportPayload.cacheHit === false &&
-      reportPayload.response.status === 200
-    ) {
-      promises.push(this.pezzo.cacheRequest(requestBody, response));
-    }
+      reportPayload.response.status === 200;
 
-    promises.push(this.pezzo.reportPromptExecution(reportPayload));
+    const reportRequest = this.pezzo.reportPromptExecution(reportPayload);
 
     try {
-      await Promise.all(promises);
+      await Promise.all(
+        shouldWriteToCache
+          ? [reportRequest, this.pezzo.cacheRequest(requestBody, response)]
+          : [reportRequest]
+      );
     } catch (error) {
       console.error("Failed to report prompt execution", error);
     }
