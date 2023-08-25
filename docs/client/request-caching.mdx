@@ -1,0 +1,46 @@
+---
+title: "Request Caching"
+---
+
+Pezzo provides you with out-of-the-box request caching capabilities. Caching is useful in several scenarios:
+- Your LLM requests are relatively static
+- Your LLM requests take a long time to execute
+- Your LLM requests are expensive
+
+Utilizing caching can sometimes reduce your development costs and execution time by over 90%!
+
+## Usage
+
+To enable caching, simply set `cache: enabled` in the Pezzo Options parameter. Here is an example:
+
+```ts
+const response = await openai.chat.completions.create({
+  model: "gpt-3.5-turbo",
+  messages: [
+    {
+      role: "user",
+      message: "Hello, how are you?"
+    }
+  ]
+}, {
+  cache: true
+});
+```
+
+## Cached Requests in the Console
+
+Cached requests will will be marked in the **Requests** tab in the Pezzo Console:
+
+<Frame style={{ maxWidth: 600 }}>
+  <img src="/client/cache-requests-list.png" />
+</Frame>
+
+When inspecting requests, you will see whether cache was enabled, and whether there was a cache hit or miss:
+
+<Frame style={{ maxWidth: 500 }}>
+  <img src="/client/cache-request-details.png" />
+</Frame>
+
+## Limitations
+
+Requests will be cached for 3 days by default. This is currently not configurable.
