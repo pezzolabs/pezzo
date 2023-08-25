@@ -1,4 +1,4 @@
-import { IsObject, IsOptional } from "class-validator";
+import { IsBoolean, IsObject, IsOptional } from "class-validator";
 import {
   Provider,
   ObservabilityReportProperties,
@@ -23,4 +23,12 @@ export class ReportRequestDto<
 
   @IsObject()
   response: ObservabilityResponse<TProviderType>;
+
+  @IsOptional()
+  @IsBoolean()
+  cacheEnabled?: boolean = false;
+
+  @IsOptional()
+  @IsBoolean()
+  cacheHit?: boolean = null;
 }

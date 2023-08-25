@@ -99,6 +99,12 @@ services:
     networks:
       - opensearch-net
 
+  redis-stack-server:
+    image: redis/redis-stack-server:7.2.0-v0
+    container_name: redis-stack-server
+    ports:
+      - "6379:6379"
+
 volumes:
   postgres_data: ~
   opensearch-data1:

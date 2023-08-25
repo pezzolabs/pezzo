@@ -24,4 +24,6 @@ export interface ReportRequestResponse<
   response: ObservabilityResponse<TProviderType>;
   reportId: string;
   calculated: Record<string, number>;
+  cacheEnabled?: boolean;
+  cacheHit?: boolean;
 }

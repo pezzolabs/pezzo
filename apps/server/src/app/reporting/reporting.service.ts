@@ -28,7 +28,8 @@ export class ReportingService {
     const reportId = randomUUID();
     const { report, calculated } = buildRequestReport(dto);
 
-    const { properties, metadata, request, response } = report;
+    const { properties, metadata, request, response, cacheEnabled, cacheHit } =
+      report;
 
     await this.openSearchService.client.index({
       index: OpenSearchIndex.Requests,
@@ -41,6 +42,8 @@ export class ReportingService {
         metadata,
         request,
         response,
+        cacheEnabled,
+        cacheHit,
       },
     });
 
@@ -50,6 +53,7 @@ export class ReportingService {
       reportId,
       isTestPrompt: dto.metadata.isTestPrompt as boolean,
       promptId: dto.metadata.promptId as string,
+      cacheEnabled,
     });
 
     return {
@@ -59,6 +63,8 @@ export class ReportingService {
       metadata,
       request: request as any,
       response: response as any,
+      cacheEnabled,
+      cacheHit,
     };
   }
 
