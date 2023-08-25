@@ -9,4 +9,6 @@ export interface RequestReportItem {
   cost?: string;
   promptId?: AllPrimitiveTypes;
   isTestPrompt?: boolean;
+  cacheEnabled?: boolean;
+  cacheHit?: boolean;
 }

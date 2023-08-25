@@ -1,4 +1,4 @@
-import { Divider, Drawer, Space, Table, Tag, Typography } from "antd";
+import { Drawer, Space, Table, Tag, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useGetRequestReports } from "../../graphql/hooks/queries";
 import { useMemo, useState } from "react";
@@ -66,6 +66,20 @@ const getTableColumns = (
     });
   }
 
+  // Handle cached executions
+  const hasCachedExecutions = data.some((r) => r.cacheHit);
+
+  if (hasCachedExecutions) {
+    columns.unshift({
+      title: "",
+      dataIndex: "cacheHit",
+      render: (isCacheHit: boolean) =>
+        isCacheHit && <Tag color={colors.green[800]}>CACHE</Tag>,
+      width: "40px",
+      align: "center",
+    });
+  }
+
   return columns;
 };
 
@@ -103,6 +117,8 @@ export const RequestsPage = () => {
         : "$0.0000",
       promptId: report.metadata?.promptId,
       isTestPrompt: (report.metadata?.isTestPrompt as boolean) || false,
+      cacheEnabled: report.cacheEnabled as boolean,
+      cacheHit: report.cacheHit as boolean,
     };
   });
 
@@ -137,6 +153,8 @@ export const RequestsPage = () => {
               calculated={currentReport.calculated}
               metadata={currentReport.metadata}
               properties={currentReport.properties}
+              cacheEnabled={currentReport.cacheEnabled}
+              cacheHit={currentReport.cacheHit}
             />
           )}
         </Drawer>

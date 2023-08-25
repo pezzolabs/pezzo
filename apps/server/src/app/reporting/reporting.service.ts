@@ -53,6 +53,7 @@ export class ReportingService {
       reportId,
       isTestPrompt: dto.metadata.isTestPrompt as boolean,
       promptId: dto.metadata.promptId as string,
+      cacheEnabled,
     });
 
     return {
@@ -62,6 +63,8 @@ export class ReportingService {
       metadata,
       request: request as any,
       response: response as any,
+      cacheEnabled,
+      cacheHit,
     };
   }
 

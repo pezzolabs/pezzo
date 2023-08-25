@@ -24,8 +24,9 @@ export class ReportRequestDto<
   @IsObject()
   response: ObservabilityResponse<TProviderType>;
 
+  @IsOptional()
   @IsBoolean()
-  cacheEnabled: boolean;
+  cacheEnabled?: boolean = false;
 
   @IsOptional()
   @IsBoolean()
