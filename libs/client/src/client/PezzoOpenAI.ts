@@ -117,12 +117,19 @@ class Completions {
 
       if (cachedRequest.hit === true) {
         baseReport.cacheHit = true;
-        response = cachedRequest.data;
+        response = {
+          ...cachedRequest.data,
+          usage: {
+            prompt_tokens: 0,
+            completion_tokens: 0,
+            total_tokens: 0,
+          },
+        };
 
         reportPayload = {
           ...baseReport,
           response: {
-            timestamp: new Date().toISOString(),
+            timestamp: requestTimestamp,
             body: response,
             status: 200,
           },
