@@ -18,11 +18,22 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
 
   async onModuleInit() {
     this.client = createClient({
-      url: "redis://localhost:6379",
+      url: this.config.get("REDIS_URL"),
+      socket: {
+        tls: this.config.get("REDIS_TLS_ENABLED"),
+        reconnectStrategy: (retries) => {
+          if (retries === 5) {
+            this.logger.error("Redis connection failed");
+            return process.exit(1);
+          }
+
+          return Math.min(retries * 50, 1000);
+        },
+      },
     });
 
     this.client.on("error", (error) => {
-      this.logger.error({ error }, "Redis client error");
+      this.logger.error({ error: error.message }, "Redis client error");
     });
 
     await this.client.connect();
