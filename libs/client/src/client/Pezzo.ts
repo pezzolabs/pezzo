@@ -92,43 +92,42 @@ export class Pezzo {
   async fetchCachedRequest(
     request: object
   ): Promise<FetchCachedRequestResult | null> {
-    const url = new URL(`${this.options.serverUrl}/api/cache/v1/request`);
-    url.searchParams.append(
-      "request",
-      Buffer.from(JSON.stringify(request)).toString("base64")
-    );
-
-    const response = await fetch(url.toString(), {
-      headers: {
-        "Content-Type": "application/json",
-        "x-pezzo-api-key": this.options.apiKey,
-        "x-pezzo-project-id": this.options.projectId,
-      },
-    });
-
-    const data = await response.json();
-    if (!response.ok) {
-      const json = await response.json();
-      console.warn("Could not fetch request fro mcache", json);
-    }
-
-    return data;
-  }
-
-  async cacheRequest(request: object, _response: object): Promise<void> {
     const response = await fetch(
-      `${this.options.serverUrl}/api/cache/v1/request`,
+      `${this.options.serverUrl}/api/cache/v1/request/retrieve`,
       {
         method: "POST",
+        body: JSON.stringify({ request }),
         headers: {
           "Content-Type": "application/json",
           "x-pezzo-api-key": this.options.apiKey,
           "x-pezzo-project-id": this.options.projectId,
         },
+      }
+    );
+
+    if (!response.ok) {
+      const json = await response.json();
+      console.warn("Could not fetch request fro mcache", json);
+    }
+
+    const data = await response.json();
+    return data;
+  }
+
+  async cacheRequest(request: object, _response: object): Promise<void> {
+    const response = await fetch(
+      `${this.options.serverUrl}/api/cache/v1/request/save`,
+      {
+        method: "POST",
         body: JSON.stringify({
           request,
           response: _response,
         }),
+        headers: {
+          "Content-Type": "application/json",
+          "x-pezzo-api-key": this.options.apiKey,
+          "x-pezzo-project-id": this.options.projectId,
+        },
       }
     );
 
