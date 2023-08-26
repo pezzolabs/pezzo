@@ -6,6 +6,7 @@ import supertokens from "supertokens-node";
 import { AppModule } from "../src/app/app.module";
 import { KafkaConsumerService, KafkaProducerService } from "@pezzo/kafka";
 import { OpenSearchService } from "../src/app/opensearch/opensearch.service";
+import { RedisService } from "../src/app/redis/redis.service";
 
 // This script only runs in GitHub Actions
 if (process.env.GITHUB_ACTIONS !== "true") {
@@ -29,6 +30,8 @@ export default async function generateGraphQLSchema(): Promise<void> {
   KafkaProducerService.prototype.connect = async () => {};
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   OpenSearchService.prototype.onModuleInit = async () => {};
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  RedisService.prototype.onModuleInit = async () => {};
 
   // Use the side effect of initializing the nest application for generating
   // the Nest.js schema

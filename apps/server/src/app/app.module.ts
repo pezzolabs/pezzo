@@ -23,6 +23,8 @@ import { NotificationsModule } from "./notifications/notifications.module";
 import { getConfigSchema } from "./config/common-config-schema";
 import { PromptTesterModule } from "./prompt-tester/prompt-tester.module";
 import { ClsModule } from "./cls.module";
+import { CacheModule } from "./cache/cache.module";
+import { RedisModule } from "./redis/redis.module";
 
 const isCloud = process.env.PEZZO_CLOUD === "true";
 const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
@@ -40,6 +42,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
         process.env.SKIP_CONFIG_VALIDATION === "true" ? () => ({}) : undefined,
     }),
     OpenSearchModule,
+    RedisModule,
     EventEmitterModule.forRoot(),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -73,6 +76,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
     ReportingModule,
     ...(isCloud ? [NotificationsModule] : []),
     ClsModule,
+    CacheModule,
   ],
   controllers: [HealthController],
 })

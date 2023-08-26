@@ -37,6 +37,8 @@ interface Props {
   metadata: ObservabilityReportMetadata;
   properties: ObservabilityReportProperties;
   calculated: Record<string, any>;
+  cacheEnabled: boolean;
+  cacheHit: boolean;
 }
 
 export const RequestDetails = (props: Props) => {
@@ -58,6 +60,15 @@ export const RequestDetails = (props: Props) => {
   }
 
   const listData = [
+    {
+      title: "Cache",
+      description: (
+        <>
+          <Tag>{props.cacheEnabled ? "enabled" : "disabled"}</Tag>
+          <Tag>{props.cacheHit ? "hit" : "miss"}</Tag>
+        </>
+      ),
+    },
     {
       title: "Provider",
       description: <Tag>{props.provider}</Tag>,

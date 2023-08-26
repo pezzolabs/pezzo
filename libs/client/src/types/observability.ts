@@ -8,6 +8,8 @@ export type ObservabilityReportMetadata = {
 };
 
 export interface ReportData {
+  cacheEnabled: boolean;
+  cacheHit: boolean;
   metadata: ObservabilityReportMetadata;
   properties?: ObservabilityReportProperties;
   request: {

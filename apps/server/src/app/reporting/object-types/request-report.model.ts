@@ -21,4 +21,10 @@ export class RequestReport {
 
   @Field(() => GraphQLJSONObject, { nullable: false })
   response!: Record<string, AllPrimitiveTypes>;
+
+  @Field(() => Boolean, { nullable: true })
+  cacheEnabled?: boolean = false;
+
+  @Field(() => Boolean, { nullable: true })
+  cacheHit?: boolean = null;
 }

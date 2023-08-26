@@ -142,3 +142,17 @@ const response = await openai.chat.completions.create({
   }
 });
 ```
+
+#### Request Caching
+
+Utilizing request caching can sometimes save up to 90% on your API costs and execution time. You can enable cache by setting `cache` to `true` in the second argument of the `createChatCompletion` method.
+
+```ts
+const response = await openai.chat.completions.create({
+  ...
+}, {
+  cache: true
+});
+```
+
+To learn more, visit the [Request Caching](/client/request-caching) page.

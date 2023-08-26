@@ -39,6 +39,8 @@ export const PromptTesterModal = () => {
           calculated={testResult.calculated}
           metadata={testResult.metadata}
           properties={testResult.properties}
+          cacheEnabled={testResult.cacheEnabled}
+          cacheHit={testResult.cacheHit}
         />
       )}
     </Modal>

@@ -12,6 +12,8 @@ const commonConfigSchema = {
   OPENSEARCH_URL: Joi.string().required(),
   OPENSEARCH_AUTH: Joi.string().valid("insecure", "aws").default("insecure"),
   TESTER_OPENAI_API_KEY: Joi.string().required(),
+  REDIS_URL: Joi.string().required(),
+  REDIS_TLS_ENABLED: Joi.boolean().default(false),
 };
 
 const cloudConfigSchema = {
