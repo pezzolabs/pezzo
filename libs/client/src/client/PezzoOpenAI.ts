@@ -140,7 +140,7 @@ class Completions {
       }
     }
 
-    if (!pezzoOptions.cache || (pezzoOptions.cache && !baseReport.cacheHit)) {
+    if (!pezzoOptions?.cache || (pezzoOptions?.cache && !baseReport.cacheHit)) {
       try {
         response = await this.openai.chat.completions.create(
           {
@@ -176,7 +176,7 @@ class Completions {
     }
 
     const shouldWriteToCache =
-      pezzoOptions.cache &&
+      pezzoOptions?.cache &&
       reportPayload.cacheHit === false &&
       reportPayload.response.status === 200;
 

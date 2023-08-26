@@ -1,9 +1,7 @@
 import {
   Body,
   Controller,
-  Get,
   Post,
-  Query,
   UnauthorizedException,
   UseGuards,
 } from "@nestjs/common";
@@ -15,6 +13,7 @@ import { CacheRequestDto } from "./dto/cache-request.dto";
 import { ProjectIdAuthGuard } from "../auth/project-id-auth.guard";
 import { ProjectId } from "../identity/project-id.decorator";
 import { CacheRequestResult, FetchCachedRequestResult } from "@pezzo/client";
+import { RetrieveCacheRequestDto } from "./dto/retrieve-cache-request.dto";
 
 @UseGuards(ApiKeyAuthGuard)
 @UseGuards(ProjectIdAuthGuard)
@@ -25,11 +24,11 @@ export class CacheController {
     private readonly cacheService: CacheService
   ) {}
 
-  @Get("/request")
-  async fetchCachedRequest(
+  @Post("/request/retrieve")
+  async retrieveCachedRequest(
     @ApiKeyOrgId() organizationId: string,
     @ProjectId() projectId: string,
-    @Query("request") requestBase64: string
+    @Body() dto: RetrieveCacheRequestDto,
   ): Promise<FetchCachedRequestResult> {
     this.logger
       .assign({
@@ -38,10 +37,7 @@ export class CacheController {
       })
       .info("fetchCachedRequest");
 
-    const request = JSON.parse(
-      Buffer.from(requestBase64, "base64").toString("utf-8")
-    );
-    const cachedRequest = await this.cacheService.fetchRequest(request);
+    const cachedRequest = await this.cacheService.fetchRequest(dto.request);
 
     const hit = !!cachedRequest;
 
@@ -55,8 +51,8 @@ export class CacheController {
     };
   }
 
-  @Post("/request")
-  async cacheRequest(
+  @Post("/request/save")
+  async saveRequestToCache(
     @ApiKeyOrgId() organizationId: string,
     @ProjectId() projectId: string,
     @Body() dto: CacheRequestDto
