@@ -75,7 +75,8 @@ class Completions {
 
     if (
       "variables" in optionsOrPezzoProps ||
-      "properties" in optionsOrPezzoProps
+      "properties" in optionsOrPezzoProps ||
+      "cache" in optionsOrPezzoProps
     ) {
       pezzoOptions = optionsOrPezzoProps as PezzoProps;
     }
@@ -110,7 +111,7 @@ class Completions {
       },
     };
 
-    if (pezzoOptions.cache) {
+    if (pezzoOptions?.cache) {
       baseReport.cacheEnabled = true;
 
       const cachedRequest = await this.pezzo.fetchCachedRequest(requestBody);
