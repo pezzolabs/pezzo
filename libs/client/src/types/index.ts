@@ -1,5 +1,6 @@
 export * from "./observability";
 export * from "./prompts";
+export * from "./cache";
 
 // TODO: Remove, this is a temp fix
 export type ValueType = any;

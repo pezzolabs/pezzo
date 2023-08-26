@@ -96,6 +96,12 @@ export async function createRequestsIndex(
             },
           },
         },
+        cacheEnabled: {
+          type: "boolean",
+        },
+        cacheHit: {
+          type: "boolean",
+        },
         request: {
           properties: {
             timestamp: {

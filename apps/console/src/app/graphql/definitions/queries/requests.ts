@@ -10,6 +10,8 @@ export const GET_ALL_REQUESTS = graphql(/* GraphQL */ `
         calculated
         properties
         metadata
+        cacheEnabled
+        cacheHit
       }
       pagination {
         page

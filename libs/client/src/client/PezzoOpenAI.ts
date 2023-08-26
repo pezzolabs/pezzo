@@ -20,6 +20,7 @@ type OpenAIChatCompletionCreateParams = Omit<
 interface PezzoProps {
   variables?: Record<string, string | number | boolean>;
   properties?: Record<string, string | number | boolean>;
+  cache?: boolean;
 }
 
 export class PezzoOpenAI {
@@ -101,47 +102,91 @@ class Completions {
     const baseReport = {
       metadata: merge(baseMetadata, pezzoPrompt?.metadata),
       properties: pezzoOptions?.properties,
+      cacheEnabled: false,
+      cacheHit: null,
       request: {
         timestamp: requestTimestamp,
         body: requestBody,
       },
     };
 
-    try {
-      response = await this.openai.chat.completions.create(
-        {
-          ...(requestBody as OpenAI.Chat.CompletionCreateParamsNonStreaming),
-        },
-        "variables" in optionsOrPezzoProps
-          ? undefined
-          : (optionsOrPezzoProps as Parameters<
-              OpenAI["chat"]["completions"]["create"]
-            >[1])
-      );
+    if (pezzoOptions.cache) {
+      baseReport.cacheEnabled = true;
 
-      reportPayload = {
-        ...baseReport,
-        response: {
-          timestamp: new Date().toISOString(),
-          body: response,
-          status: 200,
-        },
-      };
-    } catch (err) {
-      error = err;
+      const cachedRequest = await this.pezzo.fetchCachedRequest(requestBody);
 
-      reportPayload = {
-        ...baseReport,
-        response: {
-          timestamp: new Date().toISOString(),
-          body: err.error,
-          status: err.status,
-        },
-      };
+      if (cachedRequest.hit === true) {
+        baseReport.cacheHit = true;
+        response = {
+          ...cachedRequest.data,
+          usage: {
+            prompt_tokens: 0,
+            completion_tokens: 0,
+            total_tokens: 0,
+          },
+        };
+
+        reportPayload = {
+          ...baseReport,
+          response: {
+            timestamp: requestTimestamp,
+            body: response,
+            status: 200,
+          },
+        };
+      } else {
+        baseReport.cacheHit = false;
+      }
     }
 
+    if (!pezzoOptions.cache || (pezzoOptions.cache && !baseReport.cacheHit)) {
+      try {
+        response = await this.openai.chat.completions.create(
+          {
+            ...(requestBody as OpenAI.Chat.CompletionCreateParamsNonStreaming),
+          },
+          "variables" in optionsOrPezzoProps
+            ? undefined
+            : (optionsOrPezzoProps as Parameters<
+                OpenAI["chat"]["completions"]["create"]
+              >[1])
+        );
+
+        reportPayload = {
+          ...baseReport,
+          response: {
+            timestamp: new Date().toISOString(),
+            body: response,
+            status: 200,
+          },
+        };
+      } catch (err) {
+        error = err;
+
+        reportPayload = {
+          ...baseReport,
+          response: {
+            timestamp: new Date().toISOString(),
+            body: err.error,
+            status: err.status,
+          },
+        };
+      }
+    }
+
+    const shouldWriteToCache =
+      pezzoOptions.cache &&
+      reportPayload.cacheHit === false &&
+      reportPayload.response.status === 200;
+
+    const reportRequest = this.pezzo.reportPromptExecution(reportPayload);
+
     try {
-      await this.pezzo.reportPromptExecution(reportPayload);
+      await Promise.all(
+        shouldWriteToCache
+          ? [reportRequest, this.pezzo.cacheRequest(requestBody, response)]
+          : [reportRequest]
+      );
     } catch (error) {
       console.error("Failed to report prompt execution", error);
     }
