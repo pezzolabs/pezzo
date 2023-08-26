@@ -104,12 +104,12 @@ export class Pezzo {
         },
       }
     );
-    
+
     if (!response.ok) {
       const json = await response.json();
       console.warn("Could not fetch request fro mcache", json);
     }
-    
+
     const data = await response.json();
     return data;
   }

@@ -28,7 +28,7 @@ export class CacheController {
   async retrieveCachedRequest(
     @ApiKeyOrgId() organizationId: string,
     @ProjectId() projectId: string,
-    @Body() dto: RetrieveCacheRequestDto,
+    @Body() dto: RetrieveCacheRequestDto
   ): Promise<FetchCachedRequestResult> {
     this.logger
       .assign({
