@@ -42,6 +42,10 @@ export const useBreadcrumbItems = () => {
         title: prompt && prompt.name,
         link: `/projects/${project?.id}/prompts/${prompt?.id}`,
       },
+      "fine-tuning": {
+        title: "Fine Tuning",
+        link: `/projects/${project?.id}/fine-tuning`,
+      },
     }),
     [organization, project, prompt]
   );

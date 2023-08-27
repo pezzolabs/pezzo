@@ -1,4 +1,4 @@
-import { ChatBubbleBottomCenterIcon } from "@heroicons/react/24/outline";
+import { BoltIcon, ChatBubbleBottomCenterIcon } from "@heroicons/react/24/outline";
 import { Menu } from "antd";
 import { useMemo, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -26,6 +26,11 @@ const topMenuItems = [
     key: "environments",
     label: "Environments",
     icon: <ServerIcon height={18} />,
+  },
+  {
+    key: "fine-tuning",
+    label: "Fine Tuning",
+    icon: <BoltIcon height={18} />,
   },
 ];
 

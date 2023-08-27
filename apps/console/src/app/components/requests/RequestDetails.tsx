@@ -14,6 +14,7 @@ import {
   Segmented,
   Card,
   Alert,
+  Button,
 } from "antd";
 import { toDollarSign } from "../../lib/utils/currency-utils";
 import { InfoCircleFilled } from "@ant-design/icons";
@@ -26,6 +27,7 @@ import { useState } from "react";
 import { RequestResponseChatView } from "./RequestResponseChatView";
 import { RequestResponseViewJsonView } from "./RequestResponseViewJsonView";
 import { trackEvent } from "../../lib/utils/analytics";
+import { InsertToDatasetButton } from "./InsertToDatasetButton";
 
 type Mode = "chat" | "json";
 
@@ -177,6 +179,10 @@ export const RequestDetails = (props: Props) => {
       {selectedMode === "chat" && (
         <RequestResponseChatView request={request} response={response} />
       )}
+
+      <div style={{ marginTop: 12 }}>
+        <InsertToDatasetButton request={request} response={response} />
+      </div>
     </>
   );
 };

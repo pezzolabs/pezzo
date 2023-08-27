@@ -1,5 +1,11 @@
 import {
   AcceptInvitationMutation,
+  CreateDatasetMutation,
+  CreateFineTunedModelInput,
+  CreateFineTunedModelMutation,
+  CreateFineTunedModelMutationVariables,
+  CreateFineTunedModelVariantInput,
+  CreateFineTunedModelVariantMutation,
   CreateOrgInvitationInput,
   CreateOrgInvitationMutation,
   CreateProjectInput,
@@ -9,6 +15,8 @@ import {
   DeleteEnvironmentMutation,
   DeletePromptMutation,
   EnvironmentWhereUniqueInput,
+  InsertToDatasetMutation,
+  InsertToDatasetMutationVariables,
   InvitationWhereUniqueInput,
   RequestReport,
   TestPromptInput,
@@ -21,7 +29,11 @@ import {
   UpdateOrgSettingsMutation,
   UpdateProfileInput,
 } from "../../../@generated/graphql/graphql";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  UseMutationOptions,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { gqlClient } from "../../lib/graphql";
 import { UPDATE_PROFILE } from "../definitions/queries/users";
 import { CREATE_PROJECT } from "../definitions/queries/projects";
@@ -43,6 +55,12 @@ import { DELETE_ENVIRONMENT } from "../definitions/mutations/environments";
 import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
 import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
 import { TEST_PROMPT } from "../definitions/queries/prompt-executions";
+import {
+  CREATE_FINE_TUNED_MODEL,
+  CREATE_FINE_TUNED_MODEL_VARIANT,
+} from "../definitions/mutations/fine-tuning";
+import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
+import { CREATE_DATASET, INSERT_TO_DATASET } from "../definitions/mutations/datasets";
 
 export const useUpdateCurrentUserMutation = () =>
   useMutation({
@@ -262,4 +280,133 @@ export const useTestPrompt = () => {
       },
     }
   );
+};
+
+/* Fine Tuning */
+export const useCreateFineTunedModelMutation = (
+  options: UseMutationOptions<
+    CreateFineTunedModelMutation,
+    GraphQLErrorResponse,
+    { name: string }
+  >
+) => {
+  const queryClient = useQueryClient();
+  const { project } = useCurrentProject();
+
+  return useMutation<
+    CreateFineTunedModelMutation,
+    GraphQLErrorResponse,
+    { name: string }
+  >({
+    mutationFn: (variables) => {
+      return gqlClient.request(CREATE_FINE_TUNED_MODEL, {
+        data: {
+          name: variables.name,
+          projectId: project?.id,
+        },
+      });
+    },
+    onSuccess: (data, vars, context) => {
+      queryClient.invalidateQueries([
+        "project",
+        project?.id,
+        "fineTunedModels",
+      ]);
+
+      options?.onSuccess?.(data, vars, context);
+    },
+  });
+};
+
+export const useCreateCreateFineTunedModelVariantMutation = (
+  options: UseMutationOptions<
+    CreateFineTunedModelVariantMutation,
+    GraphQLErrorResponse,
+    CreateFineTunedModelVariantInput
+  >
+) => {
+  const queryClient = useQueryClient();
+  const { project } = useCurrentProject();
+
+  return useMutation<
+    CreateFineTunedModelVariantMutation,
+    GraphQLErrorResponse,
+    CreateFineTunedModelVariantInput
+  >({
+    mutationFn: (data) => {
+      return gqlClient.request(CREATE_FINE_TUNED_MODEL_VARIANT, {
+        data,
+      });
+    },
+    onSuccess: (data, vars, context) => {
+      queryClient.invalidateQueries([
+        "project",
+        project?.id,
+        "fineTunedModelVariants"
+      ]);
+
+      options?.onSuccess?.(data, vars, context);
+    },
+  });
+};
+
+export const useCreateDatasetMutation = (
+  options: UseMutationOptions<
+    CreateDatasetMutation,
+    GraphQLErrorResponse,
+    { name: string }
+  >
+) => {
+  const queryClient = useQueryClient();
+  const { project } = useCurrentProject();
+
+  return useMutation<
+    CreateDatasetMutation,
+    GraphQLErrorResponse,
+    { name: string }
+  >({
+    mutationFn: (variables) => {
+      return gqlClient.request(CREATE_DATASET, {
+        data: {
+          name: variables.name,
+          projectId: project?.id,
+        },
+      });
+    },
+    onSuccess: (data, vars, context) => {
+      queryClient.invalidateQueries(["project", project?.id, "datasets"]);
+
+      options?.onSuccess?.(data, vars, context);
+    },
+  });
+};
+
+export const useInsertToDatasetMutation = (
+  options?: UseMutationOptions<
+    InsertToDatasetMutation,
+    GraphQLErrorResponse,
+    InsertToDatasetMutationVariables
+  >
+) => {
+  const queryClient = useQueryClient();
+  const { project } = useCurrentProject();
+
+  return useMutation<
+    InsertToDatasetMutation,
+    GraphQLErrorResponse,
+    InsertToDatasetMutationVariables
+  >({
+    mutationFn: (data) => {
+      return gqlClient.request(INSERT_TO_DATASET, data);
+    },
+    onSuccess: (...args) => {
+      queryClient.invalidateQueries(["project", project?.id, "datasets"]);
+
+      console.log("onSuccess?", options)
+
+      if (options?.onSuccess) {
+        options.onSuccess(...args);
+      }
+    },
+  });
 };

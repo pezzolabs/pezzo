@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Post,
-  UnauthorizedException,
   UseGuards,
 } from "@nestjs/common";
 import { PinoLogger } from "../logger/pino-logger";
@@ -42,7 +41,10 @@ export class CacheController {
     const hit = !!cachedRequest;
 
     if (hit && cachedRequest.metadata.organizationId !== organizationId) {
-      throw new UnauthorizedException();
+      return {
+        hit: false,
+        data: null,
+      }
     }
 
     return {

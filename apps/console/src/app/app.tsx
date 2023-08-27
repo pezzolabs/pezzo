@@ -31,6 +31,9 @@ import { AcceptInvitationPage } from "./pages/invitations/AcceptInvitationPage";
 import { LogoutPage } from "./pages/LogoutPage";
 import { ProjectPage } from "./pages/projects/ProjectPage";
 import { RequestsPage } from "./pages/requests/RequestsPage";
+import { FineTuningPage } from "./pages/fine-tuning/FineTuningPage";
+import { FineTunedModelPage } from "./pages/fine-tuning/FineTunedModelPage";
+import { DatasetPage } from "./pages/fine-tuning/DatasetPage";
 
 initSuperTokens();
 
@@ -54,6 +57,9 @@ export const paths = {
   "/projects/:projectId/prompts/:promptId":
     "/projects/:projectId/prompts/:promptId",
   "/projects/:projectId/environments": "/projects/:projectId/environments",
+  "/projects/:projectId/fine-tuning": "/projects/:projectId/fine-tuning",
+  "/projects/:projectId/fine-tuning/:modelId": "/projects/:projectId/fine-tuning/:modelId",
+  "/projects/:projectId/datasets/:datasetId": "/projects/:projectId/datasets/:datasetId",
 };
 
 export function App() {
@@ -199,6 +205,19 @@ export function App() {
                     <Route
                       path={paths["/projects/:projectId/environments"]}
                       element={<EnvironmentsPage />}
+                    />
+                    <Route
+                      path={paths["/projects/:projectId/fine-tuning"]}
+                      element={<FineTuningPage />}
+                    />
+                    <Route
+                      path={paths["/projects/:projectId/fine-tuning/:modelId"]}
+                      element={<FineTunedModelPage />}
+                    />
+
+                    <Route
+                      path={paths["/projects/:projectId/datasets/:datasetId"]}
+                      element={<DatasetPage />}
                     />
                   </Route>
                 </Route>

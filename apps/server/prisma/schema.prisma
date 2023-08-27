@@ -38,7 +38,7 @@ model PromptVersion {
   /// @FieldType('PromptService')
   /// @PropertyType('PromptService')
   service            String
-  settings           Json                @default("{}")         
+  settings           Json                @default("{}")
   content            Json
   promptId           String
   prompt             Prompt              @relation(fields: [promptId], references: [id], onDelete: Cascade)
@@ -204,4 +204,43 @@ model ProviderApiKey {
   organization   Organization @relation(fields: [organizationId], references: [id])
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+}
+
+model Dataset {
+  id        String   @id @default(cuid())
+  projectId String
+  name      String
+  data      Json     @default("[]")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FineTunedModel {
+  id                    String                  @id @default(cuid())
+  projectId             String
+  name                  String
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  FineTunedModelVariant FineTunedModelVariant[]
+}
+
+enum FineTunedModelVariantStatus {
+  Pending
+  InProgress
+  Completed
+  Failed
+}
+
+model FineTunedModelVariant {
+  id                     String                      @id @default(cuid())
+  fineTunedModel         FineTunedModel              @relation(fields: [fineTunedModelId], references: [id], onDelete: Cascade)
+  fineTunedModelId       String
+  slug                   String
+  openaiFineTuningJobId  String
+  openaiTrainingFileId   String
+  openaiFineTunedModelId String?
+  status                 FineTunedModelVariantStatus
+  dataSnapshot           Json
+  createdAt              DateTime                    @default(now())
+  updatedAt              DateTime                    @updatedAt
 }
