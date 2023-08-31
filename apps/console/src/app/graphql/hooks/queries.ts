@@ -10,9 +10,12 @@ import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 import { GET_ALL_REQUESTS } from "../definitions/queries/requests";
 import {
+  GetProjectMetricQuery,
   GetPromptQuery,
   GetPromptVersionQuery,
   Pagination,
+  ProjectMetricTimeframe,
+  ProjectMetricType,
   RequestReport,
 } from "../../../@generated/graphql/graphql";
 import { GraphQLErrorResponse, ReportRequestResponse } from "../types";
@@ -20,6 +23,7 @@ import { Provider } from "@pezzo/types";
 import { GET_PROMPT, GET_PROMPT_VERSION } from "../definitions/queries/prompts";
 import { useEffect } from "react";
 import { useFiltersAndSortParams } from "../../lib/hooks/useFiltersAndSortParams";
+import { GET_PROJECT_METRIC } from "../definitions/queries/metrics";
 
 export const useProviderApiKeys = () => {
   const { organization } = useCurrentOrganization();
@@ -150,4 +154,27 @@ export const useGetRequestReports = ({
       },
     },
   };
+};
+
+export const useProjectMetric = (
+  metric: ProjectMetricType,
+  timeframe: ProjectMetricTimeframe,
+  options: UseQueryOptions<GetProjectMetricQuery, GraphQLErrorResponse> = {}
+) => {
+  const { project } = useCurrentProject();
+  const result = useQuery({
+    enabled: !!project,
+    queryKey: ["projectMetric", project?.id, metric, timeframe],
+    queryFn: () =>
+      gqlClient.request(GET_PROJECT_METRIC, {
+        data: {
+          projectId: project?.id,
+          metric,
+          timeframe,
+        },
+      }),
+    ...options,
+  });
+
+  return { ...result, metric: result.data?.projectMetric };
 };

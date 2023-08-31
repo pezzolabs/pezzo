@@ -49,6 +49,8 @@ export class ProjectMetricsResolver {
         return this.projectMetricsService.getCost(projectId, timeframe);
       case ProjectMetricType.duration:
         return this.projectMetricsService.getAvgDuration(projectId, timeframe);
+      case ProjectMetricType.successfulRequests:
+        return this.projectMetricsService.getSuccessfulRequests(projectId, timeframe);
       case ProjectMetricType.erroneousRequests:
         return this.projectMetricsService.getErroneousRequests(projectId, timeframe);
     }

@@ -78,8 +78,8 @@ export const SideNavigation = () => {
       <TopMenu
         mode="inline"
         onClick={handleTopMenuClick}
-        defaultSelectedKeys={["prompts"]}
-        selectedKeys={selectedKeys.length ? selectedKeys : ["prompts"]}
+        defaultSelectedKeys={["overview"]}
+        selectedKeys={selectedKeys.length ? selectedKeys : ["overview"]}
         items={topMenuItems}
         inlineCollapsed={isCollapsed}
       />

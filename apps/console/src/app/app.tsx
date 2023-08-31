@@ -179,7 +179,7 @@ export function App() {
                     <Route
                       index
                       path={paths["/projects/:projectId/"]}
-                      element={<PromptsPage />}
+                      element={<OverviewPage />}
                     />
                     <Route
                       path={"/projects/:projectId/overview"}
