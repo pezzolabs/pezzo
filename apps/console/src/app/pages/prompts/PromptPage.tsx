@@ -1,9 +1,9 @@
 import { Spin, Tabs } from "antd";
 import {
   EditOutlined,
-  DashboardOutlined,
   BranchesOutlined,
   SettingOutlined,
+  BarChartOutlined,
 } from "@ant-design/icons";
 import styled from "@emotion/styled";
 import { useState } from "react";
@@ -37,18 +37,18 @@ export const PromptPage = () => {
     {
       label: (
         <TabLabel>
-          <DashboardOutlined /> Metrics
-        </TabLabel>
-      ),
-      key: "metrics",
-    },
-    {
-      label: (
-        <TabLabel>
           <BranchesOutlined /> Versions
         </TabLabel>
       ),
       key: "versions",
+    },
+    {
+      label: (
+        <TabLabel>
+          <BarChartOutlined /> Metrics
+        </TabLabel>
+      ),
+      key: "metrics",
     },
     {
       label: (

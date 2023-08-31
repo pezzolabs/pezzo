@@ -19,8 +19,8 @@ export const Avatar = ({ user, size, style }: Props) => {
   const photoUrl = useMemo(() => user.photoUrl || undefined, [user.photoUrl]);
 
   return (
-    <AntdAvatar size={size} src={photoUrl} style={style}>
-      {buildInitials(user.name || "")}
+    <AntdAvatar size={size} style={style}>
+      {buildInitials("A M")}
     </AntdAvatar>
   );
 };

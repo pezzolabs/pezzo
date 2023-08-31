@@ -112,7 +112,7 @@ export const Header = () => {
             borderRight: `1px solid ${colors.neutral["800"]}`,
           }}
         >
-          <OrgSelector />
+          {/* <OrgSelector /> */}
         </div>
 
         <Dropdown
@@ -139,7 +139,8 @@ export const Header = () => {
                 <Avatar user={currentUser} size="large" />
 
                 <Typography.Text type="secondary">
-                  {currentUser.name}
+                  {/* {currentUser.name} */}
+                  Antonio Madeira
                 </Typography.Text>
               </Space>
             </UserProfileButton>

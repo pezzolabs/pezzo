@@ -11,6 +11,9 @@ export const PromptEditMode = () => {
   useEffect(() => {
     if (value) {
       const variables = findVariables(value);
+
+      console.log("variables", variables);
+
       setVariables(variables);
     }
   }, [value, setVariables]);

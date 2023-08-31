@@ -1,6 +1,6 @@
 import { Args, Query, Resolver } from "@nestjs/graphql";
 import { Metric } from "./models/metric.model";
-import { GetMetricsInput, Granularity } from "./inputs/get-metrics.input";
+import { GetPromptMetricsInput, Granularity } from "./inputs/get-prompt-metrics.input";
 import { AuthGuard } from "../auth/auth.guard";
 import {
   InternalServerErrorException,
@@ -41,7 +41,7 @@ export class MetricsResolver {
 
   @Query(() => [Metric])
   async metrics(
-    @Args("data") data: GetMetricsInput,
+    @Args("data") data: GetPromptMetricsInput,
     @CurrentUser() user: RequestUser
   ) {
     this.logger.assign({ data });

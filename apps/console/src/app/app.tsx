@@ -31,6 +31,7 @@ import { AcceptInvitationPage } from "./pages/invitations/AcceptInvitationPage";
 import { LogoutPage } from "./pages/LogoutPage";
 import { ProjectPage } from "./pages/projects/ProjectPage";
 import { RequestsPage } from "./pages/requests/RequestsPage";
+import { OverviewPage } from "./pages/projects/overview/OverviewPage";
 
 initSuperTokens();
 
@@ -182,7 +183,7 @@ export function App() {
                     />
                     <Route
                       path={"/projects/:projectId/overview"}
-                      element={<ProjectPage />}
+                      element={<OverviewPage />}
                     />
                     <Route
                       path={"/projects/:projectId/requests"}
