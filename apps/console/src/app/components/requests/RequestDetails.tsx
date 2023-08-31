@@ -180,9 +180,11 @@ export const RequestDetails = (props: Props) => {
         <RequestResponseChatView request={request} response={response} />
       )}
 
-      <div style={{ marginTop: 12 }}>
-        <InsertToDatasetButton request={request} response={response} />
-      </div>
+      {isSuccess && (
+        <div style={{ marginTop: 12 }}>
+          <InsertToDatasetButton request={request} response={response} />
+        </div>
+      )}
     </>
   );
 };
