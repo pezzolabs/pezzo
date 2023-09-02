@@ -1,4 +1,7 @@
-import { ChatBubbleBottomCenterIcon } from "@heroicons/react/24/outline";
+import {
+  ChatBubbleBottomCenterIcon,
+  HomeIcon,
+} from "@heroicons/react/24/outline";
 import { Menu } from "antd";
 import { useMemo, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -13,14 +16,19 @@ import {
 
 const topMenuItems = [
   {
-    key: "prompts",
-    label: "Prompts",
-    icon: <CubeIcon height={18} />,
+    key: "dashboard",
+    label: "Dashboard",
+    icon: <HomeIcon height={18} />,
   },
   {
     key: "requests",
     label: "Requests",
     icon: <ChatBubbleBottomCenterIcon height={18} width={18} />,
+  },
+  {
+    key: "prompts",
+    label: "Prompts",
+    icon: <CubeIcon height={18} />,
   },
   {
     key: "environments",
@@ -73,8 +81,8 @@ export const SideNavigation = () => {
       <TopMenu
         mode="inline"
         onClick={handleTopMenuClick}
-        defaultSelectedKeys={["prompts"]}
-        selectedKeys={selectedKeys.length ? selectedKeys : ["prompts"]}
+        defaultSelectedKeys={["dashboard"]}
+        selectedKeys={selectedKeys.length ? selectedKeys : ["dashboard"]}
         items={topMenuItems}
         inlineCollapsed={isCollapsed}
       />
