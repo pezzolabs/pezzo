@@ -7,6 +7,7 @@ export enum AnalyticsEvent {
   prompt_nav_clicked,
   prompt_run_test_clicked,
   prompt_how_to_consume_modal_opened,
+  prompt_how_to_consume_tab_changed,
   prompt_publish_modal_opened,
   prompt_commit_modal_opened,
   prompt_functions_modal_opened,
