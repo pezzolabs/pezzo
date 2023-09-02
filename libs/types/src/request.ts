@@ -13,6 +13,8 @@ export type AcceptedModels = ExtractModelNames<
 export type ObservabilityReportProperties = RecursiveObject<Primitive>;
 export type ObservabilityReportMetadata = {
   provider: Provider;
+  client?: string;
+  clientVersion?: string;
   type: PromptExecutionType;
   [key: string]: AllPrimitiveTypes;
 };

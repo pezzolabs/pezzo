@@ -3,10 +3,10 @@ import { FetchCachedRequestResult, ReportData } from "../types";
 import { Prompt } from "../types/prompts";
 
 export interface PezzoClientOptions {
+  apiKey?: string;
+  projectId?: string;
+  environment?: string;
   serverUrl?: string;
-  apiKey: string;
-  environment: string;
-  projectId: string;
 }
 
 export interface GetPromptOptions {
@@ -21,13 +21,14 @@ export class Pezzo {
   options: PezzoClientOptions;
 
   constructor(options: PezzoClientOptions) {
-    const serverUrl =
-      options.serverUrl ||
-      process.env["PEZZO_SERVER_URL"] ||
-      defaultOptions.serverUrl;
-
     this.options = {
-      serverUrl,
+      serverUrl:
+        options.serverUrl ||
+        process.env["PEZZO_SERVER_URL"] ||
+        defaultOptions.serverUrl,
+      apiKey: options.apiKey || process.env["PEZZO_API_KEY"],
+      projectId: options.projectId || process.env["PEZZO_PROJECT_ID"],
+      environment: options.environment || process.env["PEZZO_ENVIRONMENT"],
       ...options,
     };
   }

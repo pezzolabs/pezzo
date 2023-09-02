@@ -1,0 +1,55 @@
+---
+title: "Pezzo Client - Python"
+---
+
+The Pezzo client is a PyPi that allows you to easily integrate your application with Pezzo.
+
+## Getting Started
+
+### Intall the Pezzo Client
+
+Install the [pezzo](https://pypi.org/project/pezzo/) package from PyPi:
+
+<CodeGroup>
+  ```bash pip
+  pip install pezzo
+  ``` 
+  ```bash poetry
+  poetry add pezzo
+  ```
+</CodeGroup>
+
+### Initialize the Pezzo Client
+
+To initialize the Pezzo client, simply import it into your script. It will automatically read the configuration from your environment variables:
+- `PEZZO_API_KEY`: Your Pezzo API key
+- `PEZZO_PROJECT_ID`: Your Pezzo project ID
+- `PEZZO_ENVIRONMENT`: The environment you want to use (e.g. `Production`, which is the default environment created by Pezzo)
+
+<CodeGroup>
+```py main.py
+from pezzo.client import pezzo
+```
+</CodeGroup>
+
+In the above example, we created a `libs/pezzo.ts` file in which we instantiate the Pezzo client and export it. We can then import it in other areas of our application.
+
+<CardGroup cols={2}>
+  <Card
+    title="Use Pezzo with OpenAI"
+    icon="bolt-lightning"
+    href="/client/integrations/openai"
+  >
+    Learn how to use Pezzo to observe and manage your OpenAI API calls.
+  </Card>
+</CardGroup>
+
+## API Reference
+
+<ResponseField name="pezzo.get_prompt(prompt_name: string)" type="Function">
+  <div style={{ marginLeft: 20 }}>
+    <ParamField path="prompt_name" type="string">
+      The name of the prompt to retrieve. The prompt must be deployed to the current environment specified when initializing the Pezzo client.
+    </ParamField>
+  </div>
+</ResponseField>

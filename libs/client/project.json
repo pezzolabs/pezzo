@@ -5,7 +5,7 @@
   "projectType": "library",
   "targets": {
     "rollup": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "prebuild"],
       "executor": "@nx/rollup:rollup",
       "outputs": ["{options.outputPath}"],
       "options": {
@@ -21,6 +21,12 @@
         "watch": {
           "watch": true
         }
+      }
+    },
+    "prebuild": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node libs/client/scripts/prebuild.js"
       }
     },
     "build": {

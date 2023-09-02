@@ -1,6 +1,6 @@
 {
   "name": "pezzo",
-  "version": "0.4.1",
+  "version": "0.5.1",
   "license": "MIT",
   "scripts": {
     "postinstall": "node tools/scripts/patch-rollup",

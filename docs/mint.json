@@ -54,7 +54,8 @@
     {
       "group": "Pezzo SDK",
       "pages": [
-        "client/pezzo-client",
+        "client/pezzo-client-node",
+        "client/pezzo-client-python",
         "client/integrations/openai",
         "client/request-caching"
       ]
