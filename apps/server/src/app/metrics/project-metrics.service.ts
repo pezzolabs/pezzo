@@ -1,9 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { ProjectMetricTimeframe } from "./inputs/get-project-metrics.input";
+import { ProjectMetricType } from "./inputs/get-project-metrics.input";
 import { OpenSearchService } from "../opensearch/opensearch.service";
-import { ProjectMetric } from "./models/project-metric.model";
+import { HistogramMetric, ProjectMetric } from "./models/project-metric.model";
 import {
   buildBaseProjectMetricQuery,
+  getMetricHistogramParams,
   getStartAndEndDates,
 } from "./metrics.utils";
 import { OpenSearchIndex } from "../opensearch/types";
@@ -14,11 +15,12 @@ export class ProjectMetricsService {
 
   async getRequests(
     projectId: string,
-    timeframe: ProjectMetricTimeframe
+    startDate: Date,
+    endDate: Date
   ): Promise<ProjectMetric> {
-    const { current, previous } = getStartAndEndDates(timeframe);
+    const { current, previous } = getStartAndEndDates(startDate, endDate);
 
-    const buildAndExecuteQuery = async (startDate: Date, endDate: Date) => {
+    const buildAndExecuteQuery = async (startDate: string, endDate: string) => {
       const result = await this.openSearchService.client.search({
         index: OpenSearchIndex.Requests,
         body: buildBaseProjectMetricQuery(projectId, startDate, endDate),
@@ -39,12 +41,13 @@ export class ProjectMetricsService {
 
   async getCost(
     projectId: string,
-    timeframe: ProjectMetricTimeframe
+    startDate: Date,
+    endDate: Date
   ): Promise<ProjectMetric> {
-    const { current, previous } = getStartAndEndDates(timeframe);
+    const { current, previous } = getStartAndEndDates(startDate, endDate);
 
-    const buildAndExecuteQuery = async (startDate: Date, endDate: Date) => {
-      const result = await this.openSearchService.client.search({
+    const buildAndExecuteQuery = async (startDate: string, endDate: string) => {
+      const query = {
         index: OpenSearchIndex.Requests,
         body: buildBaseProjectMetricQuery(projectId, startDate, endDate, {
           aggs: {
@@ -55,7 +58,11 @@ export class ProjectMetricsService {
             },
           },
         }),
-      });
+      };
+
+      console.log("query", JSON.stringify(query, null, 2));
+
+      const result = await this.openSearchService.client.search(query);
 
       return result.body.aggregations.total_cost.value || 0;
     };
@@ -70,23 +77,24 @@ export class ProjectMetricsService {
       previousValue: parseFloat(previousRequestCount.toFixed(5)),
     };
   }
-  
+
   async getAvgDuration(
     projectId: string,
-    timeframe: ProjectMetricTimeframe
+    startDate: Date,
+    endDate: Date
   ): Promise<ProjectMetric> {
-    const { current, previous } = getStartAndEndDates(timeframe);
+    const { current, previous } = getStartAndEndDates(startDate, endDate);
 
-    const buildAndExecuteQuery = async (startDate: Date, endDate: Date) => {
+    const buildAndExecuteQuery = async (startDate: string, endDate: string) => {
       const result = await this.openSearchService.client.search({
         index: OpenSearchIndex.Requests,
         body: buildBaseProjectMetricQuery(projectId, startDate, endDate, {
           aggs: {
             avg_duration: {
               avg: {
-                field: "calculated.duration"
-              }
-            }
+                field: "calculated.duration",
+              },
+            },
           },
         }),
       });
@@ -107,11 +115,12 @@ export class ProjectMetricsService {
 
   async getSuccessfulRequests(
     projectId: string,
-    timeframe: ProjectMetricTimeframe
+    startDate: Date,
+    endDate: Date
   ): Promise<ProjectMetric> {
-    const { current, previous } = getStartAndEndDates(timeframe);
+    const { current, previous } = getStartAndEndDates(startDate, endDate);
 
-    const buildAndExecuteQuery = async (startDate: Date, endDate: Date) => {
+    const buildAndExecuteQuery = async (startDate: string, endDate: string) => {
       const result = await this.openSearchService.client.search({
         index: OpenSearchIndex.Requests,
         body: buildBaseProjectMetricQuery(projectId, startDate, endDate, {
@@ -121,10 +130,10 @@ export class ProjectMetricsService {
                 {
                   term: {
                     "response.status": 200,
-                  }
-                }
-              ]
-            }
+                  },
+                },
+              ],
+            },
           },
         }),
       });
@@ -145,11 +154,12 @@ export class ProjectMetricsService {
 
   async getErroneousRequests(
     projectId: string,
-    timeframe: ProjectMetricTimeframe
+    startDate: Date,
+    endDate: Date
   ): Promise<ProjectMetric> {
-    const { current, previous } = getStartAndEndDates(timeframe);
+    const { current, previous } = getStartAndEndDates(startDate, endDate);
 
-    const buildAndExecuteQuery = async (startDate: Date, endDate: Date) => {
+    const buildAndExecuteQuery = async (startDate: string, endDate: string) => {
       const result = await this.openSearchService.client.search({
         index: OpenSearchIndex.Requests,
         body: buildBaseProjectMetricQuery(projectId, startDate, endDate, {
@@ -159,10 +169,10 @@ export class ProjectMetricsService {
                 {
                   term: {
                     "response.status": 200,
-                  }
-                }
-              ]
-            }
+                  },
+                },
+              ],
+            },
           },
         }),
       });
@@ -179,5 +189,67 @@ export class ProjectMetricsService {
       currentValue: parseInt(currentRequestCount),
       previousValue: parseInt(previousRequestCount),
     };
+  }
+
+  async getHistogram(
+    projectId: string,
+    metricType: ProjectMetricType,
+    startDate: Date,
+    endDate: Date,
+    bucketSize: string
+  ): Promise<HistogramMetric[]> {
+    const { aggregation, filters = [] } = getMetricHistogramParams(metricType);
+
+    console.log("bucketSize", bucketSize);
+
+    const result = await this.openSearchService.client.search({
+      index: OpenSearchIndex.Requests,
+      body: {
+        query: {
+          bool: {
+            filter: [
+              {
+                term: {
+                  "ownership.projectId": projectId,
+                },
+              },
+              {
+                range: {
+                  timestamp: {
+                    gte: startDate.toISOString(),
+                    lte: endDate.toISOString(),
+                  },
+                },
+              },
+              ...filters,
+            ],
+          },
+        },
+        aggs: {
+          metrics_over_time: {
+            date_histogram: {
+              field: "timestamp",
+              interval: bucketSize,
+              extended_bounds: {
+                min: startDate.toISOString(),
+                max: endDate.toISOString(),
+              },
+            },
+            aggs: {
+              metric_value: aggregation,
+            },
+          },
+        },
+        size: 0,
+      },
+    });
+
+    // Convert the response to the HistogramMetric format
+    const buckets = result.body.aggregations.metrics_over_time.buckets;
+
+    return buckets.map((bucket) => ({
+      date: bucket.key_as_string,
+      value: parseInt(bucket.metric_value.value || 0),
+    }));
   }
 }

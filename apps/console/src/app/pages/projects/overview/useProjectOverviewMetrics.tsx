@@ -1,37 +1,49 @@
-import { ProjectMetricTimeframe, ProjectMetricType } from "../../../../@generated/graphql/graphql";
+import { ProjectMetricType } from "../../../../@generated/graphql/graphql";
 import { useProjectMetric } from "../../../graphql/hooks/queries";
+import { useCurrentProject } from "../../../lib/hooks/useCurrentProject";
+import { useTimeframeSelector } from "../../../lib/providers/TimeframeSelectorContext";
 
-export const useProjectOverviewMetrics = (timeframe: ProjectMetricTimeframe) => {
-  const { metric: requests } = useProjectMetric(
-    ProjectMetricType.Requests,
-    timeframe
-  );
+export const useProjectOverviewMetrics = () => {
+  const { project } = useCurrentProject();
+  const { startDate, endDate } = useTimeframeSelector();
 
-  const { metric: cost } = useProjectMetric(
-    ProjectMetricType.Cost,
-    timeframe
-  );
+  const useMetric = (metric: ProjectMetricType) =>
+    useProjectMetric(
+      {
+        projectId: project?.id,
+        metric,
+        startDate,
+        endDate,
+      },
+      {
+        enabled: !!project && !!startDate && !!endDate,
+      }
+    );
 
-  const { metric: avgExecutionDuration } = useProjectMetric(
-    ProjectMetricType.Duration,
-    timeframe
-  );
+  const requests = useMetric(ProjectMetricType.Requests);
+  const cost = useMetric(ProjectMetricType.Cost);
+  const avgExecutionDuration = useMetric(ProjectMetricType.Duration);
+  const successfulRequests = useMetric(ProjectMetricType.SuccessfulRequests);
 
-  const { metric: successfulRequests } = useProjectMetric(
-    ProjectMetricType.SuccessfulRequests,
-    timeframe
-  );
+  const successRateCurrent =
+    (successfulRequests?.data?.currentValue / requests?.data?.currentValue) *
+    100;
+  const successRatePrevious =
+    (successfulRequests?.data?.previousValue / requests?.data?.previousValue) *
+    100;
 
-  const successRateCurrent = (successfulRequests?.currentValue / requests?.currentValue) * 100;
-  const successRatePrevious = (successfulRequests?.previousValue / requests?.previousValue) * 100;
+  const successRate = {
+    isLoading: successfulRequests.isLoading || requests.isLoading,
+    data: {
+      currentValue: successRateCurrent,
+      previousValue: successRatePrevious,
+    },
+  };
 
   return {
     requests,
     cost,
     avgExecutionDuration,
-    successRate: {
-      currentValue: successRateCurrent,
-      previousValue: successRatePrevious
-    }
+    successRate,
   };
 };

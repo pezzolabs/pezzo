@@ -1,6 +1,9 @@
 import { Args, Query, Resolver } from "@nestjs/graphql";
 import { Metric } from "./models/metric.model";
-import { GetPromptMetricsInput, Granularity } from "./inputs/get-prompt-metrics.input";
+import {
+  GetPromptMetricsInput,
+  Granularity,
+} from "./inputs/get-prompt-metrics.input";
 import { AuthGuard } from "../auth/auth.guard";
 import {
   InternalServerErrorException,

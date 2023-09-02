@@ -12,16 +12,6 @@ registerEnumType(ProjectMetricType, {
   name: "ProjectMetricType",
 });
 
-export enum ProjectMetricTimeframe {
-  daily = "daily",
-  weekly = "weekly",
-  monthly = "monthly",
-}
-
-registerEnumType(ProjectMetricTimeframe, {
-  name: "ProjectMetricTimeframe",
-});
-
 @InputType()
 export class GetProjectMetricInput {
   @Field(() => String, { nullable: false })
@@ -30,6 +20,39 @@ export class GetProjectMetricInput {
   @Field(() => ProjectMetricType, { nullable: false })
   metric: ProjectMetricType;
 
-  @Field(() => ProjectMetricTimeframe, { nullable: false })
-  timeframe: ProjectMetricTimeframe;
+  @Field(() => Date, { nullable: false })
+  startDate: Date;
+
+  @Field(() => Date, { nullable: false })
+  endDate: Date;
+}
+
+export enum ProjectMetricHistogramBucketSize {
+  hourly = "1h",
+  daily = "1d",
+  weekly = "1w",
+  monthly = "30d",
+  yearly = "1y",
+}
+
+registerEnumType(ProjectMetricHistogramBucketSize, {
+  name: "ProjectMetricHistogramBucketSize",
+});
+
+@InputType()
+export class GetProjectMetricHistogramInput {
+  @Field(() => String, { nullable: false })
+  projectId: string;
+
+  @Field(() => ProjectMetricType, { nullable: false })
+  metric: ProjectMetricType;
+
+  @Field(() => Date, { nullable: false })
+  startDate: Date;
+
+  @Field(() => Date, { nullable: false })
+  endDate: Date;
+
+  @Field(() => ProjectMetricHistogramBucketSize, { nullable: true })
+  bucketSize?: ProjectMetricHistogramBucketSize; // The size of each histogram bucket, e.g., "1d", "1w", "1h"
 }

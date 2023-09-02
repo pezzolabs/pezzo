@@ -1,6 +1,4 @@
 import {
-  LineChart,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -11,46 +9,74 @@ import {
   BarChart,
 } from "recharts";
 import colors from "tailwindcss/colors";
+import { useProjectMetricHistogram } from "../../../../graphql/hooks/queries";
+import {
+  HistogramMetric,
+  ProjectMetricType,
+} from "../../../../../@generated/graphql/graphql";
+import { useCurrentProject } from "../../../../lib/hooks/useCurrentProject";
+import { useTimeframeSelector } from "../../../../lib/providers/TimeframeSelectorContext";
+import { useProjectMetricControls } from "./ProjectMetricContext";
+import { TooltipWithTimestamp } from "./TooltipWithTimestamp";
 
-const data = [
-  {
-    name: "Aug 10",
-    requests: 12800,
-    errors: 300,
-  },
-  {
-    name: "Aug 11",
-    requests: 14800,
-    errors: 400,
-  },
-  {
-    name: "Aug 12",
-    requests: 9900,
-    errors: 500,
-  },
-  {
-    name: "Aug 13",
-    requests: 18800,
-    errors: 1200,
-  },
-  {
-    name: "Aug 14",
-    requests: 12000,
-    errors: 2200,
-  },
-  {
-    name: "Aug 15",
-    requests: 13200,
-    errors: 600,
-  },
-  {
-    name: "Aug 16",
-    requests: 11800,
-    errors: 400,
-  },
-];
+const histogramToChartData = (
+  totalRequests: HistogramMetric[],
+  erroneousRequests: HistogramMetric[]
+) => {
+  return totalRequests.map((entry) => {
+    const errorEntry = erroneousRequests.find((e) => e.date === entry.date);
+
+    return {
+      timestamp: entry.date,
+      requests: entry.value,
+      errors: errorEntry ? errorEntry.value : 0,
+    };
+  });
+};
 
 export const SuccessErrorRateChart = () => {
+  const { startDate, endDate } = useTimeframeSelector();
+  const controls = useProjectMetricControls();
+
+  const { project } = useCurrentProject();
+  const totalRequestsHistogram = useProjectMetricHistogram(
+    {
+      projectId: project?.id,
+      metric: ProjectMetricType.Requests,
+      bucketSize: controls.bucketSize,
+      startDate: startDate,
+      endDate: endDate,
+    },
+    {
+      enabled: !!project && !!startDate && !!endDate,
+    }
+  );
+
+  const erroneousRequestsHistogram = useProjectMetricHistogram(
+    {
+      projectId: project?.id,
+      metric: ProjectMetricType.ErroneousRequests,
+      bucketSize: controls.bucketSize,
+      startDate: startDate,
+      endDate: endDate,
+    },
+    {
+      enabled: !!project && !!startDate && !!endDate,
+    }
+  );
+
+  if (
+    totalRequestsHistogram.isLoading ||
+    erroneousRequestsHistogram.isLoading
+  ) {
+    return <>Loading</>;
+  }
+
+  const data = histogramToChartData(
+    totalRequestsHistogram.histogram,
+    erroneousRequestsHistogram.histogram
+  );
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChart
@@ -65,9 +91,12 @@ export const SuccessErrorRateChart = () => {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" stroke={colors.neutral["600"]} />
-        <XAxis dataKey="name" />
+        <XAxis
+          dataKey="timestamp"
+          tickFormatter={(v) => controls.formatTimestamp(v)}
+        />
         <YAxis />
-        <Tooltip cursor={{ opacity: 0.2 }} />
+        <Tooltip cursor={{ opacity: 0.2 }} content={TooltipWithTimestamp} />
         <Legend
           payload={[
             {

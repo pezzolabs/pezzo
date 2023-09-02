@@ -17,3 +17,12 @@ export const GET_PROJECT_METRIC = graphql(/* GraphQL */ `
     }
   }
 `);
+
+export const GET_PROJECT_METRIC_HISTOGRAM = graphql(/* GraphQL */ `
+  query getProjectMetricHistogram($data: GetProjectMetricHistogramInput!) {
+    projectMetricHistogram(data: $data) {
+      date
+      value
+    }
+  }
+`);

@@ -15,6 +15,7 @@ interface Props {
   numberPrefix?: string;
   numberSuffix?: string;
   numberSeparator?: string;
+  loading: boolean;
 }
 
 const getProperties = (
@@ -23,8 +24,10 @@ const getProperties = (
   reverseColors: boolean
 ) => {
   const diff = currentValue - previousValue;
-  const percentage = Math.abs(Math.floor((diff / previousValue) * 100));
+  // Handle case where previousValue is 0
+  previousValue = previousValue === 0 ? 1 : previousValue;
 
+  const percentage = Math.abs(Math.floor((diff / previousValue) * 100));
   const increaseColor = reverseColors ? colors.red[400] : colors.green[400];
   const decreaseColor = reverseColors ? colors.green[400] : colors.red[400];
 
@@ -55,12 +58,13 @@ export const StatisticBox = ({
   previousValue,
   prefix,
   suffix,
-  precision,
+  precision = 0,
   reverseColors = false,
   valueStyle = { color: colors.stone[500] },
   numberPrefix,
   numberSuffix,
   numberSeparator,
+  loading = false,
 }: Props) => {
   const calculatedFormatter = (value: number) => (
     <CountUp
@@ -70,6 +74,8 @@ export const StatisticBox = ({
       suffix={numberSuffix}
       duration={1}
       separator={numberSeparator}
+      decimal={"."}
+      decimals={precision}
     />
   );
 
@@ -83,9 +89,8 @@ export const StatisticBox = ({
     <Statistic
       title={title}
       value={currentValue}
-      valueStyle={
-        valueStyle || calculaedValueStyle
-      }
+      loading={loading}
+      valueStyle={valueStyle || calculaedValueStyle}
       formatter={calculatedFormatter}
       suffix={
         <Tooltip title={tooltipTitle}>

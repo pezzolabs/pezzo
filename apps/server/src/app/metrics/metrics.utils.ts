@@ -1,5 +1,5 @@
 import { MsearchBody } from "@opensearch-project/opensearch/api/types";
-import { ProjectMetricTimeframe } from "./inputs/get-project-metrics.input";
+import { ProjectMetricType } from "./inputs/get-project-metrics.input";
 
 export function getPercentageChange(
   currentValue: number,
@@ -14,8 +14,8 @@ export function getPercentageChange(
 
 export function buildBaseProjectMetricQuery(
   projectId: string,
-  startDate: Date,
-  endDate: Date,
+  startDate: string,
+  endDate: string,
   options: Partial<MsearchBody> = {}
 ) {
   const body: MsearchBody = {
@@ -30,16 +30,14 @@ export function buildBaseProjectMetricQuery(
           {
             range: {
               timestamp: {
-                gte: startDate.toISOString(),
-                lte: endDate.toISOString(),
+                gte: startDate,
+                lte: endDate,
               },
             },
           },
-          ...(options?.query?.bool?.filter as any[] || []),
+          ...((options?.query?.bool?.filter as any[]) || []),
         ],
-        must_not: [
-          ...(options?.query?.bool?.must_not as any[] || []),
-        ]
+        must_not: [...((options?.query?.bool?.must_not as any[]) || [])],
       },
     },
     size: 0,
@@ -54,65 +52,80 @@ export function buildBaseProjectMetricQuery(
 
 type IntervalDates = {
   current: {
-    startDate: Date;
-    endDate: Date;
+    startDate: string;
+    endDate: string;
   };
   previous: {
-    startDate: Date;
-    endDate: Date;
+    startDate: string;
+    endDate: string;
   };
 };
 
 export function getStartAndEndDates(
-  timeframe: ProjectMetricTimeframe
+  startDate: Date,
+  endDate: Date
 ): IntervalDates {
-  const endDate = new Date();
-  let startDate: Date;
+  const diff = endDate.getTime() - startDate.getTime();
 
-  switch (timeframe) {
-    case ProjectMetricTimeframe.daily:
-      startDate = new Date(
-        endDate.getFullYear(),
-        endDate.getMonth(),
-        endDate.getDate() - 1
-      );
-      break;
-    case ProjectMetricTimeframe.weekly:
-      startDate = new Date(
-        endDate.getFullYear(),
-        endDate.getMonth(),
-        endDate.getDate() - 7
-      );
-      break;
-    case ProjectMetricTimeframe.monthly:
-      startDate = new Date(
-        endDate.getFullYear(),
-        endDate.getMonth() - 1,
-        endDate.getDate()
-      );
-      break;
-
-    default:
-      throw new Error("Unsupported interval");
-  }
-
-  // Calculate previous interval dates based on current interval's start and end dates
-  const previousIntervalStartDate = new Date(startDate);
-  const previousIntervalEndDate = new Date(endDate);
-
-  const dateDifference =
-    (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
-  previousIntervalStartDate.setDate(startDate.getDate() - dateDifference);
-  previousIntervalEndDate.setDate(endDate.getDate() - dateDifference);
+  const previousStartDate = new Date(startDate.getTime() - diff);
+  const previousEndDate = new Date(endDate.getTime() - diff);
 
   return {
     current: {
-      startDate: startDate,
-      endDate: endDate,
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
     },
     previous: {
-      startDate: previousIntervalStartDate,
-      endDate: previousIntervalEndDate,
+      startDate: previousStartDate.toISOString(),
+      endDate: previousEndDate.toISOString(),
     },
   };
+}
+
+export function getMetricHistogramParams(metric: ProjectMetricType): {
+  aggregation: any;
+  filters?: any[];
+} {
+  switch (metric) {
+    case ProjectMetricType.requests:
+      return {
+        aggregation: {
+          value_count: {
+            field: "timestamp",
+          },
+        },
+      };
+    case ProjectMetricType.duration:
+      return {
+        aggregation: {
+          avg: {
+            field: "calculated.duration",
+          },
+        },
+      };
+    case ProjectMetricType.erroneousRequests:
+      return {
+        aggregation: {
+          value_count: {
+            field: "timestamp",
+          },
+        },
+        filters: [
+          {
+            bool: {
+              must_not: [
+                {
+                  term: {
+                    "response.status": 200,
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      };
+
+    default:
+      throw new Error("Invalid metric");
+  }
 }

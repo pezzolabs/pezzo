@@ -9,6 +9,11 @@ import { ProjectMetricsService } from "./project-metrics.service";
 
 @Module({
   imports: [IdentityModule, PromptsModule, OpenSearchModule],
-  providers: [MetricsResolver, ProjectMetricsResolver, PrismaService, ProjectMetricsService],
+  providers: [
+    MetricsResolver,
+    ProjectMetricsResolver,
+    PrismaService,
+    ProjectMetricsService,
+  ],
 })
 export class MetricsModule {}
