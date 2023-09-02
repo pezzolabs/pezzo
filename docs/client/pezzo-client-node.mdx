@@ -1,0 +1,105 @@
+---
+title: "Pezzo Client - Node.js"
+---
+
+The Pezzo client is an NPM package that allows you to easily integrate your application with Pezzo. The client was built with TypeScript and is type-safe.
+
+## Getting Started
+
+### Intall the Pezzo Client
+
+Install the [@pezzo/client](https://www.npmjs.com/package/@pezzo/client) NPM package:
+
+<CodeGroup>
+  ```bash npm
+  npm i @pezzo/client
+  ``` 
+  ```bash yarn
+  yarn add @pezzo/client
+  ```
+  ```bash pnpm
+  pnpm add @pezzo/client
+  ```
+</CodeGroup>
+
+### Initialize the Pezzo Client
+
+You only need to initialize the Pezzo client once, and then you can use it throughout your application.
+
+<Tabs>
+  <Tab title="Configure via environment variables">
+      Pezzo automatically looks for the following environment variables:
+      - `PEZZO_API_KEY`: Your Pezzo API key
+      - `PEZZO_PROJECT_ID`: Your Pezzo project ID
+      - `PEZZO_ENVIRONMENT`: The environment you want to use (e.g. `Production`, which is the default environment created by Pezzo)
+
+      Variables found will be used automatically for configuration.
+
+      ```ts
+      import { Pezzo, PezzoOpenAI } from "@pezzo/client";
+
+      // Initialize the Pezzo client and export it
+      export const pezzo = new Pezzo();
+
+      // Initialize PezzoOpenAI and export it
+      export const openai = new PezzoOpenAI(pezzo);
+      ```
+  </Tab>
+  <Tab title="Configure manually">
+      ```ts
+      import { Pezzo, PezzoOpenAI } from "@pezzo/client";
+
+      // Initialize the Pezzo client and export it
+      export const pezzo = new Pezzo({
+        apiKey: "your-api-key",
+        projectId: "your-project-id",
+        environment: "Production",
+      });
+
+      // Initialize PezzoOpenAI and export it
+      export const openai = new PezzoOpenAI(pezzo);
+      ```
+  </Tab>
+</Tabs>
+
+
+<CardGroup cols={2}>
+  <Card
+    title="Use Pezzo with OpenAI"
+    icon="bolt-lightning"
+    href="/client/integrations/openai"
+  >
+    Learn how to use Pezzo to observe and manage your OpenAI API calls.
+  </Card>
+</CardGroup>
+
+## API Reference
+
+<ResponseField name="Pezzo.constructor(options: PezzoOptions)" type="Function">
+  <div style={{ marginLeft: 20 }}>
+  <ParamField path="options" type="PezzoOptions">
+    <div style={{ marginLeft: 20 }}>
+      <ParamField path="apiKey" type="string" required="false" default="process.env.PEZZO_API_KEY">
+        Pezzo API key
+      </ParamField>
+      <ParamField path="projectId" type="string" required="false" default="process.env.PEZZO_PROJECT_ID">
+        Pezzo project ID
+      </ParamField>
+      <ParamField path="environment" type="string" required="false" default="process.env.PEZZO_ENVIRONMENT">
+        Pezzo environment name
+      </ParamField>
+      <ParamField path="serverUrl" type="string" required="false" default="https://api.pezzo.ai">
+        Pezzo server URL
+      </ParamField>
+    </div>
+  </ParamField>
+  </div>
+</ResponseField>
+
+<ResponseField name="Pezzo.getPrompt(promptName: string)" type="Function">
+  <div style={{ marginLeft: 20 }}>
+    <ParamField path="promptName" type="string">
+      The name of the prompt to retrieve. The prompt must be deployed to the current environment specified when initializing the Pezzo client.
+    </ParamField>
+  </div>
+</ResponseField>
