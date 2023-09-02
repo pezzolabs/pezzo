@@ -3,6 +3,7 @@ import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 import { CopyOutlined } from "@ant-design/icons";
 import { copyToClipboard } from "../../lib/utils/browser-utils";
 import { useState } from "react";
+import { trackEvent } from "../../lib/utils/analytics";
 
 export const ProjectCopy = () => {
   const { project, isLoading } = useCurrentProject();
@@ -20,6 +21,7 @@ export const ProjectCopy = () => {
         onClick={() => {
           copyToClipboard(project.id);
           setClicked(true);
+          trackEvent("project_id_copied", { projectId: project.id });
         }}
       >
         Copy Project ID

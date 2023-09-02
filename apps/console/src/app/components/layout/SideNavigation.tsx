@@ -16,19 +16,19 @@ import {
 
 const topMenuItems = [
   {
-    key: "overview",
-    label: "Overview",
+    key: "dashboard",
+    label: "Dashboard",
     icon: <HomeIcon height={18} />,
-  },
-  {
-    key: "prompts",
-    label: "Prompts",
-    icon: <CubeIcon height={18} />,
   },
   {
     key: "requests",
     label: "Requests",
     icon: <ChatBubbleBottomCenterIcon height={18} width={18} />,
+  },
+  {
+    key: "prompts",
+    label: "Prompts",
+    icon: <CubeIcon height={18} />,
   },
   {
     key: "environments",
@@ -81,8 +81,8 @@ export const SideNavigation = () => {
       <TopMenu
         mode="inline"
         onClick={handleTopMenuClick}
-        defaultSelectedKeys={["overview"]}
-        selectedKeys={selectedKeys.length ? selectedKeys : ["overview"]}
+        defaultSelectedKeys={["dashboard"]}
+        selectedKeys={selectedKeys.length ? selectedKeys : ["dashboard"]}
         items={topMenuItems}
         inlineCollapsed={isCollapsed}
       />

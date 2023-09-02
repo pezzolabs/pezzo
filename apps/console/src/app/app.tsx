@@ -29,9 +29,8 @@ import { HOTJAR_SITE_ID, HOTJAR_VERSION } from "../env";
 import { OrgPage } from "./pages/organizations/OrgPage";
 import { AcceptInvitationPage } from "./pages/invitations/AcceptInvitationPage";
 import { LogoutPage } from "./pages/LogoutPage";
-import { ProjectPage } from "./pages/projects/ProjectPage";
 import { RequestsPage } from "./pages/requests/RequestsPage";
-import { OverviewPage } from "./pages/projects/overview/OverviewPage";
+import { DashboardPage } from "./pages/projects/overview/DashboardPage";
 
 initSuperTokens();
 
@@ -49,7 +48,7 @@ export const paths = {
   "/info": "/info",
   "/orgs/:orgId": "/orgs/:orgId",
   "/projects/:projectId": "/projects/:projectId",
-  "/projects/:projectId/overview": "/projects/:projectId/overview",
+  "/projects/:projectId/dashboard": "/projects/:projectId/dashboard",
   "/projects/:projectId/requests": "/projects/:projectId/reqeusts",
   "/projects/:projectId/prompts": "/projects/:projectId/prompts",
   "/projects/:projectId/prompts/:promptId":
@@ -179,11 +178,11 @@ export function App() {
                     <Route
                       index
                       path={paths["/projects/:projectId/"]}
-                      element={<OverviewPage />}
+                      element={<DashboardPage />}
                     />
                     <Route
-                      path={"/projects/:projectId/overview"}
-                      element={<OverviewPage />}
+                      path={"/projects/:projectId/dashboard"}
+                      element={<DashboardPage />}
                     />
                     <Route
                       path={"/projects/:projectId/requests"}

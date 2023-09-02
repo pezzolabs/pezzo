@@ -6,12 +6,12 @@ import { TimeframeSelectorProvider } from "../../../lib/providers/TimeframeSelec
 import { StatisticsSection } from "./StatisticsSection";
 import { ExecutionTimeChart } from "./charts/ExecutionTimeChart";
 
-export const OverviewPage = () => {
+export const DashboardPage = () => {
   return (
     <TimeframeSelectorProvider>
       <Row gutter={[24, 24]}>
         <Col span={12}>
-          <Typography.Title level={2}>Overview</Typography.Title>
+          <Typography.Title level={2}>Dashboard</Typography.Title>
         </Col>
         <Col span={12} style={{ display: "flex", justifyContent: "flex-end" }}>
           <TimeframeSelector />

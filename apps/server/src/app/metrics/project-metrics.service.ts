@@ -60,8 +60,6 @@ export class ProjectMetricsService {
         }),
       };
 
-      console.log("query", JSON.stringify(query, null, 2));
-
       const result = await this.openSearchService.client.search(query);
 
       return result.body.aggregations.total_cost.value || 0;
@@ -199,8 +197,6 @@ export class ProjectMetricsService {
     bucketSize: string
   ): Promise<HistogramMetric[]> {
     const { aggregation, filters = [] } = getMetricHistogramParams(metricType);
-
-    console.log("bucketSize", bucketSize);
 
     const result = await this.openSearchService.client.search({
       index: OpenSearchIndex.Requests,
