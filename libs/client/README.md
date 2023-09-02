@@ -29,8 +29,6 @@ To use the Pezzo client with OpenAI:
 npm install @pezzo/client openai
 ```
 
-You can use the Pezzo client in two ways:
-
 ## Usage
 
 The Pezzo Documentation contains useful information on how to use the Pezzo client. It covers various use cases such as prompt management, observability, variables, properties, and more.

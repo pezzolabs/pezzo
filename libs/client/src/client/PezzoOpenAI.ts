@@ -8,6 +8,7 @@ import {
 import { interpolateVariablesRecursively } from "../utils";
 import { merge } from "../utils/helpers";
 import { PromptExecutionType, Provider } from "@pezzo/types";
+import { version } from "../version";
 
 type OpenAIChatCompletionCreateParams = Omit<
   OpenAI.Chat.CompletionCreateParamsNonStreaming,
@@ -96,6 +97,8 @@ class Completions {
       environment: this.pezzo.options.environment,
       provider: Provider.OpenAI,
       type: PromptExecutionType.ChatCompletion,
+      client: "pezzo-ts",
+      clientVersion: version,
     };
 
     const requestTimestamp = new Date().toISOString();
