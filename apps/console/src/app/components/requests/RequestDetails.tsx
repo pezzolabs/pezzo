@@ -41,6 +41,17 @@ interface Props {
   cacheHit: boolean;
 }
 
+const getClientDisplayName = (client: string) => {
+  switch (client) {
+    case "pezzo-ts":
+      return "TypeScript (Official)";
+    case "pezzo-python":
+      return "Python (Official)";
+    default:
+      return client;
+  }
+};
+
 export const RequestDetails = (props: Props) => {
   const request = props.request as ObservabilityRequest<Provider.OpenAI>;
   const response = props.response as ObservabilityResponse<Provider.OpenAI>;
@@ -59,6 +70,13 @@ export const RequestDetails = (props: Props) => {
     return null;
   }
 
+  const clientString =
+    props.metadata.client && props.metadata.clientVersion
+      ? `${getClientDisplayName(props.metadata.client)} - v${
+          props.metadata.clientVersion
+        }`
+      : "Unknown";
+
   const listData = [
     {
       title: "Cache",
@@ -68,6 +86,10 @@ export const RequestDetails = (props: Props) => {
           <Tag>{props.cacheHit ? "hit" : "miss"}</Tag>
         </>
       ),
+    },
+    {
+      title: "Client",
+      description: clientString,
     },
     {
       title: "Provider",
@@ -136,6 +158,17 @@ export const RequestDetails = (props: Props) => {
       ),
     },
   ];
+
+  if (props.metadata.client && props.metadata.clientVersion) {
+    listData.push({
+      title: "Client",
+      description: (
+        <Tag>
+          {props.metadata.client} v{props.metadata.clientVersion}
+        </Tag>
+      ),
+    });
+  }
 
   return (
     <>

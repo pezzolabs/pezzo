@@ -94,6 +94,12 @@ export async function createRequestsIndex(
             isTestPrompt: {
               type: "boolean",
             },
+            client: {
+              type: "keyword",
+            },
+            clientVersion: {
+              type: "keyword",
+            },
           },
         },
         cacheEnabled: {
