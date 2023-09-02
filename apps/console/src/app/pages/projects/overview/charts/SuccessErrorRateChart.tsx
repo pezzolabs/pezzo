@@ -18,6 +18,8 @@ import { useCurrentProject } from "../../../../lib/hooks/useCurrentProject";
 import { useTimeframeSelector } from "../../../../lib/providers/TimeframeSelectorContext";
 import { useProjectMetricControls } from "./ProjectMetricContext";
 import { TooltipWithTimestamp } from "./TooltipWithTimestamp";
+import { Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const histogramToChartData = (
   totalRequests: HistogramMetric[],
@@ -69,7 +71,21 @@ export const SuccessErrorRateChart = () => {
     totalRequestsHistogram.isLoading ||
     erroneousRequestsHistogram.isLoading
   ) {
-    return <>Loading</>;
+    return (
+      <div
+        style={{
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Spin
+          spinning
+          indicator={<LoadingOutlined style={{ fontSize: 60 }} />}
+        />
+      </div>
+    );
   }
 
   const data = histogramToChartData(

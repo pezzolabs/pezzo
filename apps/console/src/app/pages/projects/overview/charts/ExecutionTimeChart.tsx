@@ -18,6 +18,8 @@ import {
   HistogramMetric,
   ProjectMetricType,
 } from "../../../../../@generated/graphql/graphql";
+import { Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const histogramToChartData = (requests: HistogramMetric[]) => {
   return requests.map((entry) => ({
@@ -45,7 +47,21 @@ export const ExecutionTimeChart = () => {
   );
 
   if (durationHistogram.isLoading) {
-    return <>Loading</>;
+    return (
+      <div
+        style={{
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Spin
+          spinning
+          indicator={<LoadingOutlined style={{ fontSize: 60 }} />}
+        />
+      </div>
+    );
   }
 
   const data = histogramToChartData(durationHistogram.histogram);
