@@ -1,4 +1,4 @@
-import { Button, DatePicker, Space } from "antd";
+import { Button, DatePicker, Space, Typography } from "antd";
 import dayjs from "dayjs";
 import { useState } from "react";
 
@@ -19,18 +19,32 @@ export const CustomDateTooltip = ({ startDate, endDate, onApply }: Props) => {
   return (
     <Space direction="vertical">
       <Space direction="horizontal">
-        <DatePicker
-          value={dayjs(tempStartDate)}
-          onChange={(v) => setTempStartDate(v?.toISOString())}
-          placeholder="Start date"
-          showTime={{ format: "HH:mm" }}
-        />
-        <DatePicker
-          value={dayjs(tempEndDate)}
-          onChange={(v) => setTempEndDate(v?.toString())}
-          placeholder="End date"
-          showTime={{ format: "HH:mm" }}
-        />
+        <div>
+          <p style={{ marginBottom: 4 }}>
+            <Typography.Text style={{ fontWeight: 500 }}>
+              Start date
+            </Typography.Text>
+          </p>
+          <DatePicker
+            value={dayjs(tempStartDate)}
+            onChange={(v) => setTempStartDate(v?.toISOString())}
+            placeholder="Start date"
+            showTime={{ format: "HH:mm" }}
+          />
+        </div>
+        <div>
+          <p style={{ marginBottom: 4 }}>
+            <Typography.Text style={{ fontWeight: 500 }}>
+              End date
+            </Typography.Text>
+          </p>
+          <DatePicker
+            value={dayjs(tempEndDate)}
+            onChange={(v) => setTempEndDate(v?.toString())}
+            placeholder="End date"
+            showTime={{ format: "HH:mm" }}
+          />
+        </div>
       </Space>
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
         <Button onClick={handleApply} type="primary" size="small">

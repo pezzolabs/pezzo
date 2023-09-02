@@ -53,7 +53,7 @@ export const TimeframeSelector = () => {
           >
             <CalendarIcon style={{ fontSize: 16 }} />
           </Icon>
-          Custom
+          Custom Dates
         </Radio.Button>
       </Popover>
 
