@@ -69,6 +69,51 @@
 
 In the documentation, you can find information on how to use Pezzo, its architecture, including tutorials and recipes for varius use cases and LLM providers.
 
+# Supported Clients
+
+<table>
+  <thead>
+    <tr>
+      <th>Feature</th>
+      <th>
+        <a href="https://www.npmjs.com/package/@pezzo/client">Node.js</a>
+        • 
+        <a href="https://docs.pezzo.ai/client/pezzo-client-node">Docs</a>
+      </th>
+      <th>
+        <a href="https://pypi.org/">Python</a>
+         • 
+        <a href="https://docs.pezzo.ai/client/pezzo-client-python">Docs</a>
+      </th>
+      <th>
+        <a href="https://github.com/pezzolabs/pezzo/issues/180">LangChain</a>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Prompt Management</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">🚧</td>
+    </tr>
+    <tr>
+      <td>Observability</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">🚧</td>
+    </tr>
+    <tr>
+      <td>Caching</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">🚧</td>
+    </tr>
+  </tbody>
+</table>
+
+Looking for a client that's not listed here? [Open an issue](https://github.com/pezzolabs/pezzo/issues/new/choose) and let us know!
+
 # Getting Started - Local Development
 
 This section is useful for contributors who want to run Pezzo locally in development mode.
