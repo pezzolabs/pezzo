@@ -10,6 +10,10 @@ import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 import { GET_ALL_REQUESTS } from "../definitions/queries/requests";
 import {
+  GetProjectMetricHistogramQuery,
+  GetProjectMetricHistogramQueryVariables,
+  GetProjectMetricQuery,
+  GetProjectMetricQueryVariables,
   GetPromptQuery,
   GetPromptVersionQuery,
   Pagination,
@@ -20,6 +24,10 @@ import { Provider } from "@pezzo/types";
 import { GET_PROMPT, GET_PROMPT_VERSION } from "../definitions/queries/prompts";
 import { useEffect } from "react";
 import { useFiltersAndSortParams } from "../../lib/hooks/useFiltersAndSortParams";
+import {
+  GET_PROJECT_METRIC,
+  GET_PROJECT_METRIC_HISTOGRAM,
+} from "../definitions/queries/metrics";
 
 export const useProviderApiKeys = () => {
   const { organization } = useCurrentOrganization();
@@ -150,4 +158,41 @@ export const useGetRequestReports = ({
       },
     },
   };
+};
+
+export const useProjectMetric = (
+  data: GetProjectMetricQueryVariables["data"],
+  options: UseQueryOptions<GetProjectMetricQuery, GraphQLErrorResponse> = {}
+) => {
+  const { project } = useCurrentProject();
+  const result = useQuery({
+    enabled: !!project,
+    queryKey: ["projectMetric", ...Object.values(data)],
+    queryFn: () =>
+      gqlClient.request(GET_PROJECT_METRIC, {
+        data,
+      }),
+    ...options,
+  });
+
+  return { ...result, data: result.data?.projectMetric };
+};
+
+export const useProjectMetricHistogram = (
+  data: GetProjectMetricHistogramQueryVariables["data"],
+  options: UseQueryOptions<
+    GetProjectMetricHistogramQuery,
+    GraphQLErrorResponse
+  > = {}
+) => {
+  const result = useQuery({
+    queryKey: ["projectMetricHistogram", ...Object.values(data)],
+    queryFn: () =>
+      gqlClient.request(GET_PROJECT_METRIC_HISTOGRAM, {
+        data,
+      }),
+    ...options,
+  });
+
+  return { ...result, histogram: result.data?.projectMetricHistogram };
 };

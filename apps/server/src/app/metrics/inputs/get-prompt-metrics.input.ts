@@ -34,7 +34,7 @@ registerEnumType(Granularity, {
 });
 
 @InputType()
-export class GetMetricsInput {
+export class GetPromptMetricsInput {
   @Field(() => String, { nullable: false })
   promptId: string;
 
