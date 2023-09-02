@@ -7,8 +7,11 @@ import {
   Timeframe,
   useTimeframeSelector,
 } from "../../lib/providers/TimeframeSelectorContext";
+import { trackEvent } from "../../lib/utils/analytics";
+import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 
 export const TimeframeSelector = () => {
+  const { projectId } = useCurrentProject();
   const {
     startDate,
     endDate,
@@ -28,6 +31,23 @@ export const TimeframeSelector = () => {
     setStartDate(dates.startDate);
     setEndDate(dates.endDate);
     setCustomDatePopoverOpen(false);
+    trackEvent("project_dashboard_custom_date_applied", { projectId });
+  };
+
+  const handlePopoverOpen = (isOpen) => {
+    setCustomDatePopoverOpen(isOpen);
+
+    if (isOpen === true) {
+      trackEvent("project_dashboard_custom_date_popover_opened", { projectId });
+    }
+  };
+
+  const handleSetTimeframe = (tf: Timeframe) => {
+    setTimeframe(tf);
+    trackEvent("project_dashboard_timeframe_changed", {
+      projectId,
+      timeframe: tf,
+    });
   };
 
   return (
@@ -35,7 +55,7 @@ export const TimeframeSelector = () => {
       <Popover
         trigger={["click"]}
         open={customDatePopoverOpen}
-        onOpenChange={(isOpen) => setCustomDatePopoverOpen(isOpen)}
+        onOpenChange={handlePopoverOpen}
         placement="bottomRight"
         title="Custom Dates"
         content={
@@ -60,7 +80,11 @@ export const TimeframeSelector = () => {
       {Object.values(Timeframe)
         .filter((tf) => tf !== Timeframe.Custom)
         .map((tf) => (
-          <Radio.Button key={tf} value={tf} onClick={() => setTimeframe(tf)}>
+          <Radio.Button
+            key={tf}
+            value={tf}
+            onClick={() => handleSetTimeframe(tf)}
+          >
             {tf}
           </Radio.Button>
         ))}

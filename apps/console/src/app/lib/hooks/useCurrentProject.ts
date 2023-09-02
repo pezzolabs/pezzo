@@ -11,5 +11,5 @@ export const useCurrentProject = () => {
     [projects, projectId]
   );
 
-  return { project, isLoading };
+  return { project, projectId: project?.id, isLoading };
 };
