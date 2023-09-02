@@ -14,42 +14,43 @@ const StyledPre = styled.pre`
 
 const getVariablesString = (variables: string[]) => {
   if (!variables.length) return "";
-  const varStrings = variables.map((v) => `    ${v}: "value"`).join(",\n");
-  return `, {
-  variables: {
+  const varStrings = variables.map((v) => `       "${v}": "value"`).join(",\n");
+  return `
+    "variables": {
 ${varStrings}
-  }
-}`;
+    }`;
 };
 
-export const TypeScriptOpenAIIntegrationTutorial = () => {
+export const PythonOpenAIIntegrationTutorial = () => {
   const { variables } = usePromptVersionEditorContext();
   const { prompt } = useCurrentPrompt();
   const { data: pezzoApiKeysData } = usePezzoApiKeys();
   const API_KEY = pezzoApiKeysData?.apiKeys[0].id;
 
   const { project } = useCurrentProject();
-  const codeSetupClients = `import { Pezzo, PezzoOpenAI } from "@pezzo/client";
+  const codeSetupClients = `from pezzo.client import pezzo
+from pezzo.openai import openai
 
-// Initialize the Pezzo client
-export const pezzo = new Pezzo({
-  apiKey: "${API_KEY}",
-  projectId: "${project.id}",
-  environment: "Production", // Your desired environment
-});
-
-// Initialize the PezzoOpenAI client
-const openai = new PezzoOpenAI(pezzo);
+/*
+ * The Pezzo client automatically searches for the following environment variables and uses them to initialize the cilent:
+ * - PEZZO_API_KEY: Your Pezzo API key
+ * - PEZZO_PROJECT_ID: The ID of the project you want to use
+ * - PEZZO_ENVIRONMENT: The environment you want to use. By default, Pezzo creates a "Production" environment for you.
+ */
 `;
 
   const variablesString = getVariablesString(variables);
 
   const codeWithPromptManagement = `${codeSetupClients}
 // Fetch the prompt from Pezzo
-const prompt = await pezzo.getPrompt("${prompt.name}");
+prompt = pezzo.get_prompt("${prompt.name}")
 
 // Use the OpenAI API as you normally would
-const response = await openai.chat.completions.create(prompt${variablesString});
+response = await openai.ChatCompletion.create(
+  pezzo_prompt=prompt,
+  pezzo_options={${variablesString}
+  }
+)
 `;
 
   return (
@@ -78,11 +79,20 @@ const response = await openai.chat.completions.create(prompt${variablesString});
 
       <Typography.Title level={3}>Installation</Typography.Title>
       <Typography.Paragraph>
-        Pezzo provides a fully-typed NPM package for integration with TypeScript
-        projects.
+        Pezzo provides a package for intergration with Python projects. Here's
+        how to install it:
       </Typography.Paragraph>
       <StyledPre>
-        <code>{"npm install @pezzo/client openai"}</code>
+        <code>
+          # via pip
+          <br />
+          pip install pezzo
+          <br />
+          <br />
+          # via poetry
+          <br />
+          poetry add pezzo
+        </code>
       </StyledPre>
       <Typography.Title level={3} style={{ marginTop: 24 }}>
         Usage
