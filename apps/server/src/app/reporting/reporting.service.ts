@@ -53,6 +53,8 @@ export class ReportingService {
       reportId,
       isTestPrompt: !!dto.metadata.isTestPrompt as boolean,
       promptId: dto.metadata.promptId as string,
+      client: (dto.metadata.client as string) || null,
+      clientVersion: (dto.metadata.clientVersion as string) || null,
       cacheEnabled,
     });
 

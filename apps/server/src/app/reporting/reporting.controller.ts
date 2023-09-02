@@ -36,7 +36,7 @@ export class ReportingController {
       .info("Saving report to OpenSearch");
 
     try {
-      return await this.reportingService.saveReport(dto, {
+      return this.reportingService.saveReport(dto, {
         organizationId,
         projectId,
       });
