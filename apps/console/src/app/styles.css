@@ -6,7 +6,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
   .bg-primary-gradient {
     @apply bg-gradient-to-r from-emerald-500 to-emerald-600;

@@ -27,7 +27,9 @@ const emailPasswordFormSchema = z.object({
 });
 
 export const LoginPage = () => {
-  const [mode, setMode] = useState<"signin" | "signup" | "forgot_password">("signin");
+  const [mode, setMode] = useState<"signin" | "signup" | "forgot_password">(
+    "signin"
+  );
   const [isEmail, setIsEmail] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [emailPasswordLoading, setEmailPasswordLoading] =
@@ -222,7 +224,7 @@ export const LoginPage = () => {
             transition={{ duration: 0.3 }}
           >
             {mode === "signin" ? (
-              <p className="text-center text-sm leading-6 mt-2">
+              <p className="mt-2 text-center text-sm leading-6">
                 Don't have an account?{" "}
                 <Button
                   variant="link"
@@ -251,7 +253,7 @@ export const LoginPage = () => {
           </motion.div>
         </div>
       </div>
-      <div className="relative flex h-[100vh] flex-1 bg-neutral-950 lg:block hidden">
+      <div className="relative flex hidden h-[100vh] flex-1 bg-neutral-950 lg:block">
         <div className="flex h-full w-full items-center justify-center">
           <div
             className="pointer-events-none absolute -mt-36 translate-x-[0vw] translate-y-[10vh] scale-[110%] opacity-50 blur-2xl md:block"
