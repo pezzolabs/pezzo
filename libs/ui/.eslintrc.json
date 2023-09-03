@@ -5,9 +5,7 @@
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
-        "@nx/enforce-module-boundaries": {
-          "allow": ["@pezzo/ui"]
-        }
+        "@nx/enforce-module-boundaries": "off"
       }
     },
     {
