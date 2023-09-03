@@ -1,48 +1,93 @@
-@import url("./fonts");
-@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200;300;400;500;600;700&display=swap");
+@import "./fonts";
+@import "./antd-overrides.css";
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  font-family: "Inter", sans-serif;
-  font-size: 16px;
-  color: theme("colors.slate.200");
+
+@layer base {
+  .bg-primary-gradient {
+    @apply bg-gradient-to-r from-emerald-500 to-emerald-600;
+  }
+
+  :root {
+    --font-sans: "Inter", sans-serif;
+    --font-heading: "Brockmann";
+
+    --background: hsl(0 0% 100%);
+    --foreground: hsl(222.2 47.4% 11.2%);
+
+    --muted: hsl(210 40% 96.1%);
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --popover: hsl(0 0% 100%);
+    --popover-foreground: hsl(222.2 47.4% 11.2%);
+
+    --border: hsl(214.3 31.8% 91.4%);
+    --input: hsl(214.3 31.8% 91.4%);
+
+    --card: hsl(0 0% 100%);
+    --card-foreground: hsl(222.2 47.4% 11.2%);
+
+    --primary: hsl(222.2 47.4% 11.2%);
+    --primary-foreground: hsl(210 40% 98%);
+
+    --secondary: hsl(210 40% 96.1%);
+    --secondary-foreground: hsl(222.2 47.4% 11.2%);
+
+    --accent: hsl(210 40% 96.1%);
+    --accent-foreground: hsl(222.2 47.4% 11.2%);
+
+    --destructive: hsl(0 100% 50%);
+    --destructive-foreground: hsl(210 40% 98%);
+
+    --ring: hsl(215 20.2% 65.1%);
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: hsl(224 71% 4%);
+    --foreground: hsl(213 31% 91%);
+
+    --muted: hsl(223 47% 11%);
+    --muted-foreground: hsl(215.4 16.3% 56.9%);
+
+    --accent: hsl(hsl(0, 0%, 21%));
+    --accent-foreground: hsl(210 40% 98%);
+
+    --popover: hsl(224 71% 4%);
+    --popover-foreground: hsl(215 20.2% 65.1%);
+
+    --border: hsl(0, 0%, 21%);
+    --input: hsl(0, 0%, 28%);
+
+    --card: hsl(224 71% 4%);
+    --card-foreground: hsl(213 31% 91%);
+
+    --primary: #37aa82;
+    --primary-foreground: hsl(0, 0%, 100%);
+
+    --secondary: #444444;
+    --secondary-foreground: hsl(210 40% 98%);
+
+    --destructive: hsl(0, 65%, 57%);
+    --destructive-foreground: hsl(210 40% 98%);
+
+    --ring: hsl(0, 0%, 21%);
+
+    --radius: 0.5rem;
+  }
 }
 
-h1.ant-typography,
-h2.ant-typography,
-h3.ant-typography,
-h4.ant-typography,
-h5.ant-typography {
-  font-family: "Brockmann", serif;
-  font-weight: 400;
-  color: theme("colors.slate.200");
-}
-
-.ant-btn {
-  font-family: "Brockmann", serif;
-  font-weight: 400;
-}
-
-.ant-tabs-tab {
-  font-family: "Brockmann", serif;
-  font-weight: 300;
-}
-
-.ant-modal-title {
-  font-family: "Brockmann", serif;
-  font-weight: 400;
-}
-
-:where(.css-dev-only-do-not-override-n4pdk8).ant-menu-inline > .ant-menu-item,
-:where(.css-dev-only-do-not-override-n4pdk8).ant-menu-vertical > .ant-menu-item,
-:where(.css-dev-only-do-not-override-n4pdk8).ant-menu-inline
-  > .ant-menu-submenu
-  > .ant-menu-submenu-title,
-:where(.css-dev-only-do-not-override-n4pdk8).ant-menu-vertical
-  > .ant-menu-submenu
-  > .ant-menu-submenu-title {
-  padding-inline: 24px;
-  margin-block: 8px;
-}
+/* @layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+} */

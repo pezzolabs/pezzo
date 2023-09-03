@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@pezzo/ui": ["libs/ui/src/index.ts"],
+      "@pezzo/ui/*": ["libs/ui/src/*"]
+    }
+  }
+}
