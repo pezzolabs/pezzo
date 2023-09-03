@@ -1,6 +1,6 @@
 import BlurryBlurb from "../../../assets/blurry-blurb.svg";
 import Spline from "@splinetool/react-spline";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   AlertDescription,
@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion } from "framer-motion";
+import { useSearchParams } from "react-router-dom";
 
 const GENERIC_ERROR = "Something went wrong. Please try again later.";
 
@@ -27,6 +28,7 @@ const emailPasswordFormSchema = z.object({
 });
 
 export const LoginPage = () => {
+  const [searchParams] = useSearchParams();
   const [mode, setMode] = useState<"signin" | "signup" | "forgot_password">(
     "signin"
   );
@@ -35,6 +37,18 @@ export const LoginPage = () => {
   const [emailPasswordLoading, setEmailPasswordLoading] =
     useState<boolean>(false);
   const [thirdPartyLoading, setThirdPartyLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const error = searchParams.get("error");
+
+    if (error) {
+      setError(GENERIC_ERROR);
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+    // if (params.error && params.error === "signin") {
+    //   setError(GENERIC_ERROR);
+    // }
+  }, [searchParams]);
 
   const emailPasswordForm = useForm<z.infer<typeof emailPasswordFormSchema>>({
     resolver: zodResolver(emailPasswordFormSchema),

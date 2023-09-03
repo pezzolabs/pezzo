@@ -56,7 +56,7 @@ export const paths = {
 export function App() {
   return (
     <ThemeProvider>
-      <main className="app flex h-full min-h-full flex-1 overflow-hidden bg-slate-900 text-slate-300">
+      <main className="app flex h-full min-h-full flex-1 overflow-hidden bg-neutral-900 text-slate-300">
         <SuperTokensWrapper>
           <QueryClientProvider client={queryClient}>
             {/* Non-authorized routes */}
