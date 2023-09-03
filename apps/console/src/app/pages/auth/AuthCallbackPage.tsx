@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import ThirdPartyEmailPassword from "supertokens-auth-react/recipe/thirdpartyemailpassword";
+import { Loader } from "../../components/common/Loader";
 
 export const AuthCallbackPage = () => {
   const handleAuthCallback = async () => {
@@ -19,5 +20,9 @@ export const AuthCallbackPage = () => {
     handleAuthCallback();
   }, []);
 
-  return <>Loading...</>;
+  return (
+    <div className="flex h-full w-full items-center justify-center">
+      <Loader />
+    </div>
+  );
 };
