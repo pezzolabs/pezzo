@@ -47,6 +47,7 @@ export class AnalyticsService {
       });
     } else {
       console.log("Segment analytics disabled");
+      this.segmentEnabled = false;
     }
   }
 
@@ -54,6 +55,8 @@ export class AnalyticsService {
     event: keyof typeof AnalyticsEvent,
     properties?: Record<string, any> & EventContextProps
   ) => {
+    if (!this.segmentEnabled) return;
+
     const eventContext = {
       ...this.context.eventContext,
       ...getRequestContext(),
