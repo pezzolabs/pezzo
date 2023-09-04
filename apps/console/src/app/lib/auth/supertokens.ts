@@ -45,66 +45,9 @@ export const initSuperTokens = () => {
     },
     recipeList: [
       ThirdPartyEmailPassword.init({
-        useShadowDom: true,
         signInAndUpFeature: {
           providers,
-          signUpForm: {
-            formFields: [
-              {
-                id: "name",
-                label: "Name",
-                placeholder: "Your name",
-              },
-            ],
-          },
         },
-        style: `
-
-                [data-supertokens~=container] {
-                    --palette-background: 51, 51, 51;
-                    --palette-inputBackground: ${toRgba(colors.neutral[900])};
-                    --palette-inputBorder: 41, 41, 41;
-                    --palette-textTitle: 255, 255, 255;
-                    --palette-textLabel: 255, 255, 255;
-                    --palette-textPrimary: 255, 255, 255;
-                    --palette-primary: ${toRgba("#5FDD97")};
-                    --palette-error: 173, 46, 46;
-                    --palette-textInput: 169, 169, 169;
-                    --palette-textLink: 169, 169, 169;
-                    width: 100%;
-                    height: 100vh;
-                    margin: 0;
-                    display: flex;
-                    justify-content: center;
-                    flex-direction: column;
-                    border-radius: 0;
-                    font-family: "Brockmann" !important;
-                }
-                [data-supertokens~=divider] {
-                  border-bottom: 0.3px solid ${colors.neutral[600]};
-                }
-                [data-supertokens~=row] {
-                    box-shadow: 3px 3px 10px 0 rgba(0, 0, 0, 0.1);
-                    border: 1px solid ${colors.neutral[600]};
-                    background-color: ${colors.neutral[700]};
-                    padding: 32px;
-                    max-width: 480px;
-                    border-radius: 8px;
-                }
-                [data-supertokens~=input]:focus {
-                  outline: none;
-                  border: none;
-                }
-                 [data-supertokens=button] {
-                    background-color: ${"#5FDD97"};
-                    border: 0px;
-                    width: 100%;
-                    margin: 0 auto;
-                }
-                [data-supertokens=superTokensBranding] {
-                    display: none;
-                }
-            `,
       }),
       Session.init(),
     ],
