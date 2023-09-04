@@ -1,0 +1,36 @@
+h1.ant-typography,
+h2.ant-typography,
+h3.ant-typography,
+h4.ant-typography,
+h5.ant-typography {
+  font-family: "Brockmann", serif;
+  font-weight: 400;
+  color: theme("colors.slate.200");
+}
+
+.ant-btn {
+  font-family: "Brockmann", serif;
+  font-weight: 400;
+}
+
+.ant-tabs-tab {
+  font-family: "Brockmann", serif;
+  font-weight: 300;
+}
+
+.ant-modal-title {
+  font-family: "Brockmann", serif;
+  font-weight: 400;
+}
+
+:where(.css-dev-only-do-not-override-n4pdk8).ant-menu-inline > .ant-menu-item,
+:where(.css-dev-only-do-not-override-n4pdk8).ant-menu-vertical > .ant-menu-item,
+:where(.css-dev-only-do-not-override-n4pdk8).ant-menu-inline
+  > .ant-menu-submenu
+  > .ant-menu-submenu-title,
+:where(.css-dev-only-do-not-override-n4pdk8).ant-menu-vertical
+  > .ant-menu-submenu
+  > .ant-menu-submenu-title {
+  padding-inline: 24px;
+  margin-block: 8px;
+}

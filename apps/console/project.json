@@ -18,6 +18,7 @@
         "main": "apps/console/src/main.tsx",
         "tsConfig": "apps/console/tsconfig.app.json",
         "sourceMap": true,
+        "postcssConfig": "apps/console/postcss.config.js",
         "assets": [
           "apps/console/src/favicon.ico",
           "apps/console/src/assets",
