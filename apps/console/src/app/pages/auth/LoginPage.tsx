@@ -11,7 +11,6 @@ import {
   Input,
 } from "@pezzo/ui";
 import GoogleIcon from "../../../assets/icons/google.svg";
-import { thirdPartySignIn } from "../../lib/auth/supertokens";
 import ThirdPartyEmailPassword from "supertokens-auth-react/recipe/thirdpartyemailpassword";
 import { Form, FormField } from "@pezzo/ui";
 import { useForm } from "react-hook-form";
@@ -19,6 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion } from "framer-motion";
 import { useSearchParams } from "react-router-dom";
+import { trackEvent } from "../../lib/utils/analytics";
 
 const GENERIC_ERROR = "Something went wrong. Please try again later.";
 
@@ -45,9 +45,6 @@ export const LoginPage = () => {
       setError(GENERIC_ERROR);
       window.history.replaceState(null, "", window.location.pathname);
     }
-    // if (params.error && params.error === "signin") {
-    //   setError(GENERIC_ERROR);
-    // }
   }, [searchParams]);
 
   const emailPasswordForm = useForm<z.infer<typeof emailPasswordFormSchema>>({
@@ -71,7 +68,16 @@ export const LoginPage = () => {
     setThirdPartyLoading(true);
 
     try {
-      await thirdPartySignIn(providerId);
+      const url =
+        await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState(
+          {
+            providerId,
+            authorisationURL: `${window.location.origin}/login/callback/${providerId}`,
+          }
+        );
+
+      trackEvent("user_login", { method: "third_party", provider: providerId });
+      window.location.href = url;
     } catch (error) {
       setError(GENERIC_ERROR);
     }
@@ -111,6 +117,7 @@ export const LoginPage = () => {
       return;
     }
 
+    trackEvent("user_login", { method: "email_password" });
     window.location.assign("/");
   };
 

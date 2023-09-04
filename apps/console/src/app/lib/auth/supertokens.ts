@@ -53,15 +53,3 @@ export const initSuperTokens = () => {
     ],
   });
 };
-
-export const thirdPartySignIn = async (providerId: "google") => {
-  const url =
-    await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState(
-      {
-        providerId,
-        authorisationURL: `${window.location.origin}/login/callback/${providerId}`,
-      }
-    );
-
-  window.location.href = url;
-};
