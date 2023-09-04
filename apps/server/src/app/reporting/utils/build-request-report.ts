@@ -33,12 +33,13 @@ const buildOpenAIReport = (
       },
     };
 
-    const { promptCost, completionCost } = OpenAIToolkit.calculateGptCost({
-      model: (model.startsWith("ft:gpt-3.5-turbo-0613") ? "ft:gpt-3.5-turbo-0613" : model) as any,
-      promptTokens: usage.prompt_tokens,
-      completionTokens: usage.completion_tokens,
-    });
-  
+  const { promptCost, completionCost } = OpenAIToolkit.calculateGptCost({
+    model: (model.startsWith("ft:gpt-3.5-turbo-0613")
+      ? "ft:gpt-3.5-turbo-0613"
+      : model) as any,
+    promptTokens: usage.prompt_tokens,
+    completionTokens: usage.completion_tokens,
+  });
 
   const totalTokens = usage.prompt_tokens + usage.completion_tokens;
 
