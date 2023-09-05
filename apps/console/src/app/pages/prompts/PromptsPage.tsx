@@ -10,42 +10,34 @@ import { Button, Space, Spin, Typography, theme } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 import { trackEvent } from "../../lib/utils/analytics";
-import { Alert, AlertDescription, AlertTitle } from "@pezzo/ui";
 
 export const PromptsPage = () => {
-  // const { project, isLoading: isProjectsLoading } = useCurrentProject();
-  // const { token } = theme.useToken();
-  // const navigate = useNavigate();
-  // const [isCreatePromptModalOpen, setIsCreatePromptModalOpen] = useState(false);
-  // const { data, isLoading: isLoadingPrompts } = useQuery({
-  //   queryKey: ["prompts", project?.id],
-  //   queryFn: () =>
-  //     gqlClient.request(GET_ALL_PROMPTS, { data: { projectId: project?.id } }),
-  //   enabled: !!project?.id,
-  // });
+  const { project, isLoading: isProjectsLoading } = useCurrentProject();
+  const { token } = theme.useToken();
+  const navigate = useNavigate();
+  const [isCreatePromptModalOpen, setIsCreatePromptModalOpen] = useState(false);
+  const { data, isLoading: isLoadingPrompts } = useQuery({
+    queryKey: ["prompts", project?.id],
+    queryFn: () =>
+      gqlClient.request(GET_ALL_PROMPTS, { data: { projectId: project?.id } }),
+    enabled: !!project?.id,
+  });
 
-  // const isLoading = isLoadingPrompts || isProjectsLoading;
+  const isLoading = isLoadingPrompts || isProjectsLoading;
 
-  // const onCreatePromptModalOpen = () => {
-  //   setIsCreatePromptModalOpen(true);
-  //   trackEvent("prompt_modal_opened");
-  // };
+  const onCreatePromptModalOpen = () => {
+    setIsCreatePromptModalOpen(true);
+    trackEvent("prompt_modal_opened");
+  };
 
-  // const onPromptClick = (promptId: string) => () => {
-  //   navigate(`/projects/${project.id}/prompts/${promptId}`);
-  //   trackEvent("prompt_nav_clicked", { promptId });
-  // };
+  const onPromptClick = (promptId: string) => () => {
+    navigate(`/projects/${project.id}/prompts/${promptId}`);
+    trackEvent("prompt_nav_clicked", { promptId });
+  };
 
   return (
     <>
-      <Alert>
-        <AlertTitle>Heads up!</AlertTitle>
-        <AlertDescription>
-          You can add components and dependencies to your app using the cli.
-        </AlertDescription>
-      </Alert>
-
-      {/* <CreatePromptModal
+      <CreatePromptModal
         open={isCreatePromptModalOpen}
         onClose={() => setIsCreatePromptModalOpen(false)}
         onCreated={(id) => navigate(`/projects/${project.id}/prompts/${id}`)}
@@ -82,7 +74,7 @@ export const PromptsPage = () => {
             ))}
           </div>
         </Spin>
-      </Space> */}
+      </Space>
     </>
   );
 };
