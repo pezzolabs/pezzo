@@ -19,13 +19,10 @@ import * as z from "zod";
 import { motion } from "framer-motion";
 import { useSearchParams } from "react-router-dom";
 import { trackEvent } from "../../lib/utils/analytics";
+import clsx from "clsx";
+import { googleEnabled } from "../../lib/auth/supertokens";
 
 const GENERIC_ERROR = "Something went wrong. Please try again later.";
-
-const emailPasswordFormSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(1, "Password is required"),
-});
 
 export const LoginPage = () => {
   const [searchParams] = useSearchParams();
@@ -38,6 +35,33 @@ export const LoginPage = () => {
     useState<boolean>(false);
   const [thirdPartyLoading, setThirdPartyLoading] = useState<boolean>(false);
 
+  const verb = mode === "signin" ? "Sign in" : "Sign up";
+
+  const signInSchema = z.object({
+    email: z.string().email({ message: "Invalid email address" }),
+    password: z.string().min(1, "Password is required"),
+    confirm_password: mode === "signup" ? z.string() : z.string().optional(),
+  });
+
+  const signUpSchema = z
+    .object({
+      email: z.string().email({ message: "Invalid email address" }),
+      password: z
+        .string()
+        .regex(
+          /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}[\]:;<>,.?~\\-]).{8,}$/,
+          "Password must contain at least 8 characters, one uppercase, one lowercase and one number"
+        ),
+      confirm_password: z.string().min(1, "Confirm password is required"),
+      name: z.string().min(1, "Display name is required"),
+    })
+    .refine((data) => data.password === data.confirm_password, {
+      message: "Passwords do not match",
+      path: ["confirm_password"],
+    });
+
+  const formSchema = mode === "signin" ? signInSchema : signUpSchema;
+
   useEffect(() => {
     const error = searchParams.get("error");
 
@@ -47,19 +71,31 @@ export const LoginPage = () => {
     }
   }, [searchParams]);
 
-  const emailPasswordForm = useForm<z.infer<typeof emailPasswordFormSchema>>({
-    resolver: zodResolver(emailPasswordFormSchema),
+  const emailPasswordForm = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const onEmailPasswordSubmit = async (
-    values: z.infer<typeof emailPasswordFormSchema>
-  ) => {
+  const handleSetMode = (mode: "signin" | "signup" | "forgot_password") => {
+    setMode(mode);
+    setError(undefined);
+    emailPasswordForm.clearErrors();
+  };
+
+  const onEmailPasswordSubmit = async (formValues) => {
     setEmailPasswordLoading(true);
-    await emailPasswordSignIn(values.email, values.password);
+
+    if (mode === "signup") {
+      const values: z.infer<typeof signUpSchema> = formValues;
+      await emailPasswordSignUp(values.email, values.password, values.name);
+    } else {
+      const values: z.infer<typeof signInSchema> = formValues;
+      await emailPasswordSignIn(values.email, values.password);
+    }
+
     setEmailPasswordLoading(false);
   };
 
@@ -121,6 +157,42 @@ export const LoginPage = () => {
     window.location.assign("/");
   };
 
+  const emailPasswordSignUp = async (
+    email: string,
+    password: string,
+    name: string
+  ) => {
+    const response = await ThirdPartyEmailPassword.emailPasswordSignUp({
+      formFields: [
+        {
+          id: "email",
+          value: email,
+        },
+        {
+          id: "password",
+          value: password,
+        },
+        {
+          id: "name",
+          value: name,
+        },
+      ],
+    });
+
+    if (response.status === "FIELD_ERROR") {
+      let error = "";
+      response.formFields.forEach((item) => {
+        error += item.error + "\n";
+      });
+
+      setError(error);
+      return;
+    }
+
+    trackEvent("user_login", { method: "email_password" });
+    window.location.assign("/");
+  };
+
   return (
     <div className="flex min-h-full flex-1 overflow-hidden">
       <div className="z-10 flex flex-1 flex-col justify-center bg-neutral-900 px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
@@ -132,7 +204,7 @@ export const LoginPage = () => {
               alt="Your Company"
             />
             <h2 className="font-heading mt-8 text-3xl font-medium leading-9 tracking-tight">
-              Sign in to Pezzo{" "}
+              {verb} to Pezzo{" "}
             </h2>
           </div>
 
@@ -146,15 +218,17 @@ export const LoginPage = () => {
           </div>
 
           <div className="mt-2 flex flex-col space-y-2">
-            <Button
-              size="lg"
-              className="w-full bg-neutral-200 text-neutral-800 hover:bg-neutral-200 hover:text-neutral-700"
-              onClick={() => handleThirdPartySignIn("google")}
-              loading={thirdPartyLoading}
-            >
-              <img src={GoogleIcon} alt="Google Logo" className="mr-3 h-5" />
-              Continue with Google
-            </Button>
+            {googleEnabled && (
+              <Button
+                size="lg"
+                className="w-full bg-neutral-200 text-neutral-800 hover:bg-neutral-200 hover:text-neutral-700"
+                onClick={() => handleThirdPartySignIn("google")}
+                loading={thirdPartyLoading}
+              >
+                <img src={GoogleIcon} alt="Google Logo" className="mr-3 h-5" />
+                {verb} with Google
+              </Button>
+            )}
 
             <motion.div
               key={[mode, isEmail].join("_")}
@@ -163,10 +237,14 @@ export const LoginPage = () => {
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
-              {mode !== "signup" && isEmail && (
+              {isEmail && (
                 <>
                   <div className="-mt-2 py-4">
-                    <div className="h-px w-full bg-neutral-700"></div>
+                    <div
+                      className={`h-px w-full bg-neutral-700 ${clsx({
+                        hidden: !googleEnabled,
+                      })}`}
+                    ></div>
                   </div>
 
                   <Form {...emailPasswordForm}>
@@ -209,6 +287,44 @@ export const LoginPage = () => {
                         )}
                       />
 
+                      {mode === "signup" && (
+                        <>
+                          <FormField
+                            control={emailPasswordForm.control}
+                            name="confirm_password"
+                            render={({ field }) => (
+                              <FormItem>
+                                <Input
+                                  {...field}
+                                  autoComplete="off"
+                                  size="lg"
+                                  type="password"
+                                  placeholder="Confirm Password"
+                                  className="w-full"
+                                />
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={emailPasswordForm.control}
+                            name="name"
+                            render={({ field }) => (
+                              <FormItem>
+                                <Input
+                                  {...field}
+                                  size="lg"
+                                  type="text"
+                                  placeholder="Display Name (e.g. John Doe)"
+                                  className="w-full"
+                                />
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </>
+                      )}
+
                       <Button
                         type="submit"
                         size="lg"
@@ -216,7 +332,7 @@ export const LoginPage = () => {
                         className="mb-2 w-full"
                         loading={emailPasswordLoading}
                       >
-                        Continue with Email
+                        {verb} with Email
                       </Button>
                     </form>
                   </Form>
@@ -224,7 +340,7 @@ export const LoginPage = () => {
               )}
             </motion.div>
 
-            {mode !== "signup" && !isEmail && (
+            {!isEmail && (
               <Button
                 size="lg"
                 variant="outline"
@@ -232,7 +348,7 @@ export const LoginPage = () => {
                 loading={emailPasswordLoading}
                 onClick={() => setIsEmail(true)}
               >
-                Continue with Email
+                {verb} with Email
               </Button>
             )}
           </div>
@@ -249,7 +365,7 @@ export const LoginPage = () => {
                 Don't have an account?{" "}
                 <Button
                   variant="link"
-                  onClick={() => setMode("signup")}
+                  onClick={() => handleSetMode("signup")}
                   className="px-0"
                 >
                   Sign up
@@ -257,24 +373,24 @@ export const LoginPage = () => {
                 .
               </p>
             ) : (
-              <p className="text-center text-sm leading-6">
-                or{" "}
+              <p className="mt-2 text-center text-sm leading-6">
+                Already have an account?{" "}
                 <Button
                   variant="link"
                   onClick={() => {
-                    setMode("signin");
-                    setIsEmail(true);
+                    handleSetMode("signin");
                   }}
                   className="px-0"
                 >
-                  sign in with email
+                  Sign in
                 </Button>
+                .
               </p>
             )}
           </motion.div>
         </div>
       </div>
-      <div className="relative flex hidden h-[100vh] flex-1 bg-neutral-950 lg:block">
+      <div className="relative flex h-[100vh] flex-1 bg-neutral-950 lg:block">
         <div className="flex h-full w-full items-center justify-center">
           <div
             className="pointer-events-none absolute -mt-36 translate-x-[0vw] translate-y-[10vh] scale-[110%] opacity-50 blur-2xl md:block"
