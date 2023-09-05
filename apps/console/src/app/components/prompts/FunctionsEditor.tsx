@@ -3,8 +3,8 @@ import { FormConfig, OnSubmit } from "@tutim/types";
 import { TutimWizard, TutimProvider } from "@tutim/headless";
 import { defaultFields } from "@tutim/fields";
 import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
-import { PromptService } from "@pezzo/types";
 import { trackEvent } from "../../lib/utils/analytics";
+import "./form.css";
 
 interface Props {
   onClose: () => void;
@@ -29,8 +29,8 @@ const config: FormConfig = {
           groups: [
             {
               key: "name",
-              fields: ["key", "type", "required"],
-              layout: { fieldsPerRow: 3 },
+              fields: ["key", "type"],
+              layout: { fieldsPerRow: 2 },
             },
           ],
         },
@@ -87,11 +87,6 @@ const config: FormConfig = {
                   label: "Description",
                   type: "text",
                 },
-                {
-                  key: "required",
-                  label: "Is Required?",
-                  type: "checkbox",
-                },
               ],
             },
           },
@@ -111,21 +106,18 @@ export const FunctionsForm = ({ data, onSubmit }): JSX.Element => {
 
 export const FunctionsEditor = ({ onClose }: Props) => {
   const { form } = usePromptVersionEditorContext();
-  const functions =
-    form.getFieldValue([
-      "settings",
-      PromptService.OpenAIChatCompletion,
-      "functions",
-    ]) || [];
+  const functions = form.getFieldValue(["settings", "functions"]) || [];
 
   const data = functions.map(parseFromSchemaToFormData);
   const onSubmit: OnSubmit = ({ data }) => {
     const parsedFunctions = data.functions.map(parseFromFormDataToSchema);
+    console.log(
+      "🚀 ~ file: FunctionsEditor.tsx:120 ~ FunctionsEditor ~ parsedFunctions:",
+      parsedFunctions
+    );
     form.setFieldsValue({
       settings: {
-        [PromptService.OpenAIChatCompletion]: {
-          functions: parsedFunctions.length ? parsedFunctions : undefined,
-        },
+        functions: parsedFunctions.length ? parsedFunctions : undefined,
       },
     });
     onClose();
@@ -140,25 +132,30 @@ export const FunctionsEditor = ({ onClose }: Props) => {
   );
 };
 
-interface FunctionSchema {
+interface FunctionForm {
   name: string;
   description: string;
   parameters: {
     key: string;
     type: string;
     description: string;
+    required: boolean;
   }[];
 }
-interface FunctionForm {
+
+interface FunctionSchema {
   name: string;
   description: string;
-  parameters: Record<
-    string,
-    {
-      type: string;
-      description: string;
-    }
-  >;
+  parameters: {
+    properties: Record<
+      string,
+      {
+        type: string;
+        description: string;
+        required: boolean;
+      }
+    >;
+  };
 }
 
 const mapArrWithKeyToObjByKey = <T extends { key: string }>(arr: T[]) => {
@@ -168,13 +165,17 @@ const mapArrWithKeyToObjByKey = <T extends { key: string }>(arr: T[]) => {
   }, {});
 };
 
-const parseFromFormDataToSchema = (data: FunctionSchema) => {
-  const parametersObject = mapArrWithKeyToObjByKey(data.parameters);
-  return { ...data, parameters: parametersObject };
+const parseFromFormDataToSchema = (data: FunctionForm): FunctionSchema => {
+  const propertiesObject = mapArrWithKeyToObjByKey(data.parameters);
+  const parameters = {
+    type: "object",
+    properties: propertiesObject,
+  };
+  return { ...data, parameters };
 };
 
-const parseFromSchemaToFormData = (data: FunctionForm) => {
-  const parametersArray = Object.entries(data.parameters).map(
+const parseFromSchemaToFormData = (data: FunctionSchema): FunctionForm => {
+  const parametersArray = Object.entries(data.parameters.properties).map(
     ([key, value]) => ({ key, ...value })
   );
   return { ...data, parameters: parametersArray };
