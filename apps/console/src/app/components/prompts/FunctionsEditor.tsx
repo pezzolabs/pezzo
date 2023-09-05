@@ -111,10 +111,6 @@ export const FunctionsEditor = ({ onClose }: Props) => {
   const data = functions.map(parseFromSchemaToFormData);
   const onSubmit: OnSubmit = ({ data }) => {
     const parsedFunctions = data.functions.map(parseFromFormDataToSchema);
-    console.log(
-      "🚀 ~ file: FunctionsEditor.tsx:120 ~ FunctionsEditor ~ parsedFunctions:",
-      parsedFunctions
-    );
     form.setFieldsValue({
       settings: {
         functions: parsedFunctions.length ? parsedFunctions : undefined,
