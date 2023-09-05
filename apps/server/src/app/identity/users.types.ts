@@ -13,4 +13,5 @@ export interface RequestUser {
 export interface UserCreateRequest {
   id: string;
   email: string;
+  name: string;
 }
