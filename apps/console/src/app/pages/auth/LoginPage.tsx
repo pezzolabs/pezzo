@@ -194,218 +194,228 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="flex min-h-full flex-1 overflow-hidden">
-      <div className="z-10 flex flex-1 flex-col justify-center bg-neutral-900 px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
-        <div className="mx-auto w-full max-w-sm lg:w-96">
-          <div className="text-center">
-            <img
-              className="inline-block h-20 w-auto"
-              src="https://cdn.pezzo.ai/logo-square-transparent-bg.png"
-              alt="Your Company"
-            />
-            <h2 className="font-heading mt-8 text-3xl font-medium leading-9 tracking-tight">
-              {verb} to Pezzo{" "}
-            </h2>
-          </div>
+    <div className="tailwind">
+      <div className="dark h-full font-sans">
+        <main className="app flex h-full min-h-full flex-1 overflow-hidden bg-neutral-900 text-slate-300">
+          <div className="flex min-h-full flex-1 overflow-hidden">
+            <div className="z-10 flex flex-1 flex-col justify-center bg-neutral-900 px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+              <div className="mx-auto w-full max-w-sm lg:w-96">
+                <div className="text-center">
+                  <img
+                    className="inline-block h-20 w-auto"
+                    src="https://cdn.pezzo.ai/logo-square-transparent-bg.png"
+                    alt="Your Company"
+                  />
+                  <h2 className="font-heading mt-8 text-3xl font-medium leading-9 tracking-tight">
+                    {verb} to Pezzo{" "}
+                  </h2>
+                </div>
 
-          <div className="mb-4 mt-6">
-            {error && (
-              <Alert variant="destructive">
-                <AlertTitle>Oops!</AlertTitle>
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-          </div>
+                <div className="mb-4 mt-6">
+                  {error && (
+                    <Alert variant="destructive">
+                      <AlertTitle>Oops!</AlertTitle>
+                      <AlertDescription>{error}</AlertDescription>
+                    </Alert>
+                  )}
+                </div>
 
-          <div className="mt-2 flex flex-col space-y-2">
-            {googleEnabled && (
-              <Button
-                size="lg"
-                className="w-full bg-neutral-200 text-neutral-800 hover:bg-neutral-200 hover:text-neutral-700"
-                onClick={() => handleThirdPartySignIn("google")}
-                loading={thirdPartyLoading}
-              >
-                <img src={GoogleIcon} alt="Google Logo" className="mr-3 h-5" />
-                {verb} with Google
-              </Button>
-            )}
-
-            <motion.div
-              key={[mode, isEmail].join("_")}
-              initial={{ height: 10, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              {isEmail && (
-                <>
-                  <div className="-mt-2 py-4">
-                    <div
-                      className={`h-px w-full bg-neutral-700 ${clsx({
-                        hidden: !googleEnabled,
-                      })}`}
-                    ></div>
-                  </div>
-
-                  <Form {...emailPasswordForm}>
-                    <form
-                      onSubmit={emailPasswordForm.handleSubmit(
-                        onEmailPasswordSubmit
-                      )}
-                      className="flex flex-col space-y-3"
+                <div className="mt-2 flex flex-col space-y-2">
+                  {googleEnabled && (
+                    <Button
+                      size="lg"
+                      className="w-full bg-neutral-200 text-neutral-800 hover:bg-neutral-200 hover:text-neutral-700"
+                      onClick={() => handleThirdPartySignIn("google")}
+                      loading={thirdPartyLoading}
                     >
-                      <FormField
-                        control={emailPasswordForm.control}
-                        name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <Input
-                              {...field}
-                              size="lg"
-                              type="email"
-                              placeholder="Email"
-                              className="w-full"
-                            />
-                            <FormMessage />
-                          </FormItem>
-                        )}
+                      <img
+                        src={GoogleIcon}
+                        alt="Google Logo"
+                        className="mr-3 h-5"
                       />
-                      <FormField
-                        control={emailPasswordForm.control}
-                        name="password"
-                        render={({ field }) => (
-                          <FormItem>
-                            <Input
-                              {...field}
-                              size="lg"
-                              type="password"
-                              placeholder="Password"
-                              className="w-full"
+                      {verb} with Google
+                    </Button>
+                  )}
+
+                  <motion.div
+                    key={[mode, isEmail].join("_")}
+                    initial={{ height: 10, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {isEmail && (
+                      <>
+                        <div className="-mt-2 py-4">
+                          <div
+                            className={`h-px w-full bg-neutral-700 ${clsx({
+                              hidden: !googleEnabled,
+                            })}`}
+                          ></div>
+                        </div>
+
+                        <Form {...emailPasswordForm}>
+                          <form
+                            onSubmit={emailPasswordForm.handleSubmit(
+                              onEmailPasswordSubmit
+                            )}
+                            className="flex flex-col space-y-3"
+                          >
+                            <FormField
+                              control={emailPasswordForm.control}
+                              name="email"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <Input
+                                    {...field}
+                                    size="lg"
+                                    type="email"
+                                    placeholder="Email"
+                                    className="w-full"
+                                  />
+                                  <FormMessage />
+                                </FormItem>
+                              )}
                             />
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                            <FormField
+                              control={emailPasswordForm.control}
+                              name="password"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <Input
+                                    {...field}
+                                    size="lg"
+                                    type="password"
+                                    placeholder="Password"
+                                    className="w-full"
+                                  />
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
 
-                      {mode === "signup" && (
-                        <>
-                          <FormField
-                            control={emailPasswordForm.control}
-                            name="confirm_password"
-                            render={({ field }) => (
-                              <FormItem>
-                                <Input
-                                  {...field}
-                                  autoComplete="off"
-                                  size="lg"
-                                  type="password"
-                                  placeholder="Confirm Password"
-                                  className="w-full"
+                            {mode === "signup" && (
+                              <>
+                                <FormField
+                                  control={emailPasswordForm.control}
+                                  name="confirm_password"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <Input
+                                        {...field}
+                                        autoComplete="off"
+                                        size="lg"
+                                        type="password"
+                                        placeholder="Confirm Password"
+                                        className="w-full"
+                                      />
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
                                 />
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={emailPasswordForm.control}
-                            name="name"
-                            render={({ field }) => (
-                              <FormItem>
-                                <Input
-                                  {...field}
-                                  size="lg"
-                                  type="text"
-                                  placeholder="Display Name (e.g. John Doe)"
-                                  className="w-full"
+                                <FormField
+                                  control={emailPasswordForm.control}
+                                  name="name"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <Input
+                                        {...field}
+                                        size="lg"
+                                        type="text"
+                                        placeholder="Display Name (e.g. John Doe)"
+                                        className="w-full"
+                                      />
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
                                 />
-                                <FormMessage />
-                              </FormItem>
+                              </>
                             )}
-                          />
-                        </>
-                      )}
 
+                            <Button
+                              type="submit"
+                              size="lg"
+                              variant="outline"
+                              className="mb-2 w-full"
+                              loading={emailPasswordLoading}
+                            >
+                              {verb} with Email
+                            </Button>
+                          </form>
+                        </Form>
+                      </>
+                    )}
+                  </motion.div>
+
+                  {!isEmail && (
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      className="mb-2 w-full"
+                      loading={emailPasswordLoading}
+                      onClick={() => setIsEmail(true)}
+                    >
+                      {verb} with Email
+                    </Button>
+                  )}
+                </div>
+
+                <motion.div
+                  key={mode}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {mode === "signin" ? (
+                    <p className="mt-2 text-center text-sm leading-6">
+                      Don't have an account?{" "}
                       <Button
-                        type="submit"
-                        size="lg"
-                        variant="outline"
-                        className="mb-2 w-full"
-                        loading={emailPasswordLoading}
+                        variant="link"
+                        onClick={() => handleSetMode("signup")}
+                        className="px-0"
                       >
-                        {verb} with Email
+                        Sign up
                       </Button>
-                    </form>
-                  </Form>
-                </>
-              )}
-            </motion.div>
-
-            {!isEmail && (
-              <Button
-                size="lg"
-                variant="outline"
-                className="mb-2 w-full"
-                loading={emailPasswordLoading}
-                onClick={() => setIsEmail(true)}
-              >
-                {verb} with Email
-              </Button>
-            )}
-          </div>
-
-          <motion.div
-            key={mode}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {mode === "signin" ? (
-              <p className="mt-2 text-center text-sm leading-6">
-                Don't have an account?{" "}
-                <Button
-                  variant="link"
-                  onClick={() => handleSetMode("signup")}
-                  className="px-0"
+                      .
+                    </p>
+                  ) : (
+                    <p className="mt-2 text-center text-sm leading-6">
+                      Already have an account?{" "}
+                      <Button
+                        variant="link"
+                        onClick={() => {
+                          handleSetMode("signin");
+                        }}
+                        className="px-0"
+                      >
+                        Sign in
+                      </Button>
+                      .
+                    </p>
+                  )}
+                </motion.div>
+              </div>
+            </div>
+            <div className="relative flex h-[100vh] flex-1 bg-neutral-950 lg:block">
+              <div className="flex h-full w-full items-center justify-center">
+                <div
+                  className="pointer-events-none absolute -mt-36 translate-x-[0vw] translate-y-[10vh] scale-[110%] opacity-50 blur-2xl md:block"
+                  aria-hidden="true"
                 >
-                  Sign up
-                </Button>
-                .
-              </p>
-            ) : (
-              <p className="mt-2 text-center text-sm leading-6">
-                Already have an account?{" "}
-                <Button
-                  variant="link"
-                  onClick={() => {
-                    handleSetMode("signin");
-                  }}
-                  className="px-0"
-                >
-                  Sign in
-                </Button>
-                .
-              </p>
-            )}
-          </motion.div>
-        </div>
-      </div>
-      <div className="relative flex h-[100vh] flex-1 bg-neutral-950 lg:block">
-        <div className="flex h-full w-full items-center justify-center">
-          <div
-            className="pointer-events-none absolute -mt-36 translate-x-[0vw] translate-y-[10vh] scale-[110%] opacity-50 blur-2xl md:block"
-            aria-hidden="true"
-          >
-            <img
-              src={BlurryBlurb}
-              className="h-[100vh] w-[100vw] object-cover"
-              alt="Page Illustration"
-            />
+                  <img
+                    src={BlurryBlurb}
+                    className="h-[100vh] w-[100vw] object-cover"
+                    alt="Page Illustration"
+                  />
+                </div>
+                <div className="z-10 inline-block">
+                  <Spline scene="https://prod.spline.design/qwBMirz3eudaCbeJ/scene.splinecode" />
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="z-10 inline-block">
-            <Spline scene="https://prod.spline.design/qwBMirz3eudaCbeJ/scene.splinecode" />
-          </div>
-        </div>
+        </main>
       </div>
     </div>
   );

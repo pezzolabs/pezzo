@@ -21,8 +21,12 @@ export const AuthCallbackPage = () => {
   }, []);
 
   return (
-    <div className="flex h-full w-full items-center justify-center">
-      <Loader />
+    <div className="tailwind">
+      <div className="dark h-[100vh] w-[100vw] font-sans">
+        <div className="flex h-full w-full items-center justify-center bg-neutral-900 text-slate-300">
+          <Loader />
+        </div>
+      </div>
     </div>
   );
 };
