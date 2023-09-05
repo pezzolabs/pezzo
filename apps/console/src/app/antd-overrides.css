@@ -1,3 +1,5 @@
+@import "~antd/dist/reset.css";
+
 h1.ant-typography,
 h2.ant-typography,
 h3.ant-typography,
@@ -11,10 +13,6 @@ h5.ant-typography {
 .ant-btn {
   font-family: "Brockmann", serif;
   font-weight: 400;
-}
-
-.ant-btn-primary {
-  background: #13A071 !important;
 }
 
 .ant-tabs-tab {
