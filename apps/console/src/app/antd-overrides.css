@@ -13,6 +13,10 @@ h5.ant-typography {
   font-weight: 400;
 }
 
+.ant-btn-primary {
+  background: #13A071 !important;
+}
+
 .ant-tabs-tab {
   font-family: "Brockmann", serif;
   font-weight: 300;

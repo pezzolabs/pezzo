@@ -1,6 +1,7 @@
 import { Route, Routes, Navigate, Outlet } from "react-router-dom";
 import { hotjar } from "react-hotjar";
 import "./styles.css";
+import "./antd-overrides.css";
 
 import { ThemeProvider } from "./lib/providers/ThemeProvider";
 import { QueryClientProvider } from "@tanstack/react-query";
