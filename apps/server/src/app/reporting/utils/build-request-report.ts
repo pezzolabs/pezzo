@@ -23,7 +23,7 @@ const buildOpenAIReport = (
   const responseBody = response.body;
   const usage = responseBody.usage;
   const requestBody = request.body;
-  const model = requestBody.model;
+  const model = requestBody.model as string;
 
   if (!usage || !requestBody || !model)
     return {
@@ -34,7 +34,9 @@ const buildOpenAIReport = (
     };
 
   const { promptCost, completionCost } = OpenAIToolkit.calculateGptCost({
-    model: model as any,
+    model: (model.startsWith("ft:gpt-3.5-turbo-0613")
+      ? "ft:gpt-3.5-turbo-0613"
+      : model) as any,
     promptTokens: usage.prompt_tokens,
     completionTokens: usage.completion_tokens,
   });
