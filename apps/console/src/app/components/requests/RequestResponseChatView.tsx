@@ -4,7 +4,7 @@ import {
   ObservabilityResponse,
   Provider,
 } from "@pezzo/types";
-import { Space, Typography, theme, List, Row, Col, Avatar } from "antd";
+import { Space, Typography, theme, List, Row, Col, Avatar, Tag } from "antd";
 import OpenAILogo from "../../../assets/providers/openai-logo.svg";
 
 interface Props {
@@ -32,8 +32,9 @@ export const RequestResponseChatView = ({ request, response }: Props) => {
           ...request.body.messages,
           ...choices.map((choice) => choice.message),
         ]}
-        renderItem={(item, index) =>
-          item.role === "user" ? (
+        renderItem={(item, index) => {
+          const isFunctionResponse = !!item.function_call;
+          return item.role === "user" ? (
             <Row>
               <List.Item
                 style={{
@@ -94,12 +95,21 @@ export const RequestResponseChatView = ({ request, response }: Props) => {
                   />
                 </Col>
                 <Col>
-                  <Typography.Text>{item.content}</Typography.Text>
+                  {isFunctionResponse ? (
+                    <>
+                      <Typography.Title level={5}>
+                        Function Call: {item.function_call.name}
+                      </Typography.Title>
+                      <Tag>{item.function_call.arguments}</Tag>
+                    </>
+                  ) : (
+                    <Typography.Text>{item.content}</Typography.Text>
+                  )}
                 </Col>
               </List.Item>
             </Row>
-          )
-        }
+          );
+        }}
       />
     </Space>
   );
