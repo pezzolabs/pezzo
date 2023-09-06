@@ -159,17 +159,6 @@ export const RequestDetails = (props: Props) => {
     },
   ];
 
-  if (props.metadata.client && props.metadata.clientVersion) {
-    listData.push({
-      title: "Client",
-      description: (
-        <Tag>
-          {props.metadata.client} v{props.metadata.clientVersion}
-        </Tag>
-      ),
-    });
-  }
-
   return (
     <>
       {props.metadata?.isTestPrompt && (
