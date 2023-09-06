@@ -17,7 +17,7 @@ import { usePromptVersionEditorContext } from "../../../lib/providers/PromptVers
 import { CommitButton } from "../editor/CommitButton";
 import { Variables } from "../editor/Variables";
 import { ProviderSettingsCard } from "../editor/ProviderSettingsCard";
-import { FunctionsFormModal } from "../FormModal";
+import { FunctionsFormModal } from "../FunctionsFormModal";
 import { colors } from "../../../lib/theme/colors";
 import { PromptTesterModal } from "../prompt-tester/PromptTesterModal";
 import { usePromptTester } from "../../../lib/providers/PromptTesterContext";

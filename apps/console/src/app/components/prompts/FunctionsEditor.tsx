@@ -1,4 +1,4 @@
-import { Col, Row } from "antd";
+import { Col, Form, Row } from "antd";
 import { FormConfig, OnSubmit } from "@tutim/types";
 import { TutimWizard, TutimProvider } from "@tutim/headless";
 import { defaultFields } from "@tutim/fields";
@@ -98,7 +98,10 @@ const config: FormConfig = {
 
 export const FunctionsForm = ({ data, onSubmit }): JSX.Element => {
   return (
-    <TutimProvider fieldComponents={defaultFields}>
+    <TutimProvider
+      key={JSON.stringify(data)}
+      fieldComponents={{ ...defaultFields }}
+    >
       <TutimWizard onSubmit={onSubmit} config={config} initialValues={data} />
     </TutimProvider>
   );
@@ -106,6 +109,7 @@ export const FunctionsForm = ({ data, onSubmit }): JSX.Element => {
 
 export const FunctionsEditor = ({ onClose }: Props) => {
   const { form } = usePromptVersionEditorContext();
+  const settings = Form.useWatch("settings", { form, preserve: true });
   const functions = form.getFieldValue(["settings", "functions"]) || [];
 
   const data = functions.map(parseFromSchemaToFormData);
@@ -119,6 +123,7 @@ export const FunctionsEditor = ({ onClose }: Props) => {
     onClose();
     trackEvent("prompt_functions_edited");
   };
+
   return (
     <Row style={{ padding: "8px" }}>
       <Col span={24}>
