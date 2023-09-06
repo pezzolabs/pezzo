@@ -21,7 +21,7 @@ export class UsersService {
     const user = await this.prisma.user.create({
       data: {
         id: userCreateRequest.id,
-        email: userCreateRequest.email,
+        email: userCreateRequest.email.toLowerCase(),
       },
       include: {
         orgMemberships: true,
@@ -30,7 +30,7 @@ export class UsersService {
 
     const organization = await this.prisma.organization.create({
       data: {
-        name: "Default Organization",
+        name: `${userCreateRequest.name}'s Organization`,
         members: {
           create: {
             userId: userCreateRequest.id,

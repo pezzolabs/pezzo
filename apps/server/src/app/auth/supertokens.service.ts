@@ -86,10 +86,14 @@ export class SupertokensService {
                 emailPasswordSignUpPOST: async (input) => {
                   const res =
                     await originalImplementation.emailPasswordSignUpPOST(input);
+
                   if (res?.status === "OK") {
                     const userCreateRequest: UserCreateRequest = {
                       email: res.user.email,
                       id: res.user.id,
+                      name: input.formFields.find(
+                        (field) => field.id === "name"
+                      ).value,
                     };
 
                     this.logger.assign({ userId: res.user.id });
@@ -140,14 +144,15 @@ export class SupertokensService {
 
                       this.logger.assign({ userId: res.user.id });
 
-                      const userCreateRequest: UserCreateRequest = {
-                        email: data.email,
-                        id: res.user.id,
-                      };
-
                       const metadataFields = {
                         name: `${data.given_name} ${data.family_name}`,
                         photoUrl: data.picture,
+                      };
+
+                      const userCreateRequest: UserCreateRequest = {
+                        email: data.email,
+                        id: res.user.id,
+                        name: metadataFields.name,
                       };
 
                       const user = await this.usersService.getUser(data.email);
@@ -191,20 +196,6 @@ export class SupertokensService {
 
   private getActiveProviders(): TypeProvider[] {
     const providers: TypeProvider[] = [];
-
-    if (
-      this.config.get<string>("GITHUB_OAUTH_APP_CLIENT_ID") &&
-      this.config.get<string>("GITHUB_OAUTH_APP_CLIENT_SECRET")
-    ) {
-      providers.push(
-        ThirdParty.Github({
-          clientId: this.config.get<string>("GITHUB_OAUTH_APP_CLIENT_ID"),
-          clientSecret: this.config.get<string>(
-            "GITHUB_OAUTH_APP_CLIENT_SECRET"
-          ),
-        })
-      );
-    }
 
     if (
       this.config.get<string>("GOOGLE_OAUTH_CLIENT_ID") &&
