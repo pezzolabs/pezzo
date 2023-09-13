@@ -52,7 +52,7 @@ class Completions {
     optionsOrPezzoProps:
       | Parameters<OpenAI["chat"]["completions"]["create"]>[1]
       | PezzoProps = {}
-  ) {
+  ): Promise<OpenAI.Chat.ChatCompletion> {
     const arg1 = _arg1 as PezzoCreateChatCompletionRequest;
 
     const pezzoPrompt = arg1.pezzo as any; // TODO: Fix this type
