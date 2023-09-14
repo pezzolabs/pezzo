@@ -41,10 +41,10 @@ export class AnalyticsService {
         throw new Error("Segment write key not found (SEGMENT_KEY)");
       }
 
-      console.log("Initializing Segment Analytics");
       this.analytics = new Analytics({
         writeKey,
       });
+      this.segmentEnabled = true;
     } else {
       console.log("Segment analytics disabled");
       this.segmentEnabled = false;
