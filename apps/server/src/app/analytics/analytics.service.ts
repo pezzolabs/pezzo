@@ -34,20 +34,14 @@ export class AnalyticsService {
   ) {
     const segmentApiKey = this.config.get("SEGMENT_KEY");
 
-    if (segmentApiKey) {
-      const writeKey: string = this.configService.get("SEGMENT_KEY");
-
-      if (!writeKey) {
-        throw new Error("Segment write key not found (SEGMENT_KEY)");
-      }
-
-      this.analytics = new Analytics({
-        writeKey,
-      });
-      this.segmentEnabled = true;
-    } else {
+    if (!segmentApiKey) {
       console.log("Segment analytics disabled");
       this.segmentEnabled = false;
+    } else {
+      this.analytics = new Analytics({
+        writeKey: segmentApiKey,
+      });
+      this.segmentEnabled = true;
     }
   }
 
