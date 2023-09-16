@@ -1,0 +1,105 @@
+version: "3"
+services:
+  opensearch-node1:
+    image: opensearchproject/opensearch:2.5.0
+    container_name: opensearch-node1
+    environment:
+      - cluster.name=opensearch-cluster
+      - node.name=opensearch-node1
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "plugins.security.disabled=true"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - opensearch-data1:/usr/share/opensearch/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl --silent --fail localhost:9200/_cluster/health || exit 1",
+        ]
+      interval: 20s
+      timeout: 5s
+      retries: 10
+    ports:
+      - 9200:9200 # REST API
+      - 9600:9600 # Performance Analyzer
+    deploy:
+      resources:
+        limits:
+          memory: 3g
+
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:2.5.0
+    container_name: opensearch-dashboards
+    ports:
+      - 5601:5601
+    depends_on:
+      opensearch-node1:
+        condition: service_healthy
+    expose:
+      - "5601"
+    environment:
+      - "DISABLE_SECURITY_DASHBOARDS_PLUGIN=true"
+      - "OPENSEARCH_HOSTS=http://opensearch-node1:9200"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl --silent --fail localhost:5601/api/status || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  supertokens:
+    image: supertokens/supertokens-postgresql:5.0
+    ports:
+      - "3567:3567"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_CONNECTION_URI: postgres://postgres:postgres@postgres:5432/supertokens
+    healthcheck:
+      test: >
+        bash -c 'exec 3<>/dev/tcp/127.0.0.1/3567 && echo -e "GET /hello HTTP/1.1\r\nhost: 127.0.0.1:3567\r\nConnection: close\r\n\r\n" >&3 && cat <&3 | grep "Hello"'
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis-stack-server:
+    image: redis/redis-stack-server:7.2.0-v0
+    container_name: redis-stack-server
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  postgres_data: ~
+  opensearch-data1: ~
