@@ -1,0 +1,31 @@
+---
+title: "Running With Docker Compose"
+description: "Learn how to run the full Pezzo stack locally with Docker Compose."
+---
+
+<Tip>
+  If you don't wish to run Pezzo locally, you can use [Pezzo
+  Cloud](https://app.pezzo.ai) instead. Pezzo Cloud is a fully managed version
+  of Pezzo that is hosted and managed by the Pezzo team.
+</Tip>
+
+## Clone the repository
+
+First, clone the Pezzo repository from GitHub and then navigate into the directory:
+
+```bash
+git clone https://github.com/pezzolabs/pezzo.git
+cd pezzo
+```
+
+## Running with Docker Compose
+
+Run the following command to start the Pezzo stack:
+
+```bash
+docker-compose up
+```
+
+This command will spin up the all infrastructure services (PostgreSQL, Redis, etc.) and the Pezzo components (Server, Console). It will also automatically apply database migratiosn to the PostgreSQL database.
+
+Once the stack is up and running, you can access the Pezzo Console at http://localhost:4200. 🚀

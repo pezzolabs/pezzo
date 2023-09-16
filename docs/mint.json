@@ -31,7 +31,8 @@
       "pages": [
         "introduction/what-is-pezzo",
         "introduction/tutorial-prompt-management/overview",
-        "introduction/tutorial-observability/overview"
+        "introduction/tutorial-observability/overview",
+        "introduction/docker-compose"
       ]
     },
     {

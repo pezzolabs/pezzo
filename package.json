@@ -156,6 +156,7 @@
     "jest": "^29.4.1",
     "jest-environment-jsdom": "^29.4.1",
     "jest-environment-node": "^29.4.1",
+    "mintlify": "^4.0.18",
     "nx": "16.6.0",
     "nx-cloud": "16.2.0",
     "postcss": "^8.4.23",
