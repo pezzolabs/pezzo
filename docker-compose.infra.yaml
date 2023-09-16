@@ -19,7 +19,11 @@ services:
     volumes:
       - opensearch-data1:/usr/share/opensearch/data
     healthcheck:
-      test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          "curl --silent --fail localhost:9200/_cluster/health || exit 1",
+        ]
       interval: 20s
       timeout: 5s
       retries: 10
@@ -45,7 +49,11 @@ services:
       - "DISABLE_SECURITY_DASHBOARDS_PLUGIN=true"
       - "OPENSEARCH_HOSTS=http://opensearch-node1:9200"
     healthcheck:
-      test: ["CMD-SHELL", "curl --silent --fail localhost:5601/api/status || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          "curl --silent --fail localhost:5601/api/status || exit 1",
+        ]
       interval: 10s
       timeout: 5s
       retries: 20
