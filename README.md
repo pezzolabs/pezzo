@@ -13,7 +13,7 @@
 
 <p align="center">
   <strong>
-    Pezzo is the open-source LLMOps platform built for developers and teams. In just two lines of code, you can seamlessly troubleshoot your AI operations, collaborate and manage your prompts in one place, and instantly deploy changes to any environment.
+    Pezzo is a fully cloud-native and open-source LLMOps platform. Seamlessly observe and monitor your AI operations, troubleshoot issues, save up to 90% on costs and latency, collaborate and manage your prompts in one place, and instantly deliver AI changes.
   </strong><br/><br/>
   <a href="https://pezzo.cc/discord" target="_blank">
     <img src="https://cdn.pezzo.ai/discord-button.png" height="32" />
@@ -114,9 +114,11 @@ In the documentation, you can find information on how to use Pezzo, its architec
 
 Looking for a client that's not listed here? [Open an issue](https://github.com/pezzolabs/pezzo/issues/new/choose) and let us know!
 
-# Getting Started - Local Development
+# Getting Started - Docker Compose
 
-This section is useful for contributors who want to run Pezzo locally in development mode.
+If you simplay want to run the full Pezzo stack locally, check out [Running With Docker Compose](http://docs.pezzo.ai/introduction/docker-compose) in the documentation.
+
+If you want to run Pezzo in development mode, continue reading.
 
 ### Prerequisites
 
@@ -132,14 +134,14 @@ Install NPM dependencies by running:
 npm install
 ```
 
-### Spin up development dependencies via Docker Compose
+### Spin up infrastructure dependencies via Docker Compose
 
-Pezzo is entirely cloud-native and relies solely on open-source technologies such as [PostgreSQL](https://www.postgresql.org/), [OpenSearch](https://github.com/opensearch-project/OpenSearch), and [Supertokens](https://supertokens.com/).
+Pezzo is entirely cloud-native and relies solely on open-source technologies such as [PostgreSQL](https://www.postgresql.org/), [OpenSearch](https://github.com/opensearch-project/OpenSearch), [Redis](https://github.com/redis/redis) and [Supertokens](https://supertokens.com/).
 
-Spin these dependencies up via Docker Compose:
+You can run these dependencies via Docker Compose:
 
 ```
-docker-compose -f docker-compose.dev.yaml up
+docker-compose -f docker-compose.infra.yaml up
 ```
 
 ### Start Pezzo
