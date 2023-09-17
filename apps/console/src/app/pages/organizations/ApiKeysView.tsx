@@ -26,11 +26,15 @@ export const ApiKeysView = () => {
       (key) => key.provider === provider.provider
     );
 
+    const value = apiKey?.censoredValue
+      ? `**********${apiKey?.censoredValue}`
+      : null;
+
     return (
       <ProviderApiKeyListItem
         key={provider.provider}
         provider={provider.provider}
-        value={apiKey?.value}
+        value={value}
         iconBase64={provider.iconBase64}
       />
     );
@@ -53,7 +57,7 @@ export const ApiKeysView = () => {
         </div>
       )}
 
-      {/* {providerApiKeysData && (
+      {providerApiKeysData && (
         <div>
           <Typography.Title level={2}>Provider API Keys</Typography.Title>
 
@@ -67,7 +71,7 @@ export const ApiKeysView = () => {
             {providers.map((item, index) => renderProviderApiKey(item))}
           </Space>
         </div>
-      )} */}
+      )}
     </>
   );
 };
