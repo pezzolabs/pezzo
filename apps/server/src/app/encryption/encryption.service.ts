@@ -16,7 +16,9 @@ export class EncryptionService {
     this.kms = new KMS({
       region,
       endpoint: isLocalKMS ? "http://localhost:9981" : undefined,
-      credentials: isLocalKMS ? { accessKeyId: "", secretAccessKey: "" } : undefined,
+      credentials: isLocalKMS
+        ? { accessKeyId: "", secretAccessKey: "" }
+        : undefined,
     });
   }
 
