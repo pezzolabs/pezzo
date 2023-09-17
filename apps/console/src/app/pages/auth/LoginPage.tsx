@@ -112,7 +112,6 @@ export const LoginPage = () => {
           }
         );
 
-      trackEvent("user_login", { method: "third_party", provider: providerId });
       window.location.href = url;
     } catch (error) {
       setError(GENERIC_ERROR);
@@ -189,7 +188,7 @@ export const LoginPage = () => {
       return;
     }
 
-    trackEvent("user_login", { method: "email_password" });
+    trackEvent("user_signup", { method: "email_password" });
     window.location.assign("/");
   };
 
