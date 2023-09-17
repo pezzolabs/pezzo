@@ -7,8 +7,20 @@
   - Added the required column `encryptedDataKey` to the `ProviderApiKey` table without a default value. This is not possible if the table is not empty.
 
 */
--- AlterTable
-ALTER TABLE "ProviderApiKey" DROP COLUMN "value",
-ADD COLUMN     "censoredValue" TEXT NOT NULL,
-ADD COLUMN     "encryptedData" TEXT NOT NULL,
-ADD COLUMN     "encryptedDataKey" TEXT NOT NULL;
+
+-- DropTable
+DROP TABLE IF EXISTS "ProviderApiKey";
+
+-- CreateTable
+CREATE TABLE "ProviderApiKey" (
+    "id" TEXT NOT NULL,
+    "provider" TEXT NOT NULL,
+    "censoredValue" TEXT NOT NULL,
+    "encryptedData" TEXT NOT NULL,
+    "encryptedDataKey" TEXT NOT NULL,
+    "organizationId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "ProviderApiKey_pkey" PRIMARY KEY ("id")
+);
