@@ -23,6 +23,8 @@ import { PromptTesterModal } from "../prompt-tester/PromptTesterModal";
 import { usePromptTester } from "../../../lib/providers/PromptTesterContext";
 import { ConsumePromptModal } from "../ConsumePromptModal";
 import { trackEvent } from "../../../lib/utils/analytics";
+import { useRequiredProviderApiKeyModal } from "../../../lib/providers/RequiredProviderApiKeyModalProvider";
+import { useProviderApiKeys } from "../../../graphql/hooks/queries";
 
 const FUNCTIONS_FEATURE_FLAG = true;
 
@@ -31,6 +33,8 @@ export const PromptEditView = () => {
   const { prompt, isLoading: isPromptLoading } = useCurrentPrompt();
   const { currentVersion, isPublishEnabled, isDraft, form } =
     usePromptVersionEditorContext();
+  const { providerApiKeys } = useProviderApiKeys();
+  const { openRequiredProviderApiKeyModal } = useRequiredProviderApiKeyModal();
 
   const [isCommitModalOpen, setIsCommitModalOpen] = useState(false);
   const [isConsumePromptModalOpen, setIsConsumePromptModalOpen] =
@@ -40,8 +44,28 @@ export const PromptEditView = () => {
 
   const handleRunTest = () => {
     const formValues = form.getFieldsValue();
-    openTestModal(formValues);
+
+    // TODO: make dynamic
+    const provider = "OpenAI";
+    const hasProviderApiKey = !!providerApiKeys.find(
+      (key) => key.provider === provider
+    );
     trackEvent("prompt_run_test_clicked");
+
+    if (!hasProviderApiKey) {
+      openRequiredProviderApiKeyModal({
+        callback: () => {
+          openTestModal(formValues);
+        },
+        provider,
+      });
+      trackEvent("provider_api_keys_modal_due_to_missing_api_key", {
+        provider,
+      });
+      return;
+    }
+
+    openTestModal(formValues);
   };
 
   const onConsumeClick = () => {
