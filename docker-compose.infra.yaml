@@ -100,6 +100,18 @@ services:
       timeout: 3s
       retries: 5
 
+  local-kms:
+    image: nsmithuk/local-kms:latest
+    container_name: local-kms
+    ports:
+      - "9981:9981"
+    environment:
+      - "PORT=9981"
+      - "KMS_REGION=us-east-1"
+    volumes:
+      - ./temp/local-kms/data:/data
+      - ./temp/local-kms/init:/init
+
 volumes:
   postgres_data: ~
   opensearch-data1: ~
