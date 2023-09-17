@@ -71,8 +71,8 @@ export const RequiredProviderApiKeyModalProvider = ({ children }) => {
       >
         <Space direction="vertical">
           <Typography.Paragraph>
-            In order to be able to test your prompts within the Pezzo Console,
-            you must provide your API key.
+            In order to test your prompts within the Pezzo Console,
+            you must provide an OpenAI API key.
           </Typography.Paragraph>
 
           <ProviderApiKeyListItem
