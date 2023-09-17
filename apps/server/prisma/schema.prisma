@@ -38,7 +38,7 @@ model PromptVersion {
   /// @FieldType('PromptService')
   /// @PropertyType('PromptService')
   service            String
-  settings           Json                @default("{}")         
+  settings           Json                @default("{}")
   content            Json
   promptId           String
   prompt             Prompt              @relation(fields: [promptId], references: [id], onDelete: Cascade)
@@ -197,11 +197,15 @@ enum PromptExecutionStatus {
 }
 
 model ProviderApiKey {
-  id             String       @id @default(cuid())
-  provider       String
-  value          String
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  id               String       @id @default(cuid())
+  /// @HideField({ input: true, output: true })
+  encryptedData    String
+  /// @HideField({ input: true, output: true })
+  encryptedDataKey String
+  censoredValue    String
+  provider         String
+  organizationId   String
+  organization     Organization @relation(fields: [organizationId], references: [id])
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
 }
