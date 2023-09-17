@@ -1,15 +1,28 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
+import { EncryptionService } from "../encryption/encryption.service";
+import { ProviderApiKey } from "@prisma/client";
 
 @Injectable()
 export class ProviderApiKeysService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly encryptionService: EncryptionService
+  ) {}
 
   async getByProvider(provider: string, organizationId: string) {
-    const keys = await this.prisma.providerApiKey.findFirst({
+    const key = await this.prisma.providerApiKey.findFirst({
       where: { provider, organizationId },
     });
-    return keys;
+    return key;
+  }
+
+  async decryptProviderApiKey(key: ProviderApiKey): Promise<string> {
+    const decrypted = await this.encryptionService.decrypt(
+      key.encryptedData,
+      key.encryptedDataKey
+    );
+    return decrypted;
   }
 
   async getAllProviderApiKeys(organizationId: string) {
@@ -17,22 +30,6 @@ export class ProviderApiKeysService {
       where: { organizationId },
     });
     return keys;
-  }
-
-  async createProviderApiKey(
-    provider: string,
-    value: string,
-    organizationId: string
-  ) {
-    const key = await this.prisma.providerApiKey.create({
-      data: {
-        provider,
-        value,
-        organizationId,
-      },
-    });
-
-    return key;
   }
 
   async upsertProviderApiKey(
@@ -44,13 +41,20 @@ export class ProviderApiKeysService {
       where: { provider, organizationId },
     });
 
+    const { encryptedData, encryptedDataKey } =
+      await this.encryptionService.encrypt(value);
+
+    const censoredValue = this.censorApiKey(value);
+
     if (exists) {
       const key = await this.prisma.providerApiKey.update({
         where: {
           id: exists.id,
         },
         data: {
-          value,
+          encryptedData,
+          encryptedDataKey,
+          censoredValue,
         },
       });
 
@@ -60,7 +64,9 @@ export class ProviderApiKeysService {
     const key = await this.prisma.providerApiKey.create({
       data: {
         provider,
-        value,
+        encryptedData,
+        encryptedDataKey,
+        censoredValue,
         organizationId,
       },
     });
@@ -76,5 +82,9 @@ export class ProviderApiKeysService {
     });
 
     return true;
+  }
+
+  private censorApiKey(value: string) {
+    return value.substring(value.length - 4);
   }
 }

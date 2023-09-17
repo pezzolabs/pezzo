@@ -24,7 +24,7 @@ export class ProviderApiKeysResolver {
   async providerApiKeys(
     @Args("data") data: GetProviderApiKeysInput,
     @CurrentUser() user: RequestUser
-  ) {
+  ): Promise<ProviderApiKey[]> {
     const { organizationId } = data;
     isOrgMemberOrThrow(user, organizationId);
     try {
@@ -32,10 +32,7 @@ export class ProviderApiKeysResolver {
       const keys = await this.providerAPIKeysService.getAllProviderApiKeys(
         organizationId
       );
-      return keys.map((key) => ({
-        ...key,
-        value: this.censorApiKey(key.value),
-      }));
+      return keys;
     } catch (error) {
       this.logger.error({ error }, "Error getting provider API keys");
     }
@@ -45,7 +42,7 @@ export class ProviderApiKeysResolver {
   async updateProviderApiKey(
     @Args("data") data: CreateProviderApiKeyInput,
     @CurrentUser() user: RequestUser
-  ) {
+  ): Promise<ProviderApiKey> {
     const { provider, organizationId, value } = data;
     isOrgMemberOrThrow(user, organizationId);
 
@@ -64,17 +61,10 @@ export class ProviderApiKeysResolver {
         provider,
       });
 
-      return {
-        ...key,
-        value: this.censorApiKey(key.value),
-      };
+      return key;
     } catch (error) {
       this.logger.error({ error }, "Error updating provider API key");
       throw new InternalServerErrorException();
     }
-  }
-
-  private censorApiKey(value: string) {
-    return value.substring(0, 3) + "..." + value.substring(value.length - 3);
   }
 }
