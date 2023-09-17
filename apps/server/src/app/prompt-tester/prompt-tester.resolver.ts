@@ -1,5 +1,5 @@
 import { Args, Mutation, Resolver } from "@nestjs/graphql";
-import { InternalServerErrorException, UseGuards } from "@nestjs/common";
+import { UseGuards } from "@nestjs/common";
 import { AuthGuard } from "../auth/auth.guard";
 import { PrismaService } from "../prisma.service";
 import { PromptTesterService } from "./prompt-tester.service";
@@ -17,8 +17,7 @@ export class PromptTesterResolver {
   constructor(
     private prisma: PrismaService,
     private promptTesterService: PromptTesterService,
-    private logger: PinoLogger,
-    private analytics: AnalyticsService
+    private logger: PinoLogger
   ) {}
 
   @Mutation(() => RequestReport)

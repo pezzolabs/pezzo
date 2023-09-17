@@ -1,8 +1,7 @@
-import { Button, Divider, Form } from "antd";
+import { Divider, Form } from "antd";
 import { usePromptVersionEditorContext } from "../../../lib/providers/PromptVersionEditorContext";
 import { ProviderSelector } from "./ProviderSelector/ProviderSelector";
 import { PromptService } from "@pezzo/types";
-import { SendOutlined } from "@ant-design/icons";
 import { ProviderSettingsSchemaRenderer } from "./ProviderSettings/ProviderSettingsSchemaRenderer";
 import { openAIChatCompletionSettingsDefinition } from "./ProviderSettings/providers/openai-chat-completion";
 import { azureOpenAIChatCompletionSettingsDefinition } from "./ProviderSettings/providers/azure-openai-chat-completion";
@@ -35,12 +34,6 @@ export const ProviderSettingsCard = ({ onOpenFunctionsModal }: Props) => {
           <ProviderSettingsSchemaRenderer
             schema={providerSettings[service].generateFormSchema(settings)}
           />
-          {/* {service === PromptService.OpenAIChatCompletion &&
-            onOpenFunctionsModal && (
-              <Button onClick={onOpenFunctionsModal} icon={<SendOutlined />}>
-                Edit Functions
-              </Button>
-            )} */}
         </>
       )}
     </>

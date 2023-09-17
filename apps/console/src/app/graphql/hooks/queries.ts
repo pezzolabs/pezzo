@@ -32,13 +32,15 @@ import {
 export const useProviderApiKeys = () => {
   const { organization } = useCurrentOrganization();
 
-  return useQuery({
+  const result = useQuery({
     queryKey: ["providerApiKeys", organization?.id],
     queryFn: () =>
       gqlClient.request(GET_ALL_PROVIDER_API_KEYS, {
         data: { organizationId: organization?.id },
       }),
   });
+
+  return { ...result, providerApiKeys: result.data?.providerApiKeys ?? [] };
 };
 
 export const usePezzoApiKeys = () => {

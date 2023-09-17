@@ -28,6 +28,7 @@ import { RequestsPage } from "./pages/requests/RequestsPage";
 import { DashboardPage } from "./pages/projects/overview/DashboardPage";
 import { LoginPage } from "./pages/auth/LoginPage";
 import { AuthCallbackPage } from "./pages/auth/AuthCallbackPage";
+import { RequiredProviderApiKeyModalProvider } from "./lib/providers/RequiredProviderApiKeyModalProvider";
 
 initSuperTokens();
 
@@ -142,9 +143,11 @@ export function App() {
                   path={paths["/projects/:projectId"]}
                   element={
                     <CurrentPromptProvider>
-                      <LayoutWrapper withSideNav={true}>
-                        <Outlet />
-                      </LayoutWrapper>
+                      <RequiredProviderApiKeyModalProvider>
+                        <LayoutWrapper withSideNav={true}>
+                          <Outlet />
+                        </LayoutWrapper>
+                      </RequiredProviderApiKeyModalProvider>
                     </CurrentPromptProvider>
                   }
                 >

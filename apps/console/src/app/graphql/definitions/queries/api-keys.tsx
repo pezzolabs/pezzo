@@ -5,7 +5,7 @@ export const GET_ALL_PROVIDER_API_KEYS = graphql(/* GraphQL */ `
     providerApiKeys(data: $data) {
       id
       provider
-      value
+      censoredValue
     }
   }
 `);
