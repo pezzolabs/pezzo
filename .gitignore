@@ -2,7 +2,6 @@
 
 # compiled output
 dist
-tmp
 /out-tsc
 
 # dependencies
@@ -49,3 +48,5 @@ schema.graphql
 
 # temp
 temp
+
+kms/data

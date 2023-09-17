@@ -1,19 +1,15 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { TestPromptInput } from "../prompts/inputs/test-prompt.input";
 import { Pezzo, PezzoOpenAI } from "@pezzo/client";
 import { ReportingService } from "../reporting/reporting.service";
-import { ConfigService } from "@nestjs/config";
 import { RequestReport } from "../reporting/object-types/request-report.model";
+import { ProviderApiKeysService } from "../credentials/provider-api-keys.service";
 
 @Injectable()
 export class PromptTesterService {
   constructor(
     private reportingService: ReportingService,
-    private config: ConfigService
+    private providerApiKeysService: ProviderApiKeysService
   ) {}
 
   async runTest(
@@ -21,13 +17,14 @@ export class PromptTesterService {
     projectId: string,
     organizationId: string
   ): Promise<RequestReport> {
-    const testerApiKey = this.config.get("TESTER_OPENAI_API_KEY");
+    const provider = "OpenAI";
+    const providerApiKey = await this.providerApiKeysService.getByProvider(
+      provider,
+      organizationId
+    );
 
-    if (!testerApiKey) {
-      throw new UnauthorizedException(
-        `Missing OpenAI API key for tests (TESTER_OPENAI_API_KEY)`
-      );
-    }
+    const testerApiKey =
+      await this.providerApiKeysService.decryptProviderApiKey(providerApiKey);
 
     let promptExecutionData;
 
@@ -55,26 +52,18 @@ export class PromptTesterService {
       },
     };
 
-    let error;
-
     try {
       await pezzoOpenAI.chat.completions.create(mockRequest, {
         variables: testData.variables,
       });
     } catch (err) {
-      error = err;
+      //
     }
 
     const report = await this.reportingService.saveReport(promptExecutionData, {
       organizationId,
       projectId,
     });
-
-    if (error) {
-      throw new BadRequestException(
-        "Prompt execution failed, check the Requests page for more information"
-      );
-    }
 
     return report;
   }

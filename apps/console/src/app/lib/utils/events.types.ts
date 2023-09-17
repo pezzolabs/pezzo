@@ -31,6 +31,8 @@ export enum AnalyticsEvent {
   prompt_test_submitted,
   prompt_test_cancelled,
   prompt_test_display_mode_changed,
+  provider_api_keys_modal_due_to_missing_api_key,
+  provider_api_key_set,
   request_details_viewed,
   request_details_pagination_change,
   request_details_filter_added,

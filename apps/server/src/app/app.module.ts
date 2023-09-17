@@ -25,6 +25,7 @@ import { PromptTesterModule } from "./prompt-tester/prompt-tester.module";
 import { ClsModule } from "./cls.module";
 import { CacheModule } from "./cache/cache.module";
 import { RedisModule } from "./redis/redis.module";
+import { EncryptionModule } from "./encryption/encryption.module";
 
 const isCloud = process.env.PEZZO_CLOUD === "true";
 const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
@@ -43,6 +44,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
     }),
     OpenSearchModule,
     RedisModule,
+    EncryptionModule,
     EventEmitterModule.forRoot(),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
