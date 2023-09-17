@@ -14,7 +14,7 @@ const commonConfigSchema = {
   REDIS_URL: Joi.string().required(),
   REDIS_TLS_ENABLED: Joi.boolean().default(false),
   KMS_REGION: Joi.string().default("us-east-1"),
-  KMS_ENDPOINT: Joi.string().default("http://localhost:9981"),
+  KMS_LOCAL: Joi.boolean().default(true),
   KMS_KEY_ARN: Joi.string().default(
     "arn:aws:kms:us-east-1:111122223333:key/demo-master-key"
   ),

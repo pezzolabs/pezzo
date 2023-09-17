@@ -10,16 +10,13 @@ export class EncryptionService {
   private kms: KMS;
 
   constructor(private config: ConfigService, private logger: PinoLogger) {
+    const isLocalKMS = this.config.get("KMS_LOCAL");
     const region = this.config.get("KMS_REGION");
-    const endpoint = this.config.get("KMS_ENDPOINT");
 
     this.kms = new KMS({
       region,
-      endpoint,
-      credentials: {
-        accessKeyId: "",
-        secretAccessKey: "",
-      },
+      endpoint: isLocalKMS ? "http://localhost:9981" : undefined,
+      credentials: isLocalKMS ? { accessKeyId: "", secretAccessKey: "" } : undefined,
     });
   }
 
