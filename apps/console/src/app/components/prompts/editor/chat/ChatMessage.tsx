@@ -1,33 +1,53 @@
 import { Button, Card, Form, Select } from "antd";
-import { DeleteOutlined, SwapOutlined } from "@ant-design/icons";
+import { CloseOutlined, SwapOutlined } from "@ant-design/icons";
 import { colors } from "../../../../lib/theme/colors";
 import { PromptEditorTextArea } from "../../../common/PromptEditorTextArea";
+import styled from "@emotion/styled";
+import { useCurrentPrompt } from "../../../../lib/providers/CurrentPromptContext";
+import { trackEvent } from "../../../../lib/utils/analytics";
 
 interface Props {
-  id: string;
+  index: number;
   canDelete?: boolean;
   onDelete: () => void;
 }
 
-export const ChatMessage = ({ id, canDelete = true, onDelete }: Props) => {
+const StyledCard = styled(Card)`
+  .ant-card-head {
+    padding: 10px 20px;
+  }
+
+  .ant-card-body {
+    padding: 16px 20px 10px 20px;
+  }
+`;
+
+export const ChatMessage = ({ index, canDelete = true, onDelete }: Props) => {
+  const { promptId } = useCurrentPrompt();
+
   return (
-    <Card
-      style={{ marginBottom: 12 }}
+    <StyledCard
+      style={{ marginBottom: 12, padding: 0 }}
       title={
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <div style={{ display: "flex" }}>
-            <SwapOutlined style={{ color: colors.neutral["500"] }} />
-            <Form.Item
-              name={["content", "messages", id, "role"]}
-              initialValue={"user"}
-              style={{
-                width: 200,
-                margin: 0,
-                padding: 0,
-              }}
-            >
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <SwapOutlined style={{ color: colors.neutral[400] }} />
+            <Form.Item name={[index, "role"]} noStyle>
               <Select
+                bordered={false}
+                suffixIcon={null}
+                style={{ width: 200 }}
+                onChange={(role) => {
+                  trackEvent("prompt_chat_completion_message_role_changed", {
+                    promptId,
+                    role,
+                  });
+                }}
                 options={[
+                  {
+                    label: "System",
+                    value: "system",
+                  },
                   {
                     label: "User",
                     value: "user",
@@ -37,26 +57,32 @@ export const ChatMessage = ({ id, canDelete = true, onDelete }: Props) => {
                     value: "assistant",
                   },
                 ]}
-                suffixIcon={null}
-                bordered={false}
               />
             </Form.Item>
           </div>
-          {canDelete && <Button icon={<DeleteOutlined />} onClick={onDelete} />}
+          {canDelete && (
+            <Button
+              style={{ opacity: 0.5 }}
+              type="text"
+              icon={<CloseOutlined />}
+              onClick={onDelete}
+            />
+          )}
         </div>
       }
     >
       <Form.Item
-        name={["messages", id, "content"]}
+        name={[index, "content"]}
         rules={[{ required: true, message: "Message content is required" }]}
       >
         <PromptEditorTextArea
-          placeholder="Start typing your prompt here..."
-          rows={5}
+          placeholder="Start typing your message here..."
+          autoSize={{ minRows: 4, maxRows: 20 }}
           bordered={false}
           color="#fff"
+          style={{ padding: 0 }}
         />
       </Form.Item>
-    </Card>
+    </StyledCard>
   );
 };

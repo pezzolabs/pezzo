@@ -45,7 +45,7 @@ export const PromptTesterProvider = ({ children }) => {
     data,
     reset,
   } = useTestPrompt();
-  const { formValues } = usePromptVersionEditorContext();
+  const { formValues, promptType } = usePromptVersionEditorContext();
   const [isOpen, setIsOpen] = useState(false);
   const [testVariablesForm] = Form.useForm<Record<string, string>>();
 
@@ -63,6 +63,7 @@ export const PromptTesterProvider = ({ children }) => {
     const variables = testVariablesForm.getFieldsValue();
 
     testPrompt({
+      type: promptType,
       content,
       settings,
       variables,

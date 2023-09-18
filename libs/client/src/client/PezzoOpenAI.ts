@@ -62,7 +62,13 @@ class Completions {
     let managedMessages: OpenAI.Chat.CompletionCreateParams["messages"] = [];
 
     if (pezzoPrompt) {
-      managedMessages = [{ role: "user", content: pezzoPrompt.content.prompt }];
+      if (pezzoPrompt.content.messages) {
+        managedMessages = pezzoPrompt.content.messages;
+      } else {
+        managedMessages = [
+          { role: "user", content: pezzoPrompt.content.prompt },
+        ];
+      }
     }
 
     const requestBody: Partial<OpenAI.Chat.CompletionCreateParamsNonStreaming> =
