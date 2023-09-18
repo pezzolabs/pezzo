@@ -29,7 +29,7 @@ export const ProjectCard = ({ name, slug, id }: ProjectCardProps) => {
 
         <Icon
           component={() => (
-            <ArrowRightCircleIcon width={15} /> // Setting width to 15px seems to work well for most use cases
+            <ArrowRightCircleIcon width={15} />
           )}
         />
       </Row>
