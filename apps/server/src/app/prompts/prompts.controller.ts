@@ -124,7 +124,6 @@ export class PromptsController {
 
     return {
       promptId: prompt.id,
-      type: prompt.type,
       promptVersionSha: promptVersion.sha,
       settings: promptVersion.settings,
       content: promptVersion.content,

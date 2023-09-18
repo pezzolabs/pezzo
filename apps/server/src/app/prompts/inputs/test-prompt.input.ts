@@ -1,4 +1,5 @@
 import { Field, InputType } from "@nestjs/graphql";
+import { PromptType } from "../../../@generated/prisma/prompt-type.enum";
 import GraphQLJSON from "graphql-type-json";
 
 @InputType()
@@ -11,6 +12,9 @@ export class TestPromptInput {
 
   @Field(() => GraphQLJSON, { nullable: false })
   content: any;
+
+  @Field(() => PromptType, { nullable: false })
+  type: PromptType;
 
   @Field(() => GraphQLJSON, { nullable: false })
   settings: { model: string; modelSettings: unknown };

@@ -236,6 +236,7 @@ export const useCreatePromptVersion = () => {
     mutationFn: (data: CreatePromptVersionInput) => {
       return gqlClient.request(CREATE_PROMPT_VERSION, {
         data: {
+          type: data.type,
           service: data.service,
           message: data.message,
           content: data.content,

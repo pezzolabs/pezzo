@@ -35,6 +35,7 @@ datasource db {
 
 model PromptVersion {
   sha                String              @id
+  type               PromptType          @default(Prompt)
   /// @FieldType('PromptService')
   /// @PropertyType('PromptService')
   service            String
@@ -147,7 +148,6 @@ model Prompt {
   id                 String              @id @default(cuid())
   projectId          String
   name               String
-  type               PromptType
   executions         PromptExecution[]
   promptEnvironments PromptEnvironment[]
   versions           PromptVersion[]

@@ -7,7 +7,6 @@ import { TestPromptInput } from "../prompts/inputs/test-prompt.input";
 import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
 import { PinoLogger } from "../logger/pino-logger";
-import { AnalyticsService } from "../analytics/analytics.service";
 import { isOrgMemberOrThrow } from "../identity/identity.utils";
 import { RequestReport } from "../reporting/object-types/request-report.model";
 
@@ -29,6 +28,7 @@ export class PromptTesterResolver {
       .assign({
         projectId: data.projectId,
         settings: data.settings,
+        type: data.type,
       })
       .info("Testing prompt");
 

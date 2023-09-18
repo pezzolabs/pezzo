@@ -3,7 +3,6 @@ import { css } from "@emotion/css";
 import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
 import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
 import { useCreatePromptVersion } from "../../graphql/hooks/mutations";
-import { tr } from "date-fns/locale";
 import { trackEvent } from "../../lib/utils/analytics";
 
 interface Props {
@@ -19,7 +18,7 @@ type Inputs = {
 export const CommitPromptModal = ({ open, onClose, onCommitted }: Props) => {
   const [form] = Form.useForm<Inputs>();
   const { prompt } = useCurrentPrompt();
-  const { formValues } = usePromptVersionEditorContext();
+  const { formValues, promptType } = usePromptVersionEditorContext();
 
   const { mutateAsync: createPromptVersion, error } = useCreatePromptVersion();
 
@@ -27,6 +26,7 @@ export const CommitPromptModal = ({ open, onClose, onCommitted }: Props) => {
     const { settings, content, service } = formValues;
 
     const data = {
+      type: promptType,
       message: values.message,
       service: service,
       content,
@@ -56,6 +56,7 @@ export const CommitPromptModal = ({ open, onClose, onCommitted }: Props) => {
       {error && (
         <Alert type="error" message={error.response.errors[0].message} />
       )}
+
       <Form
         form={form}
         layout="vertical"
