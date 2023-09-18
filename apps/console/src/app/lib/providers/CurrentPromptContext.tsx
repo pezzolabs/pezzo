@@ -5,11 +5,13 @@ import { useGetPrompt } from "../../graphql/hooks/queries";
 
 interface CurrentPromptContextValue {
   prompt: GetPromptQuery["prompt"];
+  promptId: string;
   isLoading: boolean;
 }
 
 const CurrentPromptContext = createContext<CurrentPromptContextValue>({
   prompt: undefined,
+  promptId: undefined,
   isLoading: false,
 });
 
@@ -29,6 +31,7 @@ export const CurrentPromptProvider = ({ children }) => {
 
   const value = {
     prompt,
+    promptId,
     isLoading,
   };
 

@@ -5,6 +5,7 @@ export const GET_ALL_PROMPTS = graphql(/* GraphQL */ `
     prompts(data: $data) {
       id
       name
+      isDraft
     }
   }
 `);
@@ -14,7 +15,7 @@ export const GET_PROMPT = graphql(/* GraphQL */ `
     prompt(data: $data) {
       id
       name
-      type
+      isDraft
       latestVersion {
         sha
         message
@@ -31,6 +32,7 @@ export const GET_PROMPT_VERSION = graphql(/* GraphQL */ `
   query getPromptVersion($data: PromptVersionWhereUniqueInput!) {
     promptVersion(data: $data) {
       sha
+      type
       service
       content
       settings
@@ -42,8 +44,8 @@ export const GET_PROMPT_VERSION = graphql(/* GraphQL */ `
 export const GET_PROMPT_VERSIONS = graphql(/* GraphQL */ `
   query GetPromptVersionsWithTags($data: GetPromptInput!) {
     prompt(data: $data) {
-      type
       versions {
+        type
         sha
         service
         message

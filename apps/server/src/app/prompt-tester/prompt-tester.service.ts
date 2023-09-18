@@ -49,6 +49,7 @@ export class PromptTesterService {
         },
         settings: testData.settings,
         content: testData.content,
+        type: testData.type,
       },
     };
 

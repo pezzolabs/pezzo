@@ -308,4 +308,15 @@ export class PromptsResolver {
       throw new InternalServerErrorException();
     }
   }
+
+  @ResolveField(() => Boolean)
+  async isDraft(@Parent() prompt: PrismaPrompt) {
+    const versions = await this.prisma.promptVersion.count({
+      where: {
+        promptId: prompt.id,
+      },
+    });
+
+    return versions === 0;
+  }
 }

@@ -2,10 +2,16 @@ import { Collapse, Divider, Modal, Space, Typography } from "antd";
 import { createContext, useContext, useRef, useState } from "react";
 import { useProviderApiKeys } from "../../graphql/hooks/queries";
 import { ProviderApiKeyListItem } from "../../components/api-keys/ProviderApiKeyListItem";
+import { trackEvent } from "../utils/analytics";
+
+enum Reason {
+  prompt_tester,
+}
 
 interface OpenRequiredProviderApiKeyModalOptions {
   callback: () => void;
   provider: "OpenAI";
+  reason: keyof typeof Reason;
 }
 
 interface RequiredProviderApiKeyModalContextValue {
@@ -25,29 +31,38 @@ export const useRequiredProviderApiKeyModal = () =>
   useContext(RequiredProviderApiKeyModalContext);
 
 export const RequiredProviderApiKeyModalProvider = ({ children }) => {
+  const reasonRef = useRef<keyof typeof Reason>(null);
   const callbackRef = useRef(null);
 
   const { providerApiKeys } = useProviderApiKeys();
   const [open, setOpen] = useState(false);
 
   const openRequiredProviderApiKeyModal = (
-    options?: OpenRequiredProviderApiKeyModalOptions
+    options: OpenRequiredProviderApiKeyModalOptions
   ) => {
     setOpen(true);
+    trackEvent("provider_api_keys_modal_opened", {
+      provider: options.provider,
+      reason: options.reason,
+    });
 
-    if (options.callback) {
-      callbackRef.current = options.callback;
-    }
+    callbackRef.current = options.callback;
+    reasonRef.current = options.reason;
   };
 
   const closeRequiredProviderApiKeyModal = (cancel = false) => {
     setOpen(false);
 
-    if (callbackRef.current && !cancel) {
+    if (cancel) {
+      trackEvent("provider_api_keys_modal_canceled", {
+        reason: reasonRef.current,
+      });
+    } else {
       callbackRef.current();
     }
 
     callbackRef.current = null;
+    reasonRef.current = null;
   };
 
   const value = {

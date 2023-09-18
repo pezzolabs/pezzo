@@ -1,5 +1,16 @@
 import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
-import { Button, Card, Col, Row, Space, Tooltip, Typography } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Form,
+  Row,
+  Segmented,
+  Space,
+  Tag,
+  Tooltip,
+  Typography,
+} from "antd";
 import { CommitPromptModal } from "../CommitPromptModal";
 import { PublishPromptModal } from "../PublishPromptModal";
 import { useState } from "react";
@@ -25,14 +36,25 @@ import { ConsumePromptModal } from "../ConsumePromptModal";
 import { trackEvent } from "../../../lib/utils/analytics";
 import { useRequiredProviderApiKeyModal } from "../../../lib/providers/RequiredProviderApiKeyModalProvider";
 import { useProviderApiKeys } from "../../../graphql/hooks/queries";
+import {
+  ChatBubbleBottomCenterIcon,
+  InformationCircleIcon,
+} from "@heroicons/react/24/outline";
+import Icon from "@ant-design/icons/lib/components/Icon";
 
 const FUNCTIONS_FEATURE_FLAG = true;
 
 export const PromptEditView = () => {
   const { openTestModal } = usePromptTester();
-  const { prompt, isLoading: isPromptLoading } = useCurrentPrompt();
-  const { currentVersion, isPublishEnabled, isDraft, form } =
-    usePromptVersionEditorContext();
+  const { isLoading: isPromptLoading } = useCurrentPrompt();
+  const {
+    currentVersion,
+    isPublishEnabled,
+    isDraft,
+    form,
+    promptType,
+    setPromptType,
+  } = usePromptVersionEditorContext();
   const { providerApiKeys } = useProviderApiKeys();
   const { openRequiredProviderApiKeyModal } = useRequiredProviderApiKeyModal();
 
@@ -45,7 +67,6 @@ export const PromptEditView = () => {
   const handleRunTest = () => {
     const formValues = form.getFieldsValue();
 
-    // TODO: make dynamic
     const provider = "OpenAI";
     const hasProviderApiKey = !!providerApiKeys.find(
       (key) => key.provider === provider
@@ -58,9 +79,7 @@ export const PromptEditView = () => {
           openTestModal(formValues);
         },
         provider,
-      });
-      trackEvent("provider_api_keys_modal_due_to_missing_api_key", {
-        provider,
+        reason: "prompt_tester",
       });
       return;
     }
@@ -94,12 +113,53 @@ export const PromptEditView = () => {
     !isPromptLoading && (
       <>
         <div style={{ marginBottom: 14, border: 0 }}>
-          <Row>
-            <Col span={12}>{!isDraft && <PromptVersionSelector />}</Col>
-            <Col
-              span={12}
-              style={{ display: "flex", justifyContent: "flex-end" }}
-            >
+          <Row justify="space-between" align="middle">
+            <Col>
+              {isDraft ? (
+                <Tag
+                  style={{
+                    height: 30,
+                    fontSize: 14,
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  Draft
+                </Tag>
+              ) : (
+                <PromptVersionSelector />
+              )}
+            </Col>
+            <Col style={{ justifyContent: "center" }}>
+              <Segmented
+                style={{ padding: 4, backgroundColor: colors.neutral[700] }}
+                options={[
+                  {
+                    icon: (
+                      <Icon
+                        component={() => (
+                          <ChatBubbleBottomCenterIcon width={15} />
+                        )}
+                      />
+                    ),
+                    value: PromptType.Chat,
+                    label: "Chat",
+                  },
+                  {
+                    icon: (
+                      <Icon
+                        component={() => <InformationCircleIcon width={15} />}
+                      />
+                    ),
+                    value: PromptType.Prompt,
+                    label: "Prompt",
+                  },
+                ]}
+                value={promptType}
+                onChange={(value: PromptType) => setPromptType(value)}
+              />
+            </Col>
+            <Col style={{ display: "flex", justifyContent: "flex-end" }}>
               <Space>
                 <Button icon={<ExperimentOutlined />} onClick={handleRunTest}>
                   Test
@@ -126,11 +186,13 @@ export const PromptEditView = () => {
 
         <Row gutter={24}>
           <Col span={17}>
-            {prompt.type === PromptType.Prompt ? (
-              <PromptEditMode />
-            ) : (
-              <ChatEditMode />
-            )}
+            <Form.Item name={["content"]} initialValue={{}}>
+              {promptType === PromptType.Prompt ? (
+                <PromptEditMode />
+              ) : (
+                <ChatEditMode />
+              )}
+            </Form.Item>
           </Col>
           <Col span={7}>
             <Card title="Settings" style={{ marginBottom: 24 }}>

@@ -1,42 +1,81 @@
 import { Button, Form } from "antd";
-import { useCallback, useEffect, useState } from "react";
-import { v4 as uuid } from "uuid";
 import { ChatMessage } from "./ChatMessage";
 import { PlusOutlined } from "@ant-design/icons";
+import { usePromptVersionEditorContext } from "../../../../lib/providers/PromptVersionEditorContext";
+import { trackEvent } from "../../../../lib/utils/analytics";
+import { useCurrentPrompt } from "../../../../lib/providers/CurrentPromptContext";
+import { useEffect } from "react";
+import { findVariables } from "../../../../lib/utils/find-variables";
 
 export const ChatEditMode = () => {
-  const [form] = Form.useForm();
-  const [messageOrder, setMessageOrder] = useState<string[]>([]);
+  const { promptId } = useCurrentPrompt();
+  const { form, setVariables } = usePromptVersionEditorContext();
 
-  const handleNewMessage = useCallback(() => {
-    const id = uuid();
-    setMessageOrder([...messageOrder, id]);
-  }, [messageOrder]);
-
-  const handleDeleteMessage = (id: string) => {
-    setMessageOrder(messageOrder.filter((messageId) => messageId !== id));
-  };
+  const content = Form.useWatch(["content"], { form });
 
   useEffect(() => {
-    if (messageOrder?.length > 0) {
-      return;
+    if (content?.messages) {
+      let variables = [];
+      content.messages
+        .filter((message) => !!message)
+        .forEach((message) => {
+          const foundVariables = findVariables(message?.content);
+          if (message?.content) variables = [...variables, ...foundVariables];
+        });
+
+      setVariables(variables);
     }
-    handleNewMessage();
-  }, [messageOrder, handleNewMessage]);
+  }, [content, setVariables]);
+
+  const handleAdd = () => {
+    const currentMessages = form.getFieldValue(["content", "messages"]);
+    form.setFieldValue(
+      ["content", "messages"],
+      [
+        ...currentMessages,
+        {
+          role: "user",
+          content: "",
+        },
+      ]
+    );
+
+    trackEvent("prompt_chat_completion_message_created", {
+      promptId,
+    });
+  };
 
   return (
-    <Form form={form}>
-      {messageOrder?.map((messageId, index) => (
-        <ChatMessage
-          key={messageId}
-          id={messageId}
-          canDelete={index !== 0}
-          onDelete={() => handleDeleteMessage(messageId)}
-        />
-      ))}
-      <Button icon={<PlusOutlined />} onClick={handleNewMessage}>
-        New Message
-      </Button>
-    </Form>
+    <Form.List name={["content", "messages"]}>
+      {(fields, { add, remove }) => {
+        if (fields.length === 0) {
+          add();
+        }
+
+        return (
+          <div>
+            {fields.map((field, index) => {
+              return (
+                <ChatMessage
+                  key={field.key}
+                  index={index}
+                  canDelete={fields.length !== 1}
+                  onDelete={() => {
+                    remove(index);
+                    trackEvent("prompt_chat_completion_message_deleted", {
+                      promptId,
+                    });
+                  }}
+                />
+              );
+            })}
+
+            <Button icon={<PlusOutlined />} onClick={() => handleAdd()}>
+              New Message
+            </Button>
+          </div>
+        );
+      }}
+    </Form.List>
   );
 };

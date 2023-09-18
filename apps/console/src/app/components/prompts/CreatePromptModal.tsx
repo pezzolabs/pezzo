@@ -10,7 +10,6 @@ import {
 import { GraphQLErrorResponse } from "../../graphql/types";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 import { trackEvent } from "../../lib/utils/analytics";
-import React from "react";
 
 interface Props {
   open: boolean;
@@ -21,29 +20,6 @@ interface Props {
 type Inputs = {
   name: string;
   type: PromptType;
-};
-
-const ShadowButtonChat = () => {
-  const [isClicked, setIsClicked] = React.useState(false);
-  const onClick = () => {
-    setIsClicked(true);
-    trackEvent("prompt_form_chat_clicked");
-  };
-  return (
-    <Radio.Button
-      disabled={isClicked}
-      onClick={onClick}
-      value={PromptType.Chat}
-    >
-      {isClicked ? (
-        <>
-          Chat <span style={{ fontSize: "12px" }}>(Coming Soon)</span>
-        </>
-      ) : (
-        "Chat"
-      )}
-    </Radio.Button>
-  );
 };
 
 export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
@@ -58,14 +34,17 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
     mutationFn: (data: Inputs) =>
       gqlClient.request(CREATE_PROMPT, {
         data: {
-          type: data.type,
           name: data.name,
           projectId: project.id,
         },
       }),
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       onCreated(data.createPrompt.id);
       queryClient.invalidateQueries({ queryKey: ["prompts"] });
+      trackEvent("prompt_created", {
+        promptId: data.createPrompt.id,
+        type: variables.type,
+      });
     },
   });
 
@@ -102,13 +81,6 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
           rules={[{ required: true, message: "Prompt name is required" }]}
         >
           <Input placeholder="e.g. RecommendProduct" />
-        </Form.Item>
-
-        <Form.Item required label="Type" name="type">
-          <Radio.Group>
-            <Radio.Button value={PromptType.Prompt}>Prompt</Radio.Button>
-            <ShadowButtonChat />
-          </Radio.Group>
         </Form.Item>
 
         <Form.Item
