@@ -2,6 +2,7 @@ import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
 import { Card, Row, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import { trackEvent } from "../../lib/utils/analytics";
+import Icon from "@ant-design/icons/lib/components/Icon";
 
 interface ProjectCardProps {
   name: string;
@@ -26,7 +27,11 @@ export const ProjectCard = ({ name, slug, id }: ProjectCardProps) => {
           {name}
         </Typography.Title>
 
-        <ArrowRightCircleIcon opacity={0.5} height={24} />
+        <Icon
+          component={() => (
+            <ArrowRightCircleIcon width={15} /> // Setting width to 15px seems to work well for most use cases
+          )}
+        />
       </Row>
     </Card>
   );
