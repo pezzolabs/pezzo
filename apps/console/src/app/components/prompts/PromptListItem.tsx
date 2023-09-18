@@ -1,14 +1,15 @@
 import { ArrowRightCircleIcon, CubeIcon } from "@heroicons/react/24/outline";
-import { Card, Col, Row, Typography } from "antd";
+import { Card, Col, Row, Tag, Typography } from "antd";
 import { css } from "@emotion/css";
 import { colorPrimary } from "../../lib/theme/ant-theme";
 
 interface Props {
   name: string;
   onClick: () => void;
+  isDraft: boolean;
 }
 
-export const PromptListItem = ({ name, onClick }: Props) => {
+export const PromptListItem = ({ name, isDraft, onClick }: Props) => {
   return (
     <Card hoverable={true} onClick={onClick} size="small">
       <Row gutter={[12, 12]} align="middle">
@@ -25,7 +26,7 @@ export const PromptListItem = ({ name, onClick }: Props) => {
         </Col>
         <Col flex="auto">
           <Typography.Text style={{ fontSize: 18, fontWeight: 400 }}>
-            {name}
+            {name} {isDraft && <Tag>Draft</Tag>}
           </Typography.Text>
         </Col>
         <Col

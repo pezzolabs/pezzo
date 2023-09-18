@@ -68,6 +68,7 @@ export const PromptsPage = () => {
               <div key={prompt.id} style={{ marginBottom: 14 }}>
                 <PromptListItem
                   name={prompt.name}
+                  isDraft={prompt.isDraft}
                   onClick={onPromptClick(prompt.id)}
                 />
               </div>
