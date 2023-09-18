@@ -26,6 +26,7 @@ import { useState } from "react";
 import { RequestResponseChatView } from "./RequestResponseChatView";
 import { RequestResponseViewJsonView } from "./RequestResponseViewJsonView";
 import { trackEvent } from "../../lib/utils/analytics";
+import Icon from "@ant-design/icons/lib/components/Icon";
 
 type Mode = "chat" | "json";
 
@@ -142,12 +143,18 @@ export const RequestDetails = (props: Props) => {
         <Segmented
           options={[
             {
-              icon: <ChatBubbleBottomCenterTextIcon width={18} height={14} />,
+              icon: (
+                <Icon
+                  component={() => (
+                    <ChatBubbleBottomCenterTextIcon width={15} />
+                  )}
+                />
+              ),
               value: "chat",
               label: "Chat",
             },
             {
-              icon: <CodeBracketIcon width={18} height={14} />,
+              icon: <Icon component={() => <CodeBracketIcon width={15} />} />,
               value: "json",
               label: "JSON",
             },

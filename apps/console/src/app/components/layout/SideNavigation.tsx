@@ -1,39 +1,37 @@
 import {
   ChatBubbleBottomCenterIcon,
   HomeIcon,
+  AcademicCapIcon,
+  CubeIcon,
+  ServerIcon,
 } from "@heroicons/react/24/outline";
 import { Menu } from "antd";
 import { useMemo, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
-
+import Icon from "@ant-design/icons/lib/components/Icon";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
-import {
-  AcademicCapIcon,
-  CubeIcon,
-  ServerIcon,
-} from "@heroicons/react/24/outline";
 
 const topMenuItems = [
   {
     key: "dashboard",
     label: "Dashboard",
-    icon: <HomeIcon height={18} />,
+    icon: <Icon component={() => <HomeIcon width={15} />} />,
   },
   {
     key: "requests",
     label: "Requests",
-    icon: <ChatBubbleBottomCenterIcon height={18} width={18} />,
+    icon: <Icon component={() => <ChatBubbleBottomCenterIcon width={15} />} />,
   },
   {
     key: "prompts",
     label: "Prompts",
-    icon: <CubeIcon height={18} />,
+    icon: <Icon component={() => <CubeIcon width={15} />} />,
   },
   {
     key: "environments",
     label: "Environments",
-    icon: <ServerIcon height={18} />,
+    icon: <Icon component={() => <ServerIcon width={15} />} />,
   },
 ];
 
@@ -88,7 +86,10 @@ export const SideNavigation = () => {
       />
       {/* Bottom Menu */}
       <BaseMenu inlineCollapsed={isCollapsed} mode="inline">
-        <Menu.Item key="docs" icon={<AcademicCapIcon height={18} />}>
+        <Menu.Item
+          key="docs"
+          icon={<Icon component={() => <AcademicCapIcon width={15} />} />}
+        >
           <a href="https://docs.pezzo.ai/" target="_blank" rel="noreferrer">
             <span>Docs</span>
           </a>
