@@ -16,22 +16,49 @@ const topMenuItems = [
   {
     key: "dashboard",
     label: "Dashboard",
-    icon: <Icon component={() => <HomeIcon width={15} />} />,
+    icon: (
+      <Icon
+        component={() => (
+          <HomeIcon width={20} style={{ marginTop: 10, marginLeft: -2 }} />
+        )}
+      />
+    ),
   },
   {
     key: "requests",
     label: "Requests",
-    icon: <Icon component={() => <ChatBubbleBottomCenterIcon width={15} />} />,
+    icon: (
+      <Icon
+        component={() => (
+          <ChatBubbleBottomCenterIcon
+            width={20}
+            style={{ marginTop: 10, marginLeft: -2 }}
+          />
+        )}
+      />
+    ),
   },
   {
     key: "prompts",
     label: "Prompts",
-    icon: <Icon component={() => <CubeIcon width={15} />} />,
+    icon: (
+      <Icon
+        component={() => (
+          <CubeIcon width={20} style={{ marginTop: 10, marginLeft: -2 }} />
+        )}
+      />
+    ),
   },
   {
     key: "environments",
     label: "Environments",
-    icon: <Icon component={() => <ServerIcon width={15} />} />,
+    icon: (
+      <Icon
+        component={() => (
+          <ServerIcon width={20} style={{ marginTop: 10, marginLeft: -2 }} />
+        )}
+      />
+    ),
   },
 ];
 

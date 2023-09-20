@@ -37,7 +37,9 @@ export const PromptListItem = ({ name, isDraft, onClick }: Props) => {
             justify-content: flex-end;
           `}
         >
-          <Icon component={() => <ArrowRightCircleIcon width={15} />} />
+          <Icon
+            component={() => <ArrowRightCircleIcon height={24} opacity={0.5} />}
+          />
         </Col>
       </Row>
     </Card>

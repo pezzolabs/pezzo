@@ -34,7 +34,7 @@ export const RequestResponseChatView = ({ request, response }: Props) => {
         return (
           <Avatar
             shape="circle"
-            src={<Icon component={() => <UserCircleIcon width={15} />} />}
+            src={<Icon component={() => <UserCircleIcon width={"100%"} />} />}
           />
         );
       case "system":
