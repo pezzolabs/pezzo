@@ -45,11 +45,7 @@ const menuItems: MenuProps["items"] = [
           <Typography.Text>Info</Typography.Text>
         </Col>
         <Col style={{ marginLeft: "auto" }}>
-          <Icon
-            component={() => (
-              <QuestionMarkCircleIcon width={15} /> 
-            )}
-          />
+          <Icon component={() => <QuestionMarkCircleIcon width={15} />} />
         </Col>
       </Row>
     ),

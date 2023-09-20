@@ -27,11 +27,7 @@ export const ProjectCard = ({ name, slug, id }: ProjectCardProps) => {
           {name}
         </Typography.Title>
 
-        <Icon
-          component={() => (
-            <ArrowRightCircleIcon width={15} />
-          )}
-        />
+        <Icon component={() => <ArrowRightCircleIcon width={15} />} />
       </Row>
     </Card>
   );
