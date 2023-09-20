@@ -1,4 +1,5 @@
 import { UserCircleIcon } from "@heroicons/react/24/solid";
+import Icon from "@ant-design/icons/lib/components/Icon";
 import {
   ObservabilityRequest,
   ObservabilityResponse,
@@ -30,7 +31,12 @@ export const RequestResponseChatView = ({ request, response }: Props) => {
   const renderAvatar = (role: "user" | "system" | "assistant") => {
     switch (role) {
       case "user":
-        return <Avatar shape="circle" src={<UserCircleIcon />} />;
+        return (
+          <Avatar
+            shape="circle"
+            src={<Icon component={() => <UserCircleIcon width={"100%"} />} />}
+          />
+        );
       case "system":
         return <Avatar shape="circle">S</Avatar>;
       case "assistant":

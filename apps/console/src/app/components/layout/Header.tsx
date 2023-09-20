@@ -21,6 +21,7 @@ import { signOut } from "../../lib/utils/sign-out";
 import { useNavigate } from "react-router-dom";
 import { Avatar } from "../common/Avatar";
 import { OrgSelector } from "../organizations/OrgSelector";
+import Icon from "@ant-design/icons/lib/components/Icon";
 
 const Logo = styled.img`
   height: 40px;
@@ -44,7 +45,7 @@ const menuItems: MenuProps["items"] = [
           <Typography.Text>Info</Typography.Text>
         </Col>
         <Col style={{ marginLeft: "auto" }}>
-          <QuestionMarkCircleIcon height={16} />
+          <Icon component={() => <QuestionMarkCircleIcon width={15} />} />
         </Col>
       </Row>
     ),
@@ -57,7 +58,7 @@ const menuItems: MenuProps["items"] = [
           <Typography.Text>Sign out</Typography.Text>
         </Col>
         <Col style={{ marginLeft: "auto" }}>
-          <ArrowRightOnRectangleIcon height={16} />
+          <Icon component={() => <ArrowRightOnRectangleIcon width={15} />} />
         </Col>
       </Row>
     ),

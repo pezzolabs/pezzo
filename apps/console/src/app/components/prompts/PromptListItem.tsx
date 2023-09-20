@@ -2,6 +2,7 @@ import { ArrowRightCircleIcon, CubeIcon } from "@heroicons/react/24/outline";
 import { Card, Col, Row, Tag, Typography } from "antd";
 import { css } from "@emotion/css";
 import { colorPrimary } from "../../lib/theme/ant-theme";
+import Icon from "@ant-design/icons/lib/components/Icon";
 
 interface Props {
   name: string;
@@ -36,7 +37,9 @@ export const PromptListItem = ({ name, isDraft, onClick }: Props) => {
             justify-content: flex-end;
           `}
         >
-          <ArrowRightCircleIcon opacity={0.5} height={24} />
+          <Icon
+            component={() => <ArrowRightCircleIcon height={24} opacity={0.5} />}
+          />
         </Col>
       </Row>
     </Card>
