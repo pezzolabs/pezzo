@@ -103,14 +103,14 @@ services:
   local-kms:
     image: nsmithuk/local-kms:latest
     container_name: local-kms
+    entrypoint: "/bin/sh"
+    # Seeding the local-kms with a master key. "/init/seed.yaml" will be created based on the base64 encoded string below.
+    command: '-c "echo \"S2V5czoKICBTeW1tZXRyaWM6CiAgICBBZXM6CiAgICAgIC0gTWV0YWRhdGE6CiAgICAgICAgICBLZXlJZDogZGVtby1tYXN0ZXIta2V5CiAgICAgICAgQmFja2luZ0tleXM6CiAgICAgICAgICAtIDVjZGFlYWQyN2ZlN2RhMmRlNDc5NDVkNzNjZDZkNzllMzY0OTRlNzM4MDJmM2NkMzg2OWYxZDJjYjBiNWQ3YTkKCkFsaWFzZXM6CiAgLSBBbGlhc05hbWU6IGFsaWFzL3Rlc3RpbmcKICAgIFRhcmdldEtleUlkOiBkZW1vLW1hc3Rlci1rZXk=\" | base64 -d >> /init/seed.yaml && local-kms"'
     ports:
       - "9981:9981"
     environment:
       - "PORT=9981"
       - "KMS_REGION=us-east-1"
-    volumes:
-      - ./temp/local-kms/data:/data
-      - ./temp/local-kms/init:/init
 
 volumes:
   postgres_data: ~
