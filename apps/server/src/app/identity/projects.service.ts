@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { PinoLogger } from "../logger/pino-logger";
 import { EnvironmentsService } from "./environments.service";
+import { UpdateProjectSettingsInput } from "./inputs/update-project-settings.input";
 
 @Injectable()
 export class ProjectsService {
@@ -55,6 +56,26 @@ export class ProjectsService {
       where: {
         slug,
         organizationId,
+      },
+    });
+  }
+
+  async deleteProject(id: string) {
+    return this.prisma.project.delete({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async updateProjectSettings(data: UpdateProjectSettingsInput) {
+    const { projectId, name } = data;
+    return this.prisma.project.update({
+      where: {
+        id: projectId,
+      },
+      data: {
+        name,
       },
     });
   }

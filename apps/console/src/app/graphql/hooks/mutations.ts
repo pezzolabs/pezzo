@@ -7,10 +7,12 @@ import {
   CreatePromptVersionInput,
   CreatePromptVersionMutation,
   DeleteEnvironmentMutation,
+  DeleteProjectMutation,
+  UpdateProjectSettingsMutation,
   DeletePromptMutation,
   EnvironmentWhereUniqueInput,
   InvitationWhereUniqueInput,
-  RequestReport,
+  ProjectWhereUniqueInput,
   TestPromptInput,
   TestPromptMutation,
   UpdateOrgInvitationInput,
@@ -20,11 +22,16 @@ import {
   UpdateOrgSettingsInput,
   UpdateOrgSettingsMutation,
   UpdateProfileInput,
+  UpdateProjectSettingsInput,
 } from "../../../@generated/graphql/graphql";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { gqlClient } from "../../lib/graphql";
 import { UPDATE_PROFILE } from "../definitions/queries/users";
-import { CREATE_PROJECT } from "../definitions/queries/projects";
+import {
+  CREATE_PROJECT,
+  DELETE_PROJECT,
+  UPDATE_PROJECT_SETTINGS,
+} from "../definitions/mutations/projects";
 import {
   ACCEPT_ORG_INVITATION,
   CREATE_ORG_INVITATION,
@@ -67,6 +74,44 @@ export const useCreateProjectMutation = (props?: {
         queryKey: ["projects"],
       });
       props?.onSuccess?.();
+    },
+  });
+};
+
+export const useDeleteProjectMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    DeleteProjectMutation,
+    GraphQLErrorResponse,
+    ProjectWhereUniqueInput
+  >({
+    mutationFn: (data: ProjectWhereUniqueInput) =>
+      gqlClient.request(DELETE_PROJECT, { data }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["projects"],
+      });
+    },
+  });
+};
+
+export const useUpdateProjectSettingsMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    UpdateProjectSettingsMutation,
+    GraphQLErrorResponse,
+    UpdateProjectSettingsInput
+  >({
+    mutationFn: (data: UpdateProjectSettingsInput) =>
+      gqlClient.request(UPDATE_PROJECT_SETTINGS, {
+        data,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["projects"],
+      });
     },
   });
 };

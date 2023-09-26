@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { useCreateProjectMutation } from "../../graphql/hooks/mutations";
 import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
 import { trackEvent } from "../../lib/utils/analytics";
-import { tr } from "date-fns/locale";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   open: boolean;
@@ -14,6 +14,7 @@ interface Props {
 export const CreateNewProjectModal = ({ open, onClose, onCreated }: Props) => {
   const [form] = Form.useForm<{ projectName: string }>();
   const { organization } = useCurrentOrganization();
+  const navigate = useNavigate();
   const {
     mutateAsync: createProject,
     error,
@@ -27,14 +28,21 @@ export const CreateNewProjectModal = ({ open, onClose, onCreated }: Props) => {
   const { token } = theme.useToken();
 
   const handleCreateProject = useCallback(async () => {
-    void createProject({
-      name: form.getFieldValue("projectName"),
-      organizationId: organization.id,
-    }).catch(() => {
-      form.resetFields();
-    });
+    createProject(
+      {
+        name: form.getFieldValue("projectName"),
+        organizationId: organization.id,
+      },
+      {
+        onSuccess: (data) => {
+          onCreated();
+          navigate(`/projects/${data.createProject.id}`);
+        },
+      }
+    );
+
     trackEvent("project_form_submitted");
-  }, [createProject, form, organization.id]);
+  }, [createProject, onCreated, form, organization.id, navigate]);
 
   const onCancel = () => {
     onClose();
