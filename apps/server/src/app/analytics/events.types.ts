@@ -11,5 +11,7 @@ export enum AnalyticsEvent {
   provider_api_key_created,
   environment_created,
   project_created,
+  project_deleted,
+  project_settings_updated,
   request_reported,
 }
