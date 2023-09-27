@@ -3,10 +3,8 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/kafka/src",
   "projectType": "library",
-  "implicitDependencies": ["server"],
   "targets": {
     "build": {
-      "dependsOn": ["^build"],
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
