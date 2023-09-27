@@ -160,7 +160,7 @@ npx nx serve server
 
 The server is now running. You can verify that by navigating to http://localhost:3000/api/healthz.
 
-In development mode, you want to run `codegen` in watch mode, so whenever you make changes to the schema, types are generated automatically. After running the server, run the following in a *separate terminal Window*:
+In development mode, you want to run `codegen` in watch mode, so whenever you make changes to the schema, types are generated automatically. After running the server, run the following in a _separate terminal Window_:
 
 ```
 npm run graphql:codegen:watch
