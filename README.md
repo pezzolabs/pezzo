@@ -146,12 +146,6 @@ docker-compose -f docker-compose.infra.yaml up
 
 ### Start Pezzo
 
-Generate the Prisma client:
-
-```
-npx nx prisma:generate server
-```
-
 Deploy Prisma migrations:
 
 ```
@@ -164,13 +158,15 @@ Run the server:
 npx nx serve server
 ```
 
-The server is now running. In the background, [graphql-codegen](https://www.npmjs.com/package/@graphql-codegen/cli) has generated GraphQL types based on the actual schema. These can be found at [libs/graphql/src/@generated](libs/graphql/src/@generated). This provides excellent type safety across the monorepo.
+The server is now running. You can verify that by navigating to http://localhost:3000/api/healthz.
 
-In development mode, you want to run `graphql-codegen` in watch mode, so whenever you make changes to the schema, types are generated automatically. In a separate Terminal tab, run:
+In development mode, you want to run `codegen` in watch mode, so whenever you make changes to the schema, types are generated automatically. After running the server, run the following in a *separate terminal Window*:
 
 ```
 npm run graphql:codegen:watch
 ```
+
+This will connect [codegen](https://the-guild.dev/graphql/codegen/docs/getting-started) directly to the server and keep your GraphQL schema up-to-date as you make changes.
 
 Finally, you are ready to run the Pezzo Console:
 
@@ -178,7 +174,7 @@ Finally, you are ready to run the Pezzo Console:
 npx nx serve console
 ```
 
-That's it! Pezzo is now accessible at http://localhost:4200 🚀
+That's it! The Pezzo Console is now accessible at http://localhost:4200 🚀
 
 # Contributing
 
