@@ -36,7 +36,7 @@ export const DeleteEnvironmentModal = ({
 
   return (
     <Modal
-      title="Are You Sure?"
+      title="Are you sure?"
       open={environmentToDelete !== null}
       onCancel={onCancel}
       okType="danger"

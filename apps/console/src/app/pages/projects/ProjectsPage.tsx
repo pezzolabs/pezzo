@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useGetProjects } from "../../graphql/hooks/queries";
 import { useEffect, useState } from "react";
-import { Button, Card, Col, Row, Spin, Typography, theme } from "antd";
+import { Button, Card, Col, Row, Spin, Typography, theme, message } from "antd";
 import styled from "@emotion/styled";
 import { ProjectCard } from "../../components/projects";
 import { PlusOutlined } from "@ant-design/icons";
@@ -31,6 +31,7 @@ export const ProjectsPage = () => {
     useState(false);
   const navigate = useNavigate();
   const { token } = theme.useToken();
+  const [messageApi, contextHolder] = message.useMessage();
   usePageTitle("Projects");
   useEffect(() => {
     if (isLoading) return;
@@ -45,51 +46,62 @@ export const ProjectsPage = () => {
   };
 
   return (
-    <Paper>
-      <CreateNewProjectModal
-        open={isCreateNewProjectModalOpen}
-        onClose={() => setIsCreateNewProjectModalOpen(false)}
-        onCreated={() => setIsCreateNewProjectModalOpen(false)}
-      />
+    <>
+      {contextHolder}
+      <Paper>
+        <CreateNewProjectModal
+          open={isCreateNewProjectModalOpen}
+          onClose={() => setIsCreateNewProjectModalOpen(false)}
+          onCreated={() => setIsCreateNewProjectModalOpen(false)}
+        />
 
-      <Row justify="end">
-        <Button
-          icon={<PlusOutlined />}
-          onClick={onOpenCreateNewProjectModal("button")}
-          style={{
-            marginBottom: token.marginLG,
-          }}
-          size="large"
-        >
-          Create project
-        </Button>
-      </Row>
+        <Row justify="end">
+          <Button
+            icon={<PlusOutlined />}
+            onClick={onOpenCreateNewProjectModal("button")}
+            style={{
+              marginBottom: token.marginLG,
+            }}
+            size="large"
+          >
+            Create project
+          </Button>
+        </Row>
 
-      <Row gutter={16}>
-        {projects?.map((project, index) => (
-          <Col span={12} key={project.id}>
-            <ProjectCard
-              name={project.name}
-              slug={project.slug}
-              id={project.id}
-            />
-          </Col>
-        ))}
-        {!isOdd(projects?.length) && (
-          <Col span={12}>
-            <Card hoverable onClick={onOpenCreateNewProjectModal("card")}>
-              <Row justify="center">
-                <Col>
-                  <Button type="dashed" icon={<PlusOutlined />} size="large" />
-                </Col>
-              </Row>
-              <Row justify="center" style={{ marginTop: token.marginSM }}>
-                <Typography.Text strong>Create a new project</Typography.Text>
-              </Row>
-            </Card>
-          </Col>
-        )}
-      </Row>
-    </Paper>
+        <Row gutter={16}>
+          {projects?.map((project, index) => (
+            <Col span={12} key={project.id}>
+              <ProjectCard
+                onDelete={() =>
+                  messageApi.success("Project deleted successfully")
+                }
+                onUpdate={() =>
+                  messageApi.success("Project updated successfully")
+                }
+                project={project}
+              />
+            </Col>
+          ))}
+          {!isOdd(projects?.length) && (
+            <Col span={12}>
+              <Card hoverable onClick={onOpenCreateNewProjectModal("card")}>
+                <Row justify="center">
+                  <Col>
+                    <Button
+                      type="dashed"
+                      icon={<PlusOutlined />}
+                      size="large"
+                    />
+                  </Col>
+                </Row>
+                <Row justify="center" style={{ marginTop: token.marginSM }}>
+                  <Typography.Text strong>Create a new project</Typography.Text>
+                </Row>
+              </Card>
+            </Col>
+          )}
+        </Row>
+      </Paper>
+    </>
   );
 };

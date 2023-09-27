@@ -16,7 +16,7 @@ import {
   NotFoundException,
   UseGuards,
 } from "@nestjs/common";
-import { isOrgMemberOrThrow } from "./identity.utils";
+import { isOrgAdminOrThrow, isOrgMemberOrThrow } from "./identity.utils";
 import { CurrentUser } from "./current-user.decorator";
 import { RequestUser } from "./users.types";
 import { slugify } from "@pezzo/common";
@@ -25,6 +25,7 @@ import { PinoLogger } from "../logger/pino-logger";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { Organization } from "../../@generated/organization/organization.model";
 import { GetProjectsInput } from "./inputs/get-projects.input";
+import { UpdateProjectSettingsInput } from "./inputs/update-project-settings.input";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Project)
@@ -114,6 +115,86 @@ export class ProjectsResolver {
       return project;
     } catch (error) {
       this.logger.error({ error }, "Error creating project");
+      throw new InternalServerErrorException();
+    }
+  }
+
+  @Mutation(() => Project)
+  async updateProjectSettings(
+    @Args("data") data: UpdateProjectSettingsInput,
+    @CurrentUser() user: RequestUser
+  ) {
+    this.logger.assign(data);
+
+    let project: Project;
+
+    try {
+      project = await this.projectsService.getProjectById(data.projectId);
+    } catch (error) {
+      this.logger.error({ error }, "Error checking for existing project");
+      throw new InternalServerErrorException();
+    }
+
+    if (!project) {
+      throw new NotFoundException(`Project does not exist`);
+    }
+
+    isOrgAdminOrThrow(user, project.organizationId);
+
+    this.logger.info("Updating project settings");
+
+    try {
+      const project = await this.projectsService.updateProjectSettings(data);
+      this.logger.info("Project settings updated");
+
+      this.analytics.trackEvent("project_settings_updated", {
+        projectId: project.id,
+        name: project.name,
+      });
+
+      return project;
+    } catch (error) {
+      this.logger.error({ error }, "Error updating project settings");
+      throw new InternalServerErrorException();
+    }
+  }
+
+  @Mutation(() => Project)
+  async deleteProject(
+    @Args("data") data: ProjectWhereUniqueInput,
+    @CurrentUser() user: RequestUser
+  ) {
+    const { id } = data;
+    this.logger.assign({ id });
+
+    let project: Project;
+
+    try {
+      project = await this.projectsService.getProjectById(id);
+    } catch (error) {
+      this.logger.error({ error }, "Error checking for existing project");
+      throw new InternalServerErrorException();
+    }
+
+    if (!project) {
+      throw new NotFoundException(`Project does not exist`);
+    }
+
+    isOrgAdminOrThrow(user, project.organizationId);
+
+    this.logger.info("Deleting project");
+
+    try {
+      const project = await this.projectsService.deleteProject(id);
+      this.logger.info("Project deleted");
+
+      this.analytics.trackEvent("project_deleted", {
+        projectId: project.id,
+      });
+
+      return project;
+    } catch (error) {
+      this.logger.error({ error }, "Error deleting project");
       throw new InternalServerErrorException();
     }
   }
