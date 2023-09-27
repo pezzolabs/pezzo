@@ -127,5 +127,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64
-          push: true
+          # only push if the branch is main or a release branch
+          push: ${{ startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/release/') }}
           provenance: false
