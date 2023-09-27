@@ -4,8 +4,17 @@
     "default": {
       "runner": "nx-cloud",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"],
-        "accessToken": "ZDM4NGExYTItZDFiMy00ZmFlLWJiYTEtMGZmZjQ1NzIxMDQyfHJlYWQtd3JpdGU="
+        "cacheableOperations": [
+          "prebuild",
+          "build",
+          "lint",
+          "test",
+          "e2e",
+          "prisma:generate",
+          "graphql:generate",
+          "graphql:schema-generate",
+          "graphql:codegen"
+        ]
       }
     }
   },

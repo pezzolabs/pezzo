@@ -24,17 +24,13 @@
       }
     },
     "prebuild": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "node libs/client/scripts/prebuild.js"
-      }
+      "command": "node libs/client/scripts/prebuild.js",
+      "inputs": ["{projectRoot}/package.json"],
+      "outputs": ["{projectRoot}/src/version.ts"]
     },
     "build": {
       "dependsOn": ["rollup"],
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "node libs/client/scripts/postbuild.js"
-      }
+      "command": "node libs/client/scripts/postbuild.js"
     },
     "publish": {
       "command": "node tools/scripts/publish.mjs client {args.ver} {args.tag}",
