@@ -84,7 +84,7 @@ export const OrgPage = () => {
       ),
     [tabsItems, isOrgAdmin]
   );
-  usePageTitle(`${organization?.name || "Organization"}`);
+  usePageTitle(organization?.name);
   const onTabChange = (key: string) => {
     setActiveView(key);
     trackEvent("organization_tab_changed", { tab: key });

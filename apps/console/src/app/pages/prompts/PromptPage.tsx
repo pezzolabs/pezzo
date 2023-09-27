@@ -25,7 +25,7 @@ const TabLabel = styled.div`
 export const PromptPage = () => {
   const { prompt, isLoading } = useCurrentPrompt();
   const [activeView, setActiveView] = useState("edit");
-  usePageTitle(prompt?.name || "Prompt");
+  usePageTitle(prompt?.name);
   const tabs = [
     {
       label: (

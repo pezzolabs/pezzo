@@ -23,7 +23,7 @@ export const PromptsPage = () => {
       gqlClient.request(GET_ALL_PROMPTS, { data: { projectId: project?.id } }),
     enabled: !!project?.id,
   });
-  usePageTitle(`${project.name || ""} prompts`);
+  usePageTitle(project?.name && `${project.name} Prompts`);
 
   const isLoading = isLoadingPrompts || isProjectsLoading;
 

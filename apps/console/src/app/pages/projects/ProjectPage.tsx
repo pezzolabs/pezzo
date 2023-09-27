@@ -11,7 +11,7 @@ import { usePageTitle } from "../../lib/hooks/usePageTitle";
 export const ProjectPage = () => {
   const { project, isLoading } = useCurrentProject();
   const [clicked, setClicked] = useState(false);
-  usePageTitle(project?.name || "Project");
+  usePageTitle(project?.name);
 
   if (isLoading) return <Loader />;
 
