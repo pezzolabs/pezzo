@@ -49,8 +49,8 @@ export const LoginPage = () => {
       password: z
         .string()
         .regex(
-          /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}[\]:;<>,.?~\\-]).{8,}$/,
-          "Password must contain at least 8 characters, one uppercase, one lowercase and one number"
+          /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}[\]:;<>,.?~\\-]).{8,}$/,
+          "Password must contain at least 8 characters, one uppercase, one lowercase, one number, and one special symbol"
         ),
       confirm_password: z.string().min(1, "Confirm password is required"),
       name: z.string().min(1, "Display name is required"),
