@@ -1,6 +1,7 @@
 import BlurryBlurb from "../../../assets/blurry-blurb.svg";
 import Spline from "@splinetool/react-spline";
 import { useEffect, useState } from "react";
+import { usePageTitle } from "../../lib/hooks/usePageTitle";
 import {
   Alert,
   AlertDescription,
@@ -36,7 +37,7 @@ export const LoginPage = () => {
   const [thirdPartyLoading, setThirdPartyLoading] = useState<boolean>(false);
 
   const verb = mode === "signin" ? "Sign in" : "Sign up";
-
+  usePageTitle(verb);
   const signInSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
     password: z.string().min(1, "Password is required"),
@@ -49,8 +50,8 @@ export const LoginPage = () => {
       password: z
         .string()
         .regex(
-          /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}[\]:;<>,.?~\\-]).{8,}$/,
-          "Password must contain at least 8 characters, one uppercase, one lowercase and one number"
+          /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}[\]:;<>,.?~\\-]).{8,}$/,
+          "Password must contain at least 8 characters, one uppercase, one lowercase, one number, and one special symbol"
         ),
       confirm_password: z.string().min(1, "Confirm password is required"),
       name: z.string().min(1, "Display name is required"),

@@ -1,8 +1,10 @@
 import { version } from "@pezzo/common";
 import { Typography } from "antd";
 import { InlineCodeSnippet } from "../components/common/InlineCodeSnippet";
+import { usePageTitle } from "../lib/hooks/usePageTitle";
 
 export const InfoPage = () => {
+  usePageTitle('Login');
   return (
     <Typography.Paragraph style={{ marginBottom: 40 }}>
       <Typography.Title>Info</Typography.Title>
@@ -13,3 +15,4 @@ export const InfoPage = () => {
     </Typography.Paragraph>
   );
 };
+

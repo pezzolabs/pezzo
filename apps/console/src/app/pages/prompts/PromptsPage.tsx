@@ -10,6 +10,7 @@ import { Button, Space, Spin, Typography, theme } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 import { trackEvent } from "../../lib/utils/analytics";
+import { usePageTitle } from "../../lib/hooks/usePageTitle";
 
 export const PromptsPage = () => {
   const { project, isLoading: isProjectsLoading } = useCurrentProject();
@@ -22,6 +23,7 @@ export const PromptsPage = () => {
       gqlClient.request(GET_ALL_PROMPTS, { data: { projectId: project?.id } }),
     enabled: !!project?.id,
   });
+  usePageTitle(`${project.name || ""} prompts`);
 
   const isLoading = isLoadingPrompts || isProjectsLoading;
 

@@ -6,10 +6,12 @@ import { useState } from "react";
 import { useEnvironments } from "../../lib/hooks/useEnvironments";
 import { EnvironmentsQuery } from "../../../@generated/graphql/graphql";
 import { trackEvent } from "../../lib/utils/analytics";
+import { usePageTitle } from "../../lib/hooks/usePageTitle";
 
 type Environment = EnvironmentsQuery["environments"][0];
 
 export const EnvironmentsPage = () => {
+  usePageTitle('Environments');
   const { environments, isLoading } = useEnvironments();
   const [isCreateEnvironmentModalOpen, setIsCreateEnvironmentModalOpen] =
     useState(false);

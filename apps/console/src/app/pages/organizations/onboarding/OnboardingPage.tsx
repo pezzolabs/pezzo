@@ -16,6 +16,7 @@ import {
 } from "../../../../@generated/graphql/graphql";
 import { useAuthContext } from "../../../lib/providers/AuthProvider";
 import { useCurrentOrganization } from "../../../lib/hooks/useCurrentOrganization";
+import { usePageTitle } from "../../../lib/hooks/usePageTitle";
 
 const StyledButton = styled(Button)<{ spacing: number }>`
   margin-top: ${(props) => props.spacing}px;
@@ -39,7 +40,7 @@ export const OnboardingPage = () => {
     useUpdateCurrentUserMutation();
   const { mutateAsync: createProject, isLoading: isProjectCreationLoading } =
     useCreateProjectMutation();
-
+  usePageTitle(`Onboarding ${organization?.name || "" }`);
   const { projects, isLoading: isProjectsLoading } = useGetProjects();
 
   const { currentUser } = useAuthContext();

@@ -14,6 +14,7 @@ import { PromptSettingsView } from "../../components/prompts/views/PromptSetting
 import { PromptEditView } from "../../components/prompts/views/PromptEditView";
 import { PromptVersionEditorProvider } from "../../lib/providers/PromptVersionEditorContext";
 import { PromptTesterProvider } from "../../lib/providers/PromptTesterContext";
+import { usePageTitle } from "../../lib/hooks/usePageTitle";
 
 const TabLabel = styled.div`
   display: inline-block;
@@ -24,7 +25,7 @@ const TabLabel = styled.div`
 export const PromptPage = () => {
   const { prompt, isLoading } = useCurrentPrompt();
   const [activeView, setActiveView] = useState("edit");
-
+  usePageTitle(prompt?.name || "Prompt");
   const tabs = [
     {
       label: (
