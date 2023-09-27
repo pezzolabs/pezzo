@@ -12,6 +12,7 @@ export const ProjectPage = () => {
   const { project, isLoading } = useCurrentProject();
   const [clicked, setClicked] = useState(false);
   usePageTitle(project?.name || "Project");
+
   if (isLoading) return <Loader />;
 
   return (

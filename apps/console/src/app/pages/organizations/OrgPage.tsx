@@ -66,7 +66,6 @@ const tabsItems = [
 ];
 
 export const OrgPage = () => {
- 
   const { orgId: orgIdParam } = useParams();
   const { selectOrg, organization } = useCurrentOrganization();
   const { isOrgAdmin } = useCurrentOrgMembership();
@@ -85,7 +84,7 @@ export const OrgPage = () => {
       ),
     [tabsItems, isOrgAdmin]
   );
-  usePageTitle(`${organization?.name || "Organization" }`);
+  usePageTitle(`${organization?.name || "Organization"}`);
   const onTabChange = (key: string) => {
     setActiveView(key);
     trackEvent("organization_tab_changed", { tab: key });

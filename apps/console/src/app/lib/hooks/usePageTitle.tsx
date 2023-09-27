@@ -1,5 +1,4 @@
-
-import { useDocumentTitle } from 'usehooks-ts';
+import { useDocumentTitle } from "usehooks-ts";
 
 /**
  * Custom hook to set the page title in the format: "{feature} - Pezzo"

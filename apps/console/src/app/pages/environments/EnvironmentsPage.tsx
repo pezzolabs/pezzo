@@ -11,7 +11,7 @@ import { usePageTitle } from "../../lib/hooks/usePageTitle";
 type Environment = EnvironmentsQuery["environments"][0];
 
 export const EnvironmentsPage = () => {
-  usePageTitle('Environments');
+  usePageTitle("Environments");
   const { environments, isLoading } = useEnvironments();
   const [isCreateEnvironmentModalOpen, setIsCreateEnvironmentModalOpen] =
     useState(false);

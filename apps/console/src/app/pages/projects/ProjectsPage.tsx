@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useGetProjects } from "../../graphql/hooks/queries";
 import { useEffect, useState } from "react";
-import { Button, Card, Col, Row, Spin, Typography, theme } from "antd";
+import { Button, Card, Col, Row, Spin, Typography, theme, message } from "antd";
 import styled from "@emotion/styled";
 import { ProjectCard } from "../../components/projects";
 import { PlusOutlined } from "@ant-design/icons";
@@ -31,7 +31,9 @@ export const ProjectsPage = () => {
     useState(false);
   const navigate = useNavigate();
   const { token } = theme.useToken();
+  const [messageApi, contextHolder] = message.useMessage();
   usePageTitle("Projects");
+
   useEffect(() => {
     if (isLoading) return;
     if (!projects?.length) navigate("/onboarding");

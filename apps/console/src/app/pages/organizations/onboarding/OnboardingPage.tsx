@@ -40,7 +40,7 @@ export const OnboardingPage = () => {
     useUpdateCurrentUserMutation();
   const { mutateAsync: createProject, isLoading: isProjectCreationLoading } =
     useCreateProjectMutation();
-  usePageTitle(`Onboarding ${organization?.name || "" }`);
+  usePageTitle(`Onboarding ${organization?.name || ""}`);
   const { projects, isLoading: isProjectsLoading } = useGetProjects();
 
   const { currentUser } = useAuthContext();
