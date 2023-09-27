@@ -5,10 +5,7 @@
   "projectType": "library",
   "targets": {
     "prebuild": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx tsx libs/common/scripts/sync-version.ts"
-      }
+      "command": "npx tsx libs/common/scripts/sync-version.ts"
     },
     "build": {
       "executor": "@nx/js:tsc",
