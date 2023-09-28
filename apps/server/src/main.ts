@@ -22,11 +22,11 @@ async function bootstrap() {
   // Swagger setup
   const config = new DocumentBuilder()
     .setTitle("Pezzo API")
-    .setDescription("The Pezzo API description")
+    .setDescription("Specification of the Pezzo REST API, used by various clients.")
     .setVersion("1.0")
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup("api", app, document);
+  SwaggerModule.setup("api/spec", app, document);
 
   const port = process.env.PORT || 3000;
   await app.listen(port);

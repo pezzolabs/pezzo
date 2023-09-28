@@ -5,7 +5,7 @@ import {
   Post,
   UseGuards,
 } from "@nestjs/common";
-import { ReportRequestDto } from "./dto/report-request.dto";
+import { CreateReportDto } from "./dto/create-report.dto";
 import { ApiKeyAuthGuard } from "../auth/api-key-auth.guard";
 import { ApiKeyOrgId } from "../identity/api-key-org-id.decoator";
 import { ProjectIdAuthGuard } from "../auth/project-id-auth.guard";
@@ -28,11 +28,11 @@ export class ReportingController {
   @ApiOperation({ summary: "Report a request" })
   @ApiResponse({
     status: 200,
-    description: "Successfully reported the request.",
+    description: "Report has been reported successfully",
   })
-  @ApiResponse({ status: 500, description: "Internal server error." })
+  @ApiResponse({ status: 500, description: "Internal server error" })
   async reportRequest(
-    @Body() dto: ReportRequestDto,
+    @Body() dto: CreateReportDto,
     @ApiKeyOrgId() organizationId: string,
     @ProjectId() projectId: string
   ) {

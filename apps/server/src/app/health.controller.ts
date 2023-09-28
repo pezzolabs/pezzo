@@ -6,10 +6,10 @@ import { version } from "@pezzo/common";
 @Controller("healthz")
 export class HealthController {
   @Get()
-  @ApiOperation({ summary: "Check the health status of the application" })
+  @ApiOperation({ summary: "Performs a health check" })
   @ApiResponse({
     status: 200,
-    description: "Returns the health status and version.",
+    description: "Returns the health status and current version",
   })
   healthz() {
     return {

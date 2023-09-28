@@ -1,7 +1,7 @@
 import { OpenSearchService } from "../opensearch/opensearch.service";
 import { OpenSearchIndex } from "../opensearch/types";
 import { Injectable } from "@nestjs/common";
-import { ReportRequestDto } from "./dto/report-request.dto";
+import { CreateReportDto } from "./dto/create-report.dto";
 import { randomUUID } from "crypto";
 import { buildRequestReport } from "./utils/build-request-report";
 import { RequestReport } from "./object-types/request-report.model";
@@ -19,11 +19,12 @@ export class ReportingService {
   ) {}
 
   async saveReport(
-    dto: ReportRequestDto,
+    dto: CreateReportDto,
     ownership: {
       organizationId: string;
       projectId: string;
-    }
+    },
+    isTestPrompt = false,
   ): Promise<RequestReport> {
     const reportId = randomUUID();
     const { report, calculated } = buildRequestReport(dto);
@@ -51,7 +52,7 @@ export class ReportingService {
       organizationId: ownership.organizationId,
       projectId: ownership.projectId,
       reportId,
-      isTestPrompt: !!dto.metadata.isTestPrompt as boolean,
+      isTestPrompt: isTestPrompt,
       promptId: dto.metadata.promptId as string,
       client: (dto.metadata.client as string) || null,
       clientVersion: (dto.metadata.clientVersion as string) || null,
@@ -62,7 +63,7 @@ export class ReportingService {
       reportId,
       calculated,
       properties,
-      metadata,
+      metadata: metadata as unknown as RequestReport["metadata"],
       request: request as any,
       response: response as any,
       cacheEnabled,
