@@ -6,8 +6,4 @@ export class GetPromptDeploymentDto {
 
   @IsString()
   environmentName: string;
-
-  @IsString()
-  @IsOptional() // Backwards compatibility - https://github.com/pezzolabs/pezzo/issues/224
-  projectId: string;
 }

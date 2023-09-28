@@ -3,6 +3,7 @@ import {
   Controller,
   ForbiddenException,
   Get,
+  Headers,
   InternalServerErrorException,
   NotFoundException,
   Post,
@@ -37,22 +38,25 @@ export class PromptsController {
   @Get("/deployment")
   async getPromptDeployment(
     @Query() query: GetPromptDeploymentDto,
-    @ApiKeyOrgId() organizationId: string
+    @ApiKeyOrgId() organizationId: string,
+    @Headers() headers
   ) {
     const { name, environmentName } = query;
+    let prompt: Prompt;
+    let projectId: string = headers["x-pezzo-project-id"] || null;
+
     this.logger.assign({
       name,
       organizationId,
       environmentName,
-      projectId: query.projectId,
+      projectId,
     });
     this.logger.info("Getting prompt deployment");
-    let prompt: Prompt;
-    let projectId: string;
 
     try {
-      if (query.projectId) {
-        projectId = query.projectId;
+      // Backwards compatibility
+      // https://github.com/pezzolabs/pezzo/issues/224
+      if (projectId) {
         prompt = await this.prisma.prompt.findFirst({
           where: {
             name: {
@@ -62,8 +66,6 @@ export class PromptsController {
           },
         });
       } else {
-        // Backwards compatibility
-        // https://github.com/pezzolabs/pezzo/issues/224
         const orgProjects = await this.prisma.project.findMany({
           where: { organizationId },
         });
