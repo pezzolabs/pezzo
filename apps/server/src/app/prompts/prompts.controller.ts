@@ -23,8 +23,10 @@ import { AnalyticsService } from "../analytics/analytics.service";
 import { PrismaService } from "../prisma.service";
 import { ApiKeyOrgId } from "../identity/api-key-org-id.decoator";
 import { GetPromptDeploymentDto } from "./dto/get-prompt-deployment.dto";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 @UseGuards(ApiKeyAuthGuard)
+@ApiTags("Prompts")
 @Controller("prompts/v2")
 export class PromptsController {
   constructor(
@@ -35,8 +37,15 @@ export class PromptsController {
   ) {}
 
   @Get("/deployment")
+  @ApiOperation({ summary: "Get prompt deployment" })
+  @ApiResponse({
+    status: 200,
+    description: "Returns the prompt deployment data.",
+  })
+  @ApiResponse({ status: 404, description: "Prompt deployment not found." })
   async getPromptDeployment(
     @Query() query: GetPromptDeploymentDto,
+    @Body() dto: GetPromptDeploymentDto,
     @ApiKeyOrgId() organizationId: string
   ) {
     const { name, environmentName } = query;
@@ -130,13 +139,18 @@ export class PromptsController {
     };
   }
 
-  @Post("execution")
+  @Post("/execution")
+  @ApiOperation({ summary: "Create prompt execution" })
+  @ApiResponse({
+    status: 200,
+    description: "Successfully created the prompt execution.",
+  })
   async createPromptExecution(
-    @Body() data: CreatePromptExecutionDto,
+    @Body() dto: CreatePromptExecutionDto,
     @ApiKeyOrgId() organizationId: string
   ): Promise<{ success: boolean }> {
-    this.logger.info({ ...data, organizationId }, "Reporting prompt execution");
-    const { promptId, environmentName } = data;
+    this.logger.info({ ...dto, organizationId }, "Reporting prompt execution");
+    const { promptId, environmentName } = dto;
 
     const prompt = await this.promptsService.getPrompt(promptId);
 
@@ -163,22 +177,22 @@ export class PromptsController {
         data: {
           environmentId: environment.id,
           prompt: { connect: { id: promptId } },
-          promptVersionSha: data.promptVersionSha,
+          promptVersionSha: dto.promptVersionSha,
           timestamp: new Date(),
-          status: data.status,
-          content: data.content,
-          interpolatedContent: data.interpolatedContent,
-          settings: data.settings as any,
-          result: data.result,
-          duration: data.duration,
-          promptTokens: data.promptTokens,
-          completionTokens: data.completionTokens,
-          totalTokens: data.totalTokens,
-          promptCost: data.promptCost,
-          completionCost: data.completionCost,
-          totalCost: data.totalCost,
-          error: data.error,
-          variables: data.variables as any,
+          status: dto.status,
+          content: dto.content,
+          interpolatedContent: dto.interpolatedContent,
+          settings: dto.settings as any,
+          result: dto.result,
+          duration: dto.duration,
+          promptTokens: dto.promptTokens,
+          completionTokens: dto.completionTokens,
+          totalTokens: dto.totalTokens,
+          promptCost: dto.promptCost,
+          completionCost: dto.completionCost,
+          totalCost: dto.totalCost,
+          error: dto.error,
+          variables: dto.variables as any,
         },
       });
     } catch (error) {

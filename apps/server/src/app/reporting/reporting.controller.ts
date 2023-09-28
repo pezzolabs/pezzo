@@ -12,7 +12,9 @@ import { ProjectIdAuthGuard } from "../auth/project-id-auth.guard";
 import { ProjectId } from "../identity/project-id.decorator";
 import { PinoLogger } from "../logger/pino-logger";
 import { ReportingService } from "./reporting.service";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
+@ApiTags("Reporting")
 @Controller("/reporting/v2")
 export class ReportingController {
   constructor(
@@ -23,6 +25,12 @@ export class ReportingController {
   @UseGuards(ApiKeyAuthGuard)
   @UseGuards(ProjectIdAuthGuard)
   @Post("/request")
+  @ApiOperation({ summary: "Report a request" })
+  @ApiResponse({
+    status: 200,
+    description: "Successfully reported the request.",
+  })
+  @ApiResponse({ status: 500, description: "Internal server error." })
   async reportRequest(
     @Body() dto: ReportRequestDto,
     @ApiKeyOrgId() organizationId: string,
