@@ -5,8 +5,10 @@ import { TimeframeSelector } from "../../../components/metrics/TimeframeSelector
 import { TimeframeSelectorProvider } from "../../../lib/providers/TimeframeSelectorContext";
 import { StatisticsSection } from "./StatisticsSection";
 import { ExecutionTimeChart } from "./charts/ExecutionTimeChart";
+import { usePageTitle } from "../../../lib/hooks/usePageTitle";
 
 export const DashboardPage = () => {
+  usePageTitle("Dashboard");
   return (
     <TimeframeSelectorProvider>
       <Row gutter={[24, 24]}>

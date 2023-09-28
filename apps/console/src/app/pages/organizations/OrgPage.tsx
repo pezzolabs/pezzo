@@ -15,6 +15,7 @@ import { SettingsView } from "./SettingsView";
 import { ApiKeysView } from "./ApiKeysView";
 import { useCurrentOrgMembership } from "../../lib/hooks/useCurrentOrgMembership";
 import { trackEvent } from "../../lib/utils/analytics";
+import { usePageTitle } from "../../lib/hooks/usePageTitle";
 
 const TabLabel = styled.div`
   display: inline-block;
@@ -83,7 +84,7 @@ export const OrgPage = () => {
       ),
     [tabsItems, isOrgAdmin]
   );
-
+  usePageTitle(organization?.name);
   const onTabChange = (key: string) => {
     setActiveView(key);
     trackEvent("organization_tab_changed", { tab: key });
