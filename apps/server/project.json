@@ -89,9 +89,7 @@
     },
     "graphql:codegen": {
       "dependsOn": ["graphql:schema-generate"],
-      "command": "OFFLINE=true npx graphql-codegen",
-      "inputs": ["{projectRoot}/schema.graphql"],
-      "outputs": ["{projectRoot}/@generated"]
+      "command": "OFFLINE=true npx graphql-codegen"
     },
     "graphql:codegen:watch": {
       "command": "npx graphql-codegen --watch"
