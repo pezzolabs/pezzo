@@ -1,7 +1,7 @@
 # Add files here to ignore them from prettier formatting
 /dist
 /coverage
-apps/server/src/schema.graphql
+**/schema.graphql
 **/@generated
 libs/common/src/version.json
 **/.next

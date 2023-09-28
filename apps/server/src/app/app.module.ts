@@ -28,7 +28,6 @@ import { RedisModule } from "./redis/redis.module";
 import { EncryptionModule } from "./encryption/encryption.module";
 
 const isCloud = process.env.PEZZO_CLOUD === "true";
-const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
 
 @Module({
   imports: [
@@ -49,7 +48,7 @@ const GQL_SCHEMA_PATH = join(process.cwd(), "apps/server/src/schema.graphql");
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       playground: false,
-      autoSchemaFile: GQL_SCHEMA_PATH,
+      autoSchemaFile: join(process.cwd(), "apps/server/schema.graphql"),
       sortSchema: true,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       context: (ctx) => {
