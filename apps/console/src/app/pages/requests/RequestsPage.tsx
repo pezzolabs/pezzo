@@ -13,6 +13,7 @@ import { RequestReportItem } from "./types";
 import { UnmanagedPromptWarning } from "./UnmanagedPromptWarning";
 import { colors } from "../../lib/theme/colors";
 import { trackEvent } from "../../lib/utils/analytics";
+import { usePageTitle } from "../../lib/hooks/usePageTitle";
 
 const getTableColumns = (
   data: RequestReportItem[]
@@ -88,7 +89,7 @@ export const RequestsPage = () => {
   const [page, setPage] = useState(1);
   const [currentReportId, setCurrentReportId] = useState<string | null>(null);
   const { data: reports, isLoading } = useGetRequestReports({ size, page });
-
+  usePageTitle("Requests");
   const currentReport = useMemo(
     () =>
       reports?.paginatedRequests.data.find(

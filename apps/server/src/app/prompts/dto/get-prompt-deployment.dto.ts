@@ -3,17 +3,17 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class GetPromptDeploymentDto {
   @ApiProperty({
-    description: "The name of the prompt deployment",
+    description: "The name of the prompt (case sensitive)",
     type: String,
-    example: "my-prompt-deployment",
+    example: "PromptName",
   })
   @IsString()
   name: string;
 
   @ApiProperty({
-    description: "The name of the environment",
+    description: "The name of the environment (case sensitive)",
     type: String,
-    example: "production",
+    example: "Production",
   })
   @IsString()
   environmentName: string;

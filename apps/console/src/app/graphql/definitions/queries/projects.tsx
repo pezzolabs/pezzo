@@ -24,12 +24,3 @@ export const GET_ALL_PROJECTS = graphql(/* GraphQL */ `
     }
   }
 `);
-
-export const CREATE_PROJECT = graphql(/* GraphQL */ `
-  mutation createProject($data: CreateProjectInput!) {
-    createProject(data: $data) {
-      organizationId
-      name
-    }
-  }
-`);

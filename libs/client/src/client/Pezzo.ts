@@ -42,6 +42,7 @@ export class Pezzo {
       headers: {
         "Content-Type": "application/json",
         "x-pezzo-api-key": this.options.apiKey,
+        "x-pezzo-project-id": this.options.projectId,
       },
     });
     const data = await response.json();

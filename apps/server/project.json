@@ -5,7 +5,7 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "dependsOn": ["prisma:generate", "^prebuild", "prebuild"],
+      "dependsOn": ["prisma:generate", "^prebuild"],
       "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
@@ -35,7 +35,7 @@
     "serve": {
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
-      "dependsOn": ["prisma:generate", "^prebuild", "prebuild"],
+      "dependsOn": ["prisma:generate"],
       "options": {
         "buildTarget": "server:build"
       },
@@ -69,34 +69,30 @@
         }
       }
     },
+    "prebuild": {
+      "dependsOn": ["prisma:generate", "graphql:generate"],
+      "executor": "nx:noop"
+    },
     "prisma:generate": {
-      "executor": "nx:run-commands",
+      "command": "npx prisma generate --schema apps/server/prisma/schema.prisma",
       "inputs": ["{projectRoot}/prisma/schema.prisma"],
-      "outputs": ["{projectRoot}/src/generated"],
-      "options": {
-        "command": "npx prisma generate --schema apps/server/prisma/schema.prisma"
-      }
+      "outputs": ["{projectRoot}/src/@generated"]
+    },
+    "graphql:generate": {
+      "dependsOn": ["graphql:schema-generate", "graphql:codegen"],
+      "executor": "nx:noop"
     },
     "graphql:schema-generate": {
       "dependsOn": ["prisma:generate"],
-      "outputs": ["{projectRoot}/src/schema.graphql"],
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "GITHUB_ACTIONS=true npx ts-node -P apps/server/tsconfig.app.json -r tsconfig-paths/register apps/server/scripts/generate-graphql-schema.ts"
-      }
+      "command": "GITHUB_ACTIONS=true npx ts-node -P apps/server/tsconfig.app.json -r tsconfig-paths/register apps/server/scripts/generate-graphql-schema.ts",
+      "outputs": ["{projectRoot}/schema.graphql"]
     },
     "graphql:codegen": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx graphql-codegen"
-      }
+      "dependsOn": ["graphql:schema-generate"],
+      "command": "OFFLINE=true npx graphql-codegen"
     },
-    "graphql:codegen:offline": {
-      "dependsOn": ["prsima:generate", "graphql:schema-generate"],
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "OFFLINE=true npx graphql-codegen"
-      }
+    "graphql:codegen:watch": {
+      "command": "npx graphql-codegen --watch"
     },
     "docker:build": {
       "executor": "@nx-tools/nx-container:build",

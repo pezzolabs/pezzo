@@ -1,15 +1,15 @@
 {
   "name": "pezzo",
-  "version": "0.5.1",
+  "version": "0.6.3",
   "license": "MIT",
+  "private": true,
   "scripts": {
     "postinstall": "node tools/scripts/patch-rollup",
-    "graphql:codegen": "nx graphql:codegen:offline server",
-    "graphql:codegen:watch": "nx graphql:codegen server --watch",
-    "format": "prettier --write /Users/arielweinberger/Development/pezzo/pezzo/libs/kafka/src/lib/kafka.module.ts",
-    "docs:dev": "cd docs && mintlify dev --port 3200"
+    "docs:dev": "cd docs && mintlify dev --port 3200",
+    "graphql:generate": "nx graphql:generate server",
+    "graphql:codegen:watch": "nx graphql:codegen:watch server"
   },
-  "private": true,
+  "nx": {},
   "dependencies": {
     "@analytics/segment": "^1.1.4",
     "@ant-design/icons": "^5.0.1",
@@ -183,8 +183,5 @@
     "typescript": "~4.9.5",
     "url-loader": "^4.1.1",
     "verdaccio": "^5.0.4"
-  },
-  "nx": {
-    "includedScripts": []
   }
 }

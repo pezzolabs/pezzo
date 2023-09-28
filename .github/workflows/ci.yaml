@@ -66,9 +66,7 @@ jobs:
         run: npx nx run-many --target=test --all --parallel --maxParallel=3
 
       - name: Build
-        run: |
-          npm run graphql:codegen
-          npx nx run-many --target=build --all --parallel --maxParallel=3
+        run: npx nx run-many --target=build --all --parallel --maxParallel=3
 
       - name: Upload dist artifact
         uses: actions/upload-artifact@v2
@@ -127,5 +125,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64
-          push: true
+          # only push if the branch is main or a release branch
+          push: ${{ startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/release/') }}
           provenance: false
