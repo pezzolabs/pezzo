@@ -1,6 +1,7 @@
 import BlurryBlurb from "../../../assets/blurry-blurb.svg";
 import Spline from "@splinetool/react-spline";
 import { useEffect, useState } from "react";
+import { usePageTitle } from "../../lib/hooks/usePageTitle";
 import {
   Alert,
   AlertDescription,
@@ -36,7 +37,7 @@ export const LoginPage = () => {
   const [thirdPartyLoading, setThirdPartyLoading] = useState<boolean>(false);
 
   const verb = mode === "signin" ? "Sign in" : "Sign up";
-
+  usePageTitle(verb);
   const signInSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
     password: z.string().min(1, "Password is required"),
