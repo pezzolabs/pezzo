@@ -139,7 +139,7 @@ export class PromptsController {
     };
   }
 
-  @Post("/execution")
+  @Post("execution")
   @ApiOperation({ summary: "Create prompt execution" })
   @ApiResponse({
     status: 200,
