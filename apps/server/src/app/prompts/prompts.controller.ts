@@ -43,7 +43,7 @@ export class PromptsController {
   async getPromptDeployment(
     @Query() query: GetPromptDeploymentDto,
     @ApiKeyOrgId() organizationId: string,
-    @Headers() headers,
+    @Headers() headers
   ) {
     const { name, environmentName } = query;
     let prompt: Prompt;
