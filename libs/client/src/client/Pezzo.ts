@@ -37,6 +37,7 @@ export class Pezzo {
     const url = new URL(`${this.options.serverUrl}/api/prompts/v2/deployment`);
     url.searchParams.append("name", promptName);
     url.searchParams.append("environmentName", this.options.environment);
+    url.searchParams.append("projectId", this.options.projectId);
 
     const response = await fetch(url.toString(), {
       headers: {

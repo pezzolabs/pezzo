@@ -44,30 +44,45 @@ export class PromptsController {
       name,
       organizationId,
       environmentName,
+      projectId: query.projectId,
     });
     this.logger.info("Getting prompt deployment");
     let prompt: Prompt;
-
-    const orgProjects = await this.prisma.project.findMany({
-      where: { organizationId },
-    });
-
-    const projectIds = orgProjects.map((p) => p.id);
     let projectId: string;
 
     try {
-      prompt = await this.prisma.prompt.findFirst({
-        where: {
-          name: {
-            equals: name,
+      if (query.projectId) {
+        projectId = query.projectId;
+        prompt = await this.prisma.prompt.findFirst({
+          where: {
+            name: {
+              equals: name,
+            },
+            projectId,
           },
-          projectId: {
-            in: projectIds,
-          },
-        },
-      });
+        });
+      } else {
+        // Backwards compatibility
+        // https://github.com/pezzolabs/pezzo/issues/224
+        const orgProjects = await this.prisma.project.findMany({
+          where: { organizationId },
+        });
 
-      projectId = prompt.projectId;
+        const projectIds = orgProjects.map((p) => p.id);
+
+        prompt = await this.prisma.prompt.findFirst({
+          where: {
+            name: {
+              equals: name,
+            },
+            projectId: {
+              in: projectIds,
+            },
+          },
+        });
+
+        projectId = prompt.projectId;
+      }
     } catch (error) {
       this.logger.error({ error }, "Error finding prompt with API key");
       throw new InternalServerErrorException();
