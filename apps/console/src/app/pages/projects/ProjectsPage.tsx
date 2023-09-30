@@ -7,6 +7,7 @@ import { ProjectCard } from "../../components/projects";
 import { PlusOutlined } from "@ant-design/icons";
 import { CreateNewProjectModal } from "../../components/projects/CreateNewProjectModal";
 import { trackEvent } from "../../lib/utils/analytics";
+import { usePageTitle } from "../../lib/hooks/usePageTitle";
 
 const Spinner = styled(Row)`
   height: 100%;
@@ -31,6 +32,7 @@ export const ProjectsPage = () => {
   const navigate = useNavigate();
   const { token } = theme.useToken();
   const [messageApi, contextHolder] = message.useMessage();
+  usePageTitle("Projects");
 
   useEffect(() => {
     if (isLoading) return;

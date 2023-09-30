@@ -3,6 +3,7 @@ import {
   Controller,
   ForbiddenException,
   Get,
+  Headers,
   InternalServerErrorException,
   NotFoundException,
   Post,
@@ -37,37 +38,53 @@ export class PromptsController {
   @Get("/deployment")
   async getPromptDeployment(
     @Query() query: GetPromptDeploymentDto,
-    @ApiKeyOrgId() organizationId: string
+    @ApiKeyOrgId() organizationId: string,
+    @Headers() headers
   ) {
     const { name, environmentName } = query;
+    let prompt: Prompt;
+    let projectId: string = headers["x-pezzo-project-id"] || null;
+
     this.logger.assign({
       name,
       organizationId,
       environmentName,
+      projectId,
     });
     this.logger.info("Getting prompt deployment");
-    let prompt: Prompt;
-
-    const orgProjects = await this.prisma.project.findMany({
-      where: { organizationId },
-    });
-
-    const projectIds = orgProjects.map((p) => p.id);
-    let projectId: string;
 
     try {
-      prompt = await this.prisma.prompt.findFirst({
-        where: {
-          name: {
-            equals: name,
+      // Backwards compatibility
+      // https://github.com/pezzolabs/pezzo/issues/224
+      if (projectId) {
+        prompt = await this.prisma.prompt.findFirst({
+          where: {
+            name: {
+              equals: name,
+            },
+            projectId,
           },
-          projectId: {
-            in: projectIds,
-          },
-        },
-      });
+        });
+      } else {
+        const orgProjects = await this.prisma.project.findMany({
+          where: { organizationId },
+        });
 
-      projectId = prompt.projectId;
+        const projectIds = orgProjects.map((p) => p.id);
+
+        prompt = await this.prisma.prompt.findFirst({
+          where: {
+            name: {
+              equals: name,
+            },
+            projectId: {
+              in: projectIds,
+            },
+          },
+        });
+
+        projectId = prompt.projectId;
+      }
     } catch (error) {
       this.logger.error({ error }, "Error finding prompt with API key");
       throw new InternalServerErrorException();
