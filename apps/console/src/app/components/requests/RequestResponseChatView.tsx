@@ -15,7 +15,7 @@ import {
   Avatar,
   Tag,
   Tooltip,
-  Card
+  Card,
 } from "antd";
 import OpenAILogo from "../../../assets/providers/openai-logo.svg";
 
@@ -128,7 +128,6 @@ export const RequestResponseChatView = ({ request, response }: Props) => {
         ]}
         renderItem={(item, index) => renderMessage(item, index)}
       />
-      <Typography.Text strong>Response</Typography.Text>
       <Card>
         <pre>{JSON.stringify(response.body, null, 2)}</pre>
       </Card>
