@@ -197,8 +197,8 @@ export const LoginPage = () => {
     <div className="tailwind">
       <div className="dark h-full font-sans">
         <main className="app flex h-full min-h-full flex-1 overflow-hidden bg-neutral-900 text-slate-300">
-          <div className="flex min-h-full flex-1 overflow-hidden">
-            <div className="z-10 flex flex-1 flex-col justify-center bg-neutral-900 px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+          <div className="flex h-[100vh] min-h-full flex-1 overflow-hidden">
+            <div className="z-10 flex h-full flex-1 flex-col justify-center bg-neutral-900 px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
               <div className="mx-auto w-full max-w-sm lg:w-96">
                 <div className="text-center">
                   <img
@@ -397,7 +397,7 @@ export const LoginPage = () => {
                 </motion.div>
               </div>
             </div>
-            <div className="relative flex h-[100vh] flex-1 bg-neutral-950 lg:block">
+            <div className="relative h-full flex-1 bg-neutral-950 md:hidden lg:flex">
               <div className="flex h-full w-full items-center justify-center">
                 <div
                   className="pointer-events-none absolute -mt-36 translate-x-[0vw] translate-y-[10vh] scale-[110%] opacity-50 blur-2xl md:block"
@@ -405,7 +405,7 @@ export const LoginPage = () => {
                 >
                   <img
                     src={BlurryBlurb}
-                    className="h-[100vh] w-[100vw] object-cover"
+                    className="h-full w-full object-cover"
                     alt="Page Illustration"
                   />
                 </div>
