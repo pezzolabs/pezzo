@@ -61,10 +61,14 @@ export class PromptTesterService {
       //
     }
 
-    const report = await this.reportingService.saveReport(promptExecutionData, {
-      organizationId,
-      projectId,
-    });
+    const report = await this.reportingService.saveReport(
+      promptExecutionData,
+      {
+        organizationId,
+        projectId,
+      },
+      true
+    );
 
     return report;
   }
