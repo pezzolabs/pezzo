@@ -1,8 +1,8 @@
-import { ReportRequestDto } from "../dto/report-request.dto";
+import { CreateReportDto } from "../dto/create-report.dto";
 import { Provider } from "@pezzo/types";
 import { OpenAIToolkit } from "@pezzo/llm-toolkit";
 
-export const buildRequestReport = (dto: ReportRequestDto) => {
+export const buildRequestReport = (dto: CreateReportDto) => {
   const requestTimestamp = new Date(dto.request.timestamp);
   const responseTimestamp = new Date(dto.response.timestamp);
   const duration = responseTimestamp.getTime() - requestTimestamp.getTime();
@@ -15,7 +15,7 @@ export const buildRequestReport = (dto: ReportRequestDto) => {
 };
 
 const buildOpenAIReport = (
-  dto: ReportRequestDto<Provider.OpenAI>,
+  dto: CreateReportDto<Provider.OpenAI>,
   requestDuration: number
 ) => {
   const { response, request } = dto;

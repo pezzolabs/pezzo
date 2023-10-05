@@ -1,31 +1,24 @@
 import {
-  Body,
   Controller,
-  ForbiddenException,
   Get,
   Headers,
   InternalServerErrorException,
   NotFoundException,
-  Post,
   Query,
 } from "@nestjs/common";
 import { UseGuards } from "@nestjs/common";
 import { ApiKeyAuthGuard } from "../auth/api-key-auth.guard";
 import { PinoLogger } from "../logger/pino-logger";
-import { CreatePromptExecutionDto } from "@pezzo/common";
 import { PromptsService } from "./prompts.service";
-import {
-  Prompt,
-  PromptEnvironment,
-  PromptExecution,
-  PromptVersion,
-} from "@prisma/client";
+import { Prompt, PromptEnvironment, PromptVersion } from "@prisma/client";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { PrismaService } from "../prisma.service";
 import { ApiKeyOrgId } from "../identity/api-key-org-id.decoator";
 import { GetPromptDeploymentDto } from "./dto/get-prompt-deployment.dto";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 @UseGuards(ApiKeyAuthGuard)
+@ApiTags("Prompts")
 @Controller("prompts/v2")
 export class PromptsController {
   constructor(
@@ -36,6 +29,19 @@ export class PromptsController {
   ) {}
 
   @Get("/deployment")
+  @ApiOperation({
+    summary: "Get the deployed Prompt Version to a particular Environment",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Deployed prompt version object",
+  })
+  @ApiResponse({
+    status: 404,
+    description:
+      "Prompt deployment not found for the specific environment name",
+  })
+  @ApiResponse({ status: 500, description: "Internal server error" })
   async getPromptDeployment(
     @Query() query: GetPromptDeploymentDto,
     @ApiKeyOrgId() organizationId: string,
@@ -145,74 +151,5 @@ export class PromptsController {
       settings: promptVersion.settings,
       content: promptVersion.content,
     };
-  }
-
-  @Post("execution")
-  async createPromptExecution(
-    @Body() data: CreatePromptExecutionDto,
-    @ApiKeyOrgId() organizationId: string
-  ): Promise<{ success: boolean }> {
-    this.logger.info({ ...data, organizationId }, "Reporting prompt execution");
-    const { promptId, environmentName } = data;
-
-    const prompt = await this.promptsService.getPrompt(promptId);
-
-    if (!prompt) {
-      throw new NotFoundException();
-    }
-
-    const project = await this.prisma.project.findUnique({
-      where: { id: prompt.projectId },
-    });
-
-    if (organizationId !== project.organizationId) {
-      throw new ForbiddenException();
-    }
-
-    const environment = await this.prisma.environment.findFirst({
-      where: { name: environmentName, projectId: prompt.projectId },
-    });
-
-    let execution: PromptExecution;
-
-    try {
-      execution = await this.prisma.promptExecution.create({
-        data: {
-          environmentId: environment.id,
-          prompt: { connect: { id: promptId } },
-          promptVersionSha: data.promptVersionSha,
-          timestamp: new Date(),
-          status: data.status,
-          content: data.content,
-          interpolatedContent: data.interpolatedContent,
-          settings: data.settings as any,
-          result: data.result,
-          duration: data.duration,
-          promptTokens: data.promptTokens,
-          completionTokens: data.completionTokens,
-          totalTokens: data.totalTokens,
-          promptCost: data.promptCost,
-          completionCost: data.completionCost,
-          totalCost: data.totalCost,
-          error: data.error,
-          variables: data.variables as any,
-        },
-      });
-    } catch (error) {
-      this.logger.error({ error }, "Error reporting prompt execution");
-      return { success: false };
-    }
-
-    this.analytics.trackEvent("prompt_execution_reported", {
-      projectId: project.id,
-      promptId,
-      executionId: execution.id,
-      data: {
-        status: execution.status,
-        duration: execution.duration / 1000,
-      },
-    });
-
-    return { success: true };
   }
 }
