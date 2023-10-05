@@ -22,7 +22,9 @@ async function bootstrap() {
   // Swagger setup
   const config = new DocumentBuilder()
     .setTitle("Pezzo API")
-    .setDescription("Specification of the Pezzo REST API, used by various clients.")
+    .setDescription(
+      "Specification of the Pezzo REST API, used by various clients."
+    )
     .setVersion("1.0")
     .build();
   const document = SwaggerModule.createDocument(app, config);

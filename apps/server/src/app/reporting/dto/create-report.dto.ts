@@ -1,4 +1,12 @@
-import { IsBoolean, IsDateString, IsEnum, IsObject, IsOptional, IsString, ValidateNested } from "class-validator";
+import {
+  IsBoolean,
+  IsDateString,
+  IsEnum,
+  IsObject,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from "class-validator";
 import {
   Provider,
   ObservabilityRequest,
@@ -20,7 +28,7 @@ export class PromptExecutionMetadataDto {
   @ApiProperty({
     description: "Client name identifier",
     type: String,
-    example: "pezzo-ts"
+    example: "pezzo-ts",
   })
   @IsString()
   client: string;
@@ -28,7 +36,7 @@ export class PromptExecutionMetadataDto {
   @ApiProperty({
     description: "Client version",
     type: String,
-    example: "0.4.11"
+    example: "0.4.11",
   })
   @IsString()
   clientVersion: string;
@@ -36,7 +44,7 @@ export class PromptExecutionMetadataDto {
   @ApiProperty({
     description: "The name of the Environment (case sensitive)",
     type: String,
-    example: "Production"
+    example: "Production",
   })
   @IsString()
   environment: string;
@@ -45,16 +53,18 @@ export class PromptExecutionMetadataDto {
     description: "The ID of the reported prompt (if managed)",
     required: false,
     type: String,
-    example: "c41jd0s93j000ud7kg7vekhi3"
+    example: "c41jd0s93j000ud7kg7vekhi3",
   })
   promptId: string;
 }
 
-export class ExecutionRequestDto<TProviderType extends Provider | unknown = unknown> {
+export class ExecutionRequestDto<
+  TProviderType extends Provider | unknown = unknown
+> {
   @ApiProperty({
     description: "Request timestamp",
     type: Date,
-    example: "2021-01-01T00:00:00.000Z"
+    example: "2021-01-01T00:00:00.000Z",
   })
   @IsDateString()
   timestamp: ObservabilityRequest<TProviderType>["timestamp"];
@@ -68,11 +78,13 @@ export class ExecutionRequestDto<TProviderType extends Provider | unknown = unkn
   body: ObservabilityRequest<TProviderType>["body"];
 }
 
-export class ExecutionResponseDto<TProviderType extends Provider | unknown = unknown> {
+export class ExecutionResponseDto<
+  TProviderType extends Provider | unknown = unknown
+> {
   @ApiProperty({
     description: "Response timestamp",
     type: Date,
-    example: "2021-01-01T00:00:00.000Z"
+    example: "2021-01-01T00:00:00.000Z",
   })
   @IsDateString()
   timestamp: ObservabilityResponse<TProviderType>["timestamp"];
@@ -123,7 +135,7 @@ export class CreateReportDto<
     description: "Whether caching is enabled for the report",
     type: Boolean,
     required: false,
-    default: false
+    default: false,
   })
   @IsOptional()
   @IsBoolean()

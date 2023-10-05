@@ -10,11 +10,7 @@ import { UseGuards } from "@nestjs/common";
 import { ApiKeyAuthGuard } from "../auth/api-key-auth.guard";
 import { PinoLogger } from "../logger/pino-logger";
 import { PromptsService } from "./prompts.service";
-import {
-  Prompt,
-  PromptEnvironment,
-  PromptVersion,
-} from "@prisma/client";
+import { Prompt, PromptEnvironment, PromptVersion } from "@prisma/client";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { PrismaService } from "../prisma.service";
 import { ApiKeyOrgId } from "../identity/api-key-org-id.decoator";
@@ -33,12 +29,18 @@ export class PromptsController {
   ) {}
 
   @Get("/deployment")
-  @ApiOperation({ summary: "Get the deployed Prompt Version to a particular Environment" })
+  @ApiOperation({
+    summary: "Get the deployed Prompt Version to a particular Environment",
+  })
   @ApiResponse({
     status: 200,
-    description: "Deployed prompt version object"
+    description: "Deployed prompt version object",
   })
-  @ApiResponse({ status: 404, description: "Prompt deployment not found for the specific environment name" })
+  @ApiResponse({
+    status: 404,
+    description:
+      "Prompt deployment not found for the specific environment name",
+  })
   @ApiResponse({ status: 500, description: "Internal server error" })
   async getPromptDeployment(
     @Query() query: GetPromptDeploymentDto,

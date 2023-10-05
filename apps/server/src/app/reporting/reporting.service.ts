@@ -24,7 +24,7 @@ export class ReportingService {
       organizationId: string;
       projectId: string;
     },
-    isTestPrompt = false,
+    isTestPrompt = false
   ): Promise<RequestReport> {
     const reportId = randomUUID();
     const { report, calculated } = buildRequestReport(dto);
