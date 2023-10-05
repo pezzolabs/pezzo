@@ -15,6 +15,7 @@ import {
   Avatar,
   Tag,
   Tooltip,
+  Card,
 } from "antd";
 import OpenAILogo from "../../../assets/providers/openai-logo.svg";
 
@@ -60,21 +61,10 @@ export const RequestResponseChatView = ({ request, response }: Props) => {
   };
 
   const renderMessage = (message, index) => {
-    const isFunctionResponse = !!message.function_call;
-
-    if (isFunctionResponse) {
-      return (
-        <>
-          <Typography.Title level={5}>
-            Function Call: {message.function_call.name}
-          </Typography.Title>
-          <Tag>{message.function_call.arguments}</Tag>
-        </>
-      );
-    }
+    const isFunctionCall = !!message.function_call;
 
     return (
-      <Row>
+      <Row style={{ maxWidth: "100%", width: "100%" }}>
         <List.Item
           style={{
             background: token.colorBorderBg,
@@ -95,15 +85,37 @@ export const RequestResponseChatView = ({ request, response }: Props) => {
             <Tooltip
               title={
                 <span style={{ textTransform: "capitalize" }}>
-                  {message.role}
+                  {isFunctionCall ? "Function Call" : message.role}
                 </span>
               }
             >
-              {renderAvatar(message.role)}
+              {isFunctionCall ? (
+                <Avatar
+                  style={{
+                    backgroundColor: "rgb(25, 195, 125)",
+                    color: "#fff",
+                  }}
+                  shape="circle"
+                >
+                  ƒ
+                </Avatar>
+              ) : (
+                renderAvatar(message.role)
+              )}
             </Tooltip>
           </Col>
-          <Col>
-            <Typography.Text>{message.content}</Typography.Text>
+          <Col style={{ width: "100%", overflow: "hidden" }}>
+            {isFunctionCall ? (
+              <pre style={{ width: "100%" }}>
+                {JSON.stringify(
+                  response.body.choices[0].message.function_call,
+                  null,
+                  2
+                )}
+              </pre>
+            ) : (
+              <Typography.Text>{message.content}</Typography.Text>
+            )}
           </Col>
         </List.Item>
       </Row>
