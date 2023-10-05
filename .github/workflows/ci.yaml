@@ -66,7 +66,9 @@ jobs:
         run: npx nx run-many --target=test --all --parallel --maxParallel=3
 
       - name: Build
-        run: npx nx run-many --target=build --all --parallel --maxParallel=3
+        run: |
+          npx nx graphql:generate --skip-nx-cache
+          npx nx run-many --target=build --all --parallel --maxParallel=3
 
       - name: Upload dist artifact
         uses: actions/upload-artifact@v2
