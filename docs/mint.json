@@ -25,6 +25,12 @@
     "name": "🕹️ Pezzo Console",
     "url": "https://app.pezzo.ai?ref=docs"
   },
+  "tabs": [
+    {
+      "name": "API Reference",
+      "url": "api-reference"
+  }
+  ],
   "navigation": [
     {
       "group": "Getting Started",
