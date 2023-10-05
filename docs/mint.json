@@ -60,6 +60,31 @@
         "client/integrations/openai",
         "client/request-caching"
       ]
+    },
+    {
+      "group": "Health",
+      "pages": [
+        "api-reference/health/performs-a-health-check"
+      ]
+    },
+    {
+      "group": "Prompts",
+      "pages": [
+        "api-reference/prompts/get-the-deployed-prompt-version-to-a-particular-environment"
+      ]
+    },
+    {
+      "group": "Reporting",
+      "pages": [
+        "api-reference/reporting/report-a-request"
+      ]
+    },
+    {
+      "group": "Cache",
+      "pages": [
+        "api-reference/cache/retrieve-cached-request",
+        "api-reference/cache/save-request-to-cache"
+      ]
     }
   ],
   "footerSocials": {
@@ -73,5 +98,12 @@
     "gtm": {
       "tagId": "GTM-M338ZV95"
     }
-  }
+  },
+  "api": {
+    "baseUrl": "https://api.staging.pezzo.ai",
+    "playground": {
+      "mode": "hide"
+    }
+  },
+  "openapi": "https://api.staging.pezzo.ai/api/spec-json"
 }
