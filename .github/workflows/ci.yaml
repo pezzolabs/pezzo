@@ -67,7 +67,7 @@ jobs:
 
       - name: Build
         run: |
-          npm run graphql:generate --no-cache
+          npx nx graphql:generate --skip-nx-cache
           npx nx run-many --target=build --all --parallel --maxParallel=3
 
       - name: Upload dist artifact
