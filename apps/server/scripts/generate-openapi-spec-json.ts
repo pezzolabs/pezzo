@@ -4,7 +4,7 @@ import { NestFactory } from "@nestjs/core";
 import path from "path";
 import fs from "fs";
 
-export default async function generateOpenAPISchemaJSON() {
+export default async function generateOpenAPISpecJSON() {
   const app = await NestFactory.create(AppModule);
 
   // Swagger setup
@@ -23,4 +23,4 @@ export default async function generateOpenAPISchemaJSON() {
   process.exit(0);
 }
 
-generateOpenAPISchemaJSON();
+generateOpenAPISpecJSON();
