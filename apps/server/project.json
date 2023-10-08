@@ -88,8 +88,7 @@
       "outputs": ["{projectRoot}/schema.graphql"]
     },
     "generate-open-api-spec": {
-      "command": "npx ts-node -P apps/server/tsconfig.app.json -r tsconfig-paths/register apps/server/scripts/generate-openapi-spec-json.ts",
-      "outputs": ["{projectRoot}/schema.graphql"]
+      "command": "npx ts-node -P apps/server/tsconfig.app.json -r tsconfig-paths/register apps/server/scripts/generate-openapi-spec-json.ts"
     },
     "graphql:codegen": {
       "dependsOn": ["graphql:schema-generate"],
