@@ -106,10 +106,10 @@
     }
   },
   "api": {
-    "baseUrl": "https://api.staging.pezzo.ai",
+    "baseUrl": "https://api.staging.pezzo.ai/api",
     "playground": {
       "mode": "hide"
     }
   },
-  "openapi": "https://api.staging.pezzo.ai/api/spec-json"
+  "openapi": "./openapi.json"
 }

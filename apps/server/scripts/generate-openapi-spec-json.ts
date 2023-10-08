@@ -17,9 +17,9 @@ export default async function generateOpenAPISchemaJSON() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   const outputPath = path.join(__dirname, "../../../docs/");
-  const outputFilePath = path.join(outputPath, "open-api-spec.json");
-  fs.writeFileSync(outputFilePath, JSON.stringify(document, null, 2));
-  console.log("Generated swagger file");
+  const outputFilePath = path.join(outputPath, "openapi.json");
+  fs.writeFileSync(outputFilePath, JSON.stringify(document));
+  console.log("Generated OpenAPI spec");
   process.exit(0);
 }
 
