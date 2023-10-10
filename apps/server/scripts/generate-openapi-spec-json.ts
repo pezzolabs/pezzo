@@ -28,7 +28,7 @@ export default async function generateOpenAPISpecJSON() {
   console.log("Scraping the generated OpenAPI JSON");
 
   scrapedOutput = execSync(
-    `cd ${docsPath} && npx --yes @mintlify/scraping@latest openapi-file openapi.json -o api-reference`,
+    `cd ${docsPath} && npx --yes @mintlify/scraping@3.0.46 openapi-file openapi.json -o api-reference`,
     { encoding: "utf-8" }
   );
 
