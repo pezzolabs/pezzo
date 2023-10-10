@@ -5,7 +5,7 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "dependsOn": ["prisma:generate", "generate-open-api-spec", "^prebuild"],
+      "dependsOn": ["prisma:generate", "^prebuild"],
       "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
