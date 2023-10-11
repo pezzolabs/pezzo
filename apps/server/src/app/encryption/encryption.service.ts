@@ -13,12 +13,18 @@ export class EncryptionService {
     const isLocalKMS = this.config.get("KMS_LOCAL");
     const region = this.config.get("KMS_REGION");
 
+    const endpoint = isLocalKMS
+      ? this.config.get("KMS_LOCAL_ENDPOINT")
+      : undefined;
+
+    const credentials = isLocalKMS
+      ? { accessKeyId: "", secretAccessKey: "" }
+      : undefined;
+
     this.kms = new KMS({
       region,
-      endpoint: isLocalKMS ? "http://localhost:9981" : undefined,
-      credentials: isLocalKMS
-        ? { accessKeyId: "", secretAccessKey: "" }
-        : undefined,
+      endpoint,
+      credentials,
     });
   }
 
