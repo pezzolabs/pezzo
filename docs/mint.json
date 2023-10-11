@@ -111,5 +111,5 @@
       "mode": "hide"
     }
   },
-  "openapi": "./openapi.json"
+  "openapi": "/openapi.json"
 }
