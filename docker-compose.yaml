@@ -31,6 +31,7 @@ services:
       - SUPERTOKENS_CONNECTION_URI=http://supertokens:3567
       - OPENSEARCH_URL=http://opensearch-node1:9200
       - REDIS_URL=redis://redis-stack-server:6379
+      - KMS_LOCAL_ENDPOINT=http://local-kms:9981
     ports:
       - "3000:3000"
     depends_on:
