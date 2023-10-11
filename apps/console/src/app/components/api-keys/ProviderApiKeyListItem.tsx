@@ -65,15 +65,19 @@ export const ProviderApiKeyListItem = ({
   };
 
   const handleSave = async () => {
-    await updateKeyMutation.mutateAsync({
-      provider,
-      value: editValue,
-      organizationId: currentOrgId,
-    });
+    if (!editValue) {
+      messageApi.error("API key is required");
+    } else {
+      await updateKeyMutation.mutateAsync({
+        provider,
+        value: editValue,
+        organizationId: currentOrgId,
+      });
 
-    messageApi.success("API key saved successfully");
-    trackEvent("provider_api_key_set", { provider });
-    setIsEditing(false);
+      messageApi.success("API key saved successfully");
+      trackEvent("provider_api_key_set", { provider });
+      setIsEditing(false);
+    }
   };
 
   const iconBase64 = providersList.find(
