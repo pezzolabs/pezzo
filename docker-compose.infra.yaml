@@ -59,7 +59,7 @@ services:
       retries: 20
 
   postgres:
-    image: postgres:15
+    image: postgres:15-alpine3.17
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
