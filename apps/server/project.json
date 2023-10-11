@@ -98,13 +98,14 @@
       "command": "npx graphql-codegen --watch"
     },
     "docker:build": {
+      "dependsOn": ["build"],
       "executor": "@nx-tools/nx-container:build",
       "inputs": ["{projectRoot}/../../dist/apps/server"],
       "defaultConfiguration": "local",
       "options": {},
       "configurations": {
         "local": {
-          "tags": ["pezzolabs/pezzo-private/notifications-service"],
+          "tags": ["pezzolabs/pezzo/server"],
           "push": false
         }
       }
