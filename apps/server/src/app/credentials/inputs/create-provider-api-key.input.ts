@@ -1,4 +1,5 @@
 import { Field, InputType } from "@nestjs/graphql";
+import { IsNotEmpty, IsString } from "class-validator";
 
 @InputType()
 export class CreateProviderApiKeyInput {
@@ -6,6 +7,8 @@ export class CreateProviderApiKeyInput {
   provider: string;
 
   @Field(() => String, { nullable: false })
+  @IsString()
+  @IsNotEmpty()
   value: string;
 
   @Field(() => String, { nullable: false })
