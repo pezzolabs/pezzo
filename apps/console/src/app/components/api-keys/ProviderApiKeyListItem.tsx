@@ -54,23 +54,15 @@ export const ProviderApiKeyListItem = ({
   });
 
   const [isEditing, setIsEditing] = useState(initialIsEditing);
-  const [editValue, setEditValue] = useState<string>("");
 
   useEffect(() => {
     form.resetFields();
-    if (!isEditing) {
-      setEditValue("");
-    }
   }, [isEditing, form]);
-
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
 
   const handleSave = async () => {
     await updateKeyMutation.mutateAsync({
       provider,
-      value: editValue,
+      value: form.getFieldValue("apiKey"),
       organizationId: currentOrgId,
     });
 
@@ -89,7 +81,7 @@ export const ProviderApiKeyListItem = ({
       <Form
         form={form}
         layout="vertical"
-        name="basic"
+        name="update-api-key"
         onFinish={handleSave}
         autoComplete="off"
       >
@@ -110,6 +102,7 @@ export const ProviderApiKeyListItem = ({
             {isEditing ? (
               <Form.Item
                 name="apiKey"
+                style={{ width: "100%" }}
                 rules={[
                   {
                     required: true,
@@ -119,7 +112,6 @@ export const ProviderApiKeyListItem = ({
               >
                 <Input
                   placeholder="Paste your API key"
-                  onChange={(e) => setEditValue(e.target.value)}
                   autoComplete="off"
                   style={{ marginTop: 22 }}
                 />
@@ -150,11 +142,12 @@ export const ProviderApiKeyListItem = ({
                 )}
               </>
             ) : (
-              <Button
-                onClick={handleEdit}
-                htmlType="submit"
-                icon={<EditOutlined height={18} />}
-              />
+              <Form.Item noStyle>
+                <Button
+                  onClick={() => setIsEditing(true)}
+                  icon={<EditOutlined height={18} />}
+                />
+              </Form.Item>
             )}
           </Col>
         </Row>
