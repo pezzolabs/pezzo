@@ -7,6 +7,7 @@ import {
   Button,
   Input,
   message,
+  Form,
 } from "antd";
 import { CloseOutlined, EditOutlined, SaveOutlined } from "@ant-design/icons";
 import { useState } from "react";
@@ -36,6 +37,7 @@ export const ProviderApiKeyListItem = ({
 }: Props) => {
   const [messageApi, contextHolder] = message.useMessage();
   const { currentOrgId } = useCurrentOrganization();
+  const [form] = Form.useForm<{ name: string }>();
   const updateKeyMutation = useMutation({
     mutationFn: (data: CreateProviderApiKeyInput) =>
       gqlClient.request(UPDATE_PROVIDER_API_KEY, {
@@ -55,29 +57,27 @@ export const ProviderApiKeyListItem = ({
   const [editValue, setEditValue] = useState<string>("");
 
   useEffect(() => {
+    form.resetFields();
     if (!isEditing) {
       setEditValue("");
     }
-  }, [isEditing]);
+  }, [isEditing, form]);
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
   const handleSave = async () => {
-    if (!editValue) {
-      messageApi.error("API key is required");
-    } else {
-      await updateKeyMutation.mutateAsync({
-        provider,
-        value: editValue,
-        organizationId: currentOrgId,
-      });
+    await updateKeyMutation.mutateAsync({
+      provider,
+      value: editValue,
+      organizationId: currentOrgId,
+    });
 
-      messageApi.success("API key saved successfully");
-      trackEvent("provider_api_key_set", { provider });
-      setIsEditing(false);
-    }
+    messageApi.success("API key saved successfully");
+    trackEvent("provider_api_key_set", { provider });
+    form.resetFields();
+    setIsEditing(false);
   };
 
   const iconBase64 = providersList.find(
@@ -86,54 +86,79 @@ export const ProviderApiKeyListItem = ({
 
   return (
     <Card size="small" key={provider}>
-      {contextHolder}
-      <Row gutter={[12, 12]} align="middle" style={{ width: "100%" }}>
-        <Col style={{ display: "flex", alignItems: "center", marginRight: 20 }}>
-          <Avatar size="large" shape="square" src={iconBase64} />
-          <Typography.Text style={{ fontSize: 18, marginLeft: 10 }}>
-            {provider}
-          </Typography.Text>
-        </Col>
-        <Col
-          flex="auto"
-          style={{ display: "flex", justifyContent: "flex-end" }}
-        >
-          {isEditing ? (
-            <Input
-              placeholder="Paste your API key"
-              onChange={(e) => setEditValue(e.target.value)}
-              autoComplete="off"
-            />
-          ) : (
-            <Typography.Text style={{ marginLeft: 10, opacity: 0.5 }}>
-              {value || "No API key provided"}
+      <Form
+        form={form}
+        layout="vertical"
+        name="basic"
+        onFinish={handleSave}
+        autoComplete="off"
+      >
+        {contextHolder}
+        <Row gutter={[12, 12]} align="middle" style={{ width: "100%" }}>
+          <Col
+            style={{ display: "flex", alignItems: "center", marginRight: 20 }}
+          >
+            <Avatar size="large" shape="square" src={iconBase64} />
+            <Typography.Text style={{ fontSize: 18, marginLeft: 10 }}>
+              {provider}
             </Typography.Text>
-          )}
-        </Col>
-        <Col style={{ display: "flex", justifyContent: "flex-end" }}>
-          {isEditing ? (
-            <>
-              <Button
-                type="primary"
-                onClick={handleSave}
-                loading={updateKeyMutation.isLoading}
-                icon={<SaveOutlined height={18} />}
-              />
-
-              {canCancelEdit && (
-                <Button
-                  onClick={() => setIsEditing(false)}
-                  loading={updateKeyMutation.isLoading}
-                  icon={<CloseOutlined />}
-                  style={{ marginLeft: 10 }}
+          </Col>
+          <Col
+            flex="auto"
+            style={{ display: "flex", justifyContent: "flex-end" }}
+          >
+            {isEditing ? (
+              <Form.Item
+                name="apiKey"
+                rules={[
+                  {
+                    required: true,
+                    message: "API key is required",
+                  },
+                ]}
+              >
+                <Input
+                  placeholder="Paste your API key"
+                  onChange={(e) => setEditValue(e.target.value)}
+                  autoComplete="off"
+                  style={{ marginTop: 22 }}
                 />
-              )}
-            </>
-          ) : (
-            <Button onClick={handleEdit} icon={<EditOutlined height={18} />} />
-          )}
-        </Col>
-      </Row>
+              </Form.Item>
+            ) : (
+              <Typography.Text style={{ marginLeft: 10, opacity: 0.5 }}>
+                {value || "No API key provided"}
+              </Typography.Text>
+            )}
+          </Col>
+          <Col style={{ display: "flex", justifyContent: "flex-end" }}>
+            {isEditing ? (
+              <>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={updateKeyMutation.isLoading}
+                  icon={<SaveOutlined height={18} />}
+                />
+
+                {canCancelEdit && (
+                  <Button
+                    onClick={() => setIsEditing(false)}
+                    loading={updateKeyMutation.isLoading}
+                    icon={<CloseOutlined />}
+                    style={{ marginLeft: 10 }}
+                  />
+                )}
+              </>
+            ) : (
+              <Button
+                onClick={handleEdit}
+                htmlType="submit"
+                icon={<EditOutlined height={18} />}
+              />
+            )}
+          </Col>
+        </Row>
+      </Form>
     </Card>
   );
 };
