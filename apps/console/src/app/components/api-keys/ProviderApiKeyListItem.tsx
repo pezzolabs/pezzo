@@ -37,7 +37,7 @@ export const ProviderApiKeyListItem = ({
 }: Props) => {
   const [messageApi, contextHolder] = message.useMessage();
   const { currentOrgId } = useCurrentOrganization();
-  const [form] = Form.useForm<{ name: string }>();
+  const [form] = Form.useForm<{ apiKey: string }>();
   const updateKeyMutation = useMutation({
     mutationFn: (data: CreateProviderApiKeyInput) =>
       gqlClient.request(UPDATE_PROVIDER_API_KEY, {
