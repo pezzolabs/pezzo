@@ -1,5 +1,4 @@
-import { MsearchBody } from "@opensearch-project/opensearch/api/types";
-import { ProjectMetricType } from "./inputs/get-project-metrics.input";
+import bodybuilder from "bodybuilder";
 
 export function getPercentageChange(
   currentValue: number,
@@ -15,37 +14,12 @@ export function getPercentageChange(
 export function buildBaseProjectMetricQuery(
   projectId: string,
   startDate: string,
-  endDate: string,
-  options: Partial<MsearchBody> = {}
-) {
-  const body: MsearchBody = {
-    query: {
-      bool: {
-        filter: [
-          {
-            term: {
-              "ownership.projectId": projectId,
-            },
-          },
-          {
-            range: {
-              timestamp: {
-                gte: startDate,
-                lte: endDate,
-              },
-            },
-          },
-          ...((options?.query?.bool?.filter as any[]) || []),
-        ],
-        must_not: [...((options?.query?.bool?.must_not as any[]) || [])],
-      },
-    },
-    size: 0,
-  };
-
-  if (options.aggs) {
-    body.aggs = options.aggs;
-  }
+  endDate: string
+): bodybuilder.Bodybuilder {
+  const body = bodybuilder()
+    .filter("term", "ownership.projectId", projectId)
+    .filter("range", "timestamp", { gte: startDate, lte: endDate })
+    .size(0);
 
   return body;
 }
@@ -80,52 +54,4 @@ export function getStartAndEndDates(
       endDate: previousEndDate.toISOString(),
     },
   };
-}
-
-export function getMetricHistogramParams(metric: ProjectMetricType): {
-  aggregation: any;
-  filters?: any[];
-} {
-  switch (metric) {
-    case ProjectMetricType.requests:
-      return {
-        aggregation: {
-          value_count: {
-            field: "timestamp",
-          },
-        },
-      };
-    case ProjectMetricType.duration:
-      return {
-        aggregation: {
-          avg: {
-            field: "calculated.duration",
-          },
-        },
-      };
-    case ProjectMetricType.erroneousRequests:
-      return {
-        aggregation: {
-          value_count: {
-            field: "timestamp",
-          },
-        },
-        filters: [
-          {
-            bool: {
-              must_not: [
-                {
-                  term: {
-                    "response.status": 200,
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      };
-
-    default:
-      throw new Error("Invalid metric");
-  }
 }
