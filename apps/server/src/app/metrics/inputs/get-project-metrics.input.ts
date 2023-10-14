@@ -1,4 +1,5 @@
 import { Field, InputType, registerEnumType } from "@nestjs/graphql";
+import { FilterInput } from "../../common/filters/filter.input";
 
 export enum ProjectMetricType {
   requests = "requests",
@@ -25,6 +26,9 @@ export class GetProjectMetricInput {
 
   @Field(() => Date, { nullable: false })
   endDate: Date;
+
+  @Field(() => [FilterInput], { nullable: true })
+  filters?: FilterInput[];
 }
 
 export enum ProjectMetricHistogramBucketSize {
@@ -55,4 +59,7 @@ export class GetProjectMetricHistogramInput {
 
   @Field(() => ProjectMetricHistogramBucketSize, { nullable: true })
   bucketSize?: ProjectMetricHistogramBucketSize; // The size of each histogram bucket, e.g., "1d", "1w", "1h"
+
+  @Field(() => [FilterInput], { nullable: true })
+  filters?: FilterInput[];
 }

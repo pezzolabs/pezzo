@@ -1,4 +1,5 @@
-import { Card, Col, Row, Typography } from "antd";
+import { Button, Card, Col, Popover, Row, Space, Typography } from "antd";
+import Icon from "@ant-design/icons/lib/components/Icon";
 import { SuccessErrorRateChart } from "./charts/SuccessErrorRateChart";
 import { ProjectMetricControlsProvider } from "./charts/ProjectMetricContext";
 import { TimeframeSelector } from "../../../components/metrics/TimeframeSelector";
@@ -6,6 +7,8 @@ import { TimeframeSelectorProvider } from "../../../lib/providers/TimeframeSelec
 import { StatisticsSection } from "./StatisticsSection";
 import { ExecutionTimeChart } from "./charts/ExecutionTimeChart";
 import { usePageTitle } from "../../../lib/hooks/usePageTitle";
+import { RequestFilters } from "../../../components/requests/RequestFilters";
+import { FunnelIcon } from "@heroicons/react/24/outline";
 
 export const DashboardPage = () => {
   usePageTitle("Dashboard");
@@ -15,8 +18,29 @@ export const DashboardPage = () => {
         <Col span={12}>
           <Typography.Title level={2}>Dashboard</Typography.Title>
         </Col>
-        <Col span={12} style={{ display: "flex", justifyContent: "flex-end" }}>
-          <TimeframeSelector />
+        <Col span={12}>
+          <Space
+            direction="horizontal"
+            style={{ display: "flex", justifyContent: "flex-end" }}
+          >
+            <Popover
+              trigger={["click"]}
+              placement="bottomRight"
+              title="Filters"
+              content={<RequestFilters />}
+            >
+              <Button>
+                <Icon
+                  style={{ marginRight: 0, fontSize: 16 }}
+                  viewBox="0 0 1024 1024"
+                >
+                  <FunnelIcon style={{ fontSize: 16 }} />
+                </Icon>
+                Filters
+              </Button>
+            </Popover>
+            <TimeframeSelector />
+          </Space>
         </Col>
       </Row>
       <StatisticsSection />
@@ -47,20 +71,6 @@ export const DashboardPage = () => {
           </Card>
         </Col>
       </Row>
-      {/* <Row gutter={[24, 24]}>
-        <Col span={24} style={{ height: 540 }}>
-          <Card style={{ width: "100%" }}>
-            <div style={{ marginBottom: 12 }}>
-              <Typography.Title level={4}>
-                Total Cost (Per Provider)
-              </Typography.Title>
-              <div style={{ height: 360 }}>
-                <TotalCostChart />
-              </div>
-            </div>
-          </Card>
-        </Col>
-      </Row> */}
     </TimeframeSelectorProvider>
   );
 };
