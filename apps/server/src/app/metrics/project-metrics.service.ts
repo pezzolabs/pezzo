@@ -4,10 +4,10 @@ import { OpenSearchService } from "../opensearch/opensearch.service";
 import { HistogramMetric, ProjectMetric } from "./models/project-metric.model";
 import {
   buildBaseProjectMetricQuery,
-  getMetricHistogramParams,
   getStartAndEndDates,
 } from "./metrics.utils";
 import { OpenSearchIndex } from "../opensearch/types";
+import bodybuilder from "bodybuilder";
 
 @Injectable()
 export class ProjectMetricsService {
@@ -47,17 +47,13 @@ export class ProjectMetricsService {
     const { current, previous } = getStartAndEndDates(startDate, endDate);
 
     const buildAndExecuteQuery = async (startDate: string, endDate: string) => {
+      const body = buildBaseProjectMetricQuery(projectId, startDate, endDate)
+        .aggregation("sum", "calculated.totalCost", "total_cost")
+        .build();
+
       const query = {
         index: OpenSearchIndex.Requests,
-        body: buildBaseProjectMetricQuery(projectId, startDate, endDate, {
-          aggs: {
-            total_cost: {
-              sum: {
-                field: "calculated.totalCost",
-              },
-            },
-          },
-        }),
+        body,
       };
 
       const result = await this.openSearchService.client.search(query);
@@ -84,17 +80,12 @@ export class ProjectMetricsService {
     const { current, previous } = getStartAndEndDates(startDate, endDate);
 
     const buildAndExecuteQuery = async (startDate: string, endDate: string) => {
+      const body = buildBaseProjectMetricQuery(projectId, startDate, endDate)
+        .aggregation("avg", "calculated.duration", "avg_duration")
+        .build();
       const result = await this.openSearchService.client.search({
         index: OpenSearchIndex.Requests,
-        body: buildBaseProjectMetricQuery(projectId, startDate, endDate, {
-          aggs: {
-            avg_duration: {
-              avg: {
-                field: "calculated.duration",
-              },
-            },
-          },
-        }),
+        body,
       });
 
       return result.body.aggregations.avg_duration.value || 0;
@@ -119,21 +110,13 @@ export class ProjectMetricsService {
     const { current, previous } = getStartAndEndDates(startDate, endDate);
 
     const buildAndExecuteQuery = async (startDate: string, endDate: string) => {
+      const body = buildBaseProjectMetricQuery(projectId, startDate, endDate)
+        .filter("term", "response.status", 200)
+        .build();
+
       const result = await this.openSearchService.client.search({
         index: OpenSearchIndex.Requests,
-        body: buildBaseProjectMetricQuery(projectId, startDate, endDate, {
-          query: {
-            bool: {
-              filter: [
-                {
-                  term: {
-                    "response.status": 200,
-                  },
-                },
-              ],
-            },
-          },
-        }),
+        body,
       });
 
       return result.body.hits.total.value || 0;
@@ -158,21 +141,13 @@ export class ProjectMetricsService {
     const { current, previous } = getStartAndEndDates(startDate, endDate);
 
     const buildAndExecuteQuery = async (startDate: string, endDate: string) => {
+      const body = buildBaseProjectMetricQuery(projectId, startDate, endDate)
+        .notFilter("term", "response.status", 200)
+        .build();
+
       const result = await this.openSearchService.client.search({
         index: OpenSearchIndex.Requests,
-        body: buildBaseProjectMetricQuery(projectId, startDate, endDate, {
-          query: {
-            bool: {
-              must_not: [
-                {
-                  term: {
-                    "response.status": 200,
-                  },
-                },
-              ],
-            },
-          },
-        }),
+        body,
       });
 
       return result.body.hits.total.value || 0;
@@ -196,48 +171,52 @@ export class ProjectMetricsService {
     endDate: Date,
     bucketSize: string
   ): Promise<HistogramMetric[]> {
-    const { aggregation, filters = [] } = getMetricHistogramParams(metricType);
+    let body = bodybuilder();
+
+    body = body
+      .addFilter("term", "ownership.projectId", projectId)
+      .andFilter("range", "timestamp", {
+        gte: startDate.toISOString(),
+        lte: endDate.toISOString(),
+      });
+
+    let aggType, aggField;
+
+    switch (metricType) {
+      case ProjectMetricType.requests:
+        aggType = "value_count";
+        aggField = "timestamp";
+        break;
+      case ProjectMetricType.duration:
+        aggType = "avg";
+        aggField = "calculated.duration";
+        break;
+      case ProjectMetricType.erroneousRequests:
+        aggType = "value_count";
+        aggField = "timestamp";
+        body = body.notFilter("term", "response.status", 200);
+        break;
+    }
+
+    body = body.aggregation(
+      "date_histogram",
+      "timestamp",
+      {
+        interval: bucketSize,
+        extended_bounds: {
+          min: startDate.toISOString(),
+          max: endDate.toISOString(),
+        },
+      },
+      "metrics_over_time",
+      (agg) => agg.aggregation(aggType, aggField, "metric_value")
+    );
+
+    body = body.size(0);
 
     const result = await this.openSearchService.client.search({
       index: OpenSearchIndex.Requests,
-      body: {
-        query: {
-          bool: {
-            filter: [
-              {
-                term: {
-                  "ownership.projectId": projectId,
-                },
-              },
-              {
-                range: {
-                  timestamp: {
-                    gte: startDate.toISOString(),
-                    lte: endDate.toISOString(),
-                  },
-                },
-              },
-              ...filters,
-            ],
-          },
-        },
-        aggs: {
-          metrics_over_time: {
-            date_histogram: {
-              field: "timestamp",
-              interval: bucketSize,
-              extended_bounds: {
-                min: startDate.toISOString(),
-                max: endDate.toISOString(),
-              },
-            },
-            aggs: {
-              metric_value: aggregation,
-            },
-          },
-        },
-        size: 0,
-      },
+      body: body.build(),
     });
 
     // Convert the response to the HistogramMetric format
