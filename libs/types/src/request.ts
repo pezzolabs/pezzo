@@ -15,6 +15,7 @@ export type ObservabilityReportMetadata = {
   provider: Provider;
   client?: string;
   clientVersion?: string;
+  environment: string;
   type: PromptExecutionType;
   [key: string]: AllPrimitiveTypes;
 };
