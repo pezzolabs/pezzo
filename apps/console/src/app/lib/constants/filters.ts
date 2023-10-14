@@ -1,8 +1,20 @@
-export const FILTER_FIELDS_LIST = [
+export type FilterDefinition = {
+  value: string;
+  type: "number" | "string" | "date";
+  label: string;
+  formatter?: (value: string) => string;
+};
+
+export const FILTER_FIELDS_LIST: FilterDefinition[] = [
   {
-    value: "request.timestamp",
-    type: "date",
-    label: "Timestamp",
+    value: "calculated.duration",
+    type: "number",
+    label: "Duration (ms)",
+  },
+  {
+    value: "metadata.environment",
+    type: "string",
+    label: "Environment",
   },
   {
     value: "response.status",
@@ -10,9 +22,9 @@ export const FILTER_FIELDS_LIST = [
     label: "Status",
   },
   {
-    value: "calculated.totalTokens",
-    type: "number",
-    label: "Total Tokens",
+    value: "request.timestamp",
+    type: "date",
+    label: "Timestamp",
   },
   {
     value: "calculated.totalCost",
@@ -20,14 +32,14 @@ export const FILTER_FIELDS_LIST = [
     label: "Total Cost",
   },
   {
-    value: "calculated.duration",
+    value: "calculated.totalTokens",
     type: "number",
-    label: "Duration (ms)",
+    label: "Total Tokens",
   },
   {
     value: "property",
     type: "string",
-    label: "Property",
+    label: "Custom Property",
   },
 ];
 
