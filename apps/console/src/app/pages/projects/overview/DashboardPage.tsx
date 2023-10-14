@@ -9,16 +9,19 @@ import { ExecutionTimeChart } from "./charts/ExecutionTimeChart";
 import { usePageTitle } from "../../../lib/hooks/usePageTitle";
 import { RequestFilters } from "../../../components/requests/RequestFilters";
 import { FunnelIcon } from "@heroicons/react/24/outline";
+import { useFiltersAndSortParams } from "../../../lib/hooks/useFiltersAndSortParams";
 
 export const DashboardPage = () => {
   usePageTitle("Dashboard");
+  const { filters } = useFiltersAndSortParams();
+
   return (
     <TimeframeSelectorProvider>
       <Row gutter={[24, 24]}>
-        <Col span={12}>
+        <Col>
           <Typography.Title level={2}>Dashboard</Typography.Title>
         </Col>
-        <Col span={12}>
+        <Col flex="auto">
           <Space
             direction="horizontal"
             style={{ display: "flex", justifyContent: "flex-end" }}
@@ -36,7 +39,7 @@ export const DashboardPage = () => {
                 >
                   <FunnelIcon style={{ fontSize: 16 }} />
                 </Icon>
-                Filters
+                Filters {filters.length ? `(${filters.length})` : ""}
               </Button>
             </Popover>
             <TimeframeSelector />
