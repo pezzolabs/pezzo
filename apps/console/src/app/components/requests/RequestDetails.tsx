@@ -134,6 +134,10 @@ export const RequestDetails = (props: Props) => {
       ),
     },
     {
+      title: "Environment",
+      description: props.metadata.environment,
+    },
+    {
       title: "Duration",
       description: ms(props.calculated.duration),
     },
