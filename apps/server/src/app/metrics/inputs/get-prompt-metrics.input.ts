@@ -1,4 +1,5 @@
 import { Field, InputType, registerEnumType } from "@nestjs/graphql";
+import { FilterInput } from "../../common/filters/filter.input";
 
 export enum PromptExecutionMetricField {
   totalCost = "totalCost",
@@ -55,4 +56,7 @@ export class GetPromptMetricsInput {
 
   @Field(() => String, { nullable: true })
   fillEmpty?: string = null;
+
+  @Field(() => [FilterInput], { nullable: true })
+  filters: FilterInput[];
 }

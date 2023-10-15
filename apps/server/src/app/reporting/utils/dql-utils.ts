@@ -67,7 +67,11 @@ export const mapFiltersToDql = ({
 
     switch (filter.operator.toLowerCase()) {
       case FilterOperator.eq:
-        body = body.filter("term", filter.field, filter.value);
+        body = body.filter(
+          "term",
+          filter.field,
+          String(filter.value).toLowerCase()
+        );
         break;
       case FilterOperator.neq:
         body = body.notFilter("term", filter.field, filter.value);
@@ -77,14 +81,22 @@ export const mapFiltersToDql = ({
         if (!Array.isArray(filter.value)) {
           throw new Error(`Operator 'in' requires an array of values.`);
         }
-        body = body.filter("terms", filter.field, filter.value);
+        body = body.filter(
+          "terms",
+          filter.field,
+          filter.value.map((value) => String(value).toLowerCase())
+        );
         break;
       case FilterOperator.nin:
         // Ensure that filter.value is an array for 'nin' operator
         if (!Array.isArray(filter.value)) {
           throw new Error(`Operator 'nin' requires an array of values.`);
         }
-        body = body.notFilter("terms", filter.field, filter.value);
+        body = body.notFilter(
+          "terms",
+          filter.field,
+          filter.value.map((value) => String(value).toLowerCase())
+        );
         break;
       case FilterOperator.contains:
         body = body.query("match", filter.field, filter.value);
@@ -102,5 +114,5 @@ export const mapFiltersToDql = ({
     }
   });
 
-  return body.build();
+  return body;
 };

@@ -1,5 +1,5 @@
 import { Modal } from "antd";
-import { FunctionsEditor } from "./FunctionsEditor";
+// import { FunctionsEditor } from "./FunctionsEditor";
 
 interface Props {
   open: boolean;
@@ -15,7 +15,7 @@ export const FunctionsFormModal = ({ open, onClose }: Props) => {
       footer={false}
       width={"700px"}
     >
-      <FunctionsEditor onClose={onClose} />
+      {/* <FunctionsEditor onClose={onClose} /> */}
     </Modal>
   );
 };

@@ -31,7 +31,7 @@ export class ProjectMetricsResolver {
     this.logger.assign({ data });
     this.logger.info("Getting project metric");
 
-    const { projectId, metric, startDate, endDate } = data;
+    const { projectId, metric, startDate, endDate, filters } = data;
 
     const project = await this.prismaService.project.findUnique({
       where: {
@@ -46,31 +46,36 @@ export class ProjectMetricsResolver {
         return this.projectMetricsService.getRequests(
           projectId,
           startDate,
-          endDate
+          endDate,
+          filters
         );
       case ProjectMetricType.cost:
         return this.projectMetricsService.getCost(
           projectId,
           startDate,
-          endDate
+          endDate,
+          filters
         );
       case ProjectMetricType.duration:
         return this.projectMetricsService.getAvgDuration(
           projectId,
           startDate,
-          endDate
+          endDate,
+          filters
         );
       case ProjectMetricType.successfulRequests:
         return this.projectMetricsService.getSuccessfulRequests(
           projectId,
           startDate,
-          endDate
+          endDate,
+          filters
         );
       case ProjectMetricType.erroneousRequests:
         return this.projectMetricsService.getErroneousRequests(
           projectId,
           startDate,
-          endDate
+          endDate,
+          filters
         );
     }
   }
@@ -83,7 +88,7 @@ export class ProjectMetricsResolver {
     this.logger.assign({ data });
     this.logger.info("Getting project metric histogram");
 
-    const { projectId, metric, startDate, endDate, bucketSize } = data;
+    const { projectId, metric, startDate, endDate, bucketSize, filters } = data;
 
     const project = await this.prismaService.project.findUnique({
       where: {
@@ -97,7 +102,8 @@ export class ProjectMetricsResolver {
       metric,
       startDate,
       endDate,
-      bucketSize
+      bucketSize,
+      filters
     );
   }
 }

@@ -4,10 +4,11 @@ import { OpenSearchService } from "../opensearch/opensearch.service";
 import { HistogramMetric, ProjectMetric } from "./models/project-metric.model";
 import {
   buildBaseProjectMetricQuery,
-  getMetricHistogramParams,
   getStartAndEndDates,
 } from "./metrics.utils";
 import { OpenSearchIndex } from "../opensearch/types";
+import { FilterInput } from "../common/filters/filter.input";
+import { mapFiltersToDql } from "../reporting/utils/dql-utils";
 
 @Injectable()
 export class ProjectMetricsService {
@@ -16,15 +17,20 @@ export class ProjectMetricsService {
   async getRequests(
     projectId: string,
     startDate: Date,
-    endDate: Date
+    endDate: Date,
+    filters: FilterInput[]
   ): Promise<ProjectMetric> {
     const { current, previous } = getStartAndEndDates(startDate, endDate);
 
     const buildAndExecuteQuery = async (startDate: string, endDate: string) => {
+      let body = mapFiltersToDql({ filters, restrictions: {} });
+      body = buildBaseProjectMetricQuery(body, projectId, startDate, endDate);
+
       const result = await this.openSearchService.client.search({
         index: OpenSearchIndex.Requests,
-        body: buildBaseProjectMetricQuery(projectId, startDate, endDate),
+        body: body.build(),
       });
+
       return result.body.hits.total.value || 0;
     };
 
@@ -42,22 +48,23 @@ export class ProjectMetricsService {
   async getCost(
     projectId: string,
     startDate: Date,
-    endDate: Date
+    endDate: Date,
+    filters: FilterInput[]
   ): Promise<ProjectMetric> {
     const { current, previous } = getStartAndEndDates(startDate, endDate);
 
     const buildAndExecuteQuery = async (startDate: string, endDate: string) => {
+      let body = mapFiltersToDql({ filters, restrictions: {} });
+      body = buildBaseProjectMetricQuery(
+        body,
+        projectId,
+        startDate,
+        endDate
+      ).aggregation("sum", "calculated.totalCost", "total_cost");
+
       const query = {
         index: OpenSearchIndex.Requests,
-        body: buildBaseProjectMetricQuery(projectId, startDate, endDate, {
-          aggs: {
-            total_cost: {
-              sum: {
-                field: "calculated.totalCost",
-              },
-            },
-          },
-        }),
+        body: body.build(),
       };
 
       const result = await this.openSearchService.client.search(query);
@@ -79,22 +86,22 @@ export class ProjectMetricsService {
   async getAvgDuration(
     projectId: string,
     startDate: Date,
-    endDate: Date
+    endDate: Date,
+    filters: FilterInput[]
   ): Promise<ProjectMetric> {
     const { current, previous } = getStartAndEndDates(startDate, endDate);
 
     const buildAndExecuteQuery = async (startDate: string, endDate: string) => {
+      let body = mapFiltersToDql({ filters, restrictions: {} });
+      body = buildBaseProjectMetricQuery(
+        body,
+        projectId,
+        startDate,
+        endDate
+      ).aggregation("avg", "calculated.duration", "avg_duration");
       const result = await this.openSearchService.client.search({
         index: OpenSearchIndex.Requests,
-        body: buildBaseProjectMetricQuery(projectId, startDate, endDate, {
-          aggs: {
-            avg_duration: {
-              avg: {
-                field: "calculated.duration",
-              },
-            },
-          },
-        }),
+        body: body.build(),
       });
 
       return result.body.aggregations.avg_duration.value || 0;
@@ -114,26 +121,23 @@ export class ProjectMetricsService {
   async getSuccessfulRequests(
     projectId: string,
     startDate: Date,
-    endDate: Date
+    endDate: Date,
+    filters: FilterInput[]
   ): Promise<ProjectMetric> {
     const { current, previous } = getStartAndEndDates(startDate, endDate);
 
     const buildAndExecuteQuery = async (startDate: string, endDate: string) => {
+      let body = mapFiltersToDql({ filters, restrictions: {} });
+      body = buildBaseProjectMetricQuery(
+        body,
+        projectId,
+        startDate,
+        endDate
+      ).filter("term", "response.status", 200);
+
       const result = await this.openSearchService.client.search({
         index: OpenSearchIndex.Requests,
-        body: buildBaseProjectMetricQuery(projectId, startDate, endDate, {
-          query: {
-            bool: {
-              filter: [
-                {
-                  term: {
-                    "response.status": 200,
-                  },
-                },
-              ],
-            },
-          },
-        }),
+        body: body.build(),
       });
 
       return result.body.hits.total.value || 0;
@@ -153,26 +157,23 @@ export class ProjectMetricsService {
   async getErroneousRequests(
     projectId: string,
     startDate: Date,
-    endDate: Date
+    endDate: Date,
+    filters: FilterInput[]
   ): Promise<ProjectMetric> {
     const { current, previous } = getStartAndEndDates(startDate, endDate);
 
     const buildAndExecuteQuery = async (startDate: string, endDate: string) => {
+      let body = mapFiltersToDql({ filters, restrictions: {} });
+      body = buildBaseProjectMetricQuery(
+        body,
+        projectId,
+        startDate,
+        endDate
+      ).notFilter("term", "response.status", 200);
+
       const result = await this.openSearchService.client.search({
         index: OpenSearchIndex.Requests,
-        body: buildBaseProjectMetricQuery(projectId, startDate, endDate, {
-          query: {
-            bool: {
-              must_not: [
-                {
-                  term: {
-                    "response.status": 200,
-                  },
-                },
-              ],
-            },
-          },
-        }),
+        body: body.build(),
       });
 
       return result.body.hits.total.value || 0;
@@ -194,50 +195,55 @@ export class ProjectMetricsService {
     metricType: ProjectMetricType,
     startDate: Date,
     endDate: Date,
-    bucketSize: string
+    bucketSize: string,
+    filters: FilterInput[]
   ): Promise<HistogramMetric[]> {
-    const { aggregation, filters = [] } = getMetricHistogramParams(metricType);
+    let body = mapFiltersToDql({ filters, restrictions: {} });
+
+    body = body
+      .addFilter("term", "ownership.projectId", projectId)
+      .andFilter("range", "timestamp", {
+        gte: startDate.toISOString(),
+        lte: endDate.toISOString(),
+      });
+
+    let aggType, aggField;
+
+    switch (metricType) {
+      case ProjectMetricType.requests:
+        aggType = "value_count";
+        aggField = "timestamp";
+        break;
+      case ProjectMetricType.duration:
+        aggType = "avg";
+        aggField = "calculated.duration";
+        break;
+      case ProjectMetricType.erroneousRequests:
+        aggType = "value_count";
+        aggField = "timestamp";
+        body = body.notFilter("term", "response.status", 200);
+        break;
+    }
+
+    body = body.aggregation(
+      "date_histogram",
+      "timestamp",
+      {
+        interval: bucketSize,
+        extended_bounds: {
+          min: startDate.toISOString(),
+          max: endDate.toISOString(),
+        },
+      },
+      "metrics_over_time",
+      (agg) => agg.aggregation(aggType, aggField, "metric_value")
+    );
+
+    body = body.size(0);
 
     const result = await this.openSearchService.client.search({
       index: OpenSearchIndex.Requests,
-      body: {
-        query: {
-          bool: {
-            filter: [
-              {
-                term: {
-                  "ownership.projectId": projectId,
-                },
-              },
-              {
-                range: {
-                  timestamp: {
-                    gte: startDate.toISOString(),
-                    lte: endDate.toISOString(),
-                  },
-                },
-              },
-              ...filters,
-            ],
-          },
-        },
-        aggs: {
-          metrics_over_time: {
-            date_histogram: {
-              field: "timestamp",
-              interval: bucketSize,
-              extended_bounds: {
-                min: startDate.toISOString(),
-                max: endDate.toISOString(),
-              },
-            },
-            aggs: {
-              metric_value: aggregation,
-            },
-          },
-        },
-        size: 0,
-      },
+      body: body.build(),
     });
 
     // Convert the response to the HistogramMetric format

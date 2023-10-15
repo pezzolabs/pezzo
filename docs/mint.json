@@ -106,7 +106,7 @@
     }
   },
   "api": {
-    "baseUrl": "https://api.staging.pezzo.ai/api",
+    "baseUrl": "https://api.pezzo.ai/api",
     "playground": {
       "mode": "hide"
     }

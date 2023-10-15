@@ -13,9 +13,7 @@ import {
   Row,
   Col,
   Avatar,
-  Tag,
   Tooltip,
-  Card,
 } from "antd";
 import OpenAILogo from "../../../assets/providers/openai-logo.svg";
 
