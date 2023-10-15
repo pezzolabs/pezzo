@@ -68,7 +68,7 @@ export const ProviderApiKeyListItem = ({
     await deleteProviderApiKey({ provider, organizationId: currentOrgId });
     messageApi.open({
       type: "success",
-      content: "Provider api key deleted",
+      content: "Provider API key was deleted successfully",
     });
     trackEvent("provider_api_key_deleted", { provider });
     setDeletingProviderApiKey(null);
