@@ -36,6 +36,7 @@ export enum AnalyticsEvent {
   prompt_chat_completion_message_role_changed,
   provider_api_keys_modal_opened,
   provider_api_key_set,
+  provider_api_key_deleted,
   provider_api_keys_modal_canceled,
   request_details_viewed,
   request_details_pagination_change,

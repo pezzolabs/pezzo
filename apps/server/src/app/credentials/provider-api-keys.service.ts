@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { EncryptionService } from "../encryption/encryption.service";
 import { ProviderApiKey } from "@prisma/client";
+import { StringFilter } from "../../@generated/prisma/string-filter.input";
 
 @Injectable()
 export class ProviderApiKeysService {
@@ -86,5 +87,16 @@ export class ProviderApiKeysService {
 
   private censorApiKey(value: string) {
     return value.substring(value.length - 4);
+  }
+
+  async getProviderApiKey(provider: string, organizationId: string) {
+    const providerApiKey = await this.prisma.providerApiKey.findFirst({
+      where: { provider, organizationId },
+      include: {
+        organization: true,
+      },
+    });
+
+    return providerApiKey;
   }
 }

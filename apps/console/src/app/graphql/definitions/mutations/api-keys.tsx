@@ -7,3 +7,11 @@ export const UPDATE_PROVIDER_API_KEY = graphql(/* GraphQL */ `
     }
   }
 `);
+
+export const DELETE_PROVIDER_API_KEY = graphql(/* GraphQL */ `
+  mutation DeleteProviderAPIKey($data: DeleteProviderApiKeyInput!) {
+    deleteProviderApiKey(data: $data) {
+      provider
+    }
+  }
+`);
