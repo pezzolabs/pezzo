@@ -107,7 +107,7 @@ export const ProviderApiKeyListItem = ({
         onOk={() => handleDeleteProvider(deletingProviderApiKey)}
         onCancel={() => setDeletingProviderApiKey(null)}
       >
-        <p>Are you sure you want to delete the provider API key?</p>
+        <p>Are you sure you want to delete this API key?</p>
       </Modal>
       <Card size="small" key={provider}>
         <Form
