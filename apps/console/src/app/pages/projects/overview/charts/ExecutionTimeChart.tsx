@@ -20,6 +20,7 @@ import {
 } from "../../../../../@generated/graphql/graphql";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
+import { useFiltersAndSortParams } from "../../../../lib/hooks/useFiltersAndSortParams";
 
 const histogramToChartData = (requests: HistogramMetric[]) => {
   return requests.map((entry) => ({
@@ -32,6 +33,7 @@ export const ExecutionTimeChart = () => {
   const { project } = useCurrentProject();
   const { startDate, endDate } = useTimeframeSelector();
   const controls = useProjectMetricControls();
+  const { filters } = useFiltersAndSortParams();
 
   const durationHistogram = useProjectMetricHistogram(
     {
@@ -40,6 +42,7 @@ export const ExecutionTimeChart = () => {
       bucketSize: controls.bucketSize,
       startDate: startDate,
       endDate: endDate,
+      filters,
     },
     {
       enabled: !!project && !!startDate && !!endDate,

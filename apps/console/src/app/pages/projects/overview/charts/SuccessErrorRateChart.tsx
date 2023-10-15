@@ -20,6 +20,7 @@ import { useProjectMetricControls } from "./ProjectMetricContext";
 import { TooltipWithTimestamp } from "./TooltipWithTimestamp";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
+import { useFiltersAndSortParams } from "../../../../lib/hooks/useFiltersAndSortParams";
 
 const histogramToChartData = (
   totalRequests: HistogramMetric[],
@@ -39,6 +40,7 @@ const histogramToChartData = (
 export const SuccessErrorRateChart = () => {
   const { startDate, endDate } = useTimeframeSelector();
   const controls = useProjectMetricControls();
+  const { filters } = useFiltersAndSortParams();
 
   const { project } = useCurrentProject();
   const totalRequestsHistogram = useProjectMetricHistogram(
@@ -48,6 +50,7 @@ export const SuccessErrorRateChart = () => {
       bucketSize: controls.bucketSize,
       startDate: startDate,
       endDate: endDate,
+      filters,
     },
     {
       enabled: !!project && !!startDate && !!endDate,

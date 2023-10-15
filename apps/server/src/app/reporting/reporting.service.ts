@@ -89,7 +89,7 @@ export class ReportingService {
     const size = pageSize > MAX_PAGE_SIZE ? MAX_PAGE_SIZE : pageSize;
     const from = (page - 1) * size;
 
-    const dql = mapFiltersToDql({
+    const body = mapFiltersToDql({
       restrictions: {
         "ownership.projectId": projectId,
         "ownership.organizationId": organizationId,
@@ -97,6 +97,8 @@ export class ReportingService {
       sort,
       filters,
     });
+
+    const dql = body.build();
 
     return this.openSearchService.client.search<{
       hits: {

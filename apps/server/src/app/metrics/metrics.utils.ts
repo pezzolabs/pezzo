@@ -12,16 +12,15 @@ export function getPercentageChange(
 }
 
 export function buildBaseProjectMetricQuery(
+  body: bodybuilder.Bodybuilder,
   projectId: string,
   startDate: string,
   endDate: string
 ): bodybuilder.Bodybuilder {
-  const body = bodybuilder()
+  return body
     .filter("term", "ownership.projectId", projectId)
     .filter("range", "timestamp", { gte: startDate, lte: endDate })
     .size(0);
-
-  return body;
 }
 
 type IntervalDates = {
