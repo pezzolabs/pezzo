@@ -1,11 +1,13 @@
 import { ProjectMetricType } from "../../../../@generated/graphql/graphql";
 import { useProjectMetric } from "../../../graphql/hooks/queries";
 import { useCurrentProject } from "../../../lib/hooks/useCurrentProject";
+import { useFiltersAndSortParams } from "../../../lib/hooks/useFiltersAndSortParams";
 import { useTimeframeSelector } from "../../../lib/providers/TimeframeSelectorContext";
 
 export const useProjectOverviewMetrics = () => {
   const { project } = useCurrentProject();
   const { startDate, endDate } = useTimeframeSelector();
+  const { filters } = useFiltersAndSortParams();
 
   const useMetric = (metric: ProjectMetricType) =>
     useProjectMetric(
@@ -14,6 +16,7 @@ export const useProjectOverviewMetrics = () => {
         metric,
         startDate,
         endDate,
+        filters,
       },
       {
         enabled: !!project && !!startDate && !!endDate,

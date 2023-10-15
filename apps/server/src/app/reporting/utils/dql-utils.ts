@@ -114,5 +114,5 @@ export const mapFiltersToDql = ({
     }
   });
 
-  return body.build();
+  return body;
 };

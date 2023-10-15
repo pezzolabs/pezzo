@@ -1,4 +1,4 @@
-import { Drawer, Space, Table, Tag, Typography } from "antd";
+import { Drawer, Space, Table, Tag, Typography, Card } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useGetRequestReports } from "../../graphql/hooks/queries";
 import { useMemo, useState } from "react";
@@ -136,7 +136,9 @@ export const RequestsPage = () => {
     <div>
       <Space direction="vertical" style={{ width: "100%" }}>
         <Typography.Title level={2}>Requests</Typography.Title>
-        <RequestFilters requests={tableData} />
+        <Card style={{ width: "100%", marginBottom: 10 }}>
+          <RequestFilters />
+        </Card>
         <Drawer
           title="Request Details"
           placement="right"
