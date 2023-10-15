@@ -7,6 +7,7 @@ import {
   CreatePromptVersionInput,
   CreatePromptVersionMutation,
   DeleteEnvironmentMutation,
+  DeleteProviderApiKeyMutation,
   DeleteProjectMutation,
   UpdateProjectSettingsMutation,
   DeletePromptMutation,
@@ -23,6 +24,7 @@ import {
   UpdateOrgSettingsMutation,
   UpdateProfileInput,
   UpdateProjectSettingsInput,
+  DeleteProviderApiKeyInput,
 } from "../../../@generated/graphql/graphql";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { gqlClient } from "../../lib/graphql";
@@ -47,6 +49,7 @@ import {
   DELETE_PROMPT,
 } from "../definitions/mutations/prompts";
 import { DELETE_ENVIRONMENT } from "../definitions/mutations/environments";
+import { DELETE_PROVIDER_API_KEY } from "../definitions/mutations/api-keys";
 import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
 import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
 import { TEST_PROMPT } from "../definitions/queries/prompt-executions";
@@ -263,6 +266,24 @@ export const useDeleteEnvironmentMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["environments"],
+      });
+    },
+  });
+};
+
+export const useDeleteProviderApiKeyMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    DeleteProviderApiKeyMutation,
+    GraphQLErrorResponse,
+    DeleteProviderApiKeyInput
+  >({
+    mutationFn: (data: DeleteProviderApiKeyInput) =>
+      gqlClient.request(DELETE_PROVIDER_API_KEY, { data }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["providerApiKeys"],
       });
     },
   });
