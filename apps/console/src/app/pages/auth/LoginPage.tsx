@@ -194,11 +194,11 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="tailwind">
+    <div className="tailwind" style={{ height: "100%" }}>
       <div className="dark h-full font-sans">
         <main className="app flex h-full min-h-full flex-1 overflow-hidden bg-neutral-900 text-slate-300">
           <div className="flex min-h-full flex-1 overflow-hidden">
-            <div className="z-10 flex flex-1 flex-col justify-center bg-neutral-900 px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+            <div className="z-10 mx-auto flex min-w-[400px] flex-col justify-center bg-neutral-900 px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
               <div className="mx-auto w-full max-w-sm lg:w-96">
                 <div className="text-center">
                   <img
@@ -206,7 +206,7 @@ export const LoginPage = () => {
                     src="https://cdn.pezzo.ai/logo-square-transparent-bg.png"
                     alt="Your Company"
                   />
-                  <h2 className="font-heading mt-8 text-3xl font-medium leading-9 tracking-tight">
+                  <h2 className="font-heading mt-8 text-3xl leading-9 tracking-tight">
                     {verb} to Pezzo{" "}
                   </h2>
                 </div>
@@ -397,7 +397,7 @@ export const LoginPage = () => {
                 </motion.div>
               </div>
             </div>
-            <div className="relative flex h-[100vh] flex-1 bg-neutral-950 lg:block">
+            <div className="relative flex-1 bg-neutral-950 min-[0px]:hidden lg:flex">
               <div className="flex h-full w-full items-center justify-center">
                 <div
                   className="pointer-events-none absolute -mt-36 translate-x-[0vw] translate-y-[10vh] scale-[110%] opacity-50 blur-2xl md:block"

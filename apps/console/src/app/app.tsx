@@ -59,129 +59,127 @@ export const paths = {
 export function App() {
   return (
     <ThemeProvider>
-      <main className="app flex h-full min-h-full flex-1 overflow-hidden bg-neutral-900 text-slate-300">
-        <SuperTokensWrapper>
-          <QueryClientProvider client={queryClient}>
-            {/* Non-authorized routes */}
-            <Routes>
-              {/* We don't render the LayoutWrapper for non-authorized routes */}
+      <SuperTokensWrapper>
+        <QueryClientProvider client={queryClient}>
+          {/* Non-authorized routes */}
+          <Routes>
+            {/* We don't render the LayoutWrapper for non-authorized routes */}
+            <Route
+              path={paths["/login/callback/:providerId"]}
+              element={<AuthCallbackPage />}
+            />
+            <Route path={paths["/login"]} element={<LoginPage />} />
+            <Route path={paths["/logout"]} element={<LogoutPage />} />
+          </Routes>
+          {/* Authorized routes */}
+          <Routes>
+            <Route
+              element={
+                <SessionAuth>
+                  <AuthProvider>
+                    <OptionalIntercomProvider>
+                      <Outlet />
+                    </OptionalIntercomProvider>
+                  </AuthProvider>
+                </SessionAuth>
+              }
+            >
               <Route
-                path={paths["/login/callback/:providerId"]}
-                element={<AuthCallbackPage />}
+                path={paths["/invitations/:token/accept"]}
+                element={
+                  <LayoutWrapper
+                    withSideNav={false}
+                    withHeader={false}
+                    withBreadcrumbs={false}
+                  >
+                    <AcceptInvitationPage />
+                  </LayoutWrapper>
+                }
               />
-              <Route path={paths["/login"]} element={<LoginPage />} />
-              <Route path={paths["/logout"]} element={<LogoutPage />} />
-            </Routes>
-            {/* Authorized routes */}
-            <Routes>
+
+              <Route
+                path={paths["/onboarding"]}
+                element={
+                  <LayoutWrapper withSideNav={false}>
+                    <OnboardingPage />
+                  </LayoutWrapper>
+                }
+              />
+
+              <Route
+                path={paths["/info"]}
+                element={
+                  <LayoutWrapper withSideNav={false}>
+                    <InfoPage />
+                  </LayoutWrapper>
+                }
+              />
+
+              {/* Organizations */}
+              <Route
+                path={paths["/orgs/:orgId"]}
+                element={
+                  <LayoutWrapper withSideNav={false}>
+                    <OrgPage />
+                  </LayoutWrapper>
+                }
+              ></Route>
+
+              {/* Projects selection */}
               <Route
                 element={
-                  <SessionAuth>
-                    <AuthProvider>
-                      <OptionalIntercomProvider>
+                  <LayoutWrapper withSideNav={false}>
+                    <Outlet />
+                  </LayoutWrapper>
+                }
+              >
+                <Route index element={<Navigate to={paths["/projects"]} />} />
+                <Route path={paths["/projects"]} element={<ProjectsPage />} />
+              </Route>
+
+              {/* In-project routes */}
+              <Route
+                path={paths["/projects/:projectId"]}
+                element={
+                  <CurrentPromptProvider>
+                    <RequiredProviderApiKeyModalProvider>
+                      <LayoutWrapper withSideNav={true}>
                         <Outlet />
-                      </OptionalIntercomProvider>
-                    </AuthProvider>
-                  </SessionAuth>
+                      </LayoutWrapper>
+                    </RequiredProviderApiKeyModalProvider>
+                  </CurrentPromptProvider>
                 }
               >
                 <Route
-                  path={paths["/invitations/:token/accept"]}
-                  element={
-                    <LayoutWrapper
-                      withSideNav={false}
-                      withHeader={false}
-                      withBreadcrumbs={false}
-                    >
-                      <AcceptInvitationPage />
-                    </LayoutWrapper>
-                  }
+                  index
+                  path={paths["/projects/:projectId/"]}
+                  element={<DashboardPage />}
                 />
-
                 <Route
-                  path={paths["/onboarding"]}
-                  element={
-                    <LayoutWrapper withSideNav={false}>
-                      <OnboardingPage />
-                    </LayoutWrapper>
-                  }
+                  path={"/projects/:projectId/dashboard"}
+                  element={<DashboardPage />}
                 />
-
                 <Route
-                  path={paths["/info"]}
-                  element={
-                    <LayoutWrapper withSideNav={false}>
-                      <InfoPage />
-                    </LayoutWrapper>
-                  }
+                  path={"/projects/:projectId/requests"}
+                  element={<RequestsPage />}
                 />
-
-                {/* Organizations */}
                 <Route
-                  path={paths["/orgs/:orgId"]}
-                  element={
-                    <LayoutWrapper withSideNav={false}>
-                      <OrgPage />
-                    </LayoutWrapper>
-                  }
-                ></Route>
-
-                {/* Projects selection */}
+                  path={paths["/projects/:projectId/prompts"]}
+                  element={<PromptsPage />}
+                />
                 <Route
-                  element={
-                    <LayoutWrapper withSideNav={false}>
-                      <Outlet />
-                    </LayoutWrapper>
-                  }
-                >
-                  <Route index element={<Navigate to={paths["/projects"]} />} />
-                  <Route path={paths["/projects"]} element={<ProjectsPage />} />
-                </Route>
-
-                {/* In-project routes */}
+                  path={paths["/projects/:projectId/prompts/:promptId"]}
+                  element={<PromptPage />}
+                />
                 <Route
-                  path={paths["/projects/:projectId"]}
-                  element={
-                    <CurrentPromptProvider>
-                      <RequiredProviderApiKeyModalProvider>
-                        <LayoutWrapper withSideNav={true}>
-                          <Outlet />
-                        </LayoutWrapper>
-                      </RequiredProviderApiKeyModalProvider>
-                    </CurrentPromptProvider>
-                  }
-                >
-                  <Route
-                    index
-                    path={paths["/projects/:projectId/"]}
-                    element={<DashboardPage />}
-                  />
-                  <Route
-                    path={"/projects/:projectId/dashboard"}
-                    element={<DashboardPage />}
-                  />
-                  <Route
-                    path={"/projects/:projectId/requests"}
-                    element={<RequestsPage />}
-                  />
-                  <Route
-                    path={paths["/projects/:projectId/prompts"]}
-                    element={<PromptsPage />}
-                  />
-                  <Route
-                    path={paths["/projects/:projectId/prompts/:promptId"]}
-                    element={<PromptPage />}
-                  />
-                  <Route
-                    path={paths["/projects/:projectId/environments"]}
-                    element={<EnvironmentsPage />}
-                  />
-                </Route>
+                  path={paths["/projects/:projectId/environments"]}
+                  element={<EnvironmentsPage />}
+                />
               </Route>
-            </Routes>
-          </QueryClientProvider>
-        </SuperTokensWrapper>
-      </main>
+            </Route>
+          </Routes>
+        </QueryClientProvider>
+      </SuperTokensWrapper>
     </ThemeProvider>
   );
 }

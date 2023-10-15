@@ -1,11 +1,15 @@
 .tailwind {
-  @tailwind base;
   @tailwind components;
+  @tailwind base;
   @tailwind utilities;
 }
 
 .bg-primary-gradient {
   @apply bg-gradient-to-r from-emerald-500 to-emerald-600;
+}
+
+#root {
+  @apply h-full;
 }
 
 :root {
