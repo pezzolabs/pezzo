@@ -52,6 +52,7 @@ export const useCurrentOrganization = ({
 
   return {
     organization: data?.organization,
+    organizationId: data?.organization?.id,
     isLoading,
     currentOrgId,
     selectOrg,
