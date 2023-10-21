@@ -1,4 +1,5 @@
 import { Route, Routes, Navigate, Outlet } from "react-router-dom";
+import { hotjar } from "react-hotjar";
 import "./styles.css";
 import "./antd-overrides.css";
 import "./tailwind-overrides.css";
@@ -19,6 +20,7 @@ import { LayoutWrapper } from "./components/layout/LayoutWrapper";
 import { OnboardingPage } from "./pages/organizations/onboarding";
 import { AuthProvider } from "./lib/providers/AuthProvider";
 import { OptionalIntercomProvider } from "./lib/providers/OptionalIntercomProvider";
+import { HOTJAR_SITE_ID, HOTJAR_VERSION } from "../env";
 import { OrgPage } from "./pages/organizations/OrgPage";
 import { AcceptInvitationPage } from "./pages/invitations/AcceptInvitationPage";
 import { LogoutPage } from "./pages/auth/LogoutPage";
@@ -29,6 +31,10 @@ import { AuthCallbackPage } from "./pages/auth/AuthCallbackPage";
 import { RequiredProviderApiKeyModalProvider } from "./lib/providers/RequiredProviderApiKeyModalProvider";
 
 initSuperTokens();
+
+if (HOTJAR_SITE_ID && HOTJAR_VERSION) {
+  hotjar.initialize(Number(HOTJAR_SITE_ID), Number(HOTJAR_VERSION));
+}
 
 // We need to define the paths this way for the
 // breadcrumbs to work properly (useBreadcrumbItems)

@@ -5,6 +5,8 @@ import { createContext, useContext, useEffect, useMemo } from "react";
 import { useGetCurrentUser } from "../../graphql/hooks/queries";
 import { GetMeQuery } from "../../../@generated/graphql/graphql";
 import { LayoutWrapper } from "../../components/layout/LayoutWrapper";
+import { Loading3QuartersOutlined } from "@ant-design/icons";
+import { colors } from "../theme/colors";
 import { Loader } from "../../components/common/Loader";
 import { useIdentify } from "../utils/analytics";
 
