@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
-import { hotjar } from "react-hotjar";
 import { Col, Empty, Row } from "antd";
-import { createContext, useContext, useEffect, useMemo } from "react";
+import { createContext, useContext, useMemo } from "react";
 import { useGetCurrentUser } from "../../graphql/hooks/queries";
 import { GetMeQuery } from "../../../@generated/graphql/graphql";
 import { LayoutWrapper } from "../../components/layout/LayoutWrapper";
@@ -37,15 +36,6 @@ export const AuthProvider = ({ children }) => {
     }),
     [data, isLoading]
   );
-
-  useEffect(() => {
-    if (hotjar.initialized() && value.currentUser) {
-      hotjar.identify(value.currentUser.id, {
-        name: value.currentUser?.name,
-        email: value.currentUser?.email,
-      });
-    }
-  }, [value.currentUser]);
 
   useIdentify(value.currentUser);
 
