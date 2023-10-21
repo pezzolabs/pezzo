@@ -11,6 +11,7 @@
   },
   "nx": {},
   "dependencies": {
+    "@analytics/google-tag-manager": "^0.5.5",
     "@analytics/segment": "^1.1.4",
     "@ant-design/icons": "^5.0.1",
     "@ant-design/icons-svg": "^4.2.1",
@@ -25,7 +26,6 @@
     "@emotion/styled": "11.11.0",
     "@heroicons/react": "^2.0.17",
     "@hookform/resolvers": "^3.3.1",
-    "@hotjar/browser": "^1.0.7",
     "@monaco-editor/react": "^4.5.1",
     "@nestjs/apollo": "^11.0.6",
     "@nestjs/common": "^9.0.0",
@@ -87,7 +87,6 @@
     "react-countup": "^6.4.2",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.46.0",
-    "react-hotjar": "^6.1.0",
     "react-router-dom": "6.11.2",
     "react-use-intercom": "^5.1.4",
     "recharts": "^2.5.0",
