@@ -1,14 +1,14 @@
 import { BreadcrumbItem } from "~/lib/hooks/useBreadcrumbItems";
 
-type Props = {
+interface Props {
   items: BreadcrumbItem[];
 };
 
-export const Breadcrumbs = ({ items }) => {
+export const Breadcrumbs = ({ items }: Props) => {
   return (
     <div className="breadcrumbs text-sm">
       <ul>
-        {items.map((item, index) => (
+        {items.map((item) => (
           <li key={item.key}>
             {item.title}
           </li>
