@@ -1,10 +1,10 @@
 import { Breadcrumbs } from "~/components/common/Breadcrumbs";
+import { ProjectCopy } from "~/components/projects/ProjectCopy";
 import { SideNavigation } from "./SideNavigation";
-import { useBreadcrumbItems } from "../../lib/hooks/useBreadcrumbItems";
-import { ProjectCopy } from "../projects/ProjectCopy";
+import { useBreadcrumbItems } from "~/lib/hooks/useBreadcrumbItems";
+import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
-import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 
 interface Props {
   children: React.ReactNode;

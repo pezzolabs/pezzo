@@ -8,6 +8,8 @@ html, body, #root {
   @apply h-full;
 }
 
+@layer base {
+
 :root {
   --font-sans: "Inter", sans-serif;
   --font-heading: "Brockmann";
@@ -75,4 +77,6 @@ html, body, #root {
   --ring: hsl(0, 0%, 21%);
 
   --radius: 0.5rem;
+}
+
 }

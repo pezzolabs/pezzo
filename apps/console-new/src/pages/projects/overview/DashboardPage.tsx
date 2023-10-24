@@ -1,4 +1,4 @@
-import { Button, Card, Col, Popover, Row, Space, Typography } from "antd";
+import { Card, Col, Row, Typography } from "antd";
 import Icon from "@ant-design/icons/lib/components/Icon";
 import { SuccessErrorRateChart } from "./charts/SuccessErrorRateChart";
 import { ProjectMetricControlsProvider } from "./charts/ProjectMetricContext";
@@ -10,6 +10,7 @@ import { usePageTitle } from "~/lib/hooks/usePageTitle";
 import { RequestFilters } from "~/components/requests/RequestFilters";
 import { FunnelIcon } from "@heroicons/react/24/outline";
 import { useFiltersAndSortParams } from "~/lib/hooks/useFiltersAndSortParams";
+import { Popover, PopoverContent, PopoverTrigger, Button } from "@pezzo/ui";
 
 export const DashboardPage = () => {
   usePageTitle("Dashboard");
@@ -17,21 +18,13 @@ export const DashboardPage = () => {
 
   return (
     <TimeframeSelectorProvider>
-      <Row gutter={[24, 24]}>
-        <Col>
-          <Typography.Title level={2}>Dashboard</Typography.Title>
-        </Col>
-        <Col flex="auto">
-          <Space
-            direction="horizontal"
-            style={{ display: "flex", justifyContent: "flex-end" }}
-          >
-            <Popover
-              trigger={["click"]}
-              placement="bottomRight"
-              title="Filters"
-              content={<RequestFilters />}
-            >
+      <div className="mb-4 flex gap-4">
+        <div className="flex-1">
+          <h1 className="text-3xl font-semibold">Dashboard</h1>
+        </div>
+        <div className="flex gap-2">
+          <Popover>
+            <PopoverTrigger asChild>
               <Button>
                 <Icon
                   style={{ marginRight: 0, fontSize: 16 }}
@@ -41,11 +34,14 @@ export const DashboardPage = () => {
                 </Icon>
                 Filters {filters.length ? `(${filters.length})` : ""}
               </Button>
-            </Popover>
-            <TimeframeSelector />
-          </Space>
-        </Col>
-      </Row>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto">
+              <RequestFilters />
+            </PopoverContent>
+          </Popover>
+          <TimeframeSelector />
+        </div>
+      </div>
       <StatisticsSection />
       <Row gutter={[24, 24]}>
         <Col span={12} style={{}}>
