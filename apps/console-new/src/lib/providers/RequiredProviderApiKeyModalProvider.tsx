@@ -1,7 +1,7 @@
 import { Collapse, Divider, Modal, Space, Typography } from "antd";
 import { createContext, useContext, useRef, useState } from "react";
-import { useProviderApiKeys } from "../../graphql/hooks/queries";
-import { ProviderApiKeyListItem } from "../../components/api-keys/ProviderApiKeyListItem";
+import { useProviderApiKeys } from "~/graphql/hooks/queries";
+import { ProviderApiKeyListItem } from "~/components/api-keys/ProviderApiKeyListItem";
 import { trackEvent } from "../utils/analytics";
 
 enum Reason {

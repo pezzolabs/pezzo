@@ -1,9 +1,9 @@
 import { Table, Typography } from "antd";
-import { usePromptVersions } from "../../../lib/hooks/usePromptVersions";
-import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
-import { Avatar } from "../../common/Avatar";
-import { InlineCodeSnippet } from "../../common/InlineCodeSnippet";
-import { trackEvent } from "../../../lib/utils/analytics";
+import { usePromptVersions } from "~/lib/hooks/usePromptVersions";
+import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
+import { Avatar } from "~/components/common/Avatar";
+import { InlineCodeSnippet } from "~/components/common/InlineCodeSnippet";
+import { trackEvent } from "~/lib/utils/analytics";
 import React from "react";
 
 export const PromptVersionsView = () => {

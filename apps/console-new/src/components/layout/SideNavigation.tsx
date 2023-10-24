@@ -10,7 +10,7 @@ import { useMemo, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
 import Icon from "@ant-design/icons/lib/components/Icon";
-import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
+import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
 
 const topMenuItems = [
   {

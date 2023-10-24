@@ -1,10 +1,10 @@
 import { Space } from "antd";
 import { AddFilterItem, FilterItem } from "./filters/FilterItem";
-import { useFiltersAndSortParams } from "../../lib/hooks/useFiltersAndSortParams";
+import { useFiltersAndSortParams } from "~/lib/hooks/useFiltersAndSortParams";
 import {
   NUMBER_FILTER_OPERATORS,
   STRING_FILTER_OPERATORS,
-} from "../../lib/constants/filters";
+} from "~/lib/constants/filters";
 
 export const RequestFilters = () => {
   const { filters, removeFilter, addFilter } = useFiltersAndSortParams();

@@ -9,7 +9,7 @@ import {
   message,
   Modal,
 } from "antd";
-import { GetOrgQuery, OrgRole } from "../../../@generated/graphql/graphql";
+import { GetOrgQuery, OrgRole } from "~/@generated/graphql/graphql";
 import { Avatar } from "../common/Avatar";
 import { DeleteOutlined } from "@ant-design/icons";
 import { OrgRoleSelector } from "./OrgRoleSelector";
@@ -17,9 +17,9 @@ import { useState } from "react";
 import {
   useDeleteOrgMemberMutation,
   useUpdateOrgMemberRoleMutation,
-} from "../../graphql/hooks/mutations";
-import { useAuthContext } from "../../lib/providers/AuthProvider";
-import { useCurrentOrgMembership } from "../../lib/hooks/useCurrentOrgMembership";
+} from "~/graphql/hooks/mutations";
+import { useAuthContext } from "~/lib/providers/AuthProvider";
+import { useCurrentOrgMembership } from "~/lib/hooks/useCurrentOrgMembership";
 
 type Member = GetOrgQuery["organization"]["members"][0];
 

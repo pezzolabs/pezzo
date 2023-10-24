@@ -2,7 +2,7 @@ import { useCopyToClipboard } from "usehooks-ts";
 import styled from "@emotion/styled";
 import { Button, Card, Col, Row, Typography } from "antd";
 import { CheckOutlined, CopyOutlined } from "@ant-design/icons";
-import { trackEvent } from "../../lib/utils/analytics";
+import { trackEvent } from "~/lib/utils/analytics";
 
 const APIKeyContainer = styled.div`
   display: flex;

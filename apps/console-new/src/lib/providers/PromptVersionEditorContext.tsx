@@ -13,10 +13,10 @@ import {
   GetPromptVersionQuery,
   PromptService,
   PromptType,
-} from "../../../@generated/graphql/graphql";
+} from "~/@generated/graphql/graphql";
 import { Form, FormInstance } from "antd";
-import { useGetPromptVersion } from "../../graphql/hooks/queries";
-import { getServiceDefaultSettings } from "../../components/prompts/editor/ProviderSettings/providers";
+import { useGetPromptVersion } from "~/graphql/hooks/queries";
+import { getServiceDefaultSettings } from "~/components/prompts/editor/ProviderSettings/providers";
 import stableStringify from "json-stable-stringify";
 
 export interface PromptVersionFormInputs {

@@ -1,13 +1,13 @@
 import { Alert, List, Modal, Radio, Typography } from "antd";
-import { useEnvironments } from "../../lib/hooks/useEnvironments";
-import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
+import { useEnvironments } from "~/lib/hooks/useEnvironments";
+import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { gqlClient, queryClient } from "../../lib/graphql";
-import { PUBLISH_PROMPT } from "../../graphql/definitions/mutations/prompt-environments";
-import { PublishPromptInput } from "../../../@generated/graphql/graphql";
-import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
-import { trackEvent } from "../../lib/utils/analytics";
+import { gqlClient, queryClient } from "~/lib/graphql";
+import { PUBLISH_PROMPT } from "~/graphql/definitions/mutations/prompt-environments";
+import { PublishPromptInput } from "~/@generated/graphql/graphql";
+import { usePromptVersionEditorContext } from "~/lib/providers/PromptVersionEditorContext";
+import { trackEvent } from "~/lib/utils/analytics";
 
 interface Props {
   open: boolean;

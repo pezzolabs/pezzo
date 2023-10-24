@@ -1,15 +1,15 @@
 import { useMutation } from "@tanstack/react-query";
 import { Modal, Form, Input, Button, Alert, Radio } from "antd";
-import { CREATE_PROMPT } from "../../graphql/definitions/mutations/prompts";
-import { gqlClient, queryClient } from "../../lib/graphql";
+import { CREATE_PROMPT } from "~/graphql/definitions/mutations/prompts";
+import { gqlClient, queryClient } from "~/lib/graphql";
 import { css } from "@emotion/css";
 import {
   CreatePromptMutation,
   PromptType,
-} from "../../../@generated/graphql/graphql";
-import { GraphQLErrorResponse } from "../../graphql/types";
-import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
-import { trackEvent } from "../../lib/utils/analytics";
+} from "~/@generated/graphql/graphql";
+import { GraphQLErrorResponse } from "~/graphql/types";
+import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
+import { trackEvent } from "~/lib/utils/analytics";
 
 interface Props {
   open: boolean;

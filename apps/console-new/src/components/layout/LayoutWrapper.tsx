@@ -2,11 +2,11 @@ import { Breadcrumb, Col, Layout, Row, theme } from "antd";
 import { SideNavigation } from "./SideNavigation";
 import styled from "@emotion/styled";
 import { Header } from "./Header";
-import { useBreadcrumbItems } from "../../lib/hooks/useBreadcrumbItems";
+import { useBreadcrumbItems } from "~/lib/hooks/useBreadcrumbItems";
 import { ProjectCopy } from "../projects/ProjectCopy";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
-import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
+import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
 
 const StyledContent = styled(Layout.Content)`
   padding: 18px;

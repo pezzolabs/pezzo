@@ -1,12 +1,12 @@
 import {
   Aggregation,
   PromptExecutionMetricField,
-} from "../../../../@generated/graphql/graphql";
+} from "~/@generated/graphql/graphql";
 import { Col, Row, theme } from "antd";
-import { MetricProvider } from "../../../lib/providers/MetricContext";
+import { MetricProvider } from "~/lib/providers/MetricContext";
 import { SimpleChart } from "../metrics/SimpleChart";
 import React from "react";
-import { trackEvent } from "../../../lib/utils/analytics";
+import { trackEvent } from "~/lib/utils/analytics";
 
 export const MetricsView = () => {
   const { token } = theme.useToken();

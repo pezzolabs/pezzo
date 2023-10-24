@@ -1,5 +1,5 @@
 import { Tag, Typography } from "antd";
-import { usePromptVersionEditorContext } from "../../../lib/providers/PromptVersionEditorContext";
+import { usePromptVersionEditorContext } from "~/lib/providers/PromptVersionEditorContext";
 
 export const Variables = () => {
   const { variables } = usePromptVersionEditorContext();

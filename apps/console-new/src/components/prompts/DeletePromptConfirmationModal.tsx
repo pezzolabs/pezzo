@@ -1,11 +1,11 @@
 import { Button, Modal, Typography } from "antd";
-import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
-import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
+import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
+import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
 import { useNavigate } from "react-router-dom";
-import { useDeletePromptMutation } from "../../graphql/hooks/mutations";
+import { useDeletePromptMutation } from "~/graphql/hooks/mutations";
 import { useEffect } from "react";
 import { tr } from "date-fns/locale";
-import { trackEvent } from "../../lib/utils/analytics";
+import { trackEvent } from "~/lib/utils/analytics";
 
 interface Props {
   open: boolean;

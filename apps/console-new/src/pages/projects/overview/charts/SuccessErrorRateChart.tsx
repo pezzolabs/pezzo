@@ -9,18 +9,18 @@ import {
   BarChart,
 } from "recharts";
 import colors from "tailwindcss/colors";
-import { useProjectMetricHistogram } from "../../../../graphql/hooks/queries";
+import { useProjectMetricHistogram } from "~/graphql/hooks/queries";
 import {
   HistogramMetric,
   ProjectMetricType,
-} from "../../../../../@generated/graphql/graphql";
-import { useCurrentProject } from "../../../../lib/hooks/useCurrentProject";
-import { useTimeframeSelector } from "../../../../lib/providers/TimeframeSelectorContext";
+} from "~/@generated/graphql/graphql";
+import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
+import { useTimeframeSelector } from "~/lib/providers/TimeframeSelectorContext";
 import { useProjectMetricControls } from "./ProjectMetricContext";
 import { TooltipWithTimestamp } from "./TooltipWithTimestamp";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import { useFiltersAndSortParams } from "../../../../lib/hooks/useFiltersAndSortParams";
+import { useFiltersAndSortParams } from "~/lib/hooks/useFiltersAndSortParams";
 
 const histogramToChartData = (
   totalRequests: HistogramMetric[],

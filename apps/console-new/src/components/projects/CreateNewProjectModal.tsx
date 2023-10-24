@@ -1,8 +1,8 @@
 import { Alert, Form, Input, Modal, Space, Typography, theme } from "antd";
 import { useCallback } from "react";
-import { useCreateProjectMutation } from "../../graphql/hooks/mutations";
-import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
-import { trackEvent } from "../../lib/utils/analytics";
+import { useCreateProjectMutation } from "~/graphql/hooks/mutations";
+import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
+import { trackEvent } from "~/lib/utils/analytics";
 import { useNavigate } from "react-router-dom";
 
 interface Props {

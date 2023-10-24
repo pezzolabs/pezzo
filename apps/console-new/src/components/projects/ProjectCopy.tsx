@@ -1,9 +1,9 @@
 import { Button, Tooltip } from "antd";
-import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
+import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
 import { CopyOutlined } from "@ant-design/icons";
-import { copyToClipboard } from "../../lib/utils/browser-utils";
+import { copyToClipboard } from "~/lib/utils/browser-utils";
 import { useState } from "react";
-import { trackEvent } from "../../lib/utils/analytics";
+import { trackEvent } from "~/lib/utils/analytics";
 
 export const ProjectCopy = () => {
   const { project, isLoading } = useCurrentProject();

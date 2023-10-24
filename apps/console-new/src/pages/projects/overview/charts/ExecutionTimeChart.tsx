@@ -1,4 +1,4 @@
-import { useTimeframeSelector } from "../../../../lib/providers/TimeframeSelectorContext";
+import { useTimeframeSelector } from "~/lib/providers/TimeframeSelectorContext";
 import {
   LineChart,
   Line,
@@ -12,15 +12,15 @@ import {
 import colors from "tailwindcss/colors";
 import { useProjectMetricControls } from "./ProjectMetricContext";
 import { TooltipWithTimestamp } from "./TooltipWithTimestamp";
-import { useCurrentProject } from "../../../../lib/hooks/useCurrentProject";
-import { useProjectMetricHistogram } from "../../../../graphql/hooks/queries";
+import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
+import { useProjectMetricHistogram } from "~/graphql/hooks/queries";
 import {
   HistogramMetric,
   ProjectMetricType,
-} from "../../../../../@generated/graphql/graphql";
+} from "~/@generated/graphql/graphql";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import { useFiltersAndSortParams } from "../../../../lib/hooks/useFiltersAndSortParams";
+import { useFiltersAndSortParams } from "~/lib/hooks/useFiltersAndSortParams";
 
 const histogramToChartData = (requests: HistogramMetric[]) => {
   return requests.map((entry) => ({

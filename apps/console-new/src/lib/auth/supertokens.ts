@@ -7,7 +7,7 @@ import {
   AUTH_GOOGLE_ENABLED,
   SUPERTOKENS_API_DOMAIN,
   SUPERTOKENS_WEBSITE_DOMAIN,
-} from "../../../env";
+} from "~/env";
 
 export const googleEnabled = AUTH_GOOGLE_ENABLED === "true";
 

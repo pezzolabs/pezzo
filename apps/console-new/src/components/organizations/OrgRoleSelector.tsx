@@ -1,5 +1,5 @@
 import { Select } from "antd";
-import { OrgRole } from "../../../@generated/graphql/graphql";
+import { OrgRole } from "~/@generated/graphql/graphql";
 import { useState } from "react";
 
 interface Props {

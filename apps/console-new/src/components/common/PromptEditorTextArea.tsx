@@ -1,6 +1,6 @@
 import TextArea from "antd/es/input/TextArea";
 import styled from "@emotion/styled";
-import { colors } from "../../lib/theme/colors";
+import { colors } from "~/lib/theme/colors";
 
 export const PromptEditorTextArea = styled(TextArea)`
   resize: none !important;

@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import { useGetProjects } from "../../graphql/hooks/queries";
+import { useGetProjects } from "~/graphql/hooks/queries";
 import { useEffect, useState } from "react";
 import { Button, Card, Col, Row, Spin, Typography, theme, message } from "antd";
 import styled from "@emotion/styled";
-import { ProjectCard } from "../../components/projects";
+import { ProjectCard } from "~/components/projects";
 import { PlusOutlined } from "@ant-design/icons";
-import { CreateNewProjectModal } from "../../components/projects/CreateNewProjectModal";
-import { trackEvent } from "../../lib/utils/analytics";
-import { usePageTitle } from "../../lib/hooks/usePageTitle";
+import { CreateNewProjectModal } from "~/components/projects/CreateNewProjectModal";
+import { trackEvent } from "~/lib/utils/analytics";
+import { usePageTitle } from "~/lib/hooks/usePageTitle";
 
 const Spinner = styled(Row)`
   height: 100%;

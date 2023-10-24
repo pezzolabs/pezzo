@@ -1,8 +1,8 @@
 import { Alert, Modal } from "antd";
-import { usePromptTester } from "../../../lib/providers/PromptTesterContext";
+import { usePromptTester } from "~/lib/providers/PromptTesterContext";
 import { VariablesStep } from "./VariablesStep";
 import { RequestDetails } from "../../requests";
-import { trackEvent } from "../../../lib/utils/analytics";
+import { trackEvent } from "~/lib/utils/analytics";
 
 export const PromptTesterModal = () => {
   const { isOpen, closeTestModal, runTest, testResult, testError } =

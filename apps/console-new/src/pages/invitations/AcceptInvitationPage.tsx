@@ -1,9 +1,9 @@
 import { Result } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAcceptOrgInvitationMutation } from "../../graphql/hooks/mutations";
+import { useAcceptOrgInvitationMutation } from "~/graphql/hooks/mutations";
 import { useEffect, useState } from "react";
-import { GraphQLErrorResponse } from "../../graphql/types";
-import { usePageTitle } from "../../lib/hooks/usePageTitle";
+import { GraphQLErrorResponse } from "~/graphql/types";
+import { usePageTitle } from "~/lib/hooks/usePageTitle";
 
 export const AcceptInvitationPage = () => {
   usePageTitle("Accept Invitation");

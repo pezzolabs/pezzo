@@ -1,4 +1,4 @@
-import { graphql } from "../../../../@generated/graphql";
+import { graphql } from "~/@generated/graphql";
 
 export const CREATE_PROJECT = graphql(/* GraphQL */ `
   mutation createProject($data: CreateProjectInput!) {

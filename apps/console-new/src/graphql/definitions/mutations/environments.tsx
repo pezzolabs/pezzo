@@ -1,4 +1,4 @@
-import { graphql } from "../../../../@generated/graphql";
+import { graphql } from "~/@generated/graphql";
 
 export const CREATE_ENVIRONMENT = graphql(/* GraphQL */ `
   mutation CreateEnvironment($data: CreateEnvironmentInput!) {

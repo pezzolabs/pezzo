@@ -1,6 +1,6 @@
 import { Space } from "antd";
 import { ProviderApiKeyListItem } from "./ProviderApiKeyListItem";
-import { useProviderApiKeys } from "../../graphql/hooks/queries";
+import { useProviderApiKeys } from "~/graphql/hooks/queries";
 import { providersList } from "./providers-list";
 
 export const ProviderApiKeysList = () => {

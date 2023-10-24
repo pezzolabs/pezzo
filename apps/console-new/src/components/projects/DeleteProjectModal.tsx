@@ -1,7 +1,7 @@
 import { Alert, Modal, Typography } from "antd";
-import { GetProjectsQuery } from "../../../@generated/graphql/graphql";
-import { useDeleteProjectMutation } from "../../graphql/hooks/mutations";
-import { trackEvent } from "../../lib/utils/analytics";
+import { GetProjectsQuery } from "~/@generated/graphql/graphql";
+import { useDeleteProjectMutation } from "~/graphql/hooks/mutations";
+import { trackEvent } from "~/lib/utils/analytics";
 
 interface Props {
   projectToDelete: GetProjectsQuery["projects"][0] | null;

@@ -2,7 +2,7 @@ import { Provider } from "@pezzo/types";
 import {
   Language,
   useGettingStartedWizard,
-} from "../../lib/providers/GettingStartedWizardProvider";
+} from "~/lib/providers/GettingStartedWizardProvider";
 import { TypeScriptOpenAIIntegrationTutorial } from "./TypeScriptOpenAIIntegrationTutorial";
 
 export const IntegrateTutorial = () => {

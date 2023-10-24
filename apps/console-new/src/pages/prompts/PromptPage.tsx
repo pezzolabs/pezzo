@@ -7,14 +7,14 @@ import {
 } from "@ant-design/icons";
 import styled from "@emotion/styled";
 import { useState } from "react";
-import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
-import { MetricsView } from "../../components/prompts/views/MetricsView";
-import { PromptVersionsView } from "../../components/prompts/views/PromptVersionsView";
-import { PromptSettingsView } from "../../components/prompts/views/PromptSettingsView";
-import { PromptEditView } from "../../components/prompts/views/PromptEditView";
-import { PromptVersionEditorProvider } from "../../lib/providers/PromptVersionEditorContext";
-import { PromptTesterProvider } from "../../lib/providers/PromptTesterContext";
-import { usePageTitle } from "../../lib/hooks/usePageTitle";
+import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
+import { MetricsView } from "~/components/prompts/views/MetricsView";
+import { PromptVersionsView } from "~/components/prompts/views/PromptVersionsView";
+import { PromptSettingsView } from "~/components/prompts/views/PromptSettingsView";
+import { PromptEditView } from "~/components/prompts/views/PromptEditView";
+import { PromptVersionEditorProvider } from "~/lib/providers/PromptVersionEditorContext";
+import { PromptTesterProvider } from "~/lib/providers/PromptTesterContext";
+import { usePageTitle } from "~/lib/hooks/usePageTitle";
 
 const TabLabel = styled.div`
   display: inline-block;

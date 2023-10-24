@@ -1,5 +1,5 @@
 import Lottie from "lottie-react";
-import LogoLoader from "../../../assets/logo-loader.json";
+import LogoLoader from "~/assets/logo-loader.json";
 
 export const Loader = () => {
   return (

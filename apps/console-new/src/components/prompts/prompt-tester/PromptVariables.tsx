@@ -1,6 +1,6 @@
 import { Space, Typography } from "antd";
 import { PromptVariable } from "./PromptVariable";
-import { isJson } from "../../../lib/utils/is-json";
+import { isJson } from "~/lib/utils/is-json";
 
 interface Props {
   variables: Record<string, string>;

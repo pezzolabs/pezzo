@@ -1,7 +1,7 @@
 import { ArrowRightCircleIcon, CubeIcon } from "@heroicons/react/24/outline";
 import { Card, Col, Row, Tag, Typography } from "antd";
 import { css } from "@emotion/css";
-import { colorPrimary } from "../../lib/theme/ant-theme";
+import { colorPrimary } from "~/lib/theme/ant-theme";
 import Icon from "@ant-design/icons/lib/components/Icon";
 
 interface Props {

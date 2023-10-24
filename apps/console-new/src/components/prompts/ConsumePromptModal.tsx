@@ -2,7 +2,7 @@ import { Modal, Tabs } from "antd";
 import { TypeScriptOpenAIIntegrationTutorial } from "../getting-started-wizard";
 import { useState } from "react";
 import { PythonOpenAIIntegrationTutorial } from "../getting-started-wizard/PythonOpenAIIntegrationTutorial";
-import { trackEvent } from "../../lib/utils/analytics";
+import { trackEvent } from "~/lib/utils/analytics";
 
 interface Props {
   open: boolean;

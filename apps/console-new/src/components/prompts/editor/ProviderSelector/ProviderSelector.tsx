@@ -3,10 +3,10 @@ import styled from "@emotion/styled";
 import { useState } from "react";
 import { sortRenderedProviders } from "./providers";
 import { ProviderProps } from "./types";
-import { usePromptVersionEditorContext } from "../../../../lib/providers/PromptVersionEditorContext";
+import { usePromptVersionEditorContext } from "~/lib/providers/PromptVersionEditorContext";
 import { getServiceDefaultSettings } from "../ProviderSettings/providers";
-import { PromptService } from "../../../../../@generated/graphql/graphql";
-import { trackEvent } from "../../../../lib/utils/analytics";
+import { PromptService } from "~/@generated/graphql/graphql";
+import { trackEvent } from "~/lib/utils/analytics";
 
 const StyledSelect = styled(Select)`
   .actions {

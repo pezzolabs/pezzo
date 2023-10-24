@@ -1,4 +1,4 @@
-import { graphql } from "../../../../@generated/graphql";
+import { graphql } from "~/@generated/graphql";
 
 export const DELETE_INVITATION = graphql(/* GraphQL */ `
   mutation DeleteInvitation($data: InvitationWhereUniqueInput!) {

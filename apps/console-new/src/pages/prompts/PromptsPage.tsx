@@ -1,16 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import { PromptListItem } from "../../components/prompts/PromptListItem";
-import { GET_ALL_PROMPTS } from "../../graphql/definitions/queries/prompts";
-import { gqlClient } from "../../lib/graphql";
+import { PromptListItem } from "~/components/prompts/PromptListItem";
+import { GET_ALL_PROMPTS } from "~/graphql/definitions/queries/prompts";
+import { gqlClient } from "~/lib/graphql";
 import { PlusOutlined } from "@ant-design/icons";
-import { CreatePromptModal } from "../../components/prompts/CreatePromptModal";
+import { CreatePromptModal } from "~/components/prompts/CreatePromptModal";
 import { useState } from "react";
 import { css } from "@emotion/css";
 import { Button, Space, Spin, Typography, theme } from "antd";
 import { useNavigate } from "react-router-dom";
-import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
-import { trackEvent } from "../../lib/utils/analytics";
-import { usePageTitle } from "../../lib/hooks/usePageTitle";
+import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
+import { trackEvent } from "~/lib/utils/analytics";
+import { usePageTitle } from "~/lib/hooks/usePageTitle";
 
 export const PromptsPage = () => {
   const { project, isLoading: isProjectsLoading } = useCurrentProject();

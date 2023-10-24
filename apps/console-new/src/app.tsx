@@ -1,7 +1,7 @@
 import "./styles.css";
 import { Route, Routes, Navigate, Outlet } from "react-router-dom";
 import { hotjar } from "react-hotjar";
-import { HOTJAR_SITE_ID, HOTJAR_VERSION } from "../env";
+import { HOTJAR_SITE_ID, HOTJAR_VERSION } from "~/env";
 
 // Auth
 import { QueryClientProvider } from "@tanstack/react-query";

@@ -25,9 +25,9 @@ import {
   UpdateProfileInput,
   UpdateProjectSettingsInput,
   DeleteProviderApiKeyInput,
-} from "../../../@generated/graphql/graphql";
+} from "~/@generated/graphql/graphql";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { gqlClient } from "../../lib/graphql";
+import { gqlClient } from "~/lib/graphql";
 import { UPDATE_PROFILE } from "../definitions/queries/users";
 import {
   CREATE_PROJECT,
@@ -50,8 +50,8 @@ import {
 } from "../definitions/mutations/prompts";
 import { DELETE_ENVIRONMENT } from "../definitions/mutations/environments";
 import { DELETE_PROVIDER_API_KEY } from "../definitions/mutations/api-keys";
-import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
-import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
+import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
+import { usePromptVersionEditorContext } from "~/lib/providers/PromptVersionEditorContext";
 import { TEST_PROMPT } from "../definitions/queries/prompt-executions";
 
 export const useUpdateCurrentUserMutation = () =>

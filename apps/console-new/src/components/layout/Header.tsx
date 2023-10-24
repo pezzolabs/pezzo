@@ -9,17 +9,17 @@ import {
   Typography,
 } from "antd";
 import styled from "@emotion/styled";
-import LogoSquare from "../../../assets/logo-square.svg";
-import { colors } from "../../lib/theme/colors";
-import { useAuthContext } from "../../lib/providers/AuthProvider";
+import LogoSquare from "~/assets/logo-square.svg";
+import { colors } from "~/lib/theme/colors";
+import { useAuthContext } from "~/lib/providers/AuthProvider";
 import { useState } from "react";
 import {
   ArrowRightOnRectangleIcon,
   QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";
-import { signOut } from "../../lib/utils/sign-out";
+import { signOut } from "~/lib/utils/sign-out";
 import { useNavigate } from "react-router-dom";
-import { Avatar } from "../common/Avatar";
+import { Avatar } from "~/components/common/Avatar";
 import { OrgSelector } from "../organizations/OrgSelector";
 import Icon from "@ant-design/icons/lib/components/Icon";
 

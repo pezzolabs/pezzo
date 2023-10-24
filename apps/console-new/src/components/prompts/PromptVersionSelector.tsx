@@ -1,10 +1,10 @@
 import { CaretDownOutlined } from "@ant-design/icons";
 import { Button, Dropdown } from "antd";
-import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
+import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
 import { useState } from "react";
-import { usePromptVersions } from "../../lib/hooks/usePromptVersions";
-import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
-import { trackEvent } from "../../lib/utils/analytics";
+import { usePromptVersions } from "~/lib/hooks/usePromptVersions";
+import { usePromptVersionEditorContext } from "~/lib/providers/PromptVersionEditorContext";
+import { trackEvent } from "~/lib/utils/analytics";
 
 export const PromptVersionSelector = () => {
   const { currentVersionSha, setCurrentVersionSha } =

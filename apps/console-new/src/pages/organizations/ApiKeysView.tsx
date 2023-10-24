@@ -1,7 +1,7 @@
 import { Space, theme, Typography } from "antd";
-import { usePezzoApiKeys } from "../../graphql/hooks/queries";
-import { PezzoApiKeyListItem } from "../../components/api-keys/PezzoApiKeyListItem";
-import { ProviderApiKeysList } from "../../components/api-keys/ProviderApiKeysList";
+import { usePezzoApiKeys } from "~/graphql/hooks/queries";
+import { PezzoApiKeyListItem } from "~/components/api-keys/PezzoApiKeyListItem";
+import { ProviderApiKeysList } from "~/components/api-keys/ProviderApiKeysList";
 
 export const ApiKeysView = () => {
   const { token } = theme.useToken();

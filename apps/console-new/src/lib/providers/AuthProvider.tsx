@@ -2,13 +2,11 @@ import styled from "@emotion/styled";
 import { hotjar } from "react-hotjar";
 import { Col, Empty, Row } from "antd";
 import { createContext, useContext, useEffect, useMemo } from "react";
-import { useGetCurrentUser } from "../../graphql/hooks/queries";
-import { GetMeQuery } from "../../../@generated/graphql/graphql";
-import { LayoutWrapper } from "../../components/layout/LayoutWrapper";
-import { Loading3QuartersOutlined } from "@ant-design/icons";
-import { colors } from "../theme/colors";
-import { Loader } from "../../components/common/Loader";
-import { useIdentify } from "../utils/analytics";
+import { useGetCurrentUser } from "~/graphql/hooks/queries";
+import { GetMeQuery } from "~/@generated/graphql/graphql";
+import { LayoutWrapper } from "~/components/layout/LayoutWrapper";
+import { Loader } from "~/components/common/Loader";
+import { useIdentify } from "~/lib/utils/analytics";
 
 const SpinnerOverlay = styled(Row)`
   height: 100%;

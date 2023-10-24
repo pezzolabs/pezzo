@@ -1,5 +1,5 @@
 import { Card, Col, Row } from "antd";
-import { StatisticBox } from "../../../components/metrics/StatisticBox";
+import { StatisticBox } from "~/components/metrics/StatisticBox";
 import { useProjectOverviewMetrics } from "./useProjectOverviewMetrics";
 
 export const StatisticsSection = () => {

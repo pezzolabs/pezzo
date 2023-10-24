@@ -1,10 +1,10 @@
 import { Alert, Typography } from "antd";
 import { HighlightCode } from "./HighlightCode";
-import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
+import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
 import styled from "@emotion/styled";
-import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
-import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
-import { usePezzoApiKeys } from "../../graphql/hooks/queries";
+import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
+import { usePromptVersionEditorContext } from "~/lib/providers/PromptVersionEditorContext";
+import { usePezzoApiKeys } from "~/graphql/hooks/queries";
 
 const StyledPre = styled.pre`
   background: #000;

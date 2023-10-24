@@ -1,5 +1,5 @@
 import { Avatar as AntdAvatar, AvatarProps } from "antd";
-import { ExtendedUser } from "../../../@generated/graphql/graphql";
+import { ExtendedUser } from "~/@generated/graphql/graphql";
 import { useMemo } from "react";
 
 interface Props {

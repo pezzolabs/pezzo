@@ -2,14 +2,14 @@ import { Button, Card, Col, Popover, Row, Space, Typography } from "antd";
 import Icon from "@ant-design/icons/lib/components/Icon";
 import { SuccessErrorRateChart } from "./charts/SuccessErrorRateChart";
 import { ProjectMetricControlsProvider } from "./charts/ProjectMetricContext";
-import { TimeframeSelector } from "../../../components/metrics/TimeframeSelector";
-import { TimeframeSelectorProvider } from "../../../lib/providers/TimeframeSelectorContext";
+import { TimeframeSelector } from "~/components/metrics/TimeframeSelector";
+import { TimeframeSelectorProvider } from "~/lib/providers/TimeframeSelectorContext";
 import { StatisticsSection } from "./StatisticsSection";
 import { ExecutionTimeChart } from "./charts/ExecutionTimeChart";
-import { usePageTitle } from "../../../lib/hooks/usePageTitle";
-import { RequestFilters } from "../../../components/requests/RequestFilters";
+import { usePageTitle } from "~/lib/hooks/usePageTitle";
+import { RequestFilters } from "~/components/requests/RequestFilters";
 import { FunnelIcon } from "@heroicons/react/24/outline";
-import { useFiltersAndSortParams } from "../../../lib/hooks/useFiltersAndSortParams";
+import { useFiltersAndSortParams } from "~/lib/hooks/useFiltersAndSortParams";
 
 export const DashboardPage = () => {
   usePageTitle("Dashboard");

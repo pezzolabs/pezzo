@@ -1,12 +1,12 @@
 import styled from "@emotion/styled";
 import { ProviderProps } from "./types";
 import { promptProvidersMapping } from "@pezzo/types";
-import { PromptService } from "../../../../../@generated/graphql/graphql";
+import { PromptService } from "~/@generated/graphql/graphql";
 
 // Logos
-import OpenAILogo from "../../../../../assets/providers/openai-logo.svg";
-import AzureOpenAILogo from "../../../../../assets/providers/azure-logo.svg";
-import AnthropicOpenAILogo from "../../../../../assets/providers/anthropic-logo.svg";
+import OpenAILogo from "~/assets/providers/openai-logo.svg";
+import AzureOpenAILogo from "~/assets/providers/azure-logo.svg";
+import AnthropicOpenAILogo from "~/assets/providers/anthropic-logo.svg";
 
 const Icon = styled.img`
   border-radius: 2px;

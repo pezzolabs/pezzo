@@ -1,8 +1,8 @@
-import { ProjectMetricType } from "../../../../@generated/graphql/graphql";
-import { useProjectMetric } from "../../../graphql/hooks/queries";
-import { useCurrentProject } from "../../../lib/hooks/useCurrentProject";
-import { useFiltersAndSortParams } from "../../../lib/hooks/useFiltersAndSortParams";
-import { useTimeframeSelector } from "../../../lib/providers/TimeframeSelectorContext";
+import { ProjectMetricType } from "~/@generated/graphql/graphql";
+import { useProjectMetric } from "~/graphql/hooks/queries";
+import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
+import { useFiltersAndSortParams } from "~/lib/hooks/useFiltersAndSortParams";
+import { useTimeframeSelector } from "~/lib/providers/TimeframeSelectorContext";
 
 export const useProjectOverviewMetrics = () => {
   const { project } = useCurrentProject();

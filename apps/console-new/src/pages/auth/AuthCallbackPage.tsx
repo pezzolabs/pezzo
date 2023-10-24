@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import ThirdPartyEmailPassword from "supertokens-auth-react/recipe/thirdpartyemailpassword";
-import { Loader } from "../../components/common/Loader";
-import { trackEvent } from "../../lib/utils/analytics";
+import { Loader } from "~/components/common/Loader";
+import { trackEvent } from "~/lib/utils/analytics";
 
 export const AuthCallbackPage = () => {
   const handleAuthCallback = async () => {

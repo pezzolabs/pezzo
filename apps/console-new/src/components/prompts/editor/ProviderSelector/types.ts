@@ -1,4 +1,4 @@
-import { PromptService } from "../../../../../@generated/graphql/graphql";
+import { PromptService } from "~/@generated/graphql/graphql";
 
 export interface ProviderProps {
   image: React.ReactNode;

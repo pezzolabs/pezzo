@@ -1,6 +1,6 @@
 import { SendOutlined } from "@ant-design/icons";
 import { Button } from "antd";
-import { usePromptVersionEditorContext } from "../../../lib/providers/PromptVersionEditorContext";
+import { usePromptVersionEditorContext } from "~/lib/providers/PromptVersionEditorContext";
 
 interface Props {
   onClick: () => void;

@@ -1,4 +1,4 @@
-import { graphql } from "../../../../@generated/graphql";
+import { graphql } from "~/@generated/graphql";
 
 export const GET_ALL_PROMPTS = graphql(/* GraphQL */ `
   query getAllPrompts($data: GetProjectPromptsInput!) {

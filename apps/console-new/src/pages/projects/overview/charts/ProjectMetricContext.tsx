@@ -1,10 +1,10 @@
 import { createContext, useContext, useMemo } from "react";
-import { ProjectMetricHistogramBucketSize } from "../../../../../@generated/graphql/graphql";
+import { ProjectMetricHistogramBucketSize } from "~/@generated/graphql/graphql";
 import moment from "moment";
 import {
   Timeframe,
   useTimeframeSelector,
-} from "../../../../lib/providers/TimeframeSelectorContext";
+} from "~/lib/providers/TimeframeSelectorContext";
 
 interface ProjectMetricControlsContextValue {
   bucketSize: ProjectMetricHistogramBucketSize;

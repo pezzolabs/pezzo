@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { gqlClient } from "../graphql";
-import { GET_USER_ORG_MEMBERSHIP } from "../../graphql/definitions/queries/organizations";
+import { GET_USER_ORG_MEMBERSHIP } from "~/graphql/definitions/queries/organizations";
 import { useCurrentOrganization } from "./useCurrentOrganization";
 import { useAuthContext } from "../providers/AuthProvider";
-import { OrgRole } from "../../../@generated/graphql/graphql";
+import { OrgRole } from "~/@generated/graphql/graphql";
 
 export const useCurrentOrgMembership = () => {
   const { organization } = useCurrentOrganization();

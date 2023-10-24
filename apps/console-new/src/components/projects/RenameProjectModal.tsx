@@ -1,7 +1,7 @@
 import { Alert, Form, Input, Modal, Space, Typography, theme } from "antd";
-import { GetProjectsQuery } from "../../../@generated/graphql/graphql";
-import { useUpdateProjectSettingsMutation } from "../../graphql/hooks/mutations";
-import { trackEvent } from "../../lib/utils/analytics";
+import { GetProjectsQuery } from "~/@generated/graphql/graphql";
+import { useUpdateProjectSettingsMutation } from "~/graphql/hooks/mutations";
+import { trackEvent } from "~/lib/utils/analytics";
 import { useEffect } from "react";
 
 interface Props {

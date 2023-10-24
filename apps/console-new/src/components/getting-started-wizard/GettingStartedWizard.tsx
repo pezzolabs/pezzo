@@ -1,7 +1,7 @@
 import { Steps, Typography } from "antd";
 import { ProgrammingLanguageSelector } from "./ProgrammingLanguageSelector";
 import { ProviderSelector } from "./ProviderSelector";
-import { useGettingStartedWizard } from "../../lib/providers/GettingStartedWizardProvider";
+import { useGettingStartedWizard } from "~/lib/providers/GettingStartedWizardProvider";
 import { IntegrateTutorial } from "./IntegrateTutorial";
 import { UsageSelector } from "./UsageSelector";
 

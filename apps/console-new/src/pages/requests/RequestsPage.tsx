@@ -1,19 +1,19 @@
 import { Drawer, Space, Table, Tag, Typography, Card } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { useGetRequestReports } from "../../graphql/hooks/queries";
+import { useGetRequestReports } from "~/graphql/hooks/queries";
 import { useMemo, useState } from "react";
 import {
   DEFAULT_PAGE_SIZE,
   PAGE_SIZE_OPTIONS,
-} from "../../lib/constants/pagination";
-import { RequestDetails } from "../../components/requests/RequestDetails";
-import { toDollarSign } from "../../lib/utils/currency-utils";
-import { RequestFilters } from "../../components/requests/RequestFilters";
+} from "~/lib/constants/pagination";
+import { RequestDetails } from "~/components/requests/RequestDetails";
+import { toDollarSign } from "~/lib/utils/currency-utils";
+import { RequestFilters } from "~/components/requests/RequestFilters";
 import { RequestReportItem } from "./types";
 import { UnmanagedPromptWarning } from "./UnmanagedPromptWarning";
-import { colors } from "../../lib/theme/colors";
-import { trackEvent } from "../../lib/utils/analytics";
-import { usePageTitle } from "../../lib/hooks/usePageTitle";
+import { colors } from "~/lib/theme/colors";
+import { trackEvent } from "~/lib/utils/analytics";
+import { usePageTitle } from "~/lib/hooks/usePageTitle";
 
 const getTableColumns = (
   data: RequestReportItem[]

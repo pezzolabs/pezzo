@@ -15,7 +15,7 @@ import {
   Card,
   Alert,
 } from "antd";
-import { toDollarSign } from "../../lib/utils/currency-utils";
+import { toDollarSign } from "~/lib/utils/currency-utils";
 import { InfoCircleFilled } from "@ant-design/icons";
 import ms from "ms";
 import {
@@ -25,7 +25,7 @@ import {
 import { useState } from "react";
 import { RequestResponseChatView } from "./RequestResponseChatView";
 import { RequestResponseViewJsonView } from "./RequestResponseViewJsonView";
-import { trackEvent } from "../../lib/utils/analytics";
+import { trackEvent } from "~/lib/utils/analytics";
 import Icon from "@ant-design/icons/lib/components/Icon";
 
 type Mode = "chat" | "json";

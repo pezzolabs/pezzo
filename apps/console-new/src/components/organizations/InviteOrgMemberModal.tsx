@@ -1,9 +1,9 @@
 import { Modal, Form, Input, Button, Alert, Typography } from "antd";
 import { css } from "@emotion/css";
-import { useCreateOrgInvitationMutation } from "../../graphql/hooks/mutations";
-import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
+import { useCreateOrgInvitationMutation } from "~/graphql/hooks/mutations";
+import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
 import { useEffect, useState } from "react";
-import { GraphQLErrorResponse } from "../../graphql/types";
+import { GraphQLErrorResponse } from "~/graphql/types";
 
 interface Props {
   open: boolean;

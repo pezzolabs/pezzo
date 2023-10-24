@@ -15,7 +15,7 @@ import {
   Avatar,
   Tooltip,
 } from "antd";
-import OpenAILogo from "../../../assets/providers/openai-logo.svg";
+import OpenAILogo from "~/assets/providers/openai-logo.svg";
 
 interface Props {
   request: ObservabilityRequest<Provider.OpenAI>;

@@ -18,14 +18,14 @@ import {
 } from "@ant-design/icons";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { UPDATE_PROVIDER_API_KEY } from "../../graphql/definitions/mutations/api-keys";
-import { gqlClient, queryClient } from "../../lib/graphql";
-import { CreateProviderApiKeyInput } from "../../../@generated/graphql/graphql";
+import { UPDATE_PROVIDER_API_KEY } from "~/graphql/definitions/mutations/api-keys";
+import { gqlClient, queryClient } from "~/lib/graphql";
+import { CreateProviderApiKeyInput } from "~/@generated/graphql/graphql";
 import { useEffect } from "react";
-import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
-import { trackEvent } from "../../lib/utils/analytics";
+import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
+import { trackEvent } from "~/lib/utils/analytics";
 import { providersList } from "./providers-list";
-import { useDeleteProviderApiKeyMutation } from "../../graphql/hooks/mutations";
+import { useDeleteProviderApiKeyMutation } from "~/graphql/hooks/mutations";
 
 interface Props {
   provider: string;

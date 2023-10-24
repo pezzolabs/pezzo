@@ -1,6 +1,6 @@
 import { Space } from "antd";
-import { useGettingStartedWizard } from "../../lib/providers/GettingStartedWizardProvider";
-import OpenAILogo from "../../../assets/providers/openai-logo.svg";
+import { useGettingStartedWizard } from "~/lib/providers/GettingStartedWizardProvider";
+import OpenAILogo from "~/assets/providers/openai-logo.svg";
 import { SelectionItem } from "./SelectionItem";
 import { Provider } from "@pezzo/types";
 

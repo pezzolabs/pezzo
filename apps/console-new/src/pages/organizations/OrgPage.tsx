@@ -8,14 +8,14 @@ import {
 } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
-import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
+import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
 import { ProjectsPage } from "../projects/ProjectsPage";
 import { MembersView } from "./MembersView";
 import { SettingsView } from "./SettingsView";
 import { ApiKeysView } from "./ApiKeysView";
-import { useCurrentOrgMembership } from "../../lib/hooks/useCurrentOrgMembership";
-import { trackEvent } from "../../lib/utils/analytics";
-import { usePageTitle } from "../../lib/hooks/usePageTitle";
+import { useCurrentOrgMembership } from "~/lib/hooks/useCurrentOrgMembership";
+import { trackEvent } from "~/lib/utils/analytics";
+import { usePageTitle } from "~/lib/hooks/usePageTitle";
 
 const TabLabel = styled.div`
   display: inline-block;

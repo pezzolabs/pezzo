@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { useCallback, useEffect, useMemo } from "react";
 import { extractSortAndFiltersFromSearchParams } from "../utils/filters-utils";
-import { FilterInput } from "../../../@generated/graphql/graphql";
+import { FilterInput } from "~/@generated/graphql/graphql";
 import { trackEvent } from "../utils/analytics";
 
 export const useFiltersAndSortParams = () => {

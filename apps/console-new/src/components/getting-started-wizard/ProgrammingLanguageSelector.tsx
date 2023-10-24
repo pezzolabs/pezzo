@@ -2,8 +2,8 @@ import { Space } from "antd";
 import {
   Language,
   useGettingStartedWizard,
-} from "../../lib/providers/GettingStartedWizardProvider";
-import TypeScriptLogo from "../../../assets/typescript-logo.svg";
+} from "~/lib/providers/GettingStartedWizardProvider";
+import TypeScriptLogo from "~/assets/typescript-logo.svg";
 import { SelectionItem } from "./SelectionItem";
 
 export const ProgrammingLanguageSelector = () => {

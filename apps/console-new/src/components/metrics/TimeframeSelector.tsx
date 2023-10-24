@@ -6,9 +6,9 @@ import Icon from "@ant-design/icons/lib/components/Icon";
 import {
   Timeframe,
   useTimeframeSelector,
-} from "../../lib/providers/TimeframeSelectorContext";
-import { trackEvent } from "../../lib/utils/analytics";
-import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
+} from "~/lib/providers/TimeframeSelectorContext";
+import { trackEvent } from "~/lib/utils/analytics";
+import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
 
 export const TimeframeSelector = () => {
   const { projectId } = useCurrentProject();

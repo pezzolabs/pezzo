@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { useGetProjects } from "../../graphql/hooks/queries";
+import { useGetProjects } from "~/graphql/hooks/queries";
 
 export const useCurrentProject = () => {
   const { projectId } = useParams();

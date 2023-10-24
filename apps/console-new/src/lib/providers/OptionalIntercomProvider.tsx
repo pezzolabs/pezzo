@@ -1,4 +1,4 @@
-import { INTERCOM_APP_ID } from "../../../env";
+import { INTERCOM_APP_ID } from "~/env";
 import React from "react";
 import { IntercomProvider } from "react-use-intercom";
 import { useAuthContext } from "./AuthProvider";

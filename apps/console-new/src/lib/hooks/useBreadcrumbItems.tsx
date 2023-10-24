@@ -1,5 +1,5 @@
 import { useLocation, matchPath, Link } from "react-router-dom";
-import { paths } from "../../app";
+import { paths } from "~/app";
 import { useMemo } from "react";
 import { Col, Row, Typography } from "antd";
 import { useCurrentOrganization } from "./useCurrentOrganization";

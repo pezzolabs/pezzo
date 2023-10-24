@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { gqlClient } from "../graphql";
-import { GET_PROMPT_VERSIONS } from "../../graphql/definitions/queries/prompts";
+import { gqlClient } from "~/lib/graphql";
+import { GET_PROMPT_VERSIONS } from "~/graphql/definitions/queries/prompts";
 
 export const usePromptVersions = (promptId: string, enabled = true) => {
   const { data, isLoading } = useQuery({

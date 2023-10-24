@@ -1,10 +1,10 @@
 import { Button, Card, Form, Select } from "antd";
 import { CloseOutlined, SwapOutlined } from "@ant-design/icons";
-import { colors } from "../../../../lib/theme/colors";
-import { PromptEditorTextArea } from "../../../common/PromptEditorTextArea";
+import { colors } from "~/lib/theme/colors";
+import { PromptEditorTextArea } from "~/components/common/PromptEditorTextArea";
 import styled from "@emotion/styled";
-import { useCurrentPrompt } from "../../../../lib/providers/CurrentPromptContext";
-import { trackEvent } from "../../../../lib/utils/analytics";
+import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
+import { trackEvent } from "~/lib/utils/analytics";
 
 interface Props {
   index: number;

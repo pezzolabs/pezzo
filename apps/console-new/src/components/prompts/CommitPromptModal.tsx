@@ -1,9 +1,9 @@
 import { Modal, Form, Input, Button, Alert } from "antd";
 import { css } from "@emotion/css";
-import { useCurrentPrompt } from "../../lib/providers/CurrentPromptContext";
-import { usePromptVersionEditorContext } from "../../lib/providers/PromptVersionEditorContext";
-import { useCreatePromptVersion } from "../../graphql/hooks/mutations";
-import { trackEvent } from "../../lib/utils/analytics";
+import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
+import { usePromptVersionEditorContext } from "~/lib/providers/PromptVersionEditorContext";
+import { useCreatePromptVersion } from "~/graphql/hooks/mutations";
+import { trackEvent } from "~/lib/utils/analytics";
 
 interface Props {
   open: boolean;

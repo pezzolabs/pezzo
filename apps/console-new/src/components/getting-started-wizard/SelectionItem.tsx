@@ -1,5 +1,5 @@
 import { Card, Image, Space, Typography } from "antd";
-import { colors } from "../../lib/theme/colors";
+import { colors } from "~/lib/theme/colors";
 
 interface Props {
   logo?: string;

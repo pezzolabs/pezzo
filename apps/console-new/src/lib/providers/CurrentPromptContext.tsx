@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
-import { GetPromptQuery } from "../../../@generated/graphql/graphql";
+import { GetPromptQuery } from "~/@generated/graphql/graphql";
 import { Navigate, useParams } from "react-router-dom";
-import { useGetPrompt } from "../../graphql/hooks/queries";
+import { useGetPrompt } from "~/graphql/hooks/queries";
 
 interface CurrentPromptContextValue {
   prompt: GetPromptQuery["prompt"];

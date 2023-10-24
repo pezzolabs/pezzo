@@ -1,5 +1,5 @@
 import { Divider, Form } from "antd";
-import { usePromptVersionEditorContext } from "../../../lib/providers/PromptVersionEditorContext";
+import { usePromptVersionEditorContext } from "~/lib/providers/PromptVersionEditorContext";
 import { ProviderSelector } from "./ProviderSelector/ProviderSelector";
 import { PromptService } from "@pezzo/types";
 import { ProviderSettingsSchemaRenderer } from "./ProviderSettings/ProviderSettingsSchemaRenderer";

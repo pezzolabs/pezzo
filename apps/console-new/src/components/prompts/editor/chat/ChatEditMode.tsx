@@ -1,11 +1,11 @@
 import { Button, Form } from "antd";
 import { ChatMessage } from "./ChatMessage";
 import { PlusOutlined } from "@ant-design/icons";
-import { usePromptVersionEditorContext } from "../../../../lib/providers/PromptVersionEditorContext";
-import { trackEvent } from "../../../../lib/utils/analytics";
-import { useCurrentPrompt } from "../../../../lib/providers/CurrentPromptContext";
+import { usePromptVersionEditorContext } from "~/lib/providers/PromptVersionEditorContext";
+import { trackEvent } from "~/lib/utils/analytics";
+import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
 import { useEffect } from "react";
-import { findVariables } from "../../../../lib/utils/find-variables";
+import { findVariables } from "~/lib/utils/find-variables";
 
 export const ChatEditMode = () => {
   const { promptId } = useCurrentPrompt();

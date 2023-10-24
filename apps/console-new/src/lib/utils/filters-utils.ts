@@ -1,4 +1,4 @@
-import { FilterOperator, SortOrder } from "../../../@generated/graphql/graphql";
+import { FilterOperator, SortOrder } from "~/@generated/graphql/graphql";
 
 export const extractSortAndFiltersFromSearchParams = (
   searchParams: URLSearchParams

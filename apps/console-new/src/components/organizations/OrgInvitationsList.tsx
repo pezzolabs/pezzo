@@ -9,7 +9,7 @@ import {
   message,
   Modal,
 } from "antd";
-import { GetOrgQuery, OrgRole } from "../../../@generated/graphql/graphql";
+import { GetOrgQuery, OrgRole } from "~/@generated/graphql/graphql";
 import { DeleteOutlined, LinkOutlined } from "@ant-design/icons";
 import { OrgRoleSelector } from "./OrgRoleSelector";
 import colors from "tailwindcss/colors";
@@ -18,8 +18,8 @@ import { useState } from "react";
 import {
   useDeleteOrgInvitationMutation,
   useUpdateOrgInvitationMutation,
-} from "../../graphql/hooks/mutations";
-import { useCurrentOrgMembership } from "../../lib/hooks/useCurrentOrgMembership";
+} from "~/graphql/hooks/mutations";
+import { useCurrentOrgMembership } from "~/lib/hooks/useCurrentOrgMembership";
 
 type Invitation = GetOrgQuery["organization"]["invitations"][0];
 

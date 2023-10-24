@@ -1,6 +1,6 @@
 import { Button, Form, Typography } from "antd";
-import { usePromptVersionEditorContext } from "../../../lib/providers/PromptVersionEditorContext";
-import { usePromptTester } from "../../../lib/providers/PromptTesterContext";
+import { usePromptVersionEditorContext } from "~/lib/providers/PromptVersionEditorContext";
+import { usePromptTester } from "~/lib/providers/PromptTesterContext";
 import { PromptVariables } from "./PromptVariables";
 
 interface Props {

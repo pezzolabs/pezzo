@@ -1,12 +1,12 @@
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Button, Card, Spin, Typography, theme, Row, Col } from "antd";
-import { CreateEnvironmentModal } from "../../components/environments/CreateEnvironmentModal";
-import { DeleteEnvironmentModal } from "../../components/environments/DeleteEnvironmentModal";
+import { CreateEnvironmentModal } from "~/components/environments/CreateEnvironmentModal";
+import { DeleteEnvironmentModal } from "~/components/environments/DeleteEnvironmentModal";
 import { useState } from "react";
-import { useEnvironments } from "../../lib/hooks/useEnvironments";
-import { EnvironmentsQuery } from "../../../@generated/graphql/graphql";
-import { trackEvent } from "../../lib/utils/analytics";
-import { usePageTitle } from "../../lib/hooks/usePageTitle";
+import { useEnvironments } from "~/lib/hooks/useEnvironments";
+import { EnvironmentsQuery } from "~/@generated/graphql/graphql";
+import { trackEvent } from "~/lib/utils/analytics";
+import { usePageTitle } from "~/lib/hooks/usePageTitle";
 
 type Environment = EnvironmentsQuery["environments"][0];
 

@@ -1,9 +1,9 @@
 import { Button, Form, Input } from "antd";
-import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
+import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
 import { SaveOutlined } from "@ant-design/icons";
 import { useMemo, useState } from "react";
-import { useUpdateOrgSettingsMutation } from "../../graphql/hooks/mutations";
-import { trackEvent } from "../../lib/utils/analytics";
+import { useUpdateOrgSettingsMutation } from "~/graphql/hooks/mutations";
+import { trackEvent } from "~/lib/utils/analytics";
 
 type Inputs = {
   name: string;

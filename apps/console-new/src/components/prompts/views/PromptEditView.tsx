@@ -1,4 +1,4 @@
-import { useCurrentPrompt } from "../../../lib/providers/CurrentPromptContext";
+import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
 import {
   Button,
   Card,
@@ -21,21 +21,21 @@ import {
   PlayCircleOutlined,
 } from "@ant-design/icons";
 import { PromptVersionSelector } from "../PromptVersionSelector";
-import { PromptType } from "../../../../@generated/graphql/graphql";
+import { PromptType } from "~/@generated/graphql/graphql";
 import { ChatEditMode } from "../editor/chat/ChatEditMode";
 import { PromptEditMode } from "../editor/prompt/PromptEditMode";
-import { usePromptVersionEditorContext } from "../../../lib/providers/PromptVersionEditorContext";
+import { usePromptVersionEditorContext } from "~/lib/providers/PromptVersionEditorContext";
 import { CommitButton } from "../editor/CommitButton";
 import { Variables } from "../editor/Variables";
 import { ProviderSettingsCard } from "../editor/ProviderSettingsCard";
 import { FunctionsFormModal } from "../FunctionsFormModal";
-import { colors } from "../../../lib/theme/colors";
+import { colors } from "~/lib/theme/colors";
 import { PromptTesterModal } from "../prompt-tester/PromptTesterModal";
-import { usePromptTester } from "../../../lib/providers/PromptTesterContext";
+import { usePromptTester } from "~/lib/providers/PromptTesterContext";
 import { ConsumePromptModal } from "../ConsumePromptModal";
-import { trackEvent } from "../../../lib/utils/analytics";
-import { useRequiredProviderApiKeyModal } from "../../../lib/providers/RequiredProviderApiKeyModalProvider";
-import { useProviderApiKeys } from "../../../graphql/hooks/queries";
+import { trackEvent } from "~/lib/utils/analytics";
+import { useRequiredProviderApiKeyModal } from "~/lib/providers/RequiredProviderApiKeyModalProvider";
+import { useProviderApiKeys } from "~/graphql/hooks/queries";
 import {
   ChatBubbleBottomCenterIcon,
   InformationCircleIcon,

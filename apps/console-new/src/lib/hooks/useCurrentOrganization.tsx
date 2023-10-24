@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { gqlClient } from "../graphql";
-import { GET_ORGANIZATION } from "../../graphql/definitions/queries/organizations";
+import { GET_ORGANIZATION } from "~/graphql/definitions/queries/organizations";
 import { useLocalStorage } from "usehooks-ts";
 import { useEffect } from "react";
 import { useOrganizations } from "./useOrganizations";

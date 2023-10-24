@@ -1,13 +1,13 @@
 import { Card, MenuProps, Row, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
-import { trackEvent } from "../../lib/utils/analytics";
+import { trackEvent } from "~/lib/utils/analytics";
 import Icon from "@ant-design/icons/lib/components/Icon";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/solid";
 import Dropdown from "antd/es/dropdown/dropdown";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { DeleteProjectModal } from "./DeleteProjectModal";
 import { useState } from "react";
-import { GetProjectsQuery } from "../../../@generated/graphql/graphql";
+import { GetProjectsQuery } from "~/@generated/graphql/graphql";
 import { RenameProjectModal } from "./RenameProjectModal";
 
 interface ProjectCardProps {

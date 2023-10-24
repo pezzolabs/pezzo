@@ -1,7 +1,7 @@
 import { Button, Popover, Typography } from "antd";
 import styled from "@emotion/styled";
-import { useOrganizations } from "../../lib/hooks/useOrganizations";
-import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
+import { useOrganizations } from "~/lib/hooks/useOrganizations";
+import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 

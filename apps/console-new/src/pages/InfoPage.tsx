@@ -1,5 +1,5 @@
 import { Typography } from "antd";
-import { usePageTitle } from "../lib/hooks/usePageTitle";
+import { usePageTitle } from "~/lib/hooks/usePageTitle";
 
 export const InfoPage = () => {
   usePageTitle("Info");

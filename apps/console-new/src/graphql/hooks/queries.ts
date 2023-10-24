@@ -1,13 +1,13 @@
 import { UseQueryOptions, useQuery } from "@tanstack/react-query";
-import { gqlClient } from "../../lib/graphql";
+import { gqlClient } from "~/lib/graphql";
 import {
   GET_ALL_API_KEYS,
   GET_ALL_PROVIDER_API_KEYS,
 } from "../definitions/queries/api-keys";
 import { GET_ME } from "../definitions/queries/users";
 import { GET_ALL_PROJECTS } from "../definitions/queries/projects";
-import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
-import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
+import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
+import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
 import { GET_ALL_REQUESTS } from "../definitions/queries/requests";
 import {
   GetProjectMetricHistogramQuery,
@@ -18,12 +18,12 @@ import {
   GetPromptVersionQuery,
   Pagination,
   RequestReport,
-} from "../../../@generated/graphql/graphql";
+} from "~/@generated/graphql/graphql";
 import { GraphQLErrorResponse, ReportRequestResponse } from "../types";
 import { Provider } from "@pezzo/types";
 import { GET_PROMPT, GET_PROMPT_VERSION } from "../definitions/queries/prompts";
 import { useEffect } from "react";
-import { useFiltersAndSortParams } from "../../lib/hooks/useFiltersAndSortParams";
+import { useFiltersAndSortParams } from "~/lib/hooks/useFiltersAndSortParams";
 import {
   GET_PROJECT_METRIC,
   GET_PROJECT_METRIC_HISTOGRAM,

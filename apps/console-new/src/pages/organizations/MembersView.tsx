@@ -1,12 +1,12 @@
 import { Button, Col, Row, Typography } from "antd";
-import { useCurrentOrganization } from "../../lib/hooks/useCurrentOrganization";
-import { OrgMembersList } from "../../components/organizations/OrgMembersList";
-import { OrgInvitationsList } from "../../components/organizations/OrgInvitationsList";
+import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
+import { OrgMembersList } from "~/components/organizations/OrgMembersList";
+import { OrgInvitationsList } from "~/components/organizations/OrgInvitationsList";
 import { PlusOutlined } from "@ant-design/icons";
-import { InviteOrgMemberModal } from "../../components/organizations/InviteOrgMemberModal";
+import { InviteOrgMemberModal } from "~/components/organizations/InviteOrgMemberModal";
 import { useState } from "react";
-import { useCurrentOrgMembership } from "../../lib/hooks/useCurrentOrgMembership";
-import { trackEvent } from "../../lib/utils/analytics";
+import { useCurrentOrgMembership } from "~/lib/hooks/useCurrentOrgMembership";
+import { trackEvent } from "~/lib/utils/analytics";
 
 export const MembersView = () => {
   const { organization } = useCurrentOrganization({
