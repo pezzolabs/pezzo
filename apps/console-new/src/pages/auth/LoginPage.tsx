@@ -1,7 +1,7 @@
-import BlurryBlurb from "../../../assets/blurry-blurb.svg";
+import BlurryBlurb from "~/assets/blurry-blurb.svg";
 import Spline from "@splinetool/react-spline";
 import { useEffect, useState } from "react";
-import { usePageTitle } from "../../lib/hooks/usePageTitle";
+import { usePageTitle } from "~/lib/hooks/usePageTitle";
 import {
   Alert,
   AlertDescription,
@@ -11,7 +11,7 @@ import {
   FormMessage,
   Input,
 } from "@pezzo/ui";
-import GoogleIcon from "../../../assets/icons/google.svg";
+import GoogleIcon from "~/assets/icons/google.svg";
 import ThirdPartyEmailPassword from "supertokens-auth-react/recipe/thirdpartyemailpassword";
 import { Form, FormField } from "@pezzo/ui";
 import { useForm } from "react-hook-form";
@@ -19,9 +19,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion } from "framer-motion";
 import { useSearchParams } from "react-router-dom";
-import { trackEvent } from "../../lib/utils/analytics";
+import { trackEvent } from "~/lib/utils/analytics";
 import clsx from "clsx";
-import { googleEnabled } from "../../lib/auth/supertokens";
+import { googleEnabled } from "~/lib/auth/supertokens";
 
 const GENERIC_ERROR = "Something went wrong. Please try again later.";
 
@@ -396,7 +396,7 @@ export const LoginPage = () => {
               </motion.div>
             </div>
           </div>
-          <div className="relative flex-1 bg-neutral-950 hidden lg:flex">
+          <div className="relative hidden flex-1 bg-neutral-950 lg:flex">
             <div className="flex h-full w-full items-center justify-center">
               <div
                 className="pointer-events-none absolute -mt-36 translate-x-[0vw] translate-y-[10vh] scale-[110%] opacity-50 blur-2xl md:block"
