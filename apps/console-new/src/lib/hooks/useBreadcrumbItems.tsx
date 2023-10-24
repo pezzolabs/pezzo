@@ -1,10 +1,14 @@
 import { useLocation, matchPath, Link } from "react-router-dom";
 import { paths } from "~/app";
 import { useMemo } from "react";
-import { Col, Row, Typography } from "antd";
 import { useCurrentOrganization } from "./useCurrentOrganization";
 import { useCurrentProject } from "./useCurrentProject";
 import { useCurrentPrompt } from "../providers/CurrentPromptContext";
+
+export type BreadcrumbItem = {
+  title: string | React.ReactNode;
+  key?: string;
+};
 
 export const useBreadcrumbItems = () => {
   const location = useLocation();

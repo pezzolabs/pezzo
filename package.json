@@ -153,6 +153,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "cypress": "12.17.3",
+    "daisyui": "^3.9.3",
     "eslint": "~8.15.0",
     "eslint-config-next": "^13.4.7",
     "eslint-config-prettier": "8.1.0",

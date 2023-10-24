@@ -1,28 +1,10 @@
-import { Breadcrumb, Col, Layout, Row, theme } from "antd";
+import { Breadcrumbs } from "~/components/common/Breadcrumbs";
 import { SideNavigation } from "./SideNavigation";
-import styled from "@emotion/styled";
-import { Header } from "./Header";
-import { useBreadcrumbItems } from "~/lib/hooks/useBreadcrumbItems";
+import { useBreadcrumbItems } from "../../lib/hooks/useBreadcrumbItems";
 import { ProjectCopy } from "../projects/ProjectCopy";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
-import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
-
-const StyledContent = styled(Layout.Content)`
-  padding: 18px;
-  margin-inline: 24px;
-
-  max-height: calc(100vh - 64px);
-  overflow-y: auto;
-
-  scrollbar-width: none; /* Firefox */
-  ::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
-  }
-  ::-ms-scrollbar {
-    display: none; /* IE */
-  }
-`;
+import { useCurrentProject } from "../../lib/hooks/useCurrentProject";
 
 interface Props {
   children: React.ReactNode;
@@ -37,42 +19,22 @@ export const LayoutWrapper = ({
   withHeader = true,
   withBreadcrumbs = true,
 }: Props) => {
-  const { token } = theme.useToken();
   const { project } = useCurrentProject();
   const breadcrumbItems = useBreadcrumbItems();
   const location = useLocation();
 
   return (
-    <Layout
-      style={{
-        height: "100vh",
-        maxHeight: "100vh",
-        flexDirection: "column",
-      }}
-    >
-      {withHeader && <Header />}
-      <div style={{ display: "flex", flexDirection: "row", height: "100%" }}>
+    <div className="flex w-full h-full max-h-[100vh]">
+      <div className="flex w-full h-full">
         {withSideNav && <SideNavigation />}
 
-        <StyledContent>
-          <Row gutter={[24, 24]}>
-            <Col span={18}>
-              {withBreadcrumbs && (
-                <Breadcrumb
-                  items={breadcrumbItems}
-                  style={{
-                    marginBottom: token.marginLG,
-                  }}
-                />
-              )}
-            </Col>
-            <Col
-              span={6}
-              style={{ display: "flex", justifyContent: "flex-end" }}
-            >
-              {project && <ProjectCopy />}
-            </Col>
-          </Row>
+        <div className="p-4 overflow-y-auto max-h-full w-full">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="flex-1">
+              {withBreadcrumbs && breadcrumbItems && <Breadcrumbs items={breadcrumbItems} />}
+            </div>
+            <div className="col-span-3 flex">{project && <ProjectCopy />}</div>
+          </div>
 
           <motion.div
             key={location.pathname}
@@ -83,8 +45,8 @@ export const LayoutWrapper = ({
           >
             {children}
           </motion.div>
-        </StyledContent>
+        </div>
       </div>
-    </Layout>
+    </div>
   );
 };
