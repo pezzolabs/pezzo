@@ -1,5 +1,4 @@
-import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
-import { Button, Card, Spin, Typography, theme, Row, Col } from "antd";
+import { Button, Card } from "@pezzo/ui";
 import { CreateEnvironmentModal } from "~/components/environments/CreateEnvironmentModal";
 import { DeleteEnvironmentModal } from "~/components/environments/DeleteEnvironmentModal";
 import { useState } from "react";
@@ -7,6 +6,7 @@ import { useEnvironments } from "~/lib/hooks/useEnvironments";
 import { EnvironmentsQuery } from "~/@generated/graphql/graphql";
 import { trackEvent } from "~/lib/utils/analytics";
 import { usePageTitle } from "~/lib/hooks/usePageTitle";
+import { PlusIcon, TrashIcon } from "lucide-react";
 
 type Environment = EnvironmentsQuery["environments"][0];
 
@@ -17,7 +17,6 @@ export const EnvironmentsPage = () => {
     useState(false);
   const [environmentToDelete, setEnvironmentToDelete] =
     useState<Environment | null>(null);
-  const { token } = theme.useToken();
 
   const onCreateEnvironmentModalOpen = () => {
     setIsCreateEnvironmentModalOpen(true);
@@ -43,38 +42,33 @@ export const EnvironmentsPage = () => {
         onDelete={() => setEnvironmentToDelete(null)}
       />
 
-      <Spin size="large" spinning={isLoading}>
-        <Typography.Title level={2}>Environments</Typography.Title>
-        <div style={{ marginBottom: token.marginLG }}>
-          <Button
-            icon={<PlusOutlined />}
-            onClick={onCreateEnvironmentModalOpen}
-          >
-            New Environment
-          </Button>
-        </div>
+      <h1 className="mb-4 text-3xl font-semibold">Environments</h1>
+      <div className="mb-4">
+        <Button onClick={onCreateEnvironmentModalOpen}>
+          <PlusIcon className="mr-2 h-4 w-4" />
+          New Environment
+        </Button>
+      </div>
 
+      <div className="max-w-[600px]">
         {environments &&
           environments.map((environment) => (
-            <Card
-              key={environment.id}
-              style={{ marginBottom: 10, maxWidth: 600 }}
-              size="small"
-            >
-              <Row justify="space-between" align="middle">
-                <Col>{environment.name}</Col>
-                <Col>
+            <Card className="mb-4 p-4" key={environment.id}>
+              <div className="flex gap-4 items-center">
+                <div className="flex-1">{environment.name}</div>
+                <div>
                   <Button
                     onClick={onDeleteEnvironmentModalOpen(environment)}
-                    type="text"
-                    danger
-                    icon={<DeleteOutlined />}
-                  />
-                </Col>
-              </Row>
+                    size="icon"
+                    variant="destructiveOutline"
+                  >
+                    <TrashIcon className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
             </Card>
           ))}
-      </Spin>
+      </div>
     </>
   );
 };
