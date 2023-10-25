@@ -13,7 +13,6 @@ import {
   Input,
   FormField,
   FormMessage,
-  FormDescription,
   FormLabel,
   Alert,
   AlertTitle,
@@ -45,7 +44,7 @@ const formSchema = z.object({
 });
 
 export const CreateEnvironmentModal = ({ open, onClose, onCreated }: Props) => {
-  const { project } = useCurrentProject();
+  const { projectId } = useCurrentProject();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -58,11 +57,11 @@ export const CreateEnvironmentModal = ({ open, onClose, onCreated }: Props) => {
     GraphQLErrorResponse,
     z.infer<typeof formSchema>
   >({
-    mutationFn: (data: z.infer<typeof formSchema>) =>
+    mutationFn: (data) =>
       gqlClient.request(CREATE_ENVIRONMENT, {
         data: {
           name: data.environmentName,
-          projectId: project.id,
+          projectId,
         },
       }),
     onSuccess: (data) => {
