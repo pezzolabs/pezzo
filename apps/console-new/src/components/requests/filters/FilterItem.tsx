@@ -21,7 +21,7 @@ import {
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckIcon, XIcon } from "lucide-react";
+import { CheckIcon, PlusIcon, XIcon } from "lucide-react";
 
 interface Props {
   onRemoveFilter: () => void;
@@ -234,5 +234,9 @@ export const AddFilterItem = ({
       <AddFilterForm onAdd={handleAdd} onCancel={() => setAddFormOpen(false)} />
     );
   }
-  return <Button onClick={() => setAddFormOpen(true)}>+ Add Filter</Button>;
+  return (
+    <Button size="sm" onClick={() => setAddFormOpen(true)}>
+      <PlusIcon className="mr-2 h-4 w-4" /> Add Filter
+    </Button>
+  );
 };

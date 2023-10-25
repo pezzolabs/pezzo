@@ -1,9 +1,5 @@
-import { Popover, Radio } from "antd";
-import { useState } from "react";
 import { CustomDateTooltip } from "./CustomDateTooltip";
-import { CalendarIcon } from "@heroicons/react/24/solid";
-import Icon from "@ant-design/icons/lib/components/Icon";
-import { Button } from "@pezzo/ui";
+import { Button, PopoverContent, PopoverTrigger, Popover } from "@pezzo/ui";
 import clsx from "clsx";
 import {
   Timeframe,
@@ -11,6 +7,8 @@ import {
 } from "~/lib/providers/TimeframeSelectorContext";
 import { trackEvent } from "~/lib/utils/analytics";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
+import { CalendarDaysIcon } from "lucide-react";
+import { useState } from "react";
 
 export const TimeframeSelector = () => {
   const { projectId } = useCurrentProject();
@@ -22,9 +20,8 @@ export const TimeframeSelector = () => {
     timeframe,
     setTimeframe,
   } = useTimeframeSelector();
-  const [customDatePopoverOpen, setCustomDatePopoverOpen] =
-    useState<boolean>(false);
-
+  const [isCustomTimeframePopoverOpen, setIsCustomTimeframePopoverOpen] = useState(false);
+  
   const handleCustomDateApply = (dates: {
     startDate: string;
     endDate: string;
@@ -32,16 +29,16 @@ export const TimeframeSelector = () => {
     setTimeframe(Timeframe.Custom);
     setStartDate(dates.startDate);
     setEndDate(dates.endDate);
-    setCustomDatePopoverOpen(false);
     trackEvent("project_dashboard_custom_date_applied", { projectId });
+    setIsCustomTimeframePopoverOpen(false);
   };
 
-  const handlePopoverOpen = (isOpen) => {
-    setCustomDatePopoverOpen(isOpen);
-
+  const handlePopoverOpenChange = (isOpen: boolean) => {
     if (isOpen === true) {
       trackEvent("project_dashboard_custom_date_popover_opened", { projectId });
     }
+
+    setIsCustomTimeframePopoverOpen(isOpen);
   };
 
   const handleSetTimeframe = (tf: Timeframe) => {
@@ -54,6 +51,26 @@ export const TimeframeSelector = () => {
 
   return (
     <span className="isolate inline-flex rounded-md shadow-sm">
+      <Popover open={isCustomTimeframePopoverOpen} onOpenChange={handlePopoverOpenChange}>
+        <PopoverTrigger asChild>
+          <Button
+            type="button"
+            className={clsx(
+              "first:rounded-l-m rounded-r-none border bg-white text-primary"
+            )}
+          >
+            <CalendarDaysIcon className="mr-2 h-4 w-4" />
+            Custom
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto">
+          <CustomDateTooltip
+            startDate={startDate}
+            endDate={endDate}
+            onApply={handleCustomDateApply}
+          />
+        </PopoverContent>
+      </Popover>
       {Object.values(Timeframe)
         .filter((tf) => tf !== Timeframe.Custom)
         .map((tf) => (
@@ -62,10 +79,11 @@ export const TimeframeSelector = () => {
             type="button"
             onClick={() => handleSetTimeframe(tf)}
             className={clsx(
-              "relative -ml-px inline-flex items-center rounded-none border bg-white px-3 py-2 text-sm text-gray-900 first:rounded-l-md last:rounded-r-md hover:bg-black hover:text-white focus:z-10",
+              "relative -ml-px inline-flex items-center rounded-none border bg-white px-3 py-2 text-sm text-primary first:rounded-l-md last:rounded-r-md focus:z-10",
               {
-                "bg-black text-white": tf === timeframe,
-                // "bg-slate-200 border-slate-300": tf === timeframe,
+                "hover:bg-secondary hover:text-secondary-foreground":
+                  tf !== timeframe,
+                "bg-primary text-primary-foreground": tf === timeframe,
               }
             )}
           >
@@ -74,45 +92,4 @@ export const TimeframeSelector = () => {
         ))}
     </span>
   );
-
-  // return (
-  //   <Radio.Group value={timeframe}>
-  //     <Popover
-  //       trigger={["click"]}
-  //       open={customDatePopoverOpen}
-  //       onOpenChange={handlePopoverOpen}
-  //       placement="bottomRight"
-  //       title="Custom Dates"
-  //       content={
-  //         <CustomDateTooltip
-  //           startDate={startDate}
-  //           endDate={endDate}
-  //           onApply={handleCustomDateApply}
-  //         />
-  //       }
-  //     >
-  //       <Radio.Button value="Custom">
-  //         <Icon
-  //           style={{ marginRight: 6, fontSize: 16 }}
-  //           viewBox="0 0 1024 1024"
-  //         >
-  //           <CalendarIcon style={{ fontSize: 16 }} />
-  //         </Icon>
-  //         Custom Dates
-  //       </Radio.Button>
-  //     </Popover>
-
-  //     {Object.values(Timeframe)
-  //       .filter((tf) => tf !== Timeframe.Custom)
-  //       .map((tf) => (
-  //         <Radio.Button
-  //           key={tf}
-  //           value={tf}
-  //           onClick={() => handleSetTimeframe(tf)}
-  //         >
-  //           {tf}
-  //         </Radio.Button>
-  //       ))}
-  //   </Radio.Group>
-  // );
 };

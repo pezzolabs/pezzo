@@ -1,5 +1,4 @@
 import { Card, Col, Row, Typography } from "antd";
-import Icon from "@ant-design/icons/lib/components/Icon";
 import { SuccessErrorRateChart } from "./charts/SuccessErrorRateChart";
 import { ProjectMetricControlsProvider } from "./charts/ProjectMetricContext";
 import { TimeframeSelector } from "~/components/metrics/TimeframeSelector";
@@ -8,9 +7,9 @@ import { StatisticsSection } from "./StatisticsSection";
 import { ExecutionTimeChart } from "./charts/ExecutionTimeChart";
 import { usePageTitle } from "~/lib/hooks/usePageTitle";
 import { RequestFilters } from "~/components/requests/RequestFilters";
-import { FunnelIcon } from "@heroicons/react/24/outline";
 import { useFiltersAndSortParams } from "~/lib/hooks/useFiltersAndSortParams";
 import { Popover, PopoverContent, PopoverTrigger, Button } from "@pezzo/ui";
+import { FilterIcon } from "lucide-react";
 
 export const DashboardPage = () => {
   usePageTitle("Dashboard");
@@ -26,12 +25,7 @@ export const DashboardPage = () => {
           <Popover>
             <PopoverTrigger asChild>
               <Button>
-                <Icon
-                  style={{ marginRight: 0, fontSize: 16 }}
-                  viewBox="0 0 1024 1024"
-                >
-                  <FunnelIcon style={{ fontSize: 16 }} />
-                </Icon>
+                <FilterIcon className="mr-2 h-4 w-4" />
                 Filters {filters.length ? `(${filters.length})` : ""}
               </Button>
             </PopoverTrigger>
