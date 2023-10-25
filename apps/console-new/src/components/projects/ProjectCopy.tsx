@@ -1,9 +1,9 @@
-import { Button, Tooltip } from "antd";
+import { Button } from "@pezzo/ui";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
-import { CopyOutlined } from "@ant-design/icons";
 import { copyToClipboard } from "~/lib/utils/browser-utils";
 import { useState } from "react";
 import { trackEvent } from "~/lib/utils/analytics";
+import { CheckIcon, CopyIcon } from "lucide-react";
 
 export const ProjectCopy = () => {
   const { project, isLoading } = useCurrentProject();
@@ -12,20 +12,25 @@ export const ProjectCopy = () => {
   if (isLoading) return null;
 
   return (
-    <Tooltip title={clicked ? "Copied!" : "Copy to clipboard"}>
-      <Button
-        icon={<CopyOutlined />}
-        onMouseLeave={() => {
-          if (clicked) setTimeout(() => setClicked(false), 1000);
-        }}
-        onClick={() => {
-          copyToClipboard(project.id);
-          setClicked(true);
-          trackEvent("project_id_copied", { projectId: project.id });
-        }}
-      >
-        Copy Project ID
-      </Button>
-    </Tooltip>
+    <Button
+      className="bg-white border text-primary"
+      onClick={() => {
+        copyToClipboard(project.id);
+        setClicked(true);
+        trackEvent("project_id_copied", { projectId: project.id });
+      }}
+    >
+      {clicked ? (
+        <>
+          <CheckIcon className="mr-2 h-4 w-4" />
+          Copied!
+        </>
+      ) : (
+        <>
+          <CopyIcon className="mr-2 h-4 w-4" />
+          Copy Project ID
+        </>
+      )}
+    </Button>
   );
 };
