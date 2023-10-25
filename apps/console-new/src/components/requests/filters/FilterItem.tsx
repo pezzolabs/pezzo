@@ -58,10 +58,6 @@ export const FilterItem = ({
   );
 };
 
-interface FilterForm extends FilterInput {
-  property?: string;
-}
-
 const formSchema = z.object({
   field: z.string().min(1).max(100),
   operator: z.nativeEnum(FilterOperator),

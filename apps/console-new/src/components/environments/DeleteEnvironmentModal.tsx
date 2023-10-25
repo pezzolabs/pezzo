@@ -57,22 +57,22 @@ export const DeleteEnvironmentModal = ({
           {error && (
             <Alert variant="destructive" className="mb-4">
               <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Error</AlertTitle>
+              <AlertTitle>Oops!</AlertTitle>
               <AlertDescription>
                 {error.response.errors[0].message}
               </AlertDescription>
             </Alert>
           )}
           <p>
-            Are you sure you want to remove{" "}
+            Are you sure you want to delete the{" "}
             <span className="font-semibold">{environmentToDelete?.name}</span>{" "}
-            from your environments? All associated data will be lost.
+            environment? All associated data will be lost.
           </p>
         </AlertDialogDescription>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
           <Button variant="destructive" onClick={handleDelete}>
-            Cancel
+            Delete
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

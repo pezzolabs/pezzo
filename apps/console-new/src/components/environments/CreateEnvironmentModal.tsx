@@ -1,5 +1,24 @@
 import { useMutation } from "@tanstack/react-query";
-import { Modal, Form, Input, Button, Alert } from "antd";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Button,
+  Form,
+  FormItem,
+  FormControl,
+  Input,
+  FormField,
+  FormMessage,
+  FormDescription,
+  FormLabel,
+  Alert,
+  AlertTitle,
+  AlertDescription,
+} from "@pezzo/ui";
 import { gqlClient, queryClient } from "~/lib/graphql";
 import { css } from "@emotion/css";
 import { CREATE_ENVIRONMENT } from "~/graphql/definitions/mutations/environments";
@@ -7,6 +26,10 @@ import { CreateEnvironmentMutation } from "~/@generated/graphql/graphql";
 import { GraphQLErrorResponse } from "~/graphql/types";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
 import { trackEvent } from "~/lib/utils/analytics";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { AlertCircle } from "lucide-react";
 
 interface Props {
   open: boolean;
@@ -14,23 +37,31 @@ interface Props {
   onCreated: (id: string) => void;
 }
 
-type Inputs = {
-  name: string;
-};
+const formSchema = z.object({
+  environmentName: z
+    .string()
+    .min(1, "Name must be at least 1 character long")
+    .max(64, "Name can't be longer than 64 characters"),
+});
 
 export const CreateEnvironmentModal = ({ open, onClose, onCreated }: Props) => {
   const { project } = useCurrentProject();
-  const [form] = Form.useForm<Inputs>();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      environmentName: "",
+    },
+  });
 
   const { mutate, error } = useMutation<
     CreateEnvironmentMutation,
     GraphQLErrorResponse,
-    Inputs
+    z.infer<typeof formSchema>
   >({
-    mutationFn: (data: Inputs) =>
+    mutationFn: (data: z.infer<typeof formSchema>) =>
       gqlClient.request(CREATE_ENVIRONMENT, {
         data: {
-          name: data.name,
+          name: data.environmentName,
           projectId: project.id,
         },
       }),
@@ -40,55 +71,61 @@ export const CreateEnvironmentModal = ({ open, onClose, onCreated }: Props) => {
     },
   });
 
-  const handleFormFinish = async (values: Inputs) => {
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
     mutate(values);
-    form.resetFields();
+    form.reset();
     trackEvent("environment_form_submitted");
   };
 
   const onCancel = () => {
     onClose();
+    form.reset();
     trackEvent("environment_form_cancelled");
   };
 
   return (
-    <Modal
-      title="New Environment"
-      open={open}
-      onCancel={onCancel}
-      footer={false}
-    >
-      {error && (
-        <Alert type="error" message={error.response.errors[0].message} />
-      )}
-      <Form
-        form={form}
-        layout="vertical"
-        name="basic"
-        style={{ maxWidth: 600, marginTop: 20 }}
-        onFinish={handleFormFinish}
-        autoComplete="off"
+    <Dialog open={open}>
+      <DialogContent
+        onPointerDownOutside={onCancel}
+        className="sm:max-w-[425px]"
       >
-        <Form.Item
-          label="Environment name"
-          name="name"
-          fieldId="name"
-          rules={[{ required: true, message: "Environment name is required" }]}
-        >
-          <Input placeholder="e.g. Development" />
-        </Form.Item>
-
-        <Form.Item
-          className={css`
-            display: flex;
-            justify-content: flex-end;
-          `}
-        >
-          <Button type="primary" htmlType="submit">
-            Create
-          </Button>
-        </Form.Item>
-      </Form>
-    </Modal>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <DialogHeader>
+              <DialogTitle className="mb-2">
+                Create a new environment
+              </DialogTitle>
+              <DialogDescription>
+                {error && (
+                  <Alert variant="destructive" className="mb-4">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Oops!</AlertTitle>
+                    <AlertDescription>
+                      {error.response.errors[0].message}
+                    </AlertDescription>
+                  </Alert>
+                )}
+                <FormField
+                  control={form.control}
+                  name="environmentName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Environment name</FormLabel>
+                      <FormControl>
+                        <Input autoComplete="off" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="mt-4">
+              <Button type="submit">Create</Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 };
