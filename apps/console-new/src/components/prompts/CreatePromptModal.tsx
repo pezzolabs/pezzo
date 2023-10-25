@@ -36,7 +36,7 @@ interface Props {
 }
 
 const formSchema = z.object({
-  name: z
+  promptName: z
     .string()
     .min(1, "Name must be at least 1 character long")
     .max(100, "Name can't be longer than 64 characters"),
@@ -47,7 +47,7 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      promptName: "",
     },
   });
 
@@ -59,7 +59,7 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
     mutationFn: (data) =>
       gqlClient.request(CREATE_PROMPT, {
         data: {
-          name: data.name,
+          name: data.promptName,
           projectId: project.id,
         },
       }),
@@ -105,7 +105,7 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
                 )}
                 <FormField
                   control={form.control}
-                  name="name"
+                  name="promptName"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Prompt name</FormLabel>
