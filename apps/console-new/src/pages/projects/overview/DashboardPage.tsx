@@ -1,4 +1,4 @@
-import { Card, Col, Row, Typography } from "antd";
+import { Card } from "@pezzo/ui";
 import { SuccessErrorRateChart } from "./charts/SuccessErrorRateChart";
 import { ProjectMetricControlsProvider } from "./charts/ProjectMetricContext";
 import { TimeframeSelector } from "~/components/metrics/TimeframeSelector";
@@ -36,34 +36,32 @@ export const DashboardPage = () => {
           <TimeframeSelector />
         </div>
       </div>
-      <StatisticsSection />
-      <Row gutter={[24, 24]}>
-        <Col span={12} style={{}}>
-          <Card style={{ width: "100%" }}>
-            <Typography.Title level={4}>
-              Requests/Errors (Total)
-            </Typography.Title>
-            <div style={{ height: 360 }}>
-              <ProjectMetricControlsProvider>
-                <SuccessErrorRateChart />
-              </ProjectMetricControlsProvider>
-            </div>
-          </Card>
-        </Col>
-        <Col span={12} style={{ height: 540 }}>
-          <Card style={{ width: "100%" }}>
-            <Typography.Title level={4}>
-              Request Duration (Average)
-            </Typography.Title>
+      <div className="mb-6">
+        <StatisticsSection />
+      </div>
+      <div className="grid grid-cols-12 gap-6">
+        <Card className="col-span-6 p-6">
+          <div className="mb-4 text-xl font-semibold">
+            Requests/Errors (Total)
+          </div>
+          <div className="h-[360px]">
+            <ProjectMetricControlsProvider>
+              <SuccessErrorRateChart />
+            </ProjectMetricControlsProvider>
+          </div>
+        </Card>
+        <Card className="col-span-6 p-6">
+          <div className="mb-4 text-xl font-semibold">
+            Request Duration (Average)
+          </div>
 
-            <div style={{ height: 360 }}>
-              <ProjectMetricControlsProvider>
-                <ExecutionTimeChart />
-              </ProjectMetricControlsProvider>
-            </div>
-          </Card>
-        </Col>
-      </Row>
+          <div className="h-[360px]">
+            <ProjectMetricControlsProvider>
+              <ExecutionTimeChart />
+            </ProjectMetricControlsProvider>
+          </div>
+        </Card>
+      </div>
     </TimeframeSelectorProvider>
   );
 };

@@ -1,7 +1,12 @@
-import { Statistic, Tooltip } from "antd";
-import colors from "tailwindcss/colors";
 import CountUp from "react-countup";
-import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
+import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
+import clsx from "clsx";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@pezzo/ui";
 
 interface Props {
   title: string;
@@ -25,31 +30,38 @@ const getProperties = (
 ) => {
   const diff = currentValue - previousValue;
   // Handle case where previousValue is 0
-  previousValue = previousValue === 0 ? 1 : previousValue;
+  const calculatedPreviousValue = previousValue === 0 ? 1 : previousValue;
 
-  const percentage = Math.abs(Math.floor((diff / previousValue) * 100));
-  const increaseColor = reverseColors ? colors.red[400] : colors.green[400];
-  const decreaseColor = reverseColors ? colors.green[400] : colors.red[400];
+  const percentage = Math.abs((diff / calculatedPreviousValue) * 100);
+  const percentageToRender =
+    percentage < 1 ? percentage.toFixed(3) : percentage;
 
-  if (diff > 0) {
+  const isIncrease = diff > 0;
+  const isDecrease = diff < 0;
+
+  const className = clsx("h-7 w-7", {
+    "text-red-500": isDecrease || (reverseColors && isIncrease),
+    "text-green-500": isIncrease || (reverseColors && isDecrease),
+    "text-stone-300": !isIncrease && !isDecrease,
+  });
+
+  if (isIncrease) {
     return {
-      valueStyle: { color: increaseColor },
-      suffix: <ArrowUpOutlined />,
+      suffix: <ArrowUpIcon className={className} />,
       percentage,
-      tooltipTitle: `${percentage}% increase`,
+      tooltipTitle: `${percentageToRender}% increase (previously ${previousValue})`,
     };
   }
 
-  if (diff < 0) {
+  if (isDecrease) {
     return {
-      valueStyle: { color: decreaseColor },
-      suffix: <ArrowDownOutlined />,
+      suffix: <ArrowDownIcon className={className} />,
       percentage,
-      tooltipTitle: `${percentage}% decrease`,
+      tooltipTitle: `${percentageToRender}% decrease (previously ${previousValue})`,
     };
   }
 
-  return { valueStyle: { color: colors.stone[300] }, suffix: null };
+  return { suffix: null, percentage: 0, tooltipTitle: "" };
 };
 
 export const StatisticBox = ({
@@ -57,10 +69,8 @@ export const StatisticBox = ({
   currentValue,
   previousValue,
   prefix,
-  suffix,
   precision = 0,
   reverseColors = false,
-  valueStyle = { color: colors.stone[500] },
   numberPrefix,
   numberSuffix,
   numberSeparator,
@@ -68,7 +78,6 @@ export const StatisticBox = ({
 }: Props) => {
   const calculatedFormatter = (value: number) => (
     <CountUp
-      style={{ color: colors.stone[300] }}
       end={value}
       prefix={numberPrefix}
       suffix={numberSuffix}
@@ -79,28 +88,28 @@ export const StatisticBox = ({
     />
   );
 
-  const {
-    valueStyle: calculaedValueStyle,
-    suffix: calculatedSuffix,
-    tooltipTitle,
-  } = getProperties(currentValue, previousValue, reverseColors);
+  const { suffix: calculatedSuffix, tooltipTitle } = getProperties(
+    currentValue,
+    previousValue,
+    reverseColors
+  );
 
   return (
-    <Statistic
-      title={title}
-      value={currentValue}
-      loading={loading}
-      valueStyle={valueStyle || calculaedValueStyle}
-      formatter={calculatedFormatter}
-      suffix={
-        <Tooltip title={tooltipTitle}>
-          {prefix !== undefined ? prefix : calculatedSuffix}
-        </Tooltip>
-      }
-      prefix={
-        suffix && <span style={{ color: colors.stone[300] }}>{suffix}</span>
-      }
-      precision={precision || undefined}
-    />
+    <div>
+      <div className="mb-2 text-neutral-600">{title}</div>
+      <div className="flex text-2xl font-medium">
+        {calculatedFormatter(currentValue)}
+        {calculatedSuffix && (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                {prefix !== undefined ? prefix : calculatedSuffix}
+              </TooltipTrigger>
+              <TooltipContent>{tooltipTitle}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
+      </div>
+    </div>
   );
 };
