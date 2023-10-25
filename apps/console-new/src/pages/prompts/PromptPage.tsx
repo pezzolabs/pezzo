@@ -10,7 +10,6 @@ import { useState } from "react";
 import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
 import { MetricsView } from "~/components/prompts/views/MetricsView";
 import { PromptVersionsView } from "~/components/prompts/views/PromptVersionsView";
-import { PromptSettingsView } from "~/components/prompts/views/PromptSettingsView";
 import { PromptEditView } from "~/components/prompts/views/PromptEditView";
 import { PromptVersionEditorProvider } from "~/lib/providers/PromptVersionEditorContext";
 import { PromptTesterProvider } from "~/lib/providers/PromptTesterContext";
@@ -79,7 +78,6 @@ export const PromptPage = () => {
           )}
           {activeView === "metrics" && <MetricsView />}
           {activeView === "versions" && <PromptVersionsView />}
-          {activeView === "settings" && <PromptSettingsView />}
         </>
       )}
     </Spin>

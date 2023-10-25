@@ -1,40 +1,40 @@
-import { useQuery } from "@tanstack/react-query";
-import { PromptListItem } from "~/components/prompts/PromptListItem";
-import { GET_ALL_PROMPTS } from "~/graphql/definitions/queries/prompts";
-import { gqlClient } from "~/lib/graphql";
-import { PlusOutlined } from "@ant-design/icons";
+import { Button, Card } from "@pezzo/ui";
 import { CreatePromptModal } from "~/components/prompts/CreatePromptModal";
 import { useState } from "react";
-import { css } from "@emotion/css";
-import { Button, Space, Spin, Typography, theme } from "antd";
-import { useNavigate } from "react-router-dom";
-import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
+import { usePrompts } from "~/lib/hooks/usePrompts";
 import { trackEvent } from "~/lib/utils/analytics";
 import { usePageTitle } from "~/lib/hooks/usePageTitle";
+import { PlusIcon, TrashIcon } from "lucide-react";
+import { GetAllPromptsQuery } from "~/@generated/graphql/graphql";
+import { BoxIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
+import { DeletePromptConfirmationModal } from "~/components/prompts/DeletePromptConfirmationModal";
+
+type Prompt = GetAllPromptsQuery["prompts"][0];
 
 export const PromptsPage = () => {
-  const { project, isLoading: isProjectsLoading } = useCurrentProject();
-  const { token } = theme.useToken();
+  usePageTitle("Prompts");
+  const { projectId } = useCurrentProject();
+  const { prompts, isLoading } = usePrompts();
   const navigate = useNavigate();
   const [isCreatePromptModalOpen, setIsCreatePromptModalOpen] = useState(false);
-  const { data, isLoading: isLoadingPrompts } = useQuery({
-    queryKey: ["prompts", project?.id],
-    queryFn: () =>
-      gqlClient.request(GET_ALL_PROMPTS, { data: { projectId: project?.id } }),
-    enabled: !!project?.id,
-  });
-  usePageTitle(project?.name && `${project.name} Prompts`);
+  const [promptToDelete, setPromptToDelete] = useState<Prompt | null>(null);
 
-  const isLoading = isLoadingPrompts || isProjectsLoading;
-
-  const onCreatePromptModalOpen = () => {
+  const handleCreatePrompt = () => {
     setIsCreatePromptModalOpen(true);
-    trackEvent("prompt_modal_opened");
+    trackEvent("prompt_create_modal_opened");
+  };
+  
+  const handleClickPrompt = (e: React.MouseEvent, promptId: string) => {
+    navigate(`/projects/${projectId}/prompts/${promptId}`);
+    trackEvent("prompt_nav_clicked", { promptId });
   };
 
-  const onPromptClick = (promptId: string) => () => {
-    navigate(`/projects/${project.id}/prompts/${promptId}`);
-    trackEvent("prompt_nav_clicked", { promptId });
+  const handleDeletePrompt = (e: React.MouseEvent, prompt: Prompt) => {
+    e.stopPropagation();
+    setPromptToDelete(prompt);
+    trackEvent("prompt_delete_modal_opened", { name: prompt.name });
   };
 
   return (
@@ -42,42 +42,48 @@ export const PromptsPage = () => {
       <CreatePromptModal
         open={isCreatePromptModalOpen}
         onClose={() => setIsCreatePromptModalOpen(false)}
-        onCreated={(id) => navigate(`/projects/${project.id}/prompts/${id}`)}
+        onCreated={() => setIsCreatePromptModalOpen(false)}
       />
 
-      <Space direction="vertical" size="large" style={{ width: "100%" }}>
-        <Typography.Title level={2}>Prompts</Typography.Title>
+      <DeletePromptConfirmationModal
+        promptToDelete={promptToDelete}
+        onClose={() => setPromptToDelete(null)}
+      />
 
-        <Spin size="large" spinning={isLoading}>
-          <div
-            className={css`
-              max-width: 640px;
-              min-height: 500px;
-              padding: ${isLoading ? token.paddingLG : 0};
-            `}
-          >
-            <Button
-              icon={<PlusOutlined />}
-              style={{
-                marginBottom: token.marginLG,
-              }}
-              onClick={onCreatePromptModalOpen}
+      <h1 className="mb-4 text-3xl font-semibold">Prompts</h1>
+      <div className="mb-4">
+        <Button onClick={handleCreatePrompt}>
+          <PlusIcon className="mr-2 h-4 w-4" />
+          New Prompt
+        </Button>
+      </div>
+
+      <div className="max-w-[600px]">
+        {prompts &&
+          prompts.map((prompt) => (
+            <Card
+              className="mb-4 cursor-pointer p-4 hover:ring-2 ring-primary"
+              onClick={(e) => handleClickPrompt(e, prompt.id)}
+              key={prompt.id}
             >
-              New Prompt
-            </Button>
-
-            {data?.prompts?.map((prompt) => (
-              <div key={prompt.id} style={{ marginBottom: 14 }}>
-                <PromptListItem
-                  name={prompt.name}
-                  isDraft={prompt.isDraft}
-                  onClick={onPromptClick(prompt.id)}
-                />
+              <div className="flex items-center gap-4">
+                <div>
+                  <BoxIcon />
+                </div>
+                <div className="flex-1">{prompt.name}</div>
+                <div>
+                  <Button
+                    onClick={(e) => handleDeletePrompt(e, prompt)}
+                    size="icon"
+                    variant="destructiveOutline"
+                  >
+                    <TrashIcon className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
-            ))}
-          </div>
-        </Spin>
-      </Space>
+            </Card>
+          ))}
+      </div>
     </>
   );
 };
