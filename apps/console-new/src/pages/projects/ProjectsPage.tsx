@@ -113,9 +113,9 @@ export const ProjectsPage = () => {
         onClose={() => setIsCreateNewProjectModalOpen(false)}
       />
 
-      <div className="flex gap-4">
-        <h1 className="mb-4 flex-1 text-3xl font-semibold">Projects</h1>
-        <div className="mb-4">
+      <div className="flex gap-4 mb-4">
+        <h2 className="flex-1 text-3xl font-semibold">Projects</h2>
+        <div>
           <Button onClick={onOpenCreateNewProjectModal}>
             <PlusIcon className="mr-2 h-4 w-4" />
             New Project
