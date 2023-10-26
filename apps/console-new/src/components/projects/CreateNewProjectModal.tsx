@@ -33,7 +33,6 @@ const formSchema = z.object({
     .max(100, "Name can't be longer than 100 characters"),
 });
 
-
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -51,7 +50,6 @@ export const CreateNewProjectModal = ({ open, onClose }: Props) => {
   const {
     mutateAsync: createProject,
     error,
-    isLoading,
   } = useCreateProjectMutation({
     onSuccess: () => {
       form.reset();
