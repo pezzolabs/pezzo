@@ -62,7 +62,7 @@ export const ProjectsPage = () => {
     setProjectToDelete(project);
   };
 
-  const baseCardClassName = "col-span-6 cursor-pointer p-6";
+  const baseCardClassName = "col-span-3 cursor-pointer p-6";
 
   const renderProject = (project: Project) => (
     <Card
@@ -114,7 +114,7 @@ export const ProjectsPage = () => {
       />
 
       <div className="flex gap-4">
-        <h1 className="mb-4 text-3xl font-semibold flex-1">Projects</h1>
+        <h1 className="mb-4 flex-1 text-3xl font-semibold">Projects</h1>
         <div className="mb-4">
           <Button onClick={onOpenCreateNewProjectModal}>
             <PlusIcon className="mr-2 h-4 w-4" />
@@ -122,7 +122,7 @@ export const ProjectsPage = () => {
           </Button>
         </div>
       </div>
-      <div className="grid max-w-[640px] grid-cols-12 gap-x-4 gap-y-4">
+      <div className="grid grid-cols-12 gap-x-4 gap-y-4">
         {projects?.map((project) => renderProject(project))}
         {/* New Project Button */}
         <Card
