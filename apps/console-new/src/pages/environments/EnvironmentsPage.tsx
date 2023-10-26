@@ -42,19 +42,21 @@ export const EnvironmentsPage = () => {
         onDelete={() => setEnvironmentToDelete(null)}
       />
 
-      <h1 className="mb-4 text-3xl font-semibold">Environments</h1>
-      <div className="mb-4">
-        <Button onClick={onCreateEnvironmentModalOpen}>
-          <PlusIcon className="mr-2 h-4 w-4" />
-          New Environment
-        </Button>
+      <div className="flex gap-4">
+        <h1 className="mb-4 text-3xl font-semibold flex-1">Environments</h1>
+        <div className="mb-4">
+          <Button onClick={onCreateEnvironmentModalOpen}>
+            <PlusIcon className="mr-2 h-4 w-4" />
+            New Environment
+          </Button>
+        </div>
       </div>
 
       <div className="max-w-[600px]">
         {environments &&
           environments.map((environment) => (
             <Card className="mb-4 p-4" key={environment.id}>
-              <div className="flex gap-4 items-center">
+              <div className="flex items-center gap-4">
                 <div className="flex-1">{environment.name}</div>
                 <div>
                   <Button

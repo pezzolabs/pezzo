@@ -1,48 +1,80 @@
-import { Alert, Form, Input, Modal, Space, Typography, theme } from "antd";
-import { useCallback } from "react";
 import { useCreateProjectMutation } from "~/graphql/hooks/mutations";
 import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
 import { trackEvent } from "~/lib/utils/analytics";
 import { useNavigate } from "react-router-dom";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Button,
+  Form,
+  FormItem,
+  FormControl,
+  Input,
+  FormField,
+  FormMessage,
+  FormLabel,
+  Alert,
+  AlertTitle,
+  AlertDescription,
+} from "@pezzo/ui";
+import { AlertCircle } from "lucide-react";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+const formSchema = z.object({
+  projectName: z
+    .string()
+    .min(1, "Name must be at least 1 character long")
+    .max(100, "Name can't be longer than 100 characters"),
+});
+
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  onCreated: () => void;
 }
 
-export const CreateNewProjectModal = ({ open, onClose, onCreated }: Props) => {
-  const [form] = Form.useForm<{ projectName: string }>();
-  const { organization } = useCurrentOrganization();
+export const CreateNewProjectModal = ({ open, onClose }: Props) => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      projectName: "",
+    },
+  });
+  const { organizationId } = useCurrentOrganization();
   const navigate = useNavigate();
   const {
     mutateAsync: createProject,
     error,
-    isLoading: isCreatingProject,
+    isLoading,
   } = useCreateProjectMutation({
     onSuccess: () => {
-      form.resetFields();
-      onCreated();
+      form.reset();
+      onClose();
     },
   });
-  const { token } = theme.useToken();
 
-  const handleCreateProject = useCallback(async () => {
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
     createProject(
       {
-        name: form.getFieldValue("projectName"),
-        organizationId: organization.id,
+        name: values.projectName,
+        organizationId,
       },
       {
         onSuccess: (data) => {
-          onCreated();
+          onClose();
           navigate(`/projects/${data.createProject.id}`);
         },
       }
     );
 
     trackEvent("project_form_submitted");
-  }, [createProject, onCreated, form, organization.id, navigate]);
+  };
 
   const onCancel = () => {
     onClose();
@@ -50,51 +82,48 @@ export const CreateNewProjectModal = ({ open, onClose, onCreated }: Props) => {
   };
 
   return (
-    <Modal
-      title={
-        <Typography.Title level={3} style={{ margin: 0 }}>
-          Create Project
-        </Typography.Title>
-      }
-      open={open}
-      onCancel={onCancel}
-      okText="Create"
-      okButtonProps={{
-        form: "create-project-form",
-        htmlType: "submit",
-        loading: isCreatingProject,
-      }}
-    >
-      <Form
-        style={{ marginTop: token.marginLG }}
-        form={form}
-        name="create-project-form"
-        onFinish={handleCreateProject}
+    <Dialog open={open}>
+      <DialogContent
+        onPointerDownOutside={onCancel}
+        className="sm:max-w-[425px]"
       >
-        <Space direction="vertical" style={{ width: "100%" }} size="middle">
-          {error && (
-            <Alert
-              type="error"
-              description={
-                error?.response.errors?.[0].message ?? "Something went wrong"
-              }
-            />
-          )}
-          <Typography.Text>Name</Typography.Text>
-
-          <Form.Item
-            name="projectName"
-            rules={[
-              {
-                required: true,
-                message: "Please set a name to your project",
-              },
-            ]}
-          >
-            <Input placeholder="Content Creation" />
-          </Form.Item>
-        </Space>
-      </Form>
-    </Modal>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <DialogHeader>
+              <DialogTitle className="mb-2">
+                Create a new project
+              </DialogTitle>
+              <DialogDescription>
+                {error && (
+                  <Alert variant="destructive" className="mb-4">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Oops!</AlertTitle>
+                    <AlertDescription>
+                      {error.response.errors[0].message}
+                    </AlertDescription>
+                  </Alert>
+                )}
+                <FormField
+                  control={form.control}
+                  name="projectName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Project name</FormLabel>
+                      <FormControl>
+                        <Input autoComplete="off" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="mt-4">
+              <Button type="submit">Create</Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 };

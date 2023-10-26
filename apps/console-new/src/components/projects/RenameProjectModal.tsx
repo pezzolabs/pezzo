@@ -1,105 +1,122 @@
-import { Alert, Form, Input, Modal, Space, Typography, theme } from "antd";
 import { GetProjectsQuery } from "~/@generated/graphql/graphql";
 import { useUpdateProjectSettingsMutation } from "~/graphql/hooks/mutations";
 import { trackEvent } from "~/lib/utils/analytics";
 import { useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Button,
+  Form,
+  FormItem,
+  FormControl,
+  Input,
+  FormField,
+  FormMessage,
+  FormLabel,
+  Alert,
+  AlertTitle,
+  AlertDescription,
+} from "@pezzo/ui";
+import { AlertCircle } from "lucide-react";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+const formSchema = z.object({
+  projectName: z
+    .string()
+    .min(1, "Name must be at least 1 character long")
+    .max(100, "Name can't be longer than 100 characters"),
+});
 
 interface Props {
   projectToRename: GetProjectsQuery["projects"][0] | null;
   onClose: () => void;
-  onRename: () => void;
 }
 
 export const RenameProjectModal = ({
   projectToRename,
   onClose,
-  onRename,
 }: Props) => {
-  const [form] = Form.useForm<{ name: string }>();
-  const { token } = theme.useToken();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      projectName: "",
+    },
+  });
   const { mutate: updateProjectSettings, error } =
     useUpdateProjectSettingsMutation();
 
   useEffect(() => {
-    form.resetFields();
+    form.reset();
   }, [projectToRename, form]);
 
-  const handleRename = () => {
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
     updateProjectSettings(
-      { projectId: projectToRename.id, name: form.getFieldValue("name") },
+      { projectId: projectToRename.id, name: values.projectName },
       {
         onSuccess: () => {
-          onRename();
+          trackEvent("project_rename_submitted");
+          onClose();
         },
       }
     );
 
-    trackEvent("project_rename_submitted", {
-      name: projectToRename?.name,
-    });
   };
 
   const onCancel = () => {
+    trackEvent("project_rename_cancelled");
     onClose();
-    trackEvent("project_rename_cancelled", {
-      name: projectToRename?.name,
-    });
   };
 
   return (
-    <Modal
-      title="Rename Project"
-      open={projectToRename !== null}
-      onCancel={onCancel}
-      okText="Rename"
-      okButtonProps={{
-        form: "rename-project-form",
-        htmlType: "submit",
-      }}
-    >
-      {error && (
-        <Alert type="error" message={error.response.errors[0].message} />
-      )}
-      <p>
-        Choose a new name for the{" "}
-        <Typography.Text style={{ fontWeight: 800 }}>
-          {projectToRename?.name}
-        </Typography.Text>{" "}
-        project.
-      </p>
-
-      <Form
-        style={{ marginTop: token.marginLG }}
-        form={form}
-        name="rename-project-form"
-        onFinish={handleRename}
-        initialValues={{
-          name: projectToRename?.name,
-        }}
+    <Dialog open={!!projectToRename}>
+      <DialogContent
+        onPointerDownOutside={onCancel}
+        className="sm:max-w-[425px]"
       >
-        <Space direction="vertical" style={{ width: "100%" }} size="middle">
-          {error && (
-            <Alert
-              type="error"
-              description={
-                error?.response.errors?.[0].message ?? "Something went wrong"
-              }
-            />
-          )}
-
-          <Form.Item
-            name="name"
-            rules={[
-              {
-                required: true,
-                message: "Name must be provided",
-              },
-            ]}
-          >
-            <Input placeholder="Project name" />
-          </Form.Item>
-        </Space>
-      </Form>
-    </Modal>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <DialogHeader>
+              <DialogTitle className="mb-2">
+                Rename project{" "}
+                <span className="font-semibold">{projectToRename?.name}</span>
+              </DialogTitle>
+              <DialogDescription>
+                {error && (
+                  <Alert variant="destructive" className="mb-4">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Oops!</AlertTitle>
+                    <AlertDescription>
+                      {error.response.errors[0].message}
+                    </AlertDescription>
+                  </Alert>
+                )}
+                <FormField
+                  control={form.control}
+                  name="projectName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Project name</FormLabel>
+                      <FormControl>
+                        <Input autoComplete="off" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="mt-4">
+              <Button type="submit">Create</Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 };

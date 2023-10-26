@@ -1,37 +1,38 @@
 import { useNavigate } from "react-router-dom";
 import { useGetProjects } from "~/graphql/hooks/queries";
 import { useEffect, useState } from "react";
-import { Button, Card, Col, Row, Spin, Typography, theme, message } from "antd";
-import styled from "@emotion/styled";
-import { ProjectCard } from "~/components/projects";
-import { PlusOutlined } from "@ant-design/icons";
-import { CreateNewProjectModal } from "~/components/projects/CreateNewProjectModal";
+import {
+  Button,
+  Card,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@pezzo/ui";
 import { trackEvent } from "~/lib/utils/analytics";
 import { usePageTitle } from "~/lib/hooks/usePageTitle";
+import {
+  HomeIcon,
+  MoreVertical,
+  PencilIcon,
+  PlusIcon,
+  TrashIcon,
+} from "lucide-react";
+import { CreateNewProjectModal } from "~/components/projects/CreateNewProjectModal";
+import { DeleteProjectModal } from "~/components/projects/DeleteProjectModal";
+import { RenameProjectModal } from "~/components/projects/RenameProjectModal";
+import { GetProjectsQuery } from "~/@generated/graphql/graphql";
+import clsx from "clsx";
 
-const Spinner = styled(Row)`
-  height: 100%;
-`;
-
-Spinner.defaultProps = {
-  justify: "center",
-  align: "middle",
-  children: <Spin size="large" />,
-};
-
-const Paper = styled.div`
-  min-width: 640px;
-`;
-
-const isOdd = (number: number) => number % 2 === 0;
+type Project = GetProjectsQuery["projects"][0];
 
 export const ProjectsPage = () => {
   const { projects, isLoading } = useGetProjects();
   const [isCreateNewProjectModalOpen, setIsCreateNewProjectModalOpen] =
     useState(false);
+  const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
+  const [projectToRename, setProjectToRename] = useState<Project | null>(null);
   const navigate = useNavigate();
-  const { token } = theme.useToken();
-  const [messageApi, contextHolder] = message.useMessage();
   usePageTitle("Projects");
 
   useEffect(() => {
@@ -39,70 +40,102 @@ export const ProjectsPage = () => {
     if (!projects?.length) navigate("/onboarding");
   }, [projects, isLoading, navigate]);
 
-  if (isLoading) return <Spinner />;
-
-  const onOpenCreateNewProjectModal = (placement: "button" | "card") => () => {
+  const onOpenCreateNewProjectModal = () => {
     setIsCreateNewProjectModalOpen(true);
-    trackEvent("project_create_modal_opened", { placement });
+    trackEvent("project_create_modal_opened");
   };
+
+  const handleProjectClick = (projectId: string) => {
+    navigate(`/projects/${projectId}`);
+    trackEvent("project_nav_clicked", { projectId });
+  };
+
+  const handleRenameClick = (e: React.MouseEvent, project: Project) => {
+    e.stopPropagation();
+    trackEvent("project_rename_modal_opened", { projectId: project.id });
+    setProjectToRename(project);
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent, project: Project) => {
+    e.stopPropagation();
+    trackEvent("project_delete_modal_opened", { projectId: project.id });
+    setProjectToDelete(project);
+  };
+
+  const baseCardClassName = "col-span-4 cursor-pointer p-6";
+
+  const renderProject = (project: Project) => (
+    <Card
+      className={clsx(baseCardClassName, "ring-primary hover:ring-2")}
+      onClick={() => handleProjectClick(project.id)}
+    >
+      <div className="flex items-start">
+        <div className="flex-1">
+          <HomeIcon className="mb-2 h-8 w-8 text-primary" />
+          <div className="text-lg font-medium">{project.name}</div>
+        </div>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <MoreVertical className="h-5 w-5 text-black/40" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem onClick={(e) => handleRenameClick(e, project)}>
+              <PencilIcon className="mr-2 h-4 w-4" />
+              Rename
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="text-destructive"
+              onClick={(e) => handleDeleteClick(e, project)}
+            >
+              <TrashIcon className="mr-2 h-4 w-4" />
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </Card>
+  );
 
   return (
     <>
-      {contextHolder}
-      <Paper>
-        <CreateNewProjectModal
-          open={isCreateNewProjectModalOpen}
-          onClose={() => setIsCreateNewProjectModalOpen(false)}
-          onCreated={() => setIsCreateNewProjectModalOpen(false)}
-        />
+      <DeleteProjectModal
+        projectToDelete={projectToDelete}
+        onClose={() => setProjectToDelete(null)}
+      />
+      <RenameProjectModal
+        projectToRename={projectToRename}
+        onClose={() => setProjectToRename(null)}
+      />
 
-        <Row justify="end">
-          <Button
-            icon={<PlusOutlined />}
-            onClick={onOpenCreateNewProjectModal("button")}
-            style={{
-              marginBottom: token.marginLG,
-            }}
-            size="large"
-          >
-            Create project
+      <CreateNewProjectModal
+        open={isCreateNewProjectModalOpen}
+        onClose={() => setIsCreateNewProjectModalOpen(false)}
+      />
+
+      <div className="flex gap-4">
+        <h1 className="mb-4 text-3xl font-semibold flex-1">Projects</h1>
+        <div className="mb-4">
+          <Button onClick={onOpenCreateNewProjectModal}>
+            <PlusIcon className="mr-2 h-4 w-4" />
+            New Project
           </Button>
-        </Row>
-
-        <Row gutter={16}>
-          {projects?.map((project, index) => (
-            <Col span={12} key={project.id}>
-              <ProjectCard
-                onDelete={() =>
-                  messageApi.success("Project deleted successfully")
-                }
-                onUpdate={() =>
-                  messageApi.success("Project updated successfully")
-                }
-                project={project}
-              />
-            </Col>
-          ))}
-          {!isOdd(projects?.length) && (
-            <Col span={12}>
-              <Card hoverable onClick={onOpenCreateNewProjectModal("card")}>
-                <Row justify="center">
-                  <Col>
-                    <Button
-                      type="dashed"
-                      icon={<PlusOutlined />}
-                      size="large"
-                    />
-                  </Col>
-                </Row>
-                <Row justify="center" style={{ marginTop: token.marginSM }}>
-                  <Typography.Text strong>Create a new project</Typography.Text>
-                </Row>
-              </Card>
-            </Col>
+        </div>
+      </div>
+      <div className="grid max-w-[640px] grid-cols-12 gap-x-4 gap-y-4">
+        {projects?.map((project) => renderProject(project))}
+        {/* New Project Button */}
+        <Card
+          className={clsx(
+            baseCardClassName,
+            "flex flex-col items-center justify-center border-2 border-dashed opacity-60 hover:opacity-100"
           )}
-        </Row>
-      </Paper>
+          onClick={onOpenCreateNewProjectModal}
+        >
+          <PlusIcon className="mb-1 h-7 w-7" />
+          New Project
+        </Card>
+      </div>
     </>
   );
 };

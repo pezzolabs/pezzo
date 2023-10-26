@@ -16,7 +16,7 @@ type Prompt = GetAllPromptsQuery["prompts"][0];
 export const PromptsPage = () => {
   usePageTitle("Prompts");
   const { projectId } = useCurrentProject();
-  const { prompts, isLoading } = usePrompts();
+  const { prompts } = usePrompts();
   const navigate = useNavigate();
   const [isCreatePromptModalOpen, setIsCreatePromptModalOpen] = useState(false);
   const [promptToDelete, setPromptToDelete] = useState<Prompt | null>(null);
@@ -25,7 +25,7 @@ export const PromptsPage = () => {
     setIsCreatePromptModalOpen(true);
     trackEvent("prompt_create_modal_opened");
   };
-  
+
   const handleClickPrompt = (e: React.MouseEvent, promptId: string) => {
     navigate(`/projects/${projectId}/prompts/${promptId}`);
     trackEvent("prompt_nav_clicked", { promptId });
@@ -50,19 +50,21 @@ export const PromptsPage = () => {
         onClose={() => setPromptToDelete(null)}
       />
 
-      <h1 className="mb-4 text-3xl font-semibold">Prompts</h1>
-      <div className="mb-4">
-        <Button onClick={handleCreatePrompt}>
-          <PlusIcon className="mr-2 h-4 w-4" />
-          New Prompt
-        </Button>
+      <div className="flex gap-4">
+        <h1 className="mb-4 text-3xl font-semibold flex-1">Prompts</h1>
+        <div className="mb-4">
+          <Button onClick={handleCreatePrompt}>
+            <PlusIcon className="mr-2 h-4 w-4" />
+            New Prompt
+          </Button>
+        </div>
       </div>
 
       <div className="max-w-[600px]">
         {prompts &&
           prompts.map((prompt) => (
             <Card
-              className="mb-4 cursor-pointer p-4 hover:ring-2 ring-primary"
+              className="mb-4 cursor-pointer p-4 ring-primary hover:ring-2"
               onClick={(e) => handleClickPrompt(e, prompt.id)}
               key={prompt.id}
             >

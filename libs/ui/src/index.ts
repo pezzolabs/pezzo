@@ -10,3 +10,4 @@ export * from "./components/ui/tooltip";
 export * from "./components/ui/alert";
 export * from "./components/ui/alert-dialog";
 export * from "./components/ui/dialog";
+export * from "./components/ui/dropdown-menu";
