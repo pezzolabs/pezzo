@@ -19,10 +19,11 @@ import {
   TrashIcon,
 } from "lucide-react";
 import { CreateNewProjectModal } from "~/components/projects/CreateNewProjectModal";
-import { DeleteProjectModal } from "~/components/projects/DeleteProjectModal";
 import { RenameProjectModal } from "~/components/projects/RenameProjectModal";
 import { GetProjectsQuery } from "~/@generated/graphql/graphql";
 import clsx from "clsx";
+import { useDeleteProjectMutation } from "~/graphql/hooks/mutations";
+import { GenericDestructiveConfirmationModal } from "~/components/common/GenericDestructiveConfirmationModal";
 
 type Project = GetProjectsQuery["projects"][0];
 
@@ -35,12 +36,28 @@ export const ProjectsPage = () => {
   const navigate = useNavigate();
   usePageTitle("Projects");
 
+  const { mutate: deleteProject, error } = useDeleteProjectMutation();
+
+  const handleDeleteProject = (projectId: string) => {
+    deleteProject(
+      { id: projectToDelete.id },
+      {
+        onSuccess: () => {
+          setProjectToDelete(null);
+        },
+      }
+    );
+    trackEvent("project_delete_confirmed", {
+      projectId: projectToDelete?.id,
+    });
+  };
+
   useEffect(() => {
     if (isLoading) return;
     if (!projects?.length) navigate("/onboarding");
   }, [projects, isLoading, navigate]);
 
-  const onOpenCreateNewProjectModal = () => {
+  const handleCreateNewProjectClick = () => {
     setIsCreateNewProjectModalOpen(true);
     trackEvent("project_create_modal_opened");
   };
@@ -100,10 +117,15 @@ export const ProjectsPage = () => {
 
   return (
     <>
-      <DeleteProjectModal
-        projectToDelete={projectToDelete}
-        onClose={() => setProjectToDelete(null)}
+      <GenericDestructiveConfirmationModal
+        open={!!projectToDelete}
+        title="Delete Project"
+        description={`Are you sure you want to delete the "${projectToDelete?.name}" project? All associated data will be lost.`}
+        onCancel={() => setProjectToDelete(null)}
+        onConfirm={() => handleDeleteProject(projectToDelete?.id)}
+        confirmText="Delete"
       />
+
       <RenameProjectModal
         projectToRename={projectToRename}
         onClose={() => setProjectToRename(null)}
@@ -114,10 +136,10 @@ export const ProjectsPage = () => {
         onClose={() => setIsCreateNewProjectModalOpen(false)}
       />
 
-      <div className="flex gap-4 mb-4">
+      <div className="mb-4 flex gap-4">
         <h2 className="flex-1 text-3xl font-semibold">Projects</h2>
         <div>
-          <Button onClick={onOpenCreateNewProjectModal}>
+          <Button onClick={handleCreateNewProjectClick}>
             <PlusIcon className="mr-2 h-4 w-4" />
             New Project
           </Button>
@@ -131,7 +153,7 @@ export const ProjectsPage = () => {
             baseCardClassName,
             "flex flex-col items-center justify-center border-2 border-dashed opacity-60 hover:opacity-100"
           )}
-          onClick={onOpenCreateNewProjectModal}
+          onClick={handleCreateNewProjectClick}
         >
           <PlusIcon className="mb-1 h-7 w-7" />
           New Project

@@ -9,7 +9,8 @@ import { GetAllPromptsQuery } from "~/@generated/graphql/graphql";
 import { BoxIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
-import { DeletePromptConfirmationModal } from "~/components/prompts/DeletePromptConfirmationModal";
+import { GenericDestructiveConfirmationModal } from "~/components/common/GenericDestructiveConfirmationModal";
+import { useDeletePromptMutation } from "~/graphql/hooks/mutations";
 
 type Prompt = GetAllPromptsQuery["prompts"][0];
 
@@ -20,6 +21,7 @@ export const PromptsPage = () => {
   const navigate = useNavigate();
   const [isCreatePromptModalOpen, setIsCreatePromptModalOpen] = useState(false);
   const [promptToDelete, setPromptToDelete] = useState<Prompt | null>(null);
+  const { mutate: deletePrompt, error: deletePromptError } = useDeletePromptMutation();
 
   const handleCreatePrompt = () => {
     setIsCreatePromptModalOpen(true);
@@ -31,10 +33,19 @@ export const PromptsPage = () => {
     trackEvent("prompt_nav_clicked", { promptId });
   };
 
-  const handleDeletePrompt = (e: React.MouseEvent, prompt: Prompt) => {
+  const handleDeletePromptClick = (e: React.MouseEvent, prompt: Prompt) => {
     e.stopPropagation();
     setPromptToDelete(prompt);
     trackEvent("prompt_delete_modal_opened", { name: prompt.name });
+  };
+
+  const handleDeletePromptConfirm = (promptId: string) => {
+    deletePrompt(promptToDelete.id, {
+      onSuccess: () => {
+        setPromptToDelete(null);
+      },
+    });
+    trackEvent("prompt_delete_confirmed");
   };
 
   return (
@@ -45,10 +56,15 @@ export const PromptsPage = () => {
         onCreated={() => setIsCreatePromptModalOpen(false)}
       />
 
-      <DeletePromptConfirmationModal
-        promptToDelete={promptToDelete}
-        onClose={() => setPromptToDelete(null)}
+      <GenericDestructiveConfirmationModal
+        title="Delete Prompt"
+        description="Are you sure you want to delete this prompt? All associated data will be lost."
+        open={!!promptToDelete}
+        onCancel={() => setPromptToDelete(null)}
+        onConfirm={() => handleDeletePromptConfirm(promptToDelete.id)}
+        error={deletePromptError}
       />
+      
 
       <div className="flex gap-4">
         <h1 className="mb-4 text-3xl font-semibold flex-1">Prompts</h1>
@@ -75,7 +91,7 @@ export const PromptsPage = () => {
                 <div className="flex-1">{prompt.name}</div>
                 <div>
                   <Button
-                    onClick={(e) => handleDeletePrompt(e, prompt)}
+                    onClick={(e) => handleDeletePromptClick(e, prompt)}
                     size="icon"
                     variant="destructiveOutline"
                   >
