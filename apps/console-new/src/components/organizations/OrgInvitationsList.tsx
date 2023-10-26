@@ -1,18 +1,6 @@
-import {
-  Button,
-  Col,
-  List,
-  Row,
-  Space,
-  Typography,
-  Card,
-  message,
-  Modal,
-} from "antd";
+import { Button, Card } from "@pezzo/ui";
 import { GetOrgQuery, OrgRole } from "~/@generated/graphql/graphql";
-import { DeleteOutlined, LinkOutlined } from "@ant-design/icons";
 import { OrgRoleSelector } from "./OrgRoleSelector";
-import colors from "tailwindcss/colors";
 import { useCopyToClipboard } from "usehooks-ts";
 import { useState } from "react";
 import {
@@ -20,6 +8,8 @@ import {
   useUpdateOrgInvitationMutation,
 } from "~/graphql/hooks/mutations";
 import { useCurrentOrgMembership } from "~/lib/hooks/useCurrentOrgMembership";
+import { CheckIcon, CopyIcon, TrashIcon } from "lucide-react";
+import { GenericDestructiveConfirmationModal } from "../common/GenericDestructiveConfirmationModal";
 
 type Invitation = GetOrgQuery["organization"]["invitations"][0];
 
@@ -27,11 +17,34 @@ interface Props {
   invitations: Invitation[];
 }
 
+const CopyInvitationButton = ({ invitationId }: { invitationId: string }) => {
+  const [copiedValue, copy] = useCopyToClipboard();
+
+  const url = new URL(window.location.origin);
+  url.pathname = `/invitations/${invitationId}/accept`;
+
+  return (
+    <Button variant="ghost" onClick={() => copy(url.toString())}>
+      {copiedValue ? (
+        <>
+          <CheckIcon className="mr-2 h-4 w-4" />
+          Copied!
+        </>
+      ) : (
+        <>
+          <CopyIcon className="mr-2 h-4 w-4" />
+          Copy Link
+        </>
+      )}
+    </Button>
+  );
+};
+
 export const OrgInvitationsList = ({ invitations }: Props) => {
   const { isOrgAdmin } = useCurrentOrgMembership();
-  const { mutateAsync: deleteOrgInvitation } = useDeleteOrgInvitationMutation();
-  const { mutateAsync: updateOrgInvitation } = useUpdateOrgInvitationMutation();
-  const [messageApi, contextHolder] = message.useMessage();
+  const { mutate: deleteOrgInvitation, error: updateOrgInvitationError } =
+    useDeleteOrgInvitationMutation();
+  const { mutate: updateOrgInvitation } = useUpdateOrgInvitationMutation();
   const [deletingInvitation, setDeletingInvitation] =
     useState<Invitation>(null);
   const [, copy] = useCopyToClipboard();
@@ -39,92 +52,65 @@ export const OrgInvitationsList = ({ invitations }: Props) => {
   const handleCopyInvitation = (invitation: Invitation) => {
     const url = new URL(window.location.origin);
     url.pathname = `/invitations/${invitation.id}/accept`;
-
     copy(url.toString());
-    messageApi.open({
-      type: "info",
-      content: "Invitation link copied to clipboard",
-    });
   };
 
   const handleDeleteInvitation = async (invitation: Invitation) => {
-    messageApi.open({
-      type: "success",
-      content: "Invitation deleted",
-    });
-    await deleteOrgInvitation({ id: invitation.id });
-    setDeletingInvitation(null);
+    deleteOrgInvitation(
+      { id: invitation.id },
+      {
+        onSuccess: () => {
+          setDeletingInvitation(null);
+        },
+      }
+    );
   };
 
-  const handleUpdateRoleForInvitation = async (
-    invitation: Invitation,
-    role: OrgRole
-  ) => {
-    messageApi.open({
-      type: "success",
-      content: "Role updated",
-    });
-    await updateOrgInvitation({ invitationId: invitation.id, role });
-    setDeletingInvitation(null);
+  const handleRoleChange = (invitation: Invitation, role: OrgRole) => {
+    updateOrgInvitation({ invitationId: invitation.id, role });
   };
 
   return (
     <>
-      {contextHolder}
-      <Modal
-        title="Are you sure?"
+      <GenericDestructiveConfirmationModal
         open={!!deletingInvitation}
-        okType="danger"
-        okText="Delete"
-        onOk={() => handleDeleteInvitation(deletingInvitation)}
+        error={updateOrgInvitationError}
+        title="Delete invitation"
+        description={`Are you sure you delete this invitation?`}
+        confirmText="Delete"
+        onConfirm={() => handleDeleteInvitation(deletingInvitation)}
         onCancel={() => setDeletingInvitation(null)}
-      >
-        <p>Are you sure you want to delete the invitation?</p>
-      </Modal>
-      <List
-        itemLayout="horizontal"
-        dataSource={invitations}
-        renderItem={(invitation) => (
-          <List.Item>
-            <Card style={{ width: "100%" }} size="small">
-              <Row align="middle" style={{ width: "100%" }}>
-                <Col flex="1">
-                  <Typography.Text>{invitation.email}</Typography.Text>
-                </Col>
-                <Space size="large">
-                  <Col>
-                    <Button
-                      onClick={() => handleCopyInvitation(invitation)}
-                      style={{ color: colors["neutral"]["400"] }}
-                      type="text"
-                      icon={<LinkOutlined />}
-                    >
-                      Copy Link
-                    </Button>
-                  </Col>
-                  <Col>
-                    <OrgRoleSelector
-                      onChange={(role) =>
-                        handleUpdateRoleForInvitation(invitation, role)
-                      }
-                      showArrow={isOrgAdmin}
-                      value={invitation.role}
-                    />
-                  </Col>
-                  <Col>
-                    <Button
-                      onClick={() => setDeletingInvitation(invitation)}
-                      type="text"
-                      danger
-                      icon={<DeleteOutlined />}
-                    />
-                  </Col>
-                </Space>
-              </Row>
-            </Card>
-          </List.Item>
-        )}
       />
+
+      {invitations
+        .sort((a, b) => a.email.localeCompare(b.email))
+        .map((invitation) => (
+          <Card
+            key={invitation.id}
+            className="mb-2 flex items-center gap-4 p-3 last:mb-0"
+          >
+            <div>
+              <div className="text-sm opacity-60">{invitation.email}</div>
+            </div>
+            <div className="flex flex-1 justify-end gap-2">
+              <CopyInvitationButton invitationId={invitation.id} />
+
+              <OrgRoleSelector
+                disabled={!isOrgAdmin}
+                value={invitation.role}
+                onChange={(newRole) => handleRoleChange(invitation, newRole)}
+                showArrow={isOrgAdmin}
+              />
+            </div>
+            <Button
+              onClick={() => setDeletingInvitation(invitation)}
+              size="icon"
+              variant="destructiveOutline"
+            >
+              <TrashIcon className="h-4 w-4" />
+            </Button>
+          </Card>
+        ))}
     </>
   );
 };

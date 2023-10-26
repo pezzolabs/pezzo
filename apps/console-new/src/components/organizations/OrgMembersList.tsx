@@ -1,17 +1,5 @@
-import {
-  Button,
-  Col,
-  List,
-  Row,
-  Space,
-  Typography,
-  Card,
-  message,
-  Modal,
-} from "antd";
 import { GetOrgQuery, OrgRole } from "~/@generated/graphql/graphql";
 import { Avatar } from "../common/Avatar";
-import { DeleteOutlined } from "@ant-design/icons";
 import { OrgRoleSelector } from "./OrgRoleSelector";
 import { useState } from "react";
 import {
@@ -20,6 +8,9 @@ import {
 } from "~/graphql/hooks/mutations";
 import { useAuthContext } from "~/lib/providers/AuthProvider";
 import { useCurrentOrgMembership } from "~/lib/hooks/useCurrentOrgMembership";
+import { Button, Card } from "@pezzo/ui";
+import { TrashIcon } from "lucide-react";
+import { GenericDestructiveConfirmationModal } from "../common/GenericDestructiveConfirmationModal";
 
 type Member = GetOrgQuery["organization"]["members"][0];
 
@@ -30,18 +21,20 @@ interface Props {
 export const OrgMembersList = ({ members }: Props) => {
   const { isOrgAdmin } = useCurrentOrgMembership();
   const { currentUser } = useAuthContext();
-  const { mutateAsync: deleteOrgMember } = useDeleteOrgMemberMutation();
+  const { mutate: deleteOrgMember, error: deleteOrgMemberError } =
+    useDeleteOrgMemberMutation();
   const { mutate: updateOrgMemberRole } = useUpdateOrgMemberRoleMutation();
-  const [messageApi, contextHolder] = message.useMessage();
   const [deletingMember, setDeletingMember] = useState<Member>(null);
 
   const handleDeleteMember = async (member: Member) => {
-    messageApi.open({
-      type: "success",
-      content: `${member.user.name} has been removed from the organization`,
-    });
-    await deleteOrgMember({ id: member.id });
-    setDeletingMember(null);
+    deleteOrgMember(
+      { id: member.id },
+      {
+        onSuccess: () => {
+          setDeletingMember(null);
+        },
+      }
+    );
   };
 
   const handleRoleChange = async (member: Member, role: OrgRole) => {
@@ -50,79 +43,46 @@ export const OrgMembersList = ({ members }: Props) => {
 
   return (
     <>
-      {contextHolder}
-      <Modal
-        title="Are you sure?"
+      <GenericDestructiveConfirmationModal
         open={!!deletingMember}
-        okType="danger"
-        okText="Delete"
-        onOk={() => handleDeleteMember(deletingMember)}
+        error={deleteOrgMemberError}
+        title="Delete member"
+        description={`Are you sure you want to remove ${deletingMember?.user.name} from your organization?`}
+        confirmText="Delete"
+        onConfirm={() => handleDeleteMember(deletingMember)}
         onCancel={() => setDeletingMember(null)}
-      >
-        <p>
-          Are you sure you want to remove{" "}
-          <Typography.Text style={{ fontWeight: 800 }}>
-            {deletingMember?.user.name}
-          </Typography.Text>{" "}
-          from your organization?
-        </p>
-      </Modal>
-      <List
-        itemLayout="horizontal"
-        dataSource={members}
-        renderItem={(member) => (
-          <List.Item>
-            <Card style={{ width: "100%" }} size="small">
-              <Row align="middle" style={{ width: "100%" }}>
-                <Col flex="1">
-                  <Row align="middle">
-                    <Space>
-                      <Col>
-                        <Avatar user={member.user} size="large" />
-                      </Col>
-                      <Col>
-                        <Typography.Text style={{ display: "block" }}>
-                          {member.user.name}
-                          {member.user.id === currentUser.id && " (You)"}
-                        </Typography.Text>
-                        <Typography.Text
-                          type="secondary"
-                          style={{ display: "block" }}
-                        >
-                          {member.user.email}
-                        </Typography.Text>
-                      </Col>
-                    </Space>
-                  </Row>
-                </Col>
-                <Space size="large">
-                  <Col>
-                    <OrgRoleSelector
-                      disabled={
-                        !isOrgAdmin || member.user.id === currentUser.id
-                      }
-                      value={member.role}
-                      onChange={(newRole) => handleRoleChange(member, newRole)}
-                      showArrow={isOrgAdmin}
-                    />
-                  </Col>
-                  <Col>
-                    {isOrgAdmin && (
-                      <Button
-                        disabled={member.user.id === currentUser.id}
-                        onClick={() => setDeletingMember(member)}
-                        type="text"
-                        danger
-                        icon={<DeleteOutlined />}
-                      />
-                    )}
-                  </Col>
-                </Space>
-              </Row>
-            </Card>
-          </List.Item>
-        )}
       />
+
+      {members.map((member) => (
+        <Card
+          key={member.id}
+          className="mb-2 flex items-center gap-4 p-3 last:mb-0"
+        >
+          <Avatar user={member.user} size="large" />
+          <div>
+            <div className="text-sm font-semibold">
+              {member.user.name} {member.user.id === currentUser.id && " (You)"}
+            </div>
+            <div className="text-xs opacity-60">{member.user.email}</div>
+          </div>
+          <div className="flex flex-1 justify-end">
+            <OrgRoleSelector
+              disabled={!isOrgAdmin || member.user.id === currentUser.id}
+              value={member.role}
+              onChange={(newRole) => handleRoleChange(member, newRole)}
+              showArrow={isOrgAdmin}
+            />
+          </div>
+          <Button
+            onClick={() => setDeletingMember(member)}
+            size="icon"
+            variant="destructiveOutline"
+            disabled={member.user.id === currentUser.id}
+          >
+            <TrashIcon className="h-4 w-4" />
+          </Button>
+        </Card>
+      ))}
     </>
   );
 };

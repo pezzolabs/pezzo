@@ -66,6 +66,7 @@ export const ProjectsPage = () => {
 
   const renderProject = (project: Project) => (
     <Card
+      key={project.id}
       className={clsx(baseCardClassName, "ring-primary hover:ring-2")}
       onClick={() => handleProjectClick(project.id)}
     >

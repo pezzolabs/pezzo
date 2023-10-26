@@ -52,7 +52,7 @@ export const MembersView = () => {
         <OrgMembersList members={members} />
         {isOrgAdmin && invitations.length > 0 && (
           <div className="mt-4">
-            <h2 className="text-2xl font-semibold">
+            <h2 className="mb-2 text-2xl font-semibold">
               Pending Invitations ({invitations.length})
             </h2>
 

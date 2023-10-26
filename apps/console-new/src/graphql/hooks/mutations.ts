@@ -25,6 +25,9 @@ import {
   UpdateProfileInput,
   UpdateProjectSettingsInput,
   DeleteProviderApiKeyInput,
+  DeleteOrgMemberMutation,
+  OrganizationMemberWhereUniqueInput,
+  DeleteInvitationMutation,
 } from "~/@generated/graphql/graphql";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { gqlClient } from "~/lib/graphql";
@@ -122,8 +125,12 @@ export const useUpdateProjectSettingsMutation = () => {
 export const useDeleteOrgInvitationMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (data: InvitationWhereUniqueInput) =>
+  return useMutation<
+    DeleteInvitationMutation,
+    GraphQLErrorResponse,
+    InvitationWhereUniqueInput
+  >({
+    mutationFn: (data) =>
       gqlClient.request(DELETE_INVITATION, { data }),
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -141,7 +148,7 @@ export const useAcceptOrgInvitationMutation = () => {
     GraphQLErrorResponse,
     InvitationWhereUniqueInput
   >({
-    mutationFn: (data: InvitationWhereUniqueInput) =>
+    mutationFn: (data) =>
       gqlClient.request(ACCEPT_ORG_INVITATION, { data }),
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -154,8 +161,8 @@ export const useAcceptOrgInvitationMutation = () => {
 export const useDeleteOrgMemberMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (data: InvitationWhereUniqueInput) =>
+  return useMutation<DeleteOrgMemberMutation, GraphQLErrorResponse, OrganizationMemberWhereUniqueInput>({
+    mutationFn: (data) =>
       gqlClient.request(DELETE_ORG_MEMBER, { data }),
     onSuccess: () => {
       queryClient.invalidateQueries({
