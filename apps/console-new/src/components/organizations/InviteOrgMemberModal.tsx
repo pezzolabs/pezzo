@@ -1,104 +1,114 @@
-import { Modal, Form, Input, Button, Alert, Typography } from "antd";
-import { css } from "@emotion/css";
 import { useCreateOrgInvitationMutation } from "~/graphql/hooks/mutations";
 import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
-import { useEffect, useState } from "react";
-import { GraphQLErrorResponse } from "~/graphql/types";
+import { useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Button,
+  Form,
+  FormItem,
+  FormControl,
+  Input,
+  FormField,
+  FormMessage,
+  FormLabel,
+  Alert,
+  AlertTitle,
+  AlertDescription,
+} from "@pezzo/ui";
+import { AlertCircle } from "lucide-react";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 interface Props {
   open: boolean;
   onClose: () => void;
 }
 
-type Inputs = {
-  email: string;
-};
+const formSchema = z.object({
+  inviteeEmail: z
+    .string()
+    .email("Must be a valid email")
+    .max(100, "Email can't be longer than 100 characters"),
+});
 
 export const InviteOrgMemberModal = ({ open, onClose }: Props) => {
   const { organization } = useCurrentOrganization({
     includeMembers: true,
     includeInvitations: false,
   });
-  const [form] = Form.useForm<Inputs>();
-  const { mutateAsync: createInvitation } = useCreateOrgInvitationMutation();
-  const [error, setError] = useState<string>(null);
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      inviteeEmail: "",
+    },
+  });
+  const { mutateAsync: createInvitation, error } =
+    useCreateOrgInvitationMutation();
 
   useEffect(() => {
-    form.resetFields();
-    setError(null);
-  }, [open, form, setError]);
+    form.reset();
+  }, [open, form]);
 
-  const handleFormFinish = async (values: Inputs) => {
-    const { email } = values;
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    const { inviteeEmail } = values;
 
-    createInvitation({ email, organizationId: organization.id })
-      .then(() => {
-        onClose();
-      })
-      .catch((error: GraphQLErrorResponse) => {
-        setError(error.response.errors[0].message);
-      });
+    createInvitation(
+      { email: inviteeEmail, organizationId: organization.id },
+      {
+        onSuccess: () => {
+          onClose();
+        },
+      }
+    );
   };
 
   return (
-    <Modal title="Invite Member" open={open} onCancel={onClose} footer={false}>
-      {error && (
-        <Alert style={{ marginBottom: 10 }} type="error" message={error} />
-      )}
-
-      <Typography.Paragraph>
-        Provide an email address to invite a new member to your organization.
-      </Typography.Paragraph>
-
-      <Form
-        form={form}
-        layout="vertical"
-        name="basic"
-        style={{ maxWidth: 600, marginTop: 20 }}
-        onFinish={handleFormFinish}
-        autoComplete="off"
+    <Dialog open={open}>
+      <DialogContent
+        onPointerDownOutside={onClose}
+        className="sm:max-w-[425px]"
       >
-        <Form.Item
-          label="Email"
-          name="email"
-          fieldId="email"
-          rules={[
-            {
-              required: true,
-              type: "email",
-              validateTrigger: "onSubmit",
-              message: "Must be a valid email",
-            },
-            () => ({
-              validator(_, value) {
-                if (
-                  organization.members?.find(
-                    (member) => member.user.email === value
-                  )
-                ) {
-                  return Promise.reject(
-                    new Error("User is already a member of this organization")
-                  );
-                }
-                return Promise.resolve();
-              },
-            }),
-          ]}
-        >
-          <Input placeholder="johndoe@yourdomain.com" />
-        </Form.Item>
-
-        <Form.Item
-          className={css`
-            display: flex;
-            justify-content: flex-end;
-          `}
-        >
-          <Button type="primary" htmlType="submit">
-            Send Invitation
-          </Button>
-        </Form.Item>
-      </Form>
-    </Modal>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <DialogHeader>
+              <DialogTitle className="mb-2">Invite a new member</DialogTitle>
+              <DialogDescription>
+                {error && (
+                  <Alert variant="destructive" className="mb-4">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Oops!</AlertTitle>
+                    <AlertDescription>
+                      {error.response.errors[0].message}
+                    </AlertDescription>
+                  </Alert>
+                )}
+                <FormField
+                  control={form.control}
+                  name="inviteeEmail"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input autoComplete="off" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="mt-4">
+              <Button type="submit">Send Invitation</Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 };
