@@ -25,8 +25,8 @@ ${varStrings}
 export const TypeScriptOpenAIIntegrationTutorial = () => {
   const { variables } = usePromptVersionEditorContext();
   const { prompt } = useCurrentPrompt();
-  const { data: pezzoApiKeysData } = usePezzoApiKeys();
-  const API_KEY = pezzoApiKeysData?.apiKeys[0].id;
+  const { pezzoApiKeys } = usePezzoApiKeys();
+  const API_KEY = pezzoApiKeys && pezzoApiKeys[0].id;
 
   const { project } = useCurrentProject();
   const codeSetupClients = `import { Pezzo, PezzoOpenAI } from "@pezzo/client";

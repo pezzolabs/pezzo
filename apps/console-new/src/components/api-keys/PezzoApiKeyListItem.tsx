@@ -1,13 +1,8 @@
 import { useCopyToClipboard } from "usehooks-ts";
-import styled from "@emotion/styled";
-import { Button, Card, Col, Row, Typography } from "antd";
-import { CheckOutlined, CopyOutlined } from "@ant-design/icons";
 import { trackEvent } from "~/lib/utils/analytics";
-
-const APIKeyContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
+import { Card } from "antd";
+import { Button } from "@pezzo/ui";
+import { CopyIcon } from "lucide-react";
 
 interface Props {
   value: string;
@@ -23,33 +18,12 @@ export const PezzoApiKeyListItem = ({ value }: Props) => {
 
   return (
     <Card size="small" key={value}>
-      <APIKeyContainer>
-        <Row align="middle">
-          <Col
-            flex={"90%"}
-            style={{
-              fontFamily: "Roboto Mono",
-              textOverflow: "ellipsis",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-            }}
-          >
-            <Typography.Text style={{ fontFamily: "Roboto Mono" }}>
-              {value}
-            </Typography.Text>
-          </Col>
-          <Col
-            flex="10%"
-            style={{ display: "flex", justifyContent: "flex-end" }}
-          >
-            {!copied ? (
-              <Button onClick={onCopy} icon={<CopyOutlined height={18} />} />
-            ) : (
-              <Button disabled icon={<CheckOutlined height={18} />} />
-            )}
-          </Col>
-        </Row>
-      </APIKeyContainer>
+      <div className="flex items-center justify-between">
+        <div className="font-mono">{value}</div>
+        <Button variant="ghost" onClick={onCopy}>
+          {copied ? "Copied!" : <CopyIcon className="h-4 w-4" />}
+        </Button>
+      </div>
     </Card>
   );
 };

@@ -46,13 +46,18 @@ export const useProviderApiKeys = () => {
 export const usePezzoApiKeys = () => {
   const { organization } = useCurrentOrganization();
 
-  return useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["pezzoApiKeys", organization?.id],
     queryFn: () =>
       gqlClient.request(GET_ALL_API_KEYS, {
         data: { organizationId: organization?.id },
       }),
   });
+
+  return {
+    pezzoApiKeys: data?.apiKeys,
+    isLoading
+  };
 };
 
 export const useGetCurrentUser = () =>
