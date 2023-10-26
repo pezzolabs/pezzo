@@ -62,7 +62,7 @@ export const ProjectsPage = () => {
     setProjectToDelete(project);
   };
 
-  const baseCardClassName = "col-span-4 cursor-pointer p-6";
+  const baseCardClassName = "col-span-6 cursor-pointer p-6";
 
   const renderProject = (project: Project) => (
     <Card
