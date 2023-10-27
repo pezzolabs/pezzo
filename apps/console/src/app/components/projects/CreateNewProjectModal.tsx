@@ -28,20 +28,30 @@ export const CreateNewProjectModal = ({ open, onClose, onCreated }: Props) => {
   const { token } = theme.useToken();
 
   const handleCreateProject = useCallback(async () => {
-    createProject(
-      {
-        name: form.getFieldValue("projectName"),
-        organizationId: organization.id,
-      },
-      {
-        onSuccess: (data) => {
-          onCreated();
-          navigate(`/projects/${data.createProject.id}`);
+    const projectName = form.getFieldValue("projectName").trim();
+    if (!projectName) {
+      form.setFields([
+        {
+          name: "projectName",
+          errors: ["Please set a valid name for your project"],
         },
-      }
-    );
+      ]);
+    } else {
+      createProject(
+        {
+          name: projectName,
+          organizationId: organization.id,
+        },
+        {
+          onSuccess: (data) => {
+            onCreated();
+            navigate(`/projects/${data.createProject.id}`);
+          },
+        }
+      );
 
-    trackEvent("project_form_submitted");
+      trackEvent("project_form_submitted");
+    }
   }, [createProject, onCreated, form, organization.id, navigate]);
 
   const onCancel = () => {

@@ -13,21 +13,32 @@ export const SettingsView = () => {
   const { organization } = useCurrentOrganization();
   const [form] = Form.useForm<Inputs>();
   const [isTouched, setIsTouched] = useState(false);
+  const [isNameEmpty, setIsNameEmpty] = useState(true);
   const { mutate: updateSettings, isLoading } = useUpdateOrgSettingsMutation();
 
   const handleFormFinish = async (values: Inputs) => {
     if (!organization) return;
+    values.name = values.name.trim();
 
-    updateSettings(
-      { organizationId: organization?.id, name: values.name },
-      {
-        onSuccess: () => {
-          setIsTouched(false);
+    if (values.name === organization.name) {
+      form.setFields([
+        {
+          name: "name",
+          errors: ["This is already your organization name."],
         },
-      }
-    );
+      ]);
+    } else {
+      updateSettings(
+        { organizationId: organization?.id, name: values.name },
+        {
+          onSuccess: () => {
+            setIsTouched(false);
+          },
+        }
+      );
 
-    trackEvent("organization_settings_form_submitted");
+      trackEvent("organization_settings_form_submitted");
+    }
   };
 
   const initialValues = useMemo(
@@ -47,7 +58,12 @@ export const SettingsView = () => {
       name="basic"
       onFinish={handleFormFinish}
       style={{ maxWidth: 600 }}
-      onChange={() => setIsTouched(true)}
+      onValuesChange={(changedValues) => {
+        if ("name" in changedValues) {
+          setIsTouched(true);
+          setIsNameEmpty(changedValues.name.trim() === "");
+        }
+      }}
     >
       <Form.Item
         label="Organization Name"
@@ -68,7 +84,7 @@ export const SettingsView = () => {
       <Form.Item>
         <Button
           loading={isLoading}
-          disabled={!isTouched}
+          disabled={!isTouched || isNameEmpty}
           icon={<SaveOutlined />}
           type="primary"
           htmlType="submit"

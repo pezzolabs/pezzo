@@ -25,17 +25,29 @@ export const RenameProjectModal = ({
   }, [projectToRename, form]);
 
   const handleRename = () => {
-    updateProjectSettings(
-      { projectId: projectToRename.id, name: form.getFieldValue("name") },
-      {
-        onSuccess: () => {
-          onRename();
-        },
-      }
-    );
+    form.validateFields().then((values) => {
+      values.name = values.name.trim();
+      if (!values.name) {
+        form.setFields([
+          {
+            name: "name",
+            errors: ["Name cannot be empty or contain only spaces"],
+          },
+        ]);
+      } else {
+        updateProjectSettings(
+          { projectId: projectToRename.id, name: values.name },
+          {
+            onSuccess: () => {
+              onRename();
+            },
+          }
+        );
 
-    trackEvent("project_rename_submitted", {
-      name: projectToRename?.name,
+        trackEvent("project_rename_submitted", {
+          name: projectToRename?.name,
+        });
+      }
     });
   };
 

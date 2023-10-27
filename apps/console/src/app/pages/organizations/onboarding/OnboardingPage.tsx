@@ -53,29 +53,62 @@ export const OnboardingPage = () => {
 
   const handleCreateProject = useCallback(
     async (values: FormValues) => {
-      const actions: [
-        Promise<CreateProjectMutation>,
-        Promise<UpdateProfileMutation | null>
-      ] = [
-        createProject({
-          name: values.projectName,
-          organizationId: organization?.id,
-        }),
-        null,
-      ];
+      const name = values.name ? values.name.trim() : "";
+      const projectName = values.projectName ? values.projectName.trim() : "";
 
-      if (!hasName) {
-        actions.push(
-          updateCurrentUser({
-            name: values.name,
-          })
-        );
+      const nameIsValid = name !== "";
+      const projectNameIsValid = projectName !== "";
+
+      if (!nameIsValid) {
+        form.setFields([
+          {
+            name: "name",
+            errors: ["Name must not be empty or contain only spaces"],
+          },
+        ]);
       }
 
-      await Promise.all(actions.filter(Boolean));
-      return navigate("/projects");
+      if (!projectNameIsValid) {
+        form.setFields([
+          {
+            name: "projectName",
+            errors: ["Project name must not be empty or contain only spaces"],
+          },
+        ]);
+      }
+
+      if (nameIsValid && projectNameIsValid) {
+        const actions: [
+          Promise<CreateProjectMutation>,
+          Promise<UpdateProfileMutation | null>
+        ] = [
+          createProject({
+            name: projectName,
+            organizationId: organization?.id,
+          }),
+          null,
+        ];
+
+        if (!hasName) {
+          actions.push(
+            updateCurrentUser({
+              name,
+            })
+          );
+        }
+
+        await Promise.all(actions.filter(Boolean));
+        return navigate("/projects");
+      }
     },
-    [updateCurrentUser, createProject, organization?.id, hasName, navigate]
+    [
+      updateCurrentUser,
+      createProject,
+      organization?.id,
+      hasName,
+      navigate,
+      form,
+    ]
   );
 
   useEffect(() => {
