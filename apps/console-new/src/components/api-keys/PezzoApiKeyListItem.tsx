@@ -1,7 +1,6 @@
 import { useCopyToClipboard } from "usehooks-ts";
 import { trackEvent } from "~/lib/utils/analytics";
-import { Card } from "antd";
-import { Button } from "@pezzo/ui";
+import { Button, Card } from "@pezzo/ui";
 import { CopyIcon } from "lucide-react";
 
 interface Props {
@@ -17,9 +16,9 @@ export const PezzoApiKeyListItem = ({ value }: Props) => {
   };
 
   return (
-    <Card size="small" key={value}>
+    <Card className="px-4 py-2" key={value}>
       <div className="flex items-center justify-between">
-        <div className="font-mono">{value}</div>
+        <div className="text-sm font-mono">{value}</div>
         <Button variant="ghost" onClick={onCopy}>
           {copied ? "Copied!" : <CopyIcon className="h-4 w-4" />}
         </Button>

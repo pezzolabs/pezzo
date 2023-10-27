@@ -1,21 +1,3 @@
-import {
-  Avatar,
-  Card,
-  Row,
-  Col,
-  Typography,
-  Button,
-  Input,
-  message,
-  Form,
-  Modal,
-} from "antd";
-import {
-  CloseOutlined,
-  EditOutlined,
-  SaveOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { UPDATE_PROVIDER_API_KEY } from "~/graphql/definitions/mutations/api-keys";
@@ -26,6 +8,21 @@ import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
 import { trackEvent } from "~/lib/utils/analytics";
 import { providersList } from "./providers-list";
 import { useDeleteProviderApiKeyMutation } from "~/graphql/hooks/mutations";
+import {
+  Card,
+  Button,
+  Form,
+  FormField,
+  FormItem,
+  FormControl,
+  Input,
+} from "@pezzo/ui";
+import { Avatar } from "antd";
+import { PencilIcon, SaveIcon, TrashIcon, XIcon } from "lucide-react";
+import { GenericDestructiveConfirmationModal } from "../common/GenericDestructiveConfirmationModal";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 interface Props {
   provider: string;
@@ -35,6 +32,10 @@ interface Props {
   canCancelEdit?: boolean;
 }
 
+const formSchema = z.strictObject({
+  apiKey: z.string().min(1, "API Key must be at least 1 character long"),
+});
+
 export const ProviderApiKeyListItem = ({
   provider,
   value,
@@ -42,11 +43,16 @@ export const ProviderApiKeyListItem = ({
   initialIsEditing = false,
   canCancelEdit = true,
 }: Props) => {
-  const [messageApi, contextHolder] = message.useMessage();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      apiKey: value,
+    },
+  });
+
   const { currentOrgId } = useCurrentOrganization();
   const { mutateAsync: deleteProviderApiKey } =
     useDeleteProviderApiKeyMutation();
-  const [form] = Form.useForm<{ apiKey: string }>();
   const [deletingProviderApiKey, setDeletingProviderApiKey] =
     useState<string>(null);
   const updateKeyMutation = useMutation({
@@ -61,15 +67,12 @@ export const ProviderApiKeyListItem = ({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["providerApiKeys"] });
       onSave && onSave();
+      setIsEditing(false);
     },
   });
 
   const handleDeleteProvider = async (provider: string) => {
     await deleteProviderApiKey({ provider, organizationId: currentOrgId });
-    messageApi.open({
-      type: "success",
-      content: "Provider API key has been deleted successfully",
-    });
     trackEvent("provider_api_key_deleted", { provider });
     setDeletingProviderApiKey(null);
   };
@@ -77,20 +80,23 @@ export const ProviderApiKeyListItem = ({
   const [isEditing, setIsEditing] = useState(initialIsEditing);
 
   useEffect(() => {
-    form.resetFields();
+    form.reset();
   }, [isEditing, form]);
 
-  const handleSave = async () => {
-    await updateKeyMutation.mutateAsync({
-      provider,
-      value: form.getFieldValue("apiKey"),
-      organizationId: currentOrgId,
-    });
-
-    messageApi.success("API key saved successfully");
-    trackEvent("provider_api_key_set", { provider });
-    form.resetFields();
-    setIsEditing(false);
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    updateKeyMutation.mutate(
+      {
+        provider,
+        value: values.apiKey,
+        organizationId: currentOrgId,
+      },
+      {
+        onSuccess: () => {
+          trackEvent("provider_api_key_set", { provider });
+          setIsEditing(false);
+        },
+      }
+    );
   };
 
   const iconBase64 = providersList.find(
@@ -99,100 +105,79 @@ export const ProviderApiKeyListItem = ({
 
   return (
     <>
-      <Modal
-        title="Are you sure?"
+      <GenericDestructiveConfirmationModal
         open={!!deletingProviderApiKey}
-        okType="danger"
-        okText="Delete"
-        onOk={() => handleDeleteProvider(deletingProviderApiKey)}
+        title="Delete Provider API Key"
+        description={`Are you sure you want to delete the API key for ${deletingProviderApiKey}?`}
+        onConfirm={() => handleDeleteProvider(deletingProviderApiKey)}
         onCancel={() => setDeletingProviderApiKey(null)}
-      >
-        <p>Are you sure you want to delete this API key?</p>
-      </Modal>
-      <Card size="small" key={provider}>
-        <Form
-          form={form}
-          layout="vertical"
-          name="update-api-key"
-          onFinish={handleSave}
-          autoComplete="off"
-        >
-          {contextHolder}
-          <Row gutter={[12, 12]} align="middle" style={{ width: "100%" }}>
-            <Col
-              style={{ display: "flex", alignItems: "center", marginRight: 20 }}
-            >
-              <Avatar size="large" shape="square" src={iconBase64} />
-              <Typography.Text style={{ fontSize: 18, marginLeft: 10 }}>
-                {provider}
-              </Typography.Text>
-            </Col>
-            <Col
-              flex="auto"
-              style={{ display: "flex", justifyContent: "flex-end" }}
-            >
-              {isEditing ? (
-                <Form.Item
-                  name="apiKey"
-                  style={{ width: "100%" }}
-                  rules={[
-                    {
-                      required: true,
-                      message: "API key is required",
-                    },
-                  ]}
-                >
-                  <Input
-                    placeholder="Paste your API key"
-                    autoComplete="off"
-                    style={{ marginTop: 22 }}
-                  />
-                </Form.Item>
-              ) : (
-                <Typography.Text style={{ marginLeft: 10, opacity: 0.5 }}>
-                  {value || "No API key provided"}
-                </Typography.Text>
-              )}
-            </Col>
-            <Col style={{ display: "flex", justifyContent: "flex-end" }}>
-              {isEditing ? (
-                <>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    loading={updateKeyMutation.isLoading}
-                    icon={<SaveOutlined height={18} />}
-                  />
+      />
 
-                  {canCancelEdit && (
-                    <Button
-                      onClick={() => setIsEditing(false)}
-                      loading={updateKeyMutation.isLoading}
-                      icon={<CloseOutlined />}
-                      style={{ marginLeft: 10 }}
-                    />
-                  )}
-                </>
-              ) : (
-                <Form.Item noStyle>
-                  <Button
-                    onClick={() => setIsEditing(true)}
-                    icon={<EditOutlined height={18} />}
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <Card className="p-2" key={value}>
+            <div className="flex items-center gap-2">
+              <Avatar size="large" shape="square" src={iconBase64} />
+              <div className="font-medium">{provider}</div>
+              {isEditing ? (
+                <div className="flex flex-1 justify-end opacity-50">
+                  <FormField
+                    control={form.control}
+                    name="apiKey"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormControl>
+                          <Input
+                            placeholder="Your API key"
+                            autoComplete="off"
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
                   />
-                  {value && (
-                    <Button
-                      onClick={() => setDeletingProviderApiKey(provider)}
-                      danger
-                      icon={<DeleteOutlined height={18} />}
-                      style={{ marginLeft: 10 }}
-                    />
-                  )}
-                </Form.Item>
+                </div>
+              ) : (
+                <div className="flex flex-1 justify-end text-sm opacity-50">
+                  {value || "No API key provided"}
+                </div>
               )}
-            </Col>
-          </Row>
-        </Form>
-      </Card>
+              {!isEditing && (
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => setIsEditing(true)}
+                >
+                  <PencilIcon className="h-4 w-4" />
+                </Button>
+              )}
+              {isEditing && (
+                <Button size="icon" type="submit">
+                  <SaveIcon className="h-4 w-4" />
+                </Button>
+              )}
+              {isEditing && canCancelEdit && (
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => setIsEditing(false)}
+                >
+                  <XIcon className="h-4 w-4" />
+                </Button>
+              )}
+              {!isEditing && value && (
+                <Button
+                  size="icon"
+                  variant="destructiveOutline"
+                  onClick={() => setDeletingProviderApiKey(provider)}
+                >
+                  <TrashIcon className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+          </Card>
+        </form>
+      </Form>
     </>
   );
 };

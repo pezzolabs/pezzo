@@ -1,4 +1,3 @@
-import { Space } from "antd";
 import { ProviderApiKeyListItem } from "./ProviderApiKeyListItem";
 import { useProviderApiKeys } from "~/graphql/hooks/queries";
 import { providersList } from "./providers-list";
@@ -26,9 +25,9 @@ export const ProviderApiKeysList = () => {
 
   return (
     providerApiKeys && (
-      <Space direction="vertical" style={{ width: 600 }}>
-        {providersList.map((item, index) => renderProviderApiKey(item))}
-      </Space>
+      <div className="flex max-w-[500px] flex-col gap-4">
+        {providersList.map((item) => renderProviderApiKey(item))}
+      </div>
     )
   );
 };
