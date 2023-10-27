@@ -16,7 +16,7 @@ export const PezzoApiKeyListItem = ({ value }: Props) => {
   };
 
   return (
-    <Card className="px-4 py-2" key={value}>
+    <Card className="px-4 py-2 mb-4" key={value}>
       <div className="flex items-center justify-between">
         <div className="text-sm font-mono">{value}</div>
         <Button variant="ghost" onClick={onCopy}>

@@ -115,7 +115,7 @@ export const ProviderApiKeyListItem = ({
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <Card className="p-2" key={value}>
+          <Card className="p-2 mb-4" key={value}>
             <div className="flex items-center gap-2">
               <Avatar size="large" shape="square" src={iconBase64} />
               <div className="font-medium">{provider}</div>
