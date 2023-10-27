@@ -1,4 +1,4 @@
-import { Tabs, Typography } from "antd";
+import { Tabs } from "antd";
 import styled from "@emotion/styled";
 import {
   AppstoreOutlined,
@@ -92,9 +92,7 @@ export const OrgPage = () => {
 
   return organization ? (
     <>
-      <Typography.Title level={1} style={{ marginTop: 0 }}>
-        {organization.name}
-      </Typography.Title>
+      <h1 className="mb-4 text-4xl font-semibold">{organization.name}</h1>
 
       <Tabs items={availableTabItems} onChange={onTabChange} />
 

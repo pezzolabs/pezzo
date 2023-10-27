@@ -1,28 +1,55 @@
-import { Button, Form, Input } from "antd";
 import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
-import { SaveOutlined } from "@ant-design/icons";
 import { useMemo, useState } from "react";
 import { useUpdateOrgSettingsMutation } from "~/graphql/hooks/mutations";
 import { trackEvent } from "~/lib/utils/analytics";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { AlertCircle, SaveIcon } from "lucide-react";
+import {
+  Form,
+  Alert,
+  AlertTitle,
+  AlertDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  Input,
+  FormMessage,
+  Button,
+} from "@pezzo/ui";
 
-type Inputs = {
-  name: string;
-};
+const formSchema = z.strictObject({
+  orgName: z
+    .string()
+    .min(1, "Name must be at least 1 character long")
+    .max(64, "Name can't be longer than 64 characters"),
+});
 
 export const SettingsView = () => {
   const { organization } = useCurrentOrganization();
-  const [form] = Form.useForm<Inputs>();
-  const [isTouched, setIsTouched] = useState(false);
-  const { mutate: updateSettings, isLoading } = useUpdateOrgSettingsMutation();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      orgName: organization?.name,
+    },
+  });
 
-  const handleFormFinish = async (values: Inputs) => {
+  const {
+    mutate: updateSettings,
+    error,
+    isLoading,
+  } = useUpdateOrgSettingsMutation();
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (!organization) return;
 
     updateSettings(
-      { organizationId: organization?.id, name: values.name },
+      { organizationId: organization?.id, name: values.orgName },
       {
         onSuccess: () => {
-          setIsTouched(false);
+          form.reset({ orgName: values.orgName });
         },
       }
     );
@@ -30,52 +57,49 @@ export const SettingsView = () => {
     trackEvent("organization_settings_form_submitted");
   };
 
-  const initialValues = useMemo(
-    () => ({
-      name: organization?.name,
-    }),
-    [organization]
-  );
-
   if (!organization) return null;
 
   return (
-    <Form
-      form={form}
-      initialValues={initialValues}
-      layout="vertical"
-      name="basic"
-      onFinish={handleFormFinish}
-      style={{ maxWidth: 600 }}
-      onChange={() => setIsTouched(true)}
-    >
-      <Form.Item
-        label="Organization Name"
-        name="name"
-        fieldId="name"
-        shouldUpdate={true}
-        rules={[
-          {
-            required: false,
-            validateTrigger: "onSubmit",
-            message: "Must be a valid name",
-          },
-        ]}
-      >
-        <Input placeholder="My Organization" />
-      </Form.Item>
+    <div className="max-w-[640px]">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          {error && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Oops!</AlertTitle>
+              <AlertDescription>
+                {error.response.errors[0].message}
+              </AlertDescription>
+            </Alert>
+          )}
 
-      <Form.Item>
-        <Button
-          loading={isLoading}
-          disabled={!isTouched}
-          icon={<SaveOutlined />}
-          type="primary"
-          htmlType="submit"
-        >
-          Save Changes
-        </Button>
-      </Form.Item>
-    </Form>
+          <FormField
+            control={form.control}
+            name="orgName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Organization name</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Your organization name"
+                    autoComplete="off"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button
+            loading={isLoading}
+            disabled={!form.formState.isDirty}
+            type="submit"
+          >
+            <SaveIcon className="mr-2 h-4 w-4" /> Save
+          </Button>
+        </form>
+      </Form>
+    </div>
   );
 };
