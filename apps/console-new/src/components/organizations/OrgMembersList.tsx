@@ -58,7 +58,7 @@ export const OrgMembersList = ({ members }: Props) => {
           key={member.id}
           className="mb-2 flex items-center gap-4 p-3 last:mb-0"
         >
-          <Avatar user={member.user} size="large" />
+          <Avatar user={member.user} className="h-8 w-8" />
           <div>
             <div className="text-sm font-semibold">
               {member.user.name} {member.user.id === currentUser.id && " (You)"}

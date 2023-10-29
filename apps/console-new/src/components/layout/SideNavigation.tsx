@@ -1,127 +1,105 @@
 import {
-  ChatBubbleBottomCenterIcon,
-  HomeIcon,
-  AcademicCapIcon,
-  CubeIcon,
-  ServerIcon,
-} from "@heroicons/react/24/outline";
-import { Menu } from "antd";
-import { useMemo, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import styled from "@emotion/styled";
-import Icon from "@ant-design/icons/lib/components/Icon";
+  BarChart2,
+  BoxIcon,
+  HardDriveIcon,
+  RadioIcon,
+  SettingsIcon,
+} from "lucide-react";
+import { cn } from "@pezzo/ui/utils";
+import LogoSquare from "~/assets/logo-square.svg";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
-
-const topMenuItems = [
-  {
-    key: "dashboard",
-    label: "Dashboard",
-    icon: (
-      <Icon
-        component={() => (
-          <HomeIcon width={20} style={{ marginTop: 10, marginLeft: -2 }} />
-        )}
-      />
-    ),
-  },
-  {
-    key: "requests",
-    label: "Requests",
-    icon: (
-      <Icon
-        component={() => (
-          <ChatBubbleBottomCenterIcon
-            width={20}
-            style={{ marginTop: 10, marginLeft: -2 }}
-          />
-        )}
-      />
-    ),
-  },
-  {
-    key: "prompts",
-    label: "Prompts",
-    icon: (
-      <Icon
-        component={() => (
-          <CubeIcon width={20} style={{ marginTop: 10, marginLeft: -2 }} />
-        )}
-      />
-    ),
-  },
-  {
-    key: "environments",
-    label: "Environments",
-    icon: (
-      <Icon
-        component={() => (
-          <ServerIcon width={20} style={{ marginTop: 10, marginLeft: -2 }} />
-        )}
-      />
-    ),
-  },
-];
-
-const BaseMenu = styled(Menu)`
-  border-inline-end: none !important;
-  padding: 12px;
-
-  border-right: 1px solid red;
-`;
-const SidebarContainer = styled.div`
-  height: 100%;
-
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-`;
-
-const TopMenu = styled(BaseMenu)`
-  flex: 100%;
-`;
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { useAuthContext } from "~/lib/providers/AuthProvider";
+import { SettingsMenu } from "./SettingsMenu";
+import { useGetProjects } from "~/graphql/hooks/queries";
 
 export const SideNavigation = () => {
-  const { project } = useCurrentProject();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [isCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
+  const { projectId, project } = useCurrentProject();
+  const { currentUser } = useAuthContext();
+  const { projects } = useGetProjects();
 
-  const handleTopMenuClick = (item) => {
-    navigate(`/projects/${project.id}/${item.key}`);
+  const isActive = (href: string) => {
+    return window.location.pathname === href;
   };
 
-  const paths = location.pathname.replace("/", "")?.split("/");
-
-  const selectedKeys = useMemo(
-    () =>
-      paths?.map((path) => {
-        const item = topMenuItems.find((item) => item.key === path);
-        return item?.key;
-      }),
-    [paths]
-  ).filter(Boolean);
+  const projectNavigation = [
+    { name: "Dashboard", href: `/projects/${projectId}`, icon: BarChart2 },
+    {
+      name: "Requests",
+      href: `/projects/${projectId}/requests`,
+      icon: RadioIcon,
+    },
+    { name: "Prompts", href: `/projects/${projectId}/prompts`, icon: BoxIcon },
+    {
+      name: "Environments",
+      href: `/projects/${projectId}/environments`,
+      icon: HardDriveIcon,
+    },
+  ];
 
   return (
-    <SidebarContainer>
-      <TopMenu
-        mode="inline"
-        onClick={handleTopMenuClick}
-        defaultSelectedKeys={["dashboard"]}
-        selectedKeys={selectedKeys.length ? selectedKeys : ["dashboard"]}
-        items={topMenuItems}
-        inlineCollapsed={isCollapsed}
-      />
-      {/* Bottom Menu */}
-      <BaseMenu inlineCollapsed={isCollapsed} mode="inline">
-        <Menu.Item
-          key="docs"
-          icon={<Icon component={() => <AcademicCapIcon width={15} />} />}
-        >
-          <a href="https://docs.pezzo.ai/" target="_blank" rel="noreferrer">
-            <span>Docs</span>
-          </a>
-        </Menu.Item>
-      </BaseMenu>
-    </SidebarContainer>
+    <div
+      // onMouseOver={() => setCollapsed(false)}
+      // onMouseLeave={() => setCollapsed(true)}
+      className={cn(
+        "flex grow flex-col gap-y-4 overflow-y-auto overflow-x-hidden bg-slate-950 px-3 pt-4"
+      )}
+    >
+      <div className={cn("mx-auto h-10 w-10")}>
+        <img src={LogoSquare} alt="Pezzo" />
+      </div>
+      <nav className="flex flex-1 flex-col">
+        <ul role="list" className="flex flex-1 flex-col gap-y-7">
+          <li className="">
+            <ul role="list" className={cn("space-y-1")}>
+              <li className="p-2 text-xs font-semibold uppercase text-gray-400">
+                Project
+              </li>
+
+              {projectId &&
+                projectNavigation.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      to={item.href}
+                      className={cn(
+                        isActive(item.href)
+                          ? "bg-gray-800 text-emerald-500"
+                          : "text-gray-400 hover:bg-gray-800 hover:text-white",
+                        "flex items-center rounded-md p-2 text-sm font-medium leading-3 transition-all"
+                      )}
+                    >
+                      <item.icon
+                        className="h-5 w-5 shrink-0"
+                        aria-hidden="true"
+                      />
+                      <motion.div
+                        initial={{ width: 0, opacity: 0, marginLeft: 0 }}
+                        animate={{
+                          width: collapsed ? 0 : 140,
+                          opacity: collapsed ? 0 : 1,
+                          marginLeft: collapsed ? 0 : 10,
+                        }}
+                        exit={{ width: 0, opacity: 0, marginLeft: 0 }}
+                      >
+                        {item.name}
+                      </motion.div>
+                    </Link>
+                  </li>
+                ))}
+
+            </ul>
+          </li>
+          <ul>
+            <li className="p-2 text-xs font-semibold uppercase text-gray-400">
+              All Projects
+            </li>
+          </ul>
+          {currentUser && <SettingsMenu collapsed={collapsed} />}
+        </ul>
+      </nav>
+    </div>
   );
 };

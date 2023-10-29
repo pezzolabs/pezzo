@@ -27,7 +27,7 @@ export const PromptVersionsView = () => {
       key: "author",
       render: (user) => (
         <>
-          <Avatar user={user} size="small" />
+          {/* <Avatar user={user} size="small" /> */}
           <Typography.Text style={{ marginLeft: 8 }}>
             {user.name}
           </Typography.Text>

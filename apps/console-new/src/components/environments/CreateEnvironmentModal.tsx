@@ -19,7 +19,6 @@ import {
   AlertDescription,
 } from "@pezzo/ui";
 import { gqlClient, queryClient } from "~/lib/graphql";
-import { css } from "@emotion/css";
 import { CREATE_ENVIRONMENT } from "~/graphql/definitions/mutations/environments";
 import { CreateEnvironmentMutation } from "~/@generated/graphql/graphql";
 import { GraphQLErrorResponse } from "~/graphql/types";

@@ -29,6 +29,9 @@ import { LayoutWrapper } from "./components/layout/LayoutWrapper";
 import { AcceptInvitationPage } from "./pages/invitations/AcceptInvitationPage";
 import { CurrentPromptProvider } from "./lib/providers/CurrentPromptContext";
 import { RequiredProviderApiKeyModalProvider } from "./lib/providers/RequiredProviderApiKeyModalProvider";
+import { OrgMembersPage } from "./pages/organizations/OrgMembersPage";
+import { OrgSettingsPage } from "./pages/organizations/OrgSettingsPage";
+import { OrgApiKeysPage } from "./pages/organizations/OrgApiKeysPage";
 
 initSuperTokens();
 
@@ -47,6 +50,9 @@ export const paths = {
   "/onboarding": "/onboarding",
   "/info": "/info",
   "/orgs/:orgId": "/orgs/:orgId",
+  "/orgs/:orgId/members": "/orgs/:orgId/members",
+  "/orgs/:orgId/settings": "/orgs/:orgId/settings",
+  "/orgs/:orgId/api-keys": "/orgs/:orgId/api-keys",
   "/projects/:projectId": "/projects/:projectId",
   "/projects/:projectId/dashboard": "/projects/:projectId/dashboard",
   "/projects/:projectId/requests": "/projects/:projectId/reqeusts",
@@ -121,6 +127,33 @@ export function App() {
                 element={
                   <LayoutWrapper withSideNav={false}>
                     <OrgPage />
+                  </LayoutWrapper>
+                }
+              ></Route>
+
+              <Route
+                path={paths["/orgs/:orgId/members"]}
+                element={
+                  <LayoutWrapper withSideNav={false}>
+                    <OrgMembersPage />
+                  </LayoutWrapper>
+                }
+              ></Route>
+
+              <Route
+                path={paths["/orgs/:orgId/api-keys"]}
+                element={
+                  <LayoutWrapper withSideNav={false}>
+                    <OrgApiKeysPage />
+                  </LayoutWrapper>
+                }
+              ></Route>
+
+              <Route
+                path={paths["/orgs/:orgId/settings"]}
+                element={
+                  <LayoutWrapper withSideNav={false}>
+                    <OrgSettingsPage />
                   </LayoutWrapper>
                 }
               ></Route>

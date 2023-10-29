@@ -3,16 +3,11 @@ import styled from "@emotion/styled";
 import {
   AppstoreOutlined,
   KeyOutlined,
-  SettingOutlined,
-  TeamOutlined,
 } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
 import { ProjectsPage } from "../projects/ProjectsPage";
-import { MembersView } from "./MembersView";
-import { SettingsView } from "./SettingsView";
-import { ApiKeysView } from "./ApiKeysView";
 import { useCurrentOrgMembership } from "~/lib/hooks/useCurrentOrgMembership";
 import { trackEvent } from "~/lib/utils/analytics";
 import { usePageTitle } from "~/lib/hooks/usePageTitle";
@@ -36,30 +31,6 @@ const tabsItems = [
     label: (
       <TabLabel>
         <AppstoreOutlined /> Projects
-      </TabLabel>
-    ),
-  },
-  {
-    key: TabItemKey.Members,
-    label: (
-      <TabLabel>
-        <TeamOutlined /> Members
-      </TabLabel>
-    ),
-  },
-  {
-    key: TabItemKey.ApiKeys,
-    label: (
-      <TabLabel>
-        <KeyOutlined /> API Keys
-      </TabLabel>
-    ),
-  },
-  {
-    key: TabItemKey.Settings,
-    label: (
-      <TabLabel>
-        <SettingOutlined /> Settings
       </TabLabel>
     ),
   },
@@ -97,9 +68,6 @@ export const OrgPage = () => {
       <Tabs items={availableTabItems} onChange={onTabChange} />
 
       {activeView === TabItemKey.Projects && <ProjectsPage />}
-      {activeView === TabItemKey.Members && <MembersView />}
-      {activeView === TabItemKey.ApiKeys && <ApiKeysView />}
-      {activeView === TabItemKey.Settings && isOrgAdmin && <SettingsView />}
     </>
   ) : null;
 };

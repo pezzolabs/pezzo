@@ -11,7 +11,7 @@ export const Breadcrumbs = ({ items }: Props) => {
     <div className="text-sm">
       <ul className="flex items-center gap-1">
         {items.map((item, index) => (
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1" key={`div_${index}`}>
             <ChevronRight
               className={cn("h-4 w-4 text-stone-400", { "hidden": index === 0 })}
             />

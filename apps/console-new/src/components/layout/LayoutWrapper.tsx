@@ -1,10 +1,10 @@
 import { Breadcrumbs } from "~/components/common/Breadcrumbs";
 import { ProjectCopy } from "~/components/projects/ProjectCopy";
-import { SideNavigation } from "./SideNavigation";
 import { useBreadcrumbItems } from "~/lib/hooks/useBreadcrumbItems";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
+import { SideNavigation } from "./SideNavigation";
 
 interface Props {
   children: React.ReactNode;
@@ -26,8 +26,9 @@ export const LayoutWrapper = ({
   return (
     <div className="flex w-full h-full max-h-[100vh]">
       <div className="flex w-full h-full">
-        {withSideNav && <SideNavigation />}
-
+        {/* {withSideNav && <OldSideNavigation />} */}
+        <SideNavigation />
+        
         <div className="p-4 overflow-y-auto max-h-full w-full">
           <div className="flex items-center gap-4 mb-4">
             <div className="flex-1">

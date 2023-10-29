@@ -8,7 +8,7 @@ import { trackEvent } from "~/lib/utils/analytics";
 import { Button } from "@pezzo/ui";
 import { Plus } from "lucide-react";
 
-export const MembersView = () => {
+export const OrgMembersPage = () => {
   const { organization } = useCurrentOrganization({
     includeMembers: true,
     includeInvitations: true,
@@ -36,9 +36,9 @@ export const MembersView = () => {
 
       <div className="max-w-[800px]">
         <div className="mb-2 flex items-center gap-4">
-          <h2 className="flex-1 text-2xl font-semibold">
+          <h1 className="flex-1 text-3xl font-semibold">
             Members ({members.length})
-          </h2>
+          </h1>
           <div>
             {isOrgAdmin && (
               <Button onClick={onOpenInviteModal}>
@@ -52,9 +52,9 @@ export const MembersView = () => {
         <OrgMembersList members={members} />
         {isOrgAdmin && invitations.length > 0 && (
           <div className="mt-4">
-            <h2 className="mb-2 text-2xl font-semibold">
+            <h1 className="mb-2 text-3xl font-semibold">
               Pending Invitations ({invitations.length})
-            </h2>
+            </h1>
 
             <OrgInvitationsList invitations={invitations} />
           </div>

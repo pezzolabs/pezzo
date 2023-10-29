@@ -27,7 +27,7 @@ const formSchema = z.strictObject({
     .max(64, "Name can't be longer than 64 characters"),
 });
 
-export const SettingsView = () => {
+export const OrgSettingsPage = () => {
   const { organization } = useCurrentOrganization();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -61,6 +61,9 @@ export const SettingsView = () => {
 
   return (
     <div className="max-w-[640px]">
+      <h1 className="flex-1 text-3xl font-semibold mb-2">
+        Settings
+      </h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           {error && (

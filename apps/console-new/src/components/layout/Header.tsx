@@ -137,7 +137,7 @@ export const Header = () => {
           {currentUser && (
             <UserProfileButton ghost style={{ padding: 4, height: "auto" }}>
               <Space size="middle">
-                <Avatar user={currentUser} size="large" />
+                {/* <Avatar user={currentUser} size="large" /> */}
 
                 <Typography.Text type="secondary">
                   {currentUser.name}
