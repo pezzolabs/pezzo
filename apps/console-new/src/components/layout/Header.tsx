@@ -1,152 +1,132 @@
+import { cn } from "@pezzo/ui/utils";
 import {
-  Button,
-  Col,
-  Dropdown,
-  Layout,
-  MenuProps,
-  Row,
-  Space,
-  Typography,
-} from "antd";
-import styled from "@emotion/styled";
+  BriefcaseIcon,
+  CheckIcon,
+  ChevronsUpDown,
+  PlusIcon,
+  ZapIcon,
+} from "lucide-react";
 import LogoSquare from "~/assets/logo-square.svg";
-import { colors } from "~/lib/theme/colors";
+import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
+import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
+import { Popover, PopoverContent, PopoverTrigger } from "@pezzo/ui";
+import { useOrganizations } from "~/lib/hooks/useOrganizations";
+import { useGetProjects } from "~/graphql/hooks/queries";
+import { Link } from "react-router-dom";
+import { UserMenu } from "./UserMenu";
 import { useAuthContext } from "~/lib/providers/AuthProvider";
-import { useState } from "react";
-import {
-  ArrowRightOnRectangleIcon,
-  QuestionMarkCircleIcon,
-} from "@heroicons/react/24/outline";
-import { signOut } from "~/lib/utils/sign-out";
-import { useNavigate } from "react-router-dom";
-import { Avatar } from "~/components/common/Avatar";
-import { OrgSelector } from "../organizations/OrgSelector";
-import Icon from "@ant-design/icons/lib/components/Icon";
+import { ProjectCopy } from "../projects/ProjectCopy";
 
-const Logo = styled.img`
-  height: 40px;
-  display: block;
-`;
-
-const UserProfileButton = styled(Button)`
-  &:hover {
-    border: none;
-  }
-  border: none;
-  outline: none;
-`;
-
-const menuItems: MenuProps["items"] = [
-  {
-    key: "info",
-    label: (
-      <Row style={{ width: "100%" }} align="middle">
-        <Col>
-          <Typography.Text>Info</Typography.Text>
-        </Col>
-        <Col style={{ marginLeft: "auto" }}>
-          <Icon component={() => <QuestionMarkCircleIcon width={15} />} />
-        </Col>
-      </Row>
-    ),
-  },
-  {
-    key: "signout",
-    label: (
-      <Row style={{ width: "100%" }} align="middle">
-        <Col>
-          <Typography.Text>Sign out</Typography.Text>
-        </Col>
-        <Col style={{ marginLeft: "auto" }}>
-          <Icon component={() => <ArrowRightOnRectangleIcon width={15} />} />
-        </Col>
-      </Row>
-    ),
-  },
-];
-
-export const Header = () => {
-  const { currentUser } = useAuthContext();
-  const [_, setOpen] = useState(false);
-  const navigate = useNavigate();
+export const OrgSelector = () => {
+  const { organizations } = useOrganizations();
+  const { organization: currentOrganization } = useCurrentOrganization();
+  const { projects } = useGetProjects();
+  const { project: currentProject } = useCurrentProject();
 
   return (
-    <Layout.Header
-      style={{
-        padding: 20,
-        position: "sticky",
-        top: 0,
-        zIndex: 1,
-        width: "100%",
-        display: "flex",
-        alignItems: "center",
-        borderBottom: `1px solid ${colors.neutral["800"]}`,
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <Space size="small" direction="horizontal" align="center">
-          <a href="/">
-            <Logo src={LogoSquare} alt="Logo" />
-          </a>
-        </Space>
+    <div className="flex text-sm">
+      <div className="flex min-w-[200px] flex-col gap-y-2 rounded-r-lg border-l bg-white p-2">
+        <p className="mt-2 px-2 text-gray-500">Organizations</p>
+        <ul className="flex h-full flex-col">
+          {organizations &&
+            currentOrganization &&
+            organizations.map((org) => (
+              <li>
+                <Link
+                  to={`/orgs/${org.id}`}
+                  className="flex cursor-pointer items-center gap-x-2 rounded-md p-2 transition-all hover:bg-gray-100"
+                >
+                  <div className="flex-1">{org.name}</div>
+                  {org.id === currentOrganization.id && (
+                    <CheckIcon className="h-4 w-4 opacity-50" />
+                  )}
+                </Link>
+              </li>
+            ))}
+        </ul>
+      </div>
+      <div className="flex min-w-[200px] flex-col gap-y-2 rounded-r-lg border-l bg-gray-100/60 p-2">
+        <p className="mt-2 px-2 text-gray-500">Projects</p>
+        <ul className="flex h-full flex-col">
+          {projects &&
+            projects.map((project) => (
+              <li className="">
+                <Link
+                  className="flex cursor-pointer items-center gap-x-2 rounded-md p-2 transition-all hover:bg-gray-200"
+                  to={`/projects/${project.id}`}
+                >
+                  <div className="flex-1">{project.name}</div>
+                  {project.id === currentProject?.id && (
+                    <CheckIcon className="h-4 w-4 opacity-50" />
+                  )}
+                </Link>
+              </li>
+            ))}
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+export const Header = () => {
+  const { organization } = useCurrentOrganization();
+  const { project } = useCurrentProject();
+  const { currentUser } = useAuthContext();
+
+  return (
+    <nav className="flex h-14 items-center gap-x-2 border-b border-b-slate-800 bg-slate-950 text-slate-200">
+      <div className={cn("mx-auto ml-2 h-10 w-10")}>
+        <img src={LogoSquare} alt="Pezzo" />
+      </div>
+      <div className="flex flex-1 items-center gap-x-2">
+        {organization && (
+          <Popover>
+            <div className="mx-2 text-lg text-slate-700">{"/"}</div>
+            <div className="flex items-center gap-x-2">
+              <BriefcaseIcon className="h-4 w-4 text-slate-500" />
+              <Link
+                to={`/orgs/${organization.id}`}
+                className="cursor-pointer text-sm font-medium hover:underline"
+              >
+                {organization.name}
+              </Link>
+              <PopoverTrigger className="cursor-pointer" asChild>
+                <ChevronsUpDown className="h-4 w-4 text-slate-500" />
+              </PopoverTrigger>
+            </div>
+            <PopoverContent className="w-auto p-0">
+              <OrgSelector />
+            </PopoverContent>
+          </Popover>
+        )}
+        {project && (
+          <Popover>
+            <div className="mx-2 text-lg text-slate-700">{"/"}</div>
+            <div className="flex items-center gap-x-2">
+              <Link
+                to={`/projects/${project.id}`}
+                className="cursor-pointer text-sm font-medium hover:underline"
+              >
+                {project.name}
+              </Link>
+              <PopoverTrigger className="cursor-pointer" asChild>
+                <ChevronsUpDown className="h-4 w-4 text-slate-500" />
+              </PopoverTrigger>
+            </div>
+            <PopoverContent className="w-auto p-0">
+              <OrgSelector />
+            </PopoverContent>
+          </Popover>
+        )}
       </div>
 
-      <div
-        style={{
-          marginLeft: 19,
-        }}
-      >
-        <span style={{ visibility: "hidden" }}>Pezzo</span>
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          flex: "100%",
-          alignItems: "center",
-          justifyContent: "flex-end",
-        }}
-      >
-        <div
-          style={{
-            marginRight: 19,
-            borderRight: `1px solid ${colors.neutral["800"]}`,
-          }}
-        >
-          <OrgSelector />
+      {project && (
+        <div className="text-sm">
+          <ProjectCopy />
         </div>
+      )}
 
-        <Dropdown
-          arrow={false}
-          menu={{
-            items: menuItems,
-            onClick: async (info) => {
-              if (info.key === "signout") {
-                await signOut();
-              }
-
-              if (info.key === "info") {
-                navigate(`/info`);
-              }
-            },
-          }}
-          align={{ offset: [0, 12] }}
-          trigger={["click"]}
-          onOpenChange={setOpen}
-        >
-          {currentUser && (
-            <UserProfileButton ghost style={{ padding: 4, height: "auto" }}>
-              <Space size="middle">
-                {/* <Avatar user={currentUser} size="large" /> */}
-
-                <Typography.Text type="secondary">
-                  {currentUser.name}
-                </Typography.Text>
-              </Space>
-            </UserProfileButton>
-          )}
-        </Dropdown>
-      </div>
-    </Layout.Header>
+      {currentUser && <UserMenu />}
+    </nav>
   );
 };

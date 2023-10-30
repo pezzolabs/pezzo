@@ -13,11 +13,16 @@ export const ProjectCopy = () => {
 
   return (
     <Button
-      className="bg-white border text-primary"
+      size="sm"
+      className="text-primary-foreground border border-slate-700 hover hover:bg-slate-800"
       onClick={() => {
         copyToClipboard(project.id);
         setClicked(true);
         trackEvent("project_id_copied", { projectId: project.id });
+
+        setTimeout(() => {
+          setClicked(false);
+        }, 3000);
       }}
     >
       {clicked ? (

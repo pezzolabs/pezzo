@@ -28,6 +28,7 @@ import {
   AlertTitle,
   AlertDescription,
 } from "@pezzo/ui";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   open: boolean;
@@ -44,6 +45,7 @@ const formSchema = z.object({
 
 export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
   const { project } = useCurrentProject();
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -69,6 +71,7 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
       trackEvent("prompt_created", {
         promptId: data.createPrompt.id,
       });
+      navigate(`/projects/${project.id}/prompts/${data.createPrompt.id}`)
     },
   });
 
@@ -92,7 +95,7 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
-              <DialogTitle className="mb-2">Create a new prompt</DialogTitle>
+              <DialogTitle className="mb-2">New Prompt</DialogTitle>
               <DialogDescription>
                 {error && (
                   <Alert variant="destructive" className="mb-4">

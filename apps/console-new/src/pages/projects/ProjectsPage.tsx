@@ -89,8 +89,8 @@ export const ProjectsPage = () => {
     >
       <div className="flex items-start">
         <div className="flex-1">
-          <HomeIcon className="mb-2 h-8 w-8 text-primary" />
-          <div className="text-lg font-medium">{project.name}</div>
+          <HomeIcon className="mb-2 h-6 w-6 text-primary" />
+          <div className="text-lg font-heading font-medium">{project.name}</div>
         </div>
 
         <DropdownMenu>
@@ -136,28 +136,33 @@ export const ProjectsPage = () => {
         onClose={() => setIsCreateNewProjectModalOpen(false)}
       />
 
-      <div className="mb-4 flex gap-4">
-        <h2 className="flex-1 text-3xl font-semibold">Projects</h2>
-        <div>
-          <Button onClick={handleCreateNewProjectClick}>
-            <PlusIcon className="mr-2 h-4 w-4" />
+      <div className="mb-6 border-b bg-white">
+        <div className="container flex h-24 items-center justify-between">
+          <h1>Projects</h1>
+          <Button size="lg" onClick={handleCreateNewProjectClick}>
+            <PlusIcon className="mr-2 h-5 w-5" />
             New Project
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-12 gap-x-4 gap-y-4">
-        {projects?.map((project) => renderProject(project))}
-        {/* New Project Button */}
-        <Card
-          className={clsx(
-            baseCardClassName,
-            "flex flex-col items-center justify-center border-2 border-dashed opacity-60 hover:opacity-100"
-          )}
-          onClick={handleCreateNewProjectClick}
-        >
-          <PlusIcon className="mb-1 h-7 w-7" />
-          New Project
-        </Card>
+
+      <div className="container">
+        <div className="mb-4 flex justify-end gap-4">
+          <div></div>
+        </div>
+        <div className="grid grid-cols-12 gap-x-4 gap-y-4">
+          {projects?.map((project) => renderProject(project))}
+          <Card
+            className={clsx(
+              baseCardClassName,
+              "flex flex-col items-center justify-center border-2 border-dashed opacity-60 hover:opacity-100"
+            )}
+            onClick={handleCreateNewProjectClick}
+          >
+            <PlusIcon className="mb-1 h-7 w-7" />
+            New Project
+          </Card>
+        </div>
       </div>
     </>
   );

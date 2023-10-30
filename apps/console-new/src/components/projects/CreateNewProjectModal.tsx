@@ -89,7 +89,7 @@ export const CreateNewProjectModal = ({ open, onClose }: Props) => {
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
               <DialogTitle className="mb-2">
-                Create a new project
+                New Project
               </DialogTitle>
               <DialogDescription>
                 {error && (

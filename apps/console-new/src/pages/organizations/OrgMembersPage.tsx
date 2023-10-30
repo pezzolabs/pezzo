@@ -5,7 +5,7 @@ import { InviteOrgMemberModal } from "~/components/organizations/InviteOrgMember
 import { useState } from "react";
 import { useCurrentOrgMembership } from "~/lib/hooks/useCurrentOrgMembership";
 import { trackEvent } from "~/lib/utils/analytics";
-import { Button } from "@pezzo/ui";
+import { Button, Card } from "@pezzo/ui";
 import { Plus } from "lucide-react";
 
 export const OrgMembersPage = () => {
@@ -34,30 +34,40 @@ export const OrgMembersPage = () => {
         onClose={() => setIsInviteModalOpen(false)}
       />
 
-      <div className="max-w-[800px]">
-        <div className="mb-2 flex items-center gap-4">
-          <h1 className="flex-1 text-3xl font-semibold">
-            Members ({members.length})
-          </h1>
-          <div>
-            {isOrgAdmin && (
-              <Button onClick={onOpenInviteModal}>
-                <Plus className="mr-2 h-4 w-4" />
-                Invite Member
-              </Button>
-            )}
-          </div>
+      <div className="mb-6 border-b bg-white">
+        <div className="container flex h-24 items-center">
+          <h1>Members</h1>
         </div>
+      </div>
 
-        <OrgMembersList members={members} />
+      <div className="container space-y-6">
+        <Card className="mx-auto flex flex-col gap-y-6 p-10">
+          <section>
+            <div className="mb-4 flex items-center justify-between gap-4">
+              <h2>Members</h2>
+              <div>
+                {isOrgAdmin && (
+                  <Button onClick={onOpenInviteModal}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Invite Member
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            <OrgMembersList members={members} />
+          </section>
+        </Card>
+
         {isOrgAdmin && invitations.length > 0 && (
-          <div className="mt-4">
-            <h1 className="mb-2 text-3xl font-semibold">
-              Pending Invitations ({invitations.length})
-            </h1>
-
-            <OrgInvitationsList invitations={invitations} />
-          </div>
+          <Card className="mx-auto flex flex-col gap-y-6 p-10">
+            <section>
+              <div className="mb-4 flex items-center justify-between gap-4">
+                <h2>Invitations</h2>
+              </div>
+              <OrgInvitationsList invitations={invitations} />
+            </section>
+          </Card>
         )}
       </div>
     </>

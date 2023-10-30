@@ -5,7 +5,7 @@ import { useEnvironments } from "~/lib/hooks/useEnvironments";
 import { EnvironmentsQuery } from "~/@generated/graphql/graphql";
 import { trackEvent } from "~/lib/utils/analytics";
 import { usePageTitle } from "~/lib/hooks/usePageTitle";
-import { PlusIcon, TrashIcon } from "lucide-react";
+import { HardDriveIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { GenericDestructiveConfirmationModal } from "~/components/common/GenericDestructiveConfirmationModal";
 import { useDeleteEnvironmentMutation } from "~/graphql/hooks/mutations";
 
@@ -62,9 +62,9 @@ export const EnvironmentsPage = () => {
         onCreated={() => setIsCreateEnvironmentModalOpen(false)}
       />
 
-      <div className="flex gap-4">
-        <h1 className="mb-4 flex-1 text-3xl font-semibold">Environments</h1>
-        <div className="mb-4">
+      <div className="mb-6 border-b bg-white">
+        <div className="container flex h-24 max-w-[660px] items-center justify-between">
+          <h1>Environments</h1>
           <Button onClick={handleCreateEnvironmentClick}>
             <PlusIcon className="mr-2 h-4 w-4" />
             New Environment
@@ -72,24 +72,26 @@ export const EnvironmentsPage = () => {
         </div>
       </div>
 
-      <div className="max-w-[600px]">
-        {environments &&
-          environments.map((environment) => (
-            <Card className="mb-4 p-4" key={environment.id}>
-              <div className="flex items-center gap-4">
-                <div className="flex-1">{environment.name}</div>
-                <div>
-                  <Button
-                    onClick={() => handleDeleteEnvironmentClick(environment)}
-                    size="icon"
-                    variant="destructiveOutline"
-                  >
-                    <TrashIcon className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          ))}
+      <div className="container max-w-[660px]">
+        <div className="space-y-4">
+          {environments &&
+            environments.map((environment) => (
+              <Card
+                className="flex h-20 items-center gap-x-3 p-4"
+                key={environment.id}
+              >
+                <HardDriveIcon />
+                <div className="flex-1 font-medium">{environment.name}</div>
+                <Button
+                  onClick={() => handleDeleteEnvironmentClick(environment)}
+                  size="icon"
+                  variant="destructiveOutline"
+                >
+                  <TrashIcon className="h-4 w-4" />
+                </Button>
+              </Card>
+            ))}
+        </div>
       </div>
     </>
   );

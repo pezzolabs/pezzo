@@ -4,7 +4,7 @@ import { useState } from "react";
 import { usePrompts } from "~/lib/hooks/usePrompts";
 import { trackEvent } from "~/lib/utils/analytics";
 import { usePageTitle } from "~/lib/hooks/usePageTitle";
-import { PlusIcon, TrashIcon } from "lucide-react";
+import { MoveRightIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { GetAllPromptsQuery } from "~/@generated/graphql/graphql";
 import { BoxIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +21,8 @@ export const PromptsPage = () => {
   const navigate = useNavigate();
   const [isCreatePromptModalOpen, setIsCreatePromptModalOpen] = useState(false);
   const [promptToDelete, setPromptToDelete] = useState<Prompt | null>(null);
-  const { mutate: deletePrompt, error: deletePromptError } = useDeletePromptMutation();
+  const { mutate: deletePrompt, error: deletePromptError } =
+    useDeletePromptMutation();
 
   const handleCreatePrompt = () => {
     setIsCreatePromptModalOpen(true);
@@ -64,11 +65,10 @@ export const PromptsPage = () => {
         onConfirm={() => handleDeletePromptConfirm(promptToDelete.id)}
         error={deletePromptError}
       />
-      
 
-      <div className="flex gap-4">
-        <h1 className="mb-4 text-3xl font-semibold flex-1">Prompts</h1>
-        <div className="mb-4">
+      <div className="mb-6 border-b bg-white">
+        <div className="container flex h-24 max-w-[660px] items-center justify-between">
+          <h1>Prompts</h1>
           <Button onClick={handleCreatePrompt}>
             <PlusIcon className="mr-2 h-4 w-4" />
             New Prompt
@@ -76,31 +76,39 @@ export const PromptsPage = () => {
         </div>
       </div>
 
-      <div className="max-w-[600px]">
-        {prompts &&
-          prompts.map((prompt) => (
+      <div className="container max-w-[660px]">
+        <div className="space-y-4">
+          {prompts &&
+            prompts.map((prompt) => (
+              <Card
+                className="group mb-4 flex h-20 cursor-pointer items-center gap-x-3 p-4 ring-primary hover:ring-2"
+                onClick={(e) => handleClickPrompt(e, prompt.id)}
+                key={prompt.id}
+              >
+                <BoxIcon />
+                <div className="flex-1 font-medium">{prompt.name}</div>
+                <Button
+                  className="hidden group-hover:inline-flex"
+                  onClick={(e) => handleDeletePromptClick(e, prompt)}
+                  size="icon"
+                  variant="destructiveOutline"
+                >
+                  <TrashIcon className="h-4 w-4" />
+                </Button>
+                <MoveRightIcon className="h-4 w-4 opacity-70" />
+              </Card>
+            ))}
+
+          {prompts && prompts.length === 0 && (
             <Card
-              className="mb-4 cursor-pointer p-4 ring-primary hover:ring-2"
-              onClick={(e) => handleClickPrompt(e, prompt.id)}
-              key={prompt.id}
+              className="group mb-4 flex flex-col h-24 cursor-pointer items-center justify-center gap-2 p-4 ring-primary border-2 border-dashed opacity-70 hover:opacity-100"
+              onClick={handleCreatePrompt}
             >
-              <div className="flex items-center gap-4">
-                <div>
-                  <BoxIcon />
-                </div>
-                <div className="flex-1">{prompt.name}</div>
-                <div>
-                  <Button
-                    onClick={(e) => handleDeletePromptClick(e, prompt)}
-                    size="icon"
-                    variant="destructiveOutline"
-                  >
-                    <TrashIcon className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+              <PlusIcon className="h-5 w-5 opacity-70 font-medium" />
+              Create your first prompt
             </Card>
-          ))}
+          )}
+        </div>
       </div>
     </>
   );

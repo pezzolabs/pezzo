@@ -13,8 +13,6 @@ import { initSuperTokens } from "./lib/auth/supertokens";
 import { EnvironmentsPage } from "./pages/environments/EnvironmentsPage";
 import { PromptsPage } from "./pages/prompts/PromptsPage";
 import { PromptPage } from "./pages/prompts/PromptPage";
-import { InfoPage } from "./pages/InfoPage";
-import { ProjectsPage } from "./pages/projects/ProjectsPage";
 import { OnboardingPage } from "./pages/organizations/onboarding";
 import { OrgPage } from "./pages/organizations/OrgPage";
 import { LogoutPage } from "./pages/auth/LogoutPage";
@@ -32,6 +30,7 @@ import { RequiredProviderApiKeyModalProvider } from "./lib/providers/RequiredPro
 import { OrgMembersPage } from "./pages/organizations/OrgMembersPage";
 import { OrgSettingsPage } from "./pages/organizations/OrgSettingsPage";
 import { OrgApiKeysPage } from "./pages/organizations/OrgApiKeysPage";
+import { useCurrentOrganization } from "./lib/hooks/useCurrentOrganization";
 
 initSuperTokens();
 
@@ -61,6 +60,14 @@ export const paths = {
     "/projects/:projectId/prompts/:promptId",
   "/projects/:projectId/environments": "/projects/:projectId/environments",
 };
+
+export const RootPageHandler = () => {
+  const { organizationId } = useCurrentOrganization();
+
+  return organizationId && (
+    <Navigate to={`/orgs/${organizationId}`} />
+  )
+}
 
 export function App() {
   return (
@@ -112,20 +119,11 @@ export function App() {
                 }
               />
 
-              <Route
-                path={paths["/info"]}
-                element={
-                  <LayoutWrapper withSideNav={false}>
-                    <InfoPage />
-                  </LayoutWrapper>
-                }
-              />
-
               {/* Organizations */}
               <Route
                 path={paths["/orgs/:orgId"]}
                 element={
-                  <LayoutWrapper withSideNav={false}>
+                  <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
                     <OrgPage />
                   </LayoutWrapper>
                 }
@@ -134,7 +132,7 @@ export function App() {
               <Route
                 path={paths["/orgs/:orgId/members"]}
                 element={
-                  <LayoutWrapper withSideNav={false}>
+                  <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
                     <OrgMembersPage />
                   </LayoutWrapper>
                 }
@@ -143,7 +141,7 @@ export function App() {
               <Route
                 path={paths["/orgs/:orgId/api-keys"]}
                 element={
-                  <LayoutWrapper withSideNav={false}>
+                  <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
                     <OrgApiKeysPage />
                   </LayoutWrapper>
                 }
@@ -152,22 +150,21 @@ export function App() {
               <Route
                 path={paths["/orgs/:orgId/settings"]}
                 element={
-                  <LayoutWrapper withSideNav={false}>
+                  <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
                     <OrgSettingsPage />
                   </LayoutWrapper>
                 }
               ></Route>
 
-              {/* Projects selection */}
+              {/* Project selection */}
               <Route
                 element={
-                  <LayoutWrapper withSideNav={false}>
+                  <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
                     <Outlet />
                   </LayoutWrapper>
                 }
               >
-                <Route index element={<Navigate to={paths["/projects"]} />} />
-                <Route path={paths["/projects"]} element={<ProjectsPage />} />
+                <Route index element={<RootPageHandler />} />
               </Route>
 
               {/* In-project routes */}

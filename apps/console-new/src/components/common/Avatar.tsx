@@ -1,6 +1,7 @@
 import { ExtendedUser } from "~/@generated/graphql/graphql";
 import { useMemo } from "react";
 import { Avatar as ShadcnAvatar, AvatarFallback, AvatarImage }from "@pezzo/ui";
+import { cn } from "@pezzo/ui/utils";
 
 interface Props {
   user: Partial<ExtendedUser>;
@@ -18,7 +19,7 @@ export const Avatar = ({ user, className = "" }: Props) => {
   const photoUrl = useMemo(() => user.photoUrl || undefined, [user.photoUrl]);
 
   return (
-    <ShadcnAvatar>
+    <ShadcnAvatar className={cn(className)}>
       <AvatarImage src={photoUrl} />
       <AvatarFallback>{buildInitials(user.name || "")}</AvatarFallback>
     </ShadcnAvatar>

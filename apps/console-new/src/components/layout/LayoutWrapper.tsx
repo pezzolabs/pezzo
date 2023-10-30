@@ -1,51 +1,53 @@
-import { Breadcrumbs } from "~/components/common/Breadcrumbs";
-import { ProjectCopy } from "~/components/projects/ProjectCopy";
-import { useBreadcrumbItems } from "~/lib/hooks/useBreadcrumbItems";
-import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
 import { SideNavigation } from "./SideNavigation";
+import { Header } from "./Header";
+import { OrgSubHeader } from "./OrgSubHeader";
 
 interface Props {
   children: React.ReactNode;
   withSideNav: boolean;
   withHeader?: boolean;
   withBreadcrumbs?: boolean;
+  withOrgSubHeader?: boolean;
 }
 
 export const LayoutWrapper = ({
   children,
   withSideNav,
+  withOrgSubHeader = false,
   withHeader = true,
   withBreadcrumbs = true,
 }: Props) => {
-  const { project } = useCurrentProject();
-  const breadcrumbItems = useBreadcrumbItems();
   const location = useLocation();
 
   return (
-    <div className="flex w-full h-full max-h-[100vh]">
-      <div className="flex w-full h-full">
-        {/* {withSideNav && <OldSideNavigation />} */}
-        <SideNavigation />
-        
-        <div className="p-4 overflow-y-auto max-h-full w-full">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="flex-1">
-              {withBreadcrumbs && breadcrumbItems && <Breadcrumbs items={breadcrumbItems} />}
-            </div>
-            <div className="col-span-3 flex">{project && <ProjectCopy />}</div>
-          </div>
+    <div className="flex h-full max-h-[100vh] w-full">
+      <div className="flex h-full w-full">
+        <div className="h-full max-h-full w-full overflow-y-auto  bg-gray-100/50">
+          <Header />
 
-          <motion.div
-            key={location.pathname}
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -10, opacity: 0 }}
-            transition={{ duration: 0.1 }}
-          >
-            {children}
-          </motion.div>
+          {withOrgSubHeader && <OrgSubHeader />}
+
+          <div className="-mt-14 flex h-full pt-14">
+            {withSideNav && (
+              <div className="h-full max-w-[240px]">
+                <SideNavigation />
+              </div>
+            )}
+
+            <div className="flex-1">
+              <motion.div
+                key={location.pathname}
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -10, opacity: 0 }}
+                transition={{ duration: 0.1 }}
+              >
+                {children}
+              </motion.div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
