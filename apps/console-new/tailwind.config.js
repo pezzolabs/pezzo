@@ -61,6 +61,9 @@ module.exports = {
           xl: "1280px"
         }
       },
+      borderColor: {
+        DEFAULT: "hsl(var(--border) / <alpha-value>)",
+      },
       borderRadius: {
         lg: `var(--radius)`,
         md: `calc(var(--radius) - 2px)`,
