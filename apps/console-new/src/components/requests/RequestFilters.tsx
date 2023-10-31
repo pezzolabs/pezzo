@@ -1,4 +1,3 @@
-import { Space } from "antd";
 import { AddFilterItem, FilterItem } from "./filters/FilterItem";
 import { useFiltersAndSortParams } from "~/lib/hooks/useFiltersAndSortParams";
 import {
@@ -10,9 +9,10 @@ export const RequestFilters = () => {
   const { filters, removeFilter, addFilter } = useFiltersAndSortParams();
 
   return (
-    <Space direction="vertical" style={{ width: "100%" }} size="large">
+    <div className="flex flex-col gap-4">
       <AddFilterItem onAdd={addFilter} />
-      <Space direction="horizontal" style={{ width: "100%", flexWrap: "wrap" }}>
+
+      <div className="flex flex-wrap gap-4">
         {filters.map((filter) => (
           <FilterItem
             key={`${filter.field}-${filter.operator}-${filter.value}`}
@@ -26,7 +26,7 @@ export const RequestFilters = () => {
             onRemoveFilter={() => removeFilter(filter)}
           />
         ))}
-      </Space>
-    </Space>
+      </div>
+    </div>
   );
 };

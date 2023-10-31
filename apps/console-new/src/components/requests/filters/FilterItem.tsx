@@ -47,7 +47,7 @@ export const FilterItem = ({
   }, [field]);
 
   return (
-    <div className="flex items-center gap-1 rounded-md border border-primary bg-white px-2 py-1 text-sm">
+    <div className="flex items-center gap-1 rounded-md border border-primary px-2 py-1 text-sm">
       <div>{translatedField}</div>
       <div>{operator}</div>
       <div>{value}</div>

@@ -18,9 +18,8 @@ import {
   HistogramMetric,
   ProjectMetricType,
 } from "~/@generated/graphql/graphql";
-import { Spin } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
 import { useFiltersAndSortParams } from "~/lib/hooks/useFiltersAndSortParams";
+import { Loader2Icon } from "lucide-react";
 
 const histogramToChartData = (requests: HistogramMetric[]) => {
   return requests.map((entry) => ({
@@ -59,10 +58,9 @@ export const ExecutionTimeChart = () => {
           alignItems: "center",
         }}
       >
-        <Spin
-          spinning
-          indicator={<LoadingOutlined style={{ fontSize: 60 }} />}
-        />
+        <div className="animate-spin">
+          <Loader2Icon className="h-20 w-20 text-primary" />
+        </div>
       </div>
     );
   }

@@ -90,7 +90,7 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
     <Dialog open={open}>
       <DialogContent
         onPointerDownOutside={onCancel}
-        className="sm:max-w-[425px]"
+        className="sm:max-w-[425px] dark"
       >
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -113,7 +113,7 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
                     <FormItem>
                       <FormLabel>Prompt name</FormLabel>
                       <FormControl>
-                        <Input autoComplete="off" {...field} />
+                        <Input placeholder="test123" autoComplete="off" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

@@ -1,7 +1,5 @@
 import {
   GraduationCap,
-  HelpCircle,
-  InfoIcon,
   LogOutIcon,
 } from "lucide-react";
 import {
@@ -22,7 +20,7 @@ export const UserMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <li className="px-4 mb-2 mt-auto flex h-full cursor-pointer items-center rounded-md p-2 text-sm font-medium text-stone-400 transition-all hover:bg-gray-900 hover:text-white ">
+        <li className="px-4 mb-2 mt-auto flex h-full cursor-pointer items-center rounded-md p-2 text-sm font-medium transition-all text-muted-foreground hover:text-foreground">
           <Avatar user={currentUser} className="h-8 w-8" />
           <span className="ml-2">{currentUser?.name}</span>
         </li>

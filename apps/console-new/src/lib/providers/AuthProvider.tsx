@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthProviderContext.Provider value={value}>
       {isLoading || isError || !data ? (
-        <LayoutWrapper withSideNav={false} withHeader={false}>
+        <LayoutWrapper>
           <Row justify="center" align="middle" style={{ height: "100vh" }}>
             <Col>
               {isLoading ? (

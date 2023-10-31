@@ -14,7 +14,7 @@ export const ProjectCopy = () => {
   return (
     <Button
       size="sm"
-      className="text-primary-foreground border border-slate-700 hover hover:bg-slate-800"
+      variant="outline"
       onClick={() => {
         copyToClipboard(project.id);
         setClicked(true);

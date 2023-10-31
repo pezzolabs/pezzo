@@ -15,12 +15,12 @@ export const OrgSubHeader = () => {
   }
 
   const baseClassName = cn(
-    "cursor-pointer py-3 px-3 text-sm font-medium  border-b-[3px] border-b-transparent hover:border-b-emerald-500 transition-all"
+    "cursor-pointer py-3 px-3 text-sm font-medium border-b-2 border-b-transparent hover:border-b-primary transition-all"
   );
 
   const getClassName = (href: string) => {
     return cn(baseClassName, {
-      "border-b-[3px] text-emerald-500 border-b-emerald-500": isActive(href),
+      "border-b-2 text-primary border-b-primary": isActive(href),
     });
   };
 
@@ -33,7 +33,7 @@ export const OrgSubHeader = () => {
 
   return (
     organization && (
-      <div className="w-full bg-slate-950 px-8 text-slate-300">
+      <div className="w-full px-8 text-slate-300 border-b border-b-border">
         <ul className="flex">
           {orgNavigation.map((nav) => (
             <li

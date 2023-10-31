@@ -62,7 +62,7 @@ export const EnvironmentsPage = () => {
         onCreated={() => setIsCreateEnvironmentModalOpen(false)}
       />
 
-      <div className="mb-6 border-b bg-white">
+      <div className="mb-6 border-b border-b-border">
         <div className="container flex h-24 max-w-[660px] items-center justify-between">
           <h1>Environments</h1>
           <Button onClick={handleCreateEnvironmentClick}>
@@ -80,7 +80,7 @@ export const EnvironmentsPage = () => {
                 className="flex h-20 items-center gap-x-3 p-4"
                 key={environment.id}
               >
-                <HardDriveIcon />
+                <HardDriveIcon className="text-primary" />
                 <div className="flex-1 font-medium">{environment.name}</div>
                 <Button
                   onClick={() => handleDeleteEnvironmentClick(environment)}

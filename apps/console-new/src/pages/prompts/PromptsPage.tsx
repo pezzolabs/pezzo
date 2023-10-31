@@ -66,7 +66,7 @@ export const PromptsPage = () => {
         error={deletePromptError}
       />
 
-      <div className="mb-6 border-b bg-white">
+      <div className="mb-6 border-b border-b-border">
         <div className="container flex h-24 max-w-[660px] items-center justify-between">
           <h1>Prompts</h1>
           <Button onClick={handleCreatePrompt}>
@@ -81,11 +81,11 @@ export const PromptsPage = () => {
           {prompts &&
             prompts.map((prompt) => (
               <Card
-                className="group mb-4 flex h-20 cursor-pointer items-center gap-x-3 p-4 ring-primary hover:ring-2"
+                className="group mb-4 flex h-20 cursor-pointer items-center gap-x-3 p-4 ring-primary hover:ring-2 transition-all"
                 onClick={(e) => handleClickPrompt(e, prompt.id)}
                 key={prompt.id}
               >
-                <BoxIcon />
+                <BoxIcon className="text-primary" />
                 <div className="flex-1 font-medium">{prompt.name}</div>
                 <Button
                   className="hidden group-hover:inline-flex"

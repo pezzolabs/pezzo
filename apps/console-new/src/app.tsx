@@ -102,8 +102,6 @@ export function App() {
                 element={
                   <LayoutWrapper
                     withSideNav={false}
-                    withHeader={false}
-                    withBreadcrumbs={false}
                   >
                     <AcceptInvitationPage />
                   </LayoutWrapper>

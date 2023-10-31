@@ -12,6 +12,8 @@ import {
 import { trackEvent } from "~/lib/utils/analytics";
 import { usePageTitle } from "~/lib/hooks/usePageTitle";
 import {
+  BoxIcon,
+  FolderRootIcon,
   HomeIcon,
   MoreVertical,
   PencilIcon,
@@ -79,7 +81,7 @@ export const ProjectsPage = () => {
     setProjectToDelete(project);
   };
 
-  const baseCardClassName = "col-span-3 cursor-pointer p-6";
+  const baseCardClassName = "col-span-3 cursor-pointer p-6 transition-all";
 
   const renderProject = (project: Project) => (
     <Card
@@ -89,8 +91,8 @@ export const ProjectsPage = () => {
     >
       <div className="flex items-start">
         <div className="flex-1">
-          <HomeIcon className="mb-2 h-6 w-6 text-primary" />
-          <div className="text-lg font-heading font-medium">{project.name}</div>
+          <FolderRootIcon className="mb-2 h-6 w-6 text-primary" />
+          <div className="font-heading text-lg font-medium">{project.name}</div>
         </div>
 
         <DropdownMenu>
@@ -136,11 +138,11 @@ export const ProjectsPage = () => {
         onClose={() => setIsCreateNewProjectModalOpen(false)}
       />
 
-      <div className="mb-6 border-b bg-white">
+      <div className="mb-6 border-b border-b-border">
         <div className="container flex h-24 items-center justify-between">
           <h1>Projects</h1>
-          <Button size="lg" onClick={handleCreateNewProjectClick}>
-            <PlusIcon className="mr-2 h-5 w-5" />
+          <Button onClick={handleCreateNewProjectClick}>
+            <PlusIcon className="mr-2 h-4 w-4" />
             New Project
           </Button>
         </div>

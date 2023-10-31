@@ -17,13 +17,13 @@ export const DashboardPage = () => {
 
   return (
     <TimeframeSelectorProvider>
-      <div className="border-b bg-white">
-        <div className="flex h-24 items-center justify-between p-6">
+      <div className="border-b border-b-border">
+        <div className="flex h-24 items-center justify-between p-6 container">
           <h1>Dashboard</h1>
           <div className="flex gap-2">
             <Popover>
               <PopoverTrigger asChild>
-                <Button>
+                <Button variant="outline">
                   <FilterIcon className="mr-2 h-4 w-4" />
                   Filters {filters.length ? `(${filters.length})` : ""}
                 </Button>
@@ -37,13 +37,13 @@ export const DashboardPage = () => {
         </div>
       </div>
 
-      <div className="p-6">
+      <div className="p-6 container">
         <div className="mb-6">
           <StatisticsSection />
         </div>
         <div className="grid grid-cols-12 gap-6">
           <Card className="col-span-6 p-6">
-            <div className="mb-4 text-xl font-semibold">
+            <div className="mb-4 text-muted-foreground">
               Requests/Errors (Total)
             </div>
             <div className="h-[360px]">
@@ -53,7 +53,7 @@ export const DashboardPage = () => {
             </div>
           </Card>
           <Card className="col-span-6 p-6">
-            <div className="mb-4 text-xl font-semibold">
+            <div className="mb-4 text-muted-foreground">
               Request Duration (Average)
             </div>
 

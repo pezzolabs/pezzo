@@ -6,25 +6,21 @@ import { OrgSubHeader } from "./OrgSubHeader";
 
 interface Props {
   children: React.ReactNode;
-  withSideNav: boolean;
-  withHeader?: boolean;
-  withBreadcrumbs?: boolean;
+  withSideNav?: boolean;
   withOrgSubHeader?: boolean;
 }
 
 export const LayoutWrapper = ({
   children,
-  withSideNav,
+  withSideNav = false,
   withOrgSubHeader = false,
-  withHeader = true,
-  withBreadcrumbs = true,
 }: Props) => {
   const location = useLocation();
 
   return (
-    <div className="flex h-full max-h-[100vh] w-full">
+    <div className="flex h-full max-h-[100vh] w-full dark text-foreground">
       <div className="flex h-full w-full">
-        <div className="h-full max-h-full w-full overflow-y-auto  bg-gray-100/50">
+        <div className="h-full max-h-full w-full overflow-y-auto  bg-background">
           <Header />
 
           {withOrgSubHeader && <OrgSubHeader />}

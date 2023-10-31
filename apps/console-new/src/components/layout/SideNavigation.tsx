@@ -39,7 +39,7 @@ export const SideNavigation = () => {
       onMouseOver={() => setCollapsed(false)}
       onMouseLeave={() => setCollapsed(true)}
       className={cn(
-        "flex h-full grow flex-col gap-y-4 overflow-y-auto overflow-x-hidden bg-slate-950 px-3 pt-2"
+        "flex h-full grow flex-col gap-y-4 overflow-y-auto overflow-x-hidden bg-stone-900 px-3 pt-2 border-r border-border",
       )}
     >
       <nav className="flex flex-1 flex-col">
@@ -53,8 +53,8 @@ export const SideNavigation = () => {
                       to={item.href}
                       className={cn(
                         isActive(item.href)
-                          ? "bg-gray-800 text-emerald-500"
-                          : "text-gray-400 hover:bg-gray-800 hover:text-white",
+                          ? "bg-stone-800 text-emerald-500"
+                          : "text-stone-400 hover:bg-stone-800 hover:text-white",
                         "flex items-center rounded-md p-2 text-sm font-medium leading-3 transition-all"
                       )}
                     >
@@ -80,7 +80,7 @@ export const SideNavigation = () => {
           </li>
           <li className="mt-auto">
             <Link
-              className="mb-2 mt-auto flex cursor-pointer items-center rounded-md p-2 text-sm font-medium text-stone-400 transition-all hover:bg-gray-800 hover:text-white "
+              className="mb-2 mt-auto flex cursor-pointer items-center rounded-md p-2 text-sm font-medium text-stone-400 transition-all hover:bg-stone-800 hover:text-white "
               to="https://docs.pezzo.ai"
               target="_blank"
             >

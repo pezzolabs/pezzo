@@ -40,10 +40,11 @@ const getProperties = (
   const isDecrease = diff < 0;
 
   const className = clsx("h-7 w-7", {
-    "text-red-500": isDecrease || (reverseColors && isIncrease),
+    "text-destructive": isDecrease || (reverseColors && isIncrease),
     "text-green-500": isIncrease || (reverseColors && isDecrease),
-    "text-stone-300": !isIncrease && !isDecrease,
+    "text-muted": !isIncrease && !isDecrease,
   });
+  
 
   if (isIncrease) {
     return {
@@ -96,8 +97,8 @@ export const StatisticBox = ({
 
   return (
     <div>
-      <div className="mb-2 text-neutral-600">{title}</div>
-      <div className="flex text-2xl font-medium">
+      <div className="mb-2 text-muted-foreground">{title}</div>
+      <div className="flex text-2xl font-normal">
         {calculatedFormatter(currentValue)}
         {calculatedSuffix && (
           <TooltipProvider>

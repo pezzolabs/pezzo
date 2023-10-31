@@ -3,8 +3,6 @@ import {
   BriefcaseIcon,
   CheckIcon,
   ChevronsUpDown,
-  PlusIcon,
-  ZapIcon,
 } from "lucide-react";
 import LogoSquare from "~/assets/logo-square.svg";
 import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
@@ -25,8 +23,8 @@ export const OrgSelector = () => {
 
   return (
     <div className="flex text-sm">
-      <div className="flex min-w-[200px] flex-col gap-y-2 rounded-r-lg border-l bg-white p-2">
-        <p className="mt-2 px-2 text-gray-500">Organizations</p>
+      <div className="flex min-w-[200px] flex-col gap-y-2 rounded-r-lg p-2">
+        <p className="mt-2 px-2 text-muted-foreground">Organizations</p>
         <ul className="flex h-full flex-col">
           {organizations &&
             currentOrganization &&
@@ -34,7 +32,7 @@ export const OrgSelector = () => {
               <li>
                 <Link
                   to={`/orgs/${org.id}`}
-                  className="flex cursor-pointer items-center gap-x-2 rounded-md p-2 transition-all hover:bg-gray-100"
+                  className="flex cursor-pointer items-center gap-x-2 rounded-md p-2 transition-all hover:bg-muted"
                 >
                   <div className="flex-1">{org.name}</div>
                   {org.id === currentOrganization.id && (
@@ -45,14 +43,14 @@ export const OrgSelector = () => {
             ))}
         </ul>
       </div>
-      <div className="flex min-w-[200px] flex-col gap-y-2 rounded-r-lg border-l bg-gray-100/60 p-2">
+      <div className="flex min-w-[200px] flex-col gap-y-2 rounded-r-lg border-l border-border 0 p-2 bg-muted/30">
         <p className="mt-2 px-2 text-gray-500">Projects</p>
         <ul className="flex h-full flex-col">
           {projects &&
             projects.map((project) => (
               <li className="">
                 <Link
-                  className="flex cursor-pointer items-center gap-x-2 rounded-md p-2 transition-all hover:bg-gray-200"
+                  className="flex cursor-pointer items-center gap-x-2 rounded-md p-2 transition-all hover:bg-muted"
                   to={`/projects/${project.id}`}
                 >
                   <div className="flex-1">{project.name}</div>
@@ -74,16 +72,16 @@ export const Header = () => {
   const { currentUser } = useAuthContext();
 
   return (
-    <nav className="flex h-14 items-center gap-x-2 border-b border-b-slate-800 bg-slate-950 text-slate-200">
+    <nav className="flex h-14 items-center gap-x-2 border-b border-b-border">
       <div className={cn("mx-auto ml-2 h-10 w-10")}>
         <img src={LogoSquare} alt="Pezzo" />
       </div>
       <div className="flex flex-1 items-center gap-x-2">
         {organization && (
           <Popover>
-            <div className="mx-2 text-lg text-slate-700">{"/"}</div>
+            <div className="mx-2 text-lg text-stone-700">{"/"}</div>
             <div className="flex items-center gap-x-2">
-              <BriefcaseIcon className="h-4 w-4 text-slate-500" />
+              <BriefcaseIcon className="h-4 w-4 text-stone-500" />
               <Link
                 to={`/orgs/${organization.id}`}
                 className="cursor-pointer text-sm font-medium hover:underline"
@@ -91,7 +89,7 @@ export const Header = () => {
                 {organization.name}
               </Link>
               <PopoverTrigger className="cursor-pointer" asChild>
-                <ChevronsUpDown className="h-4 w-4 text-slate-500" />
+                <ChevronsUpDown className="h-4 w-4 text-stone-500" />
               </PopoverTrigger>
             </div>
             <PopoverContent className="w-auto p-0">
@@ -101,7 +99,7 @@ export const Header = () => {
         )}
         {project && (
           <Popover>
-            <div className="mx-2 text-lg text-slate-700">{"/"}</div>
+            <div className="mx-2 text-lg text-stone-700">{"/"}</div>
             <div className="flex items-center gap-x-2">
               <Link
                 to={`/projects/${project.id}`}
@@ -110,7 +108,7 @@ export const Header = () => {
                 {project.name}
               </Link>
               <PopoverTrigger className="cursor-pointer" asChild>
-                <ChevronsUpDown className="h-4 w-4 text-slate-500" />
+                <ChevronsUpDown className="h-4 w-4 text-stone-500" />
               </PopoverTrigger>
             </div>
             <PopoverContent className="w-auto p-0">

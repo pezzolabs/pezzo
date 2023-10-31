@@ -8,7 +8,7 @@ export const OrgApiKeysPage = () => {
 
   return (
     <>
-      <div className="mb-6 border-b bg-white">
+      <div className="mb-6 border-b border-b-border">
         <div className="container flex h-24 items-center">
           <h1>API Keys</h1>
         </div>

@@ -55,8 +55,9 @@ export const TimeframeSelector = () => {
         <PopoverTrigger asChild>
           <Button
             type="button"
+            variant="outline"
             className={clsx(
-              "first:rounded-l-m rounded-r-none border bg-white text-primary"
+              "first:rounded-l-m rounded-r-none border"
             )}
           >
             <CalendarDaysIcon className="mr-2 h-4 w-4" />
@@ -77,13 +78,12 @@ export const TimeframeSelector = () => {
           <Button
             key={tf}
             type="button"
+            variant="outline"
             onClick={() => handleSetTimeframe(tf)}
             className={clsx(
-              "relative -ml-px inline-flex items-center rounded-none border bg-white px-3 py-2 text-sm text-primary first:rounded-l-md last:rounded-r-md focus:z-10",
+              "relative -ml-px inline-flex items-center rounded-none border px-3 py-2 text-sm first:rounded-l-md last:rounded-r-md focus:z-10",
               {
-                "hover:bg-secondary hover:text-secondary-foreground":
-                  tf !== timeframe,
-                "bg-primary text-primary-foreground": tf === timeframe,
+                "bg-primary hover:bg-primary/90 text-primary-foreground hover:text-primary-foreground": tf === timeframe,
               }
             )}
           >
