@@ -50,6 +50,7 @@
     "@radix-ui/react-popover": "^1.0.7",
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-tooltip": "^1.0.7",
     "@segment/analytics-node": "^1.0.0-beta.26",
     "@sendgrid/mail": "^7.7.0",
@@ -58,6 +59,7 @@
     "@splinetool/runtime": "^0.9.436",
     "@swc/helpers": "0.5.1",
     "@tanstack/react-query": "^4.29.3",
+    "@tanstack/react-table": "^8.10.7",
     "@uiw/codemirror-extensions-classname": "^4.21.3",
     "@uiw/codemirror-theme-material": "^4.19.16",
     "@uiw/react-codemirror": "^4.19.16",
@@ -113,7 +115,8 @@
     "type-fest": "^3.11.1",
     "usehooks-ts": "^2.9.1",
     "uuid": "^9.0.0",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "zustand": "^4.4.5"
   },
   "devDependencies": {
     "@babel/preset-react": "^7.14.5",

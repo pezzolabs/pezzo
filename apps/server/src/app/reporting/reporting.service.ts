@@ -74,20 +74,20 @@ export class ReportingService {
   async getReports({
     projectId,
     organizationId,
-    page,
-    size: pageSize,
+    offset,
+    limit,
     filters,
     sort,
   }: {
     projectId: string;
     organizationId: string;
-    page: number;
-    size: number;
+    offset: number;
+    limit: number;
     filters: FilterInput[];
     sort: SortInput;
   }) {
-    const size = pageSize > MAX_PAGE_SIZE ? MAX_PAGE_SIZE : pageSize;
-    const from = (page - 1) * size;
+    const size = limit > MAX_PAGE_SIZE ? MAX_PAGE_SIZE : limit;
+    const from = offset > 0 ? offset : 0;
 
     const body = mapFiltersToDql({
       restrictions: {

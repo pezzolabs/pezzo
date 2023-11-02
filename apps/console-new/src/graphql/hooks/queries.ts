@@ -16,13 +16,12 @@ import {
   GetProjectMetricQueryVariables,
   GetPromptQuery,
   GetPromptVersionQuery,
-  Pagination,
+  PaginatedRequestsQuery,
   RequestReport,
 } from "~/@generated/graphql/graphql";
 import { GraphQLErrorResponse, ReportRequestResponse } from "../types";
 import { Provider } from "@pezzo/types";
 import { GET_PROMPT, GET_PROMPT_VERSION } from "../definitions/queries/prompts";
-import { useEffect } from "react";
 import { useFiltersAndSortParams } from "~/lib/hooks/useFiltersAndSortParams";
 import {
   GET_PROJECT_METRIC,
@@ -56,7 +55,7 @@ export const usePezzoApiKeys = () => {
 
   return {
     pezzoApiKeys: data?.apiKeys,
-    isLoading
+    isLoading,
   };
 };
 
@@ -126,45 +125,26 @@ const buildTypedRequestReportObject = (requestReport: RequestReport) => {
 };
 
 export const useGetRequestReports = ({
-  size = 10,
-  page = 1,
+  offset,
+  limit,
 }: {
-  size: number;
-  page: number;
+  offset: number;
+  limit: number;
 }) => {
-  const { project } = useCurrentProject();
+  const { projectId } = useCurrentProject();
   const { filters, sort } = useFiltersAndSortParams();
 
-  const { refetch, ...response } = useQuery({
-    queryKey: ["requestReports", project?.id, page, size, filters, sort],
+  return useQuery<
+    PaginatedRequestsQuery,
+    GraphQLErrorResponse
+  >({
     queryFn: () =>
-      gqlClient.request<{
-        paginatedRequests: { pagination: Pagination; data: RequestReport[] };
-      }>(GET_ALL_REQUESTS, {
-        data: { projectId: project?.id, size, page, filters, sort },
+      gqlClient.request(GET_ALL_REQUESTS, {
+        data: { projectId, offset, limit, filters, sort },
       }),
-    enabled: !!project,
+    queryKey: ["requests", projectId, offset, limit, filters, sort],
+    enabled: !!projectId && offset !== undefined && limit !== undefined,
   });
-
-  const typedData =
-    response.data?.paginatedRequests.data?.map(buildTypedRequestReportObject) ??
-    [];
-
-  useEffect(() => {
-    refetch();
-  }, [refetch, sort, filters]);
-
-  return {
-    ...response,
-    refetch,
-    data: {
-      ...response.data,
-      paginatedRequests: {
-        ...response.data?.paginatedRequests,
-        data: typedData,
-      },
-    },
-  };
 };
 
 export const useProjectMetric = (

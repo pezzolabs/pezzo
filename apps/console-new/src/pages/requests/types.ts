@@ -1,14 +1,14 @@
 import { AllPrimitiveTypes } from "@pezzo/types";
 
 export interface RequestReportItem {
-  key: string;
+  reportId: string;
   timestamp: string;
-  status: JSX.Element;
-  duration: string;
-  totalTokens?: number;
-  cost?: string;
-  promptId?: AllPrimitiveTypes;
-  isTestPrompt?: boolean;
-  cacheEnabled?: boolean;
-  cacheHit?: boolean;
+  status: number;
+  duration: number;
+  totalTokens: number;
+  cost: number;
+  promptId: AllPrimitiveTypes | null;
+  isTestPrompt: boolean;
+  cacheEnabled: boolean;
+  cacheHit: boolean;
 }

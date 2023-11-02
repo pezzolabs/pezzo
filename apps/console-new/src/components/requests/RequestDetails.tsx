@@ -6,27 +6,33 @@ import {
   ObservabilityReportProperties,
 } from "@pezzo/types";
 import {
-  List,
-  Space,
-  Tag,
-  Tooltip,
-  Typography,
-  Segmented,
-  Card,
   Alert,
-} from "antd";
-import { toDollarSign } from "~/lib/utils/currency-utils";
-import { InfoCircleFilled } from "@ant-design/icons";
+  AlertDescription,
+  Tooltip,
+  TooltipProvider,
+  TooltipTrigger,
+  TooltipContent,
+  Tabs,
+  TabsList,
+  TabsContent,
+  TabsTrigger,
+} from "@pezzo/ui";
 import ms from "ms";
-import {
-  ChatBubbleBottomCenterTextIcon,
-  CodeBracketIcon,
-} from "@heroicons/react/24/solid";
 import { useState } from "react";
-import { RequestResponseChatView } from "./RequestResponseChatView";
 import { RequestResponseViewJsonView } from "./RequestResponseViewJsonView";
 import { trackEvent } from "~/lib/utils/analytics";
-import Icon from "@ant-design/icons/lib/components/Icon";
+import {
+  BracesIcon,
+  CheckIcon,
+  CircleSlash,
+  CoinsIcon,
+  InfoIcon,
+  MessageSquare,
+} from "lucide-react";
+import { Tag } from "../common/Tag";
+import { cn } from "@pezzo/ui/utils";
+import { normalizeOpenAIChatResponse } from "~/features/chat/normalizers/openai-normalizer";
+import { ChatView } from "~/features/chat/ChatView";
 
 type Mode = "chat" | "json";
 
@@ -57,6 +63,7 @@ export const RequestDetails = (props: Props) => {
   const request = props.request as ObservabilityRequest<Provider.OpenAI>;
   const response = props.response as ObservabilityResponse<Provider.OpenAI>;
   const isSuccess = response.status >= 200 && response.status < 300;
+  const isError = !isSuccess;
 
   const [selectedMode, setSelectedMode] = useState<Mode>(
     isSuccess ? "chat" : "json"
@@ -82,10 +89,11 @@ export const RequestDetails = (props: Props) => {
     {
       title: "Cache",
       description: (
-        <>
+        <div className="flex gap-1">
           <Tag>{props.cacheEnabled ? "enabled" : "disabled"}</Tag>
-          <Tag>{props.cacheHit ? "hit" : "miss"}</Tag>
-        </>
+
+          {props.cacheEnabled && <Tag>{props.cacheHit ? "hit" : "miss"}</Tag>}
+        </div>
       ),
     },
     {
@@ -94,43 +102,67 @@ export const RequestDetails = (props: Props) => {
     },
     {
       title: "Provider",
-      description: <Tag>{props.provider}</Tag>,
+      description: <>{props.provider}</>,
     },
     {
       title: "Model",
-      description: <Tag>{request.body.model}</Tag>,
+      description: <>{request.body.model}</>,
     },
     {
       title: "Tokens",
       description: (
-        <Space direction="horizontal">
-          <div>{props.calculated.totalTokens}</div>
-          <Tooltip
-            title={
-              <>
-                Completion tokens: {response.body.usage?.completion_tokens}
-                <br />
-                Prompt tokens: {response.body.usage?.prompt_tokens}
-              </>
-            }
-            overlayStyle={{ fontSize: 12 }}
-            placement="right"
-          >
-            <InfoCircleFilled />
-          </Tooltip>
-        </Space>
+        <div className="flex items-center gap-1">
+          <span>{props.calculated.totalTokens}</span>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <CoinsIcon className="h-4 w-4 opacity-70" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <div className="flex flex-col gap-2">
+                  <div className="flex justify-between gap-4">
+                    <span className="font-semibold">Completion tokens:</span>{" "}
+                    <span>{response.body.usage?.completion_tokens}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-semibold">Prompt tokens:</span>
+                    <span> {response.body.usage?.prompt_tokens}</span>
+                  </div>
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
       ),
     },
     {
       title: "Cost",
-      description: toDollarSign(props.calculated.totalCost),
+      description: `$${props.calculated?.totalCost?.toFixed(3) ?? 0}`,
     },
     {
       title: "Status",
-      description: isSuccess ? (
-        <Tag color="green">Success</Tag>
-      ) : (
-        <Tag color="red">{response.status} Error</Tag>
+      description: (
+        <div
+          className={cn(
+            "flex items-center gap-1 rounded-sm p-1 text-xs font-medium",
+            {
+              "text-red-500": isError,
+              "text-green-500": !isError,
+            }
+          )}
+        >
+          {isError ? (
+            <>
+              <CircleSlash className="h-4 w-4" />
+              <span>{response.status} Error</span>
+            </>
+          ) : (
+            <>
+              <CheckIcon className="h-4 w-4" />
+              <span>Success</span>
+            </>
+          )}
+        </div>
       ),
     },
     {
@@ -144,72 +176,62 @@ export const RequestDetails = (props: Props) => {
     {
       title: "Display mode",
       description: (
-        <Segmented
-          options={[
-            {
-              icon: (
-                <Icon
-                  component={() => (
-                    <ChatBubbleBottomCenterTextIcon width={15} />
-                  )}
-                />
-              ),
-              value: "chat",
-              label: "Chat",
-            },
-            {
-              icon: <Icon component={() => <CodeBracketIcon width={15} />} />,
-              value: "json",
-              label: "JSON",
-            },
-          ]}
-          value={selectedMode}
-          onChange={handleDisplayModeChange}
-        />
+        <Tabs
+          defaultValue="chat"
+          onValueChange={(value: Mode) => setSelectedMode(value)}
+        >
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger className="flex gap-1" value="chat">
+              <MessageSquare className="h-4 w-4" /> Chat
+            </TabsTrigger>
+            <TabsTrigger className="flex gap-1" value="json">
+              <BracesIcon className="h-4 w-4" /> JSON
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       ),
     },
   ];
 
-  return (
-    <>
-      {props.metadata?.isTestPrompt && (
-        <Alert
-          type="info"
-          showIcon
-          message="This is a test request from the Pezzo platform"
-        />
-      )}
-      <List
-        style={{ borderBottom: "1px solid rgba(253, 253, 253, 0.12)" }}
-        dataSource={listData}
-        renderItem={(item) => (
-          <List.Item style={{ alignItems: "flex-start" }}>
-            <List.Item.Meta title={item.title} />
-            <div>{item.description}</div>
-          </List.Item>
-        )}
-      />
-      <br />
-      <Space direction="vertical" style={{ width: "100%" }}>
-        <Typography.Text strong>Properties</Typography.Text>
-        {props.properties ? (
-          <Card size="small" style={{ maxWidth: "100%" }}>
-            <pre>{JSON.stringify(props.properties, null, 2)}</pre>
-          </Card>
-        ) : (
-          <Typography.Text italic type="secondary">
-            No properties specified
-          </Typography.Text>
-        )}
-      </Space>
-      <br />
-      <br />
-      {selectedMode === "json" && (
+  const renderResponse = () => {
+    if (selectedMode === "json") {
+      return (
         <RequestResponseViewJsonView request={request} response={response} />
+      );
+    }
+
+    if (props.provider === Provider.OpenAI) {
+      const chat = normalizeOpenAIChatResponse(request.body, response.body);
+      return <ChatView chat={chat} />;
+    }
+  };
+
+  return (
+    <div className="text-sm">
+      {props.metadata?.isTestPrompt && (
+        <div className="p-4">
+          <Alert className="border-blue-900 bg-blue-950/40 text-blue-500">
+            <AlertDescription className="flex items-center gap-1">
+              <InfoIcon className="h-4 w-4" />
+              This is a test request from the Pezzo Console
+            </AlertDescription>
+          </Alert>
+        </div>
       )}
-      {selectedMode === "chat" && (
-        <RequestResponseChatView request={request} response={response} />
-      )}
-    </>
+
+      <div className="flex flex-col gap-1">
+        {listData.map((item) => (
+          <div
+            key={item.title}
+            className="flex h-12 items-center justify-between border-b px-4 py-3"
+          >
+            <div className="font-semibold">{item.title}</div>
+            <div>{item.description}</div>
+          </div>
+        ))}
+
+        <div className="p-4">{renderResponse()}</div>
+      </div>
+    </div>
   );
 };

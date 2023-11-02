@@ -27,6 +27,8 @@ import { RequestResponseChatView } from "./RequestResponseChatView";
 import { RequestResponseViewJsonView } from "./RequestResponseViewJsonView";
 import { trackEvent } from "../../lib/utils/analytics";
 import Icon from "@ant-design/icons/lib/components/Icon";
+import { CheckIcon, CircleSlash } from "lucide-react";
+import { cn } from "@pezzo/ui/utils";
 
 type Mode = "chat" | "json";
 
@@ -57,6 +59,7 @@ export const RequestDetails = (props: Props) => {
   const request = props.request as ObservabilityRequest<Provider.OpenAI>;
   const response = props.response as ObservabilityResponse<Provider.OpenAI>;
   const isSuccess = response.status >= 200 && response.status < 300;
+  const isError = !isSuccess;
 
   const [selectedMode, setSelectedMode] = useState<Mode>(
     isSuccess ? "chat" : "json"
@@ -127,10 +130,25 @@ export const RequestDetails = (props: Props) => {
     },
     {
       title: "Status",
-      description: isSuccess ? (
-        <Tag color="green">Success</Tag>
-      ) : (
-        <Tag color="red">{response.status} Error</Tag>
+      description: (
+        <div
+          className={cn("flex gap-1 rounded-sm p-1 text-xs font-medium", {
+            "text-red-500": isError,
+            "text-green-500": !isError,
+          })}
+        >
+          {isError ? (
+            <>
+              <CircleSlash className="h-4 w-4" />
+              <span>Error</span>
+            </>
+          ) : (
+            <>
+              <CheckIcon className="h-4 w-4" />
+              <span>Success</span>
+            </>
+          )}
+        </div>
       ),
     },
     {

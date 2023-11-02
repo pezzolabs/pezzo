@@ -1,194 +1,208 @@
-import { Drawer, Space, Table, Tag, Typography, Card } from "antd";
-import type { ColumnsType } from "antd/es/table";
 import { useGetRequestReports } from "~/graphql/hooks/queries";
-import { useMemo, useState } from "react";
-import {
-  DEFAULT_PAGE_SIZE,
-  PAGE_SIZE_OPTIONS,
-} from "~/lib/constants/pagination";
-import { RequestDetails } from "~/components/requests/RequestDetails";
-import { toDollarSign } from "~/lib/utils/currency-utils";
-import { RequestFilters } from "~/components/requests/RequestFilters";
+import { useEffect, useMemo, useState } from "react";
+import { DEFAULT_PAGE_SIZE } from "~/lib/constants/pagination";
 import { RequestReportItem } from "./types";
-import { UnmanagedPromptWarning } from "./UnmanagedPromptWarning";
-import { colors } from "~/lib/theme/colors";
-import { trackEvent } from "~/lib/utils/analytics";
 import { usePageTitle } from "~/lib/hooks/usePageTitle";
+import { RequestsTable } from "./RequestsTable";
+import { ColumnDef } from "@tanstack/react-table";
+import { cn } from "@pezzo/ui/utils";
+import { ReportRequestResponse } from "~/graphql/types";
+import { useSearchParams } from "react-router-dom";
+import { CheckIcon, CircleSlash, MoveRightIcon } from "lucide-react";
+import { RequestItemTags } from "./RequestTags";
+import { RequestDetails } from "~/components/requests";
+import { Drawer } from "~/components/common/Drawer";
 
-const getTableColumns = (
-  data: RequestReportItem[]
-): ColumnsType<RequestReportItem> => {
-  const columns: ColumnsType<RequestReportItem> = [
+const getTableColumns = (): ColumnDef<RequestReportItem>[] => {
+  const columns: ColumnDef<RequestReportItem>[] = [
     {
-      title: "Timestamp",
-      dataIndex: "timestamp",
-      width: "auto",
+      accessorKey: "timestamp",
+      id: "timestamp",
+      header: "Timestamp",
+      cell: ({ row }) => <div>{row.original.timestamp}</div>,
+      enableSorting: true,
     },
     {
-      title: "Status",
-      dataIndex: "status",
+      accessorKey: "status",
+      id: "status",
+      header: "Status",
+      cell: ({ row }) => {
+        const isError = row.original.status >= 400;
+        return (
+          <div
+            className={cn(
+              "flex items-center gap-1 rounded-sm p-1 text-xs font-medium",
+              {
+                "text-red-500": isError,
+                "text-green-500": !isError,
+              }
+            )}
+          >
+            {isError ? (
+              <>
+                <CircleSlash className="h-4 w-4" />
+                <span>Error</span>
+              </>
+            ) : (
+              <>
+                <CheckIcon className="h-4 w-4" />
+                <span>Success</span>
+              </>
+            )}
+          </div>
+        );
+      },
+      enableSorting: true,
     },
     {
-      title: "Duration",
-      dataIndex: "duration",
+      accessorKey: "duration",
+      id: "duration",
+      header: "Duration",
+      cell: ({ row }) => (
+        <div>{`${(row.original.duration / 1000).toFixed(2)}s`}</div>
+      ),
     },
     {
-      title: "Total Tokens",
-      dataIndex: "totalTokens",
+      accessorKey: "totalTokens",
+      id: "totalTokens",
+      header: "Total Tokens",
+      cell: ({ row }) => <div>{row.original.totalTokens}</div>,
     },
     {
-      title: "Cost",
-      dataIndex: "cost",
+      accessorKey: "cost",
+      id: "cost",
+      header: "Cost",
+      cell: ({ row }) => <div>${row.original.cost.toFixed(3)}</div>,
+    },
+    {
+      id: "tags",
+      cell: ({ row }) => <RequestItemTags request={row.original} />,
+    },
+    {
+      id: "inspect",
+      size: 50,
+      cell: ({ row }) => (
+        <div className="flex w-[80px] justify-end pr-2 text-muted-foreground">
+          <MoveRightIcon className="h-4 w-4" />
+        </div>
+      ),
     },
   ];
-
-  // Handle unmanaged prompts
-  const hasUnmanagedPrompts = data.some((r) => !r.promptId);
-  if (hasUnmanagedPrompts) {
-    columns.unshift({
-      title: "",
-      dataIndex: "promptId",
-      render: (promptId?: string) => !promptId && <UnmanagedPromptWarning />,
-      width: "40px",
-      align: "center",
-    });
-  }
-
-  // Handle test prompt executions
-  const hasTestPrompts = data.some((r) => r.isTestPrompt);
-  if (hasTestPrompts) {
-    columns.unshift({
-      title: "",
-      dataIndex: "isTestPrompt",
-      render: (isTestPrompt: boolean) =>
-        isTestPrompt && <Tag color={colors.neutral[600]}>TEST</Tag>,
-      width: "40px",
-      align: "center",
-    });
-  }
-
-  // Handle cached executions
-  const hasCachedExecutions = data.some((r) => r.cacheHit);
-
-  if (hasCachedExecutions) {
-    columns.unshift({
-      title: "",
-      dataIndex: "cacheHit",
-      render: (isCacheHit: boolean) =>
-        isCacheHit && <Tag color={colors.green[800]}>CACHE</Tag>,
-      width: "40px",
-      align: "center",
-    });
-  }
 
   return columns;
 };
 
 export const RequestsPage = () => {
-  const [size, setSize] = useState(DEFAULT_PAGE_SIZE);
-  const [page, setPage] = useState(1);
-  const [currentReportId, setCurrentReportId] = useState<string | null>(null);
-  const { data: reports, isLoading } = useGetRequestReports({ size, page });
   usePageTitle("Requests");
-  const currentReport = useMemo(
-    () =>
-      reports?.paginatedRequests.data.find(
-        (r) => r.reportId === currentReportId
-      ),
-    [reports?.paginatedRequests.data, currentReportId]
-  );
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [currentReportId, setCurrentReportId] = useState<string | null>(null);
 
-  const { data, pagination } = reports.paginatedRequests;
+  useEffect(() => {
+    if (searchParams) {
+      if (!searchParams.has("offset")) {
+        searchParams.set("offset", "0");
+      }
 
-  const tableData = data?.map((report) => {
-    const isError = report.response.status >= 400;
+      if (!searchParams.has("limit")) {
+        searchParams.set("limit", DEFAULT_PAGE_SIZE.toString());
+      }
 
-    return {
-      key: report.reportId,
-      timestamp: report.request.timestamp,
-      status: isError ? (
-        <Tag color="red">{report.response.status} Error</Tag>
-      ) : (
-        <Tag color="green">Success</Tag>
-      ),
-      duration: `${(report.calculated.duration / 1000).toFixed(2)}s`,
-      totalTokens: report.calculated.totalTokens ?? 0,
-      cost: report.calculated.totalCost
-        ? toDollarSign(report.calculated.totalCost)
-        : "$0.0000",
-      promptId: report.metadata?.promptId,
-      isTestPrompt: (report.metadata?.isTestPrompt as boolean) || false,
-      cacheEnabled: report.cacheEnabled as boolean,
-      cacheHit: report.cacheHit as boolean,
-    };
+      setSearchParams(searchParams);
+    }
+  }, [searchParams])
+
+  const { limit, offset } = useMemo(() => {
+    const limit = parseInt(searchParams.get("limit"));
+    const offset = parseInt(searchParams.get("offset"));
+    return { limit, offset };
+  }, [searchParams]);
+
+  const { data: requests, isSuccess } = useGetRequestReports({
+    offset,
+    limit,
   });
 
-  const handleShowDetails = (record: RequestReportItem) => () => {
-    setCurrentReportId(record.key);
-    trackEvent("request_details_viewed", {
-      request_id: record.key,
-    });
-  };
+  const columns = useMemo(() => getTableColumns(), []);
 
-  const columns = getTableColumns(tableData);
+  const pagination = useMemo(
+    () => requests?.paginatedRequests?.pagination,
+    [requests]
+  );
+  const paginatedResults = useMemo(
+    () => requests?.paginatedRequests?.data ?? [],
+    [requests]
+  );
+
+  const data: RequestReportItem[] = useMemo(
+    () =>
+      paginatedResults.map((report: ReportRequestResponse) => {
+        return {
+          reportId: report.reportId,
+          timestamp: report.request.timestamp,
+          status: report.response.status,
+          duration: report.calculated.duration ?? 0,
+          totalTokens: report.calculated.totalTokens ?? 0,
+          cost: report.calculated.totalCost ?? 0,
+          isTestPrompt: (report.metadata?.isTestPrompt as boolean) || false,
+          promptId: report.metadata?.promptId ?? null,
+          cacheEnabled: report.cacheEnabled ?? false,
+          cacheHit: report.cacheHit ?? false,
+        };
+      }),
+    [paginatedResults]
+  );
+
+  const currentReport = useMemo(
+    () =>
+      requests?.paginatedRequests.data.find(
+        (r) => r.reportId === currentReportId
+      ),
+    [requests?.paginatedRequests.data, currentReportId]
+  );
 
   return (
-    <div>
-      <Space direction="vertical" style={{ width: "100%" }}>
-        <Typography.Title level={2}>Requests</Typography.Title>
-        <Card style={{ width: "100%", marginBottom: 10 }}>
-          <RequestFilters />
-        </Card>
-        <Drawer
-          title="Request Details"
-          placement="right"
-          closable={true}
-          onClose={() => setCurrentReportId(null)}
-          open={!!currentReport}
-          width="30%"
-        >
-          {currentReport != null && (
-            <RequestDetails
-              id={currentReportId}
-              request={currentReport.request}
-              response={currentReport.response}
-              provider={currentReport.metadata.provider}
-              calculated={currentReport.calculated}
-              metadata={currentReport.metadata}
-              properties={currentReport.properties}
-              cacheEnabled={currentReport.cacheEnabled}
-              cacheHit={currentReport.cacheHit}
-            />
-          )}
-        </Drawer>
-        <Table
-          loading={isLoading}
-          columns={columns}
-          dataSource={tableData}
-          onRow={(record) => {
-            return {
-              onClick: handleShowDetails(record),
-              style: { cursor: "pointer" },
-            };
-          }}
-          pagination={{
-            showSizeChanger: true,
-            pageSizeOptions: PAGE_SIZE_OPTIONS,
-            pageSize: pagination?.size,
-            current: pagination?.page,
-            total: pagination?.total,
+    <>
+      <Drawer onClose={() => setCurrentReportId(null)} open={!!currentReport}>
+        {currentReport != null && (
+          <RequestDetails
+            id={currentReportId}
+            request={currentReport.request}
+            response={currentReport.response}
+            provider={currentReport.metadata.provider}
+            calculated={currentReport.calculated}
+            metadata={currentReport.metadata}
+            properties={currentReport.properties}
+            cacheEnabled={currentReport.cacheEnabled}
+            cacheHit={currentReport.cacheHit}
+          />
+        )}
+      </Drawer>
+      
+      <div className="mb-6 border-b border-b-border">
+        <div className="container flex h-24 items-center justify-between">
+          <h1>Requests</h1>
+        </div>
+      </div>
 
-            onChange: (page, size) => {
-              setPage(page);
-              setSize(size ?? DEFAULT_PAGE_SIZE);
-              trackEvent("request_details_pagination_change", {
-                page,
-                size,
-              });
-            },
-          }}
-        />
-      </Space>
-    </div>
+      <div className="container">
+        {isSuccess && (
+          <RequestsTable
+            limit={limit}
+            offset={offset}
+            data={data}
+            columns={columns}
+            totalResults={pagination.total}
+            onPaginationChange={(offset, limit) => {
+              searchParams.set("offset", offset.toString());
+              searchParams.set("limit", limit.toString());
+              setSearchParams(searchParams);
+            }}
+            onClickReport={(reportId) => {
+              setCurrentReportId(reportId);
+            }}
+          />
+        )}
+      </div>
+    </>
   );
 };

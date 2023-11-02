@@ -12,3 +12,5 @@ export * from "./components/ui/alert-dialog";
 export * from "./components/ui/dialog";
 export * from "./components/ui/dropdown-menu";
 export * from "./components/ui/avatar";
+export * from "./components/ui/table";
+export * from "./components/ui/tabs";

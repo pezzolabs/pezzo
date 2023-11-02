@@ -3,7 +3,7 @@ import {
   ObservabilityResponse,
   Provider,
 } from "@pezzo/types";
-import { Space, Typography, Card } from "antd";
+import { Card } from "@pezzo/ui";
 
 interface Props {
   request: ObservabilityRequest<Provider.OpenAI>;
@@ -12,15 +12,19 @@ interface Props {
 
 export const RequestResponseViewJsonView = ({ request, response }: Props) => {
   return (
-    <Space direction="vertical" style={{ width: "100%" }}>
-      <Typography.Text strong>Request</Typography.Text>
-      <Card>
-        <pre>{JSON.stringify(request.body, null, 2)}</pre>
-      </Card>
-      <Typography.Text strong>Response</Typography.Text>
-      <Card>
-        <pre>{JSON.stringify(response.body, null, 2)}</pre>
-      </Card>
-    </Space>
+    <div className="flex flex-col gap-4 p-4">
+      <div>
+        <p className="font-semibold mb-4">Request</p>
+        <Card className="p-2">
+          <pre className="overflow-y-auto">{JSON.stringify(request.body, null, 2)}</pre>
+        </Card>
+      </div>
+      <div>
+        <p className="font-semibold mb-4">Response</p>
+        <Card className="p-2">
+          <pre className="overflow-y-auto">{JSON.stringify(response.body, null, 2)}</pre>
+        </Card>
+      </div>
+    </div>
   );
 };

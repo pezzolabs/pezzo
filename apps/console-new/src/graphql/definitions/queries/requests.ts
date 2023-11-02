@@ -14,8 +14,8 @@ export const GET_ALL_REQUESTS = graphql(/* GraphQL */ `
         cacheHit
       }
       pagination {
-        page
-        size
+        offset
+        limit
         total
       }
     }
