@@ -15,8 +15,8 @@ export const Drawer = ({ children, className, onClose, open }: Props) => {
   return (
     <div
       className={cn(
-        "absolute right-0 top-0 z-0 flex h-full w-full transition-all",
-        open && "z-10",
+        "absolute right-0 top-0 z-0 flex h-full w-0",
+        open && "z-10 w-full",
         shouldHide && "hidden"
       )}
     >
