@@ -1,15 +1,14 @@
 import { LoadingOutlined } from "@ant-design/icons";
-import { Button, Col, Input, Row, Space, Typography, Card, theme } from "antd";
-import { ArrowRightOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import styled from "@emotion/styled";
 import { useGetProjects } from "~/graphql/hooks/queries";
 import {
   useCreateProjectMutation,
   useUpdateCurrentUserMutation,
 } from "~/graphql/hooks/mutations";
 import { useCallback, useEffect } from "react";
-import { Form } from "antd";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import {
   CreateProjectMutation,
   UpdateProfileMutation,
@@ -17,24 +16,32 @@ import {
 import { useAuthContext } from "~/lib/providers/AuthProvider";
 import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
 import { usePageTitle } from "~/lib/hooks/usePageTitle";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input,
+} from "@pezzo/ui";
 
-const StyledButton = styled(Button)<{ spacing: number }>`
-  margin-top: ${(props) => props.spacing}px;
-`;
+const formSchema = z.object({
+  projectName: z.string().min(1, "Please enter a valid project name").max(100, "Project name must be less than 100 characters"),
+});
 
-const VerticalSpace = styled(Space)`
-  width: 100%;
-`;
-VerticalSpace.defaultProps = {
-  direction: "vertical",
-};
-
-interface FormValues {
-  name: string;
-  projectName: string;
-}
 export const OnboardingPage = () => {
-  const [form] = Form.useForm<FormValues>();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      projectName: "",
+    },
+  });
+
   const { organization } = useCurrentOrganization();
   const { mutateAsync: updateCurrentUser, isLoading: isUpdatingUserLoading } =
     useUpdateCurrentUserMutation();
@@ -45,14 +52,13 @@ export const OnboardingPage = () => {
 
   const { currentUser } = useAuthContext();
 
-  const { token } = theme.useToken();
   const navigate = useNavigate();
 
   const isCreatingProject = isProjectCreationLoading || isUpdatingUserLoading;
   const hasName = currentUser.name !== null;
 
   const handleCreateProject = useCallback(
-    async (values: FormValues) => {
+    async (values: z.infer<typeof formSchema>) => {
       const actions: [
         Promise<CreateProjectMutation>,
         Promise<UpdateProfileMutation | null>
@@ -64,16 +70,8 @@ export const OnboardingPage = () => {
         null,
       ];
 
-      if (!hasName) {
-        actions.push(
-          updateCurrentUser({
-            name: values.name,
-          })
-        );
-      }
-
       await Promise.all(actions.filter(Boolean));
-      return navigate("/projects");
+      return navigate("/");
     },
     [updateCurrentUser, createProject, organization?.id, hasName, navigate]
   );
@@ -89,68 +87,38 @@ export const OnboardingPage = () => {
   }
 
   return (
-    <Row justify="center">
-      <Col span={10}>
-        <Card
-          title={
-            <Typography.Title level={3} style={{ margin: 0 }}>
-              Let's create your first project{" "}
-              <span role="img" aria-label="emoji">
-                🎉
-              </span>
-            </Typography.Title>
-          }
-        >
-          <Form
-            form={form}
-            name="onboarding-form"
-            onFinish={handleCreateProject}
-          >
-            <VerticalSpace style={{ width: "100%" }}>
-              {!hasName && (
-                <>
-                  <Typography.Text style={{ padding: 0 }}>
-                    What's your name?
-                  </Typography.Text>
-                  <Form.Item name="name">
-                    <Input placeholder="John Doe" />
-                  </Form.Item>
-                </>
-              )}
-
-              <Row gutter={4} align="middle">
-                <Col>
-                  <Typography.Text>
-                    How do you want to call your first project?
-                  </Typography.Text>
-                </Col>
-              </Row>
-
-              <Form.Item
+    <div className="mt-6 flex items-center justify-center">
+      <Card>
+        <CardContent>
+          <CardHeader>
+            <h3>Let's create your first project 🎉</h3>
+          </CardHeader>
+          <div>
+            <Form {...form}>
+              <FormField
                 name="projectName"
-                rules={[
-                  {
-                    required: true,
-                    message: "You must enter a valid project name",
-                  },
-                ]}
-              >
-                <Input placeholder="e.g. Content Creation" />
-              </Form.Item>
-            </VerticalSpace>
-
-            <Row justify="end">
-              <StyledButton
-                spacing={token.marginLG}
-                htmlType="submit"
-                loading={isCreatingProject}
-              >
-                Create Project <ArrowRightOutlined />
-              </StyledButton>
-            </Row>
-          </Form>
-        </Card>
-      </Col>
-    </Row>
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      How do you want to call your first project?
+                    </FormLabel>
+                    <Input autoComplete="off" {...field} />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </Form>
+          </div>
+        </CardContent>
+        <CardFooter className="flex justify-end">
+          <Button
+            onClick={form.handleSubmit(handleCreateProject)}
+            loading={isCreatingProject}
+          >
+            Next
+          </Button>
+        </CardFooter>
+      </Card>
+    </div>
   );
 };
