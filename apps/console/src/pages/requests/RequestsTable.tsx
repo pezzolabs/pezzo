@@ -153,7 +153,9 @@ export function RequestsTable<TData, TValue>({
             </SelectTrigger>
             <SelectContent>
               {PAGE_SIZE_OPTIONS.map((size) => (
-                <SelectItem value={size}>{size}</SelectItem>
+                <SelectItem key={size} value={size}>
+                  {size}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>

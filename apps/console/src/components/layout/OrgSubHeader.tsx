@@ -37,6 +37,7 @@ export const OrgSubHeader = () => {
         <ul className="flex">
           {orgNavigation.map((nav) => (
             <li
+              key={nav.href}
               onClick={() => navigate(nav.href)}
               className={getClassName(nav.href)}
             >
