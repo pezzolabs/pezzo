@@ -4,14 +4,13 @@ import {
   BoxIcon,
   GitCommitIcon,
   PencilIcon,
-  SettingsIcon,
 } from "lucide-react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
 import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
 
-export const PromptNavigation = ({}) => {
+export const PromptNavigation = () => {
   const { projectId } = useCurrentProject();
   const { prompt } = useCurrentPrompt();
   const navigate = useNavigate();

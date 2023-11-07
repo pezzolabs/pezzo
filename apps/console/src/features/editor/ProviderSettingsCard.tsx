@@ -11,9 +11,7 @@ const providerSettings = {
     azureOpenAIChatCompletionSettingsDefinition,
 };
 
-interface Props {}
-
-export const ProviderSettingsCard = ({}: Props) => {
+export const ProviderSettingsCard = () => {
   const { getForm } = useEditorContext();
 
   const form = getForm();
@@ -31,11 +29,9 @@ export const ProviderSettingsCard = ({}: Props) => {
       <div className="my-2 border-t border-muted"></div>
 
       {service && (
-        <>
-          <ProviderSettingsSchemaRenderer
-            schema={providerSettings[service].generateFormSchema(settings)}
-          />
-        </>
+        <ProviderSettingsSchemaRenderer
+          schema={providerSettings[service].generateFormSchema(settings)}
+        />
       )}
     </div>
   );
