@@ -1,19 +1,22 @@
-import { createContext, useContext, useState } from "react";
-import {
-  PromptVersionFormInputs,
-  usePromptVersionEditorContext,
-} from "./PromptVersionEditorContext";
-import { Form, FormInstance } from "antd";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useTestPrompt } from "~/graphql/hooks/mutations";
 import { useCurrentProject } from "../hooks/useCurrentProject";
 import { useCurrentPrompt } from "./CurrentPromptContext";
 import { RequestReport } from "~/@generated/graphql/graphql";
+import { EditorFormInputs, useEditorContext } from "./EditorContext";
+import { UseFormReturn, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const formSchema = z.record(z.string(), z.string().min(1));
+
+export type PromptTesterVariablesInputs = z.infer<typeof formSchema>;
 
 interface PromptTesterContextValue {
   isOpen: boolean;
-  openTestModal: (value: PromptVersionFormInputs) => void;
+  openTestModal: (value: EditorFormInputs) => void;
   closeTestModal: () => void;
-  testVariablesForm: FormInstance<Record<string, string>>;
+  testVariablesForm: UseFormReturn<z.infer<typeof formSchema>>;
   runTest: () => void;
   isTestLoading: boolean;
   testError: any;
@@ -45,9 +48,28 @@ export const PromptTesterProvider = ({ children }) => {
     data,
     reset,
   } = useTestPrompt();
-  const { formValues, promptType } = usePromptVersionEditorContext();
+  const { getForm, variables } = useEditorContext();
+  const editorForm = getForm();
   const [isOpen, setIsOpen] = useState(false);
-  const [testVariablesForm] = Form.useForm<Record<string, string>>();
+
+  const testVariablesForm = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {},
+  });
+
+  useEffect(() => {
+    const currentValues = testVariablesForm.getValues();
+    const variablesRecord: z.infer<typeof formSchema> = {};
+
+    for (const variableName of variables) {
+      variablesRecord[variableName] = currentValues[variableName] || "";
+    }
+
+    testVariablesForm.reset({
+      ...variablesRecord,
+    });
+  }, [prompt, variables, testVariablesForm]);
+
 
   const handleOpenTestModal = () => {
     setIsOpen(true);
@@ -58,12 +80,12 @@ export const PromptTesterProvider = ({ children }) => {
     reset();
   };
 
-  const handleRunTest = async () => {
-    const { content, settings } = formValues;
-    const variables = testVariablesForm.getFieldsValue();
+  const runTest = async () => {
+    const variables = testVariablesForm.getValues();
+    const { type, content, settings } = editorForm.getValues();
 
     testPrompt({
-      type: promptType,
+      type,
       content,
       settings,
       variables,
@@ -77,7 +99,7 @@ export const PromptTesterProvider = ({ children }) => {
     openTestModal: handleOpenTestModal,
     closeTestModal: handleCloseTestModal,
     testVariablesForm,
-    runTest: handleRunTest,
+    runTest,
     isTestLoading,
     testError: testError?.response.errors[0].message,
     testResult: data?.testPrompt,

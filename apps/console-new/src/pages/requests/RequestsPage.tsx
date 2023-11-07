@@ -12,6 +12,8 @@ import { CheckIcon, CircleSlash, MoveRightIcon } from "lucide-react";
 import { RequestItemTags } from "./RequestTags";
 import { RequestDetails } from "~/components/requests";
 import { Drawer } from "~/components/common/Drawer";
+import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
+import { useQueryState } from "~/lib/hooks/useQueryState";
 
 const getTableColumns = (): ColumnDef<RequestReportItem>[] => {
   const columns: ColumnDef<RequestReportItem>[] = [
@@ -94,33 +96,23 @@ const getTableColumns = (): ColumnDef<RequestReportItem>[] => {
 
 export const RequestsPage = () => {
   usePageTitle("Requests");
+  const { projectId } = useCurrentProject();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [currentReportId, setCurrentReportId] = useState<string | null>(null);
+  const [inspectedRequestId, setInspectedRequestId] = useQueryState(
+    "inspectedRequestId",
+  );
+  const [offset, setOffset] = useQueryState("offset", 0);
+  const [limit, setLimit] = useQueryState("limit", DEFAULT_PAGE_SIZE);
 
-  useEffect(() => {
-    if (searchParams) {
-      if (!searchParams.has("offset")) {
-        searchParams.set("offset", "0");
-      }
-
-      if (!searchParams.has("limit")) {
-        searchParams.set("limit", DEFAULT_PAGE_SIZE.toString());
-      }
-
-      setSearchParams(searchParams);
+  const { data: requests, isSuccess } = useGetRequestReports(
+    {
+      offset: Number(offset),
+      limit: Number(limit),
+    },
+    {
+      enabled: inspectedRequestId && projectId && offset !== undefined && limit !== undefined,
     }
-  }, [searchParams])
-
-  const { limit, offset } = useMemo(() => {
-    const limit = parseInt(searchParams.get("limit"));
-    const offset = parseInt(searchParams.get("offset"));
-    return { limit, offset };
-  }, [searchParams]);
-
-  const { data: requests, isSuccess } = useGetRequestReports({
-    offset,
-    limit,
-  });
+  );
 
   const columns = useMemo(() => getTableColumns(), []);
 
@@ -155,17 +147,17 @@ export const RequestsPage = () => {
   const currentReport = useMemo(
     () =>
       requests?.paginatedRequests.data.find(
-        (r) => r.reportId === currentReportId
+        (r) => r.reportId === inspectedRequestId
       ),
-    [requests?.paginatedRequests.data, currentReportId]
+    [requests?.paginatedRequests.data, inspectedRequestId]
   );
 
   return (
     <>
-      <Drawer onClose={() => setCurrentReportId(null)} open={!!currentReport}>
+      <Drawer onClose={() => setInspectedRequestId(undefined)} open={!!currentReport}>
         {currentReport != null && (
           <RequestDetails
-            id={currentReportId}
+            id={inspectedRequestId}
             request={currentReport.request}
             response={currentReport.response}
             provider={currentReport.metadata.provider}
@@ -177,7 +169,7 @@ export const RequestsPage = () => {
           />
         )}
       </Drawer>
-      
+
       <div className="mb-6 border-b border-b-border">
         <div className="container flex h-24 items-center justify-between">
           <h1>Requests</h1>
@@ -187,8 +179,8 @@ export const RequestsPage = () => {
       <div className="container">
         {isSuccess && (
           <RequestsTable
-            limit={limit}
-            offset={offset}
+            limit={Number(limit)}
+            offset={Number(offset)}
             data={data}
             columns={columns}
             totalResults={pagination.total}
@@ -198,7 +190,7 @@ export const RequestsPage = () => {
               setSearchParams(searchParams);
             }}
             onClickReport={(reportId) => {
-              setCurrentReportId(reportId);
+              setInspectedRequestId(reportId);
             }}
           />
         )}

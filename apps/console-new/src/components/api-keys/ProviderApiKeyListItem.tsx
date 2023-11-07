@@ -17,7 +17,6 @@ import {
   FormControl,
   Input,
 } from "@pezzo/ui";
-import { Avatar } from "antd";
 import { PencilIcon, SaveIcon, TrashIcon, XIcon } from "lucide-react";
 import { GenericDestructiveConfirmationModal } from "../common/GenericDestructiveConfirmationModal";
 import z from "zod";
@@ -117,7 +116,7 @@ export const ProviderApiKeyListItem = ({
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <Card className="p-2 mb-4" key={value}>
             <div className="flex items-center gap-2">
-              <Avatar size="large" shape="square" src={iconBase64} />
+              <img src={iconBase64} className="w-10 h-10 rounded-lg" />
               <div className="font-medium">{provider}</div>
               {isEditing ? (
                 <div className="flex flex-1 justify-end opacity-50">

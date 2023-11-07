@@ -3,7 +3,6 @@ import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
 import { CopyOutlined } from "@ant-design/icons";
 import { copyToClipboard } from "~/lib/utils/browser-utils";
 import { useState } from "react";
-import { GettingStartedWizard } from "~/components/getting-started-wizard/GettingStartedWizard";
 import { GettingStartedWizardProvider } from "~/lib/providers/GettingStartedWizardProvider";
 import { Loader } from "~/components/common/Loader";
 import { usePageTitle } from "~/lib/hooks/usePageTitle";
@@ -36,9 +35,6 @@ export const ProjectPage = () => {
           </Button>
         </Tooltip>
       </Space>
-      <GettingStartedWizardProvider>
-        <GettingStartedWizard />
-      </GettingStartedWizardProvider>
     </div>
   );
 };

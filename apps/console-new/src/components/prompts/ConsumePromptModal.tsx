@@ -1,4 +1,4 @@
-import { TypeScriptOpenAIIntegrationTutorial } from "../getting-started-wizard";
+import { TypeScriptOpenAIIntegrationTutorial } from "../getting-started-wizard/TypeScriptOpenAIIntegrationTutorial";
 import { useState } from "react";
 import { PythonOpenAIIntegrationTutorial } from "../getting-started-wizard/PythonOpenAIIntegrationTutorial";
 import {
