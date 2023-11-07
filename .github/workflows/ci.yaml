@@ -116,6 +116,7 @@ jobs:
           tags: |
             type=raw,value=${{ github.run_id }},prefix=gh-
             type=ref,event=branch,prefix=branch-
+            type=ref,event=pr,prefix=pr-
             type=ref,event=tag
             type=sha,format=short
 
