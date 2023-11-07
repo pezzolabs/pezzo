@@ -98,9 +98,8 @@ export const RequestsPage = () => {
   usePageTitle("Requests");
   const { projectId } = useCurrentProject();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [inspectedRequestId, setInspectedRequestId] = useQueryState(
-    "inspectedRequestId",
-  );
+  const [inspectedRequestId, setInspectedRequestId] =
+    useQueryState("inspectedRequestId");
   const [offset, setOffset] = useQueryState("offset", 0);
   const [limit, setLimit] = useQueryState("limit", DEFAULT_PAGE_SIZE);
 
@@ -110,7 +109,11 @@ export const RequestsPage = () => {
       limit: Number(limit),
     },
     {
-      enabled: inspectedRequestId && projectId && offset !== undefined && limit !== undefined,
+      enabled:
+        inspectedRequestId &&
+        projectId &&
+        offset !== undefined &&
+        limit !== undefined,
     }
   );
 
@@ -154,7 +157,10 @@ export const RequestsPage = () => {
 
   return (
     <>
-      <Drawer onClose={() => setInspectedRequestId(undefined)} open={!!currentReport}>
+      <Drawer
+        onClose={() => setInspectedRequestId(undefined)}
+        open={!!currentReport}
+      >
         {currentReport != null && (
           <RequestDetails
             id={inspectedRequestId}

@@ -8,7 +8,10 @@ type Props = {
 };
 
 export const Tag = ({ children, color = "stone", className = "" }: Props) => {
-  const baseCn = cn("rounded-sm border p-1 text-xs inline-flex gap-1 items-center h-6", className);
+  const baseCn = cn(
+    "rounded-sm border p-1 text-xs inline-flex gap-1 items-center h-6",
+    className
+  );
 
   return (
     <div
@@ -16,11 +19,11 @@ export const Tag = ({ children, color = "stone", className = "" }: Props) => {
         baseCn,
         `border-${color}-600 bg-${color}-950/70 text-${color}-400`
       )}
-    style={{
-      backgroundColor: colors[color][950],
-      borderColor: colors[color][600],
-      color: colors[color][400],
-    }}
+      style={{
+        backgroundColor: colors[color][950],
+        borderColor: colors[color][600],
+        color: colors[color][400],
+      }}
     >
       {children}
     </div>

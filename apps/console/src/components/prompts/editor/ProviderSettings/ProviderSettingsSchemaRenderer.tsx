@@ -23,8 +23,11 @@ export const ProviderSettingsSchemaRenderer = ({ schema }: Props) => {
   const { getForm } = useEditorContext();
   const form = getForm();
 
-  const renderField = (renderSchema: any, field: ControllerRenderProps<FieldValues, any>) => {
-    switch(renderSchema.type) {
+  const renderField = (
+    renderSchema: any,
+    field: ControllerRenderProps<FieldValues, any>
+  ) => {
+    switch (renderSchema.type) {
       case "select":
         return renderSelectField(renderSchema, field);
       case "slider":
@@ -32,7 +35,10 @@ export const ProviderSettingsSchemaRenderer = ({ schema }: Props) => {
     }
   };
 
-  const renderSelectField = (renderSchema: SelectFormField, field: ControllerRenderProps<FieldValues, any>) => {
+  const renderSelectField = (
+    renderSchema: SelectFormField,
+    field: ControllerRenderProps<FieldValues, any>
+  ) => {
     return (
       <Select defaultValue={field.value} onValueChange={field.onChange}>
         <SelectTrigger>
@@ -49,7 +55,10 @@ export const ProviderSettingsSchemaRenderer = ({ schema }: Props) => {
     );
   };
 
-  const renderSliderField = (renderSchema: SliderFormField, field: ControllerRenderProps<FieldValues, any>) => {
+  const renderSliderField = (
+    renderSchema: SliderFormField,
+    field: ControllerRenderProps<FieldValues, any>
+  ) => {
     return (
       <PromptSettingsSlider
         field={field}
@@ -70,9 +79,7 @@ export const ProviderSettingsSchemaRenderer = ({ schema }: Props) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>{renderSchema.label}</FormLabel>
-              <FormControl>
-                {renderField(renderSchema, field)}
-              </FormControl>
+              <FormControl>{renderField(renderSchema, field)}</FormControl>
             </FormItem>
           )}
         />

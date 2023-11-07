@@ -38,10 +38,7 @@ interface Props {
   onClose: () => void;
 }
 
-export const RenameProjectModal = ({
-  projectToRename,
-  onClose,
-}: Props) => {
+export const RenameProjectModal = ({ projectToRename, onClose }: Props) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -65,7 +62,6 @@ export const RenameProjectModal = ({
         },
       }
     );
-
   };
 
   const onCancel = () => {

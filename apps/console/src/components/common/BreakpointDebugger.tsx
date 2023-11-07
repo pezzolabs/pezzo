@@ -7,10 +7,10 @@ export const BreakpointDebugger = () => {
 
   return (
     <div className="absolute bottom-0 flex w-full items-center justify-center">
-      <div className="bg-red-500 p-1 hidden sm:block">sm</div>
-      <div className="bg-red-500 p-1 hidden md:block">md</div>
-      <div className="bg-red-500 p-1 hidden lg:block">lg</div>
-      <div className="bg-red-500 p-1 hidden xl:block">xl</div>
+      <div className="hidden bg-red-500 p-1 sm:block">sm</div>
+      <div className="hidden bg-red-500 p-1 md:block">md</div>
+      <div className="hidden bg-red-500 p-1 lg:block">lg</div>
+      <div className="hidden bg-red-500 p-1 xl:block">xl</div>
     </div>
   );
 };

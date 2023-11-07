@@ -36,12 +36,7 @@ export const RequestItemTags = ({
   if (!promptId) {
     tags.push(
       <Tooltip text="This prompt is not managed by Pezzo">
-        <div
-          className={cn(
-            baseCn,
-            "border-0 text-yellow-500"
-          )}
-        >
+        <div className={cn(baseCn, "border-0 text-yellow-500")}>
           <AlertTriangleIcon className="h-3 w-3" />
         </div>
       </Tooltip>

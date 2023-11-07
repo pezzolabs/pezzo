@@ -17,7 +17,7 @@ export const PromptVariables = ({ variables, form }: Props) => {
   return (
     <>
       <p className="mb-4">Provide values for your variables below.</p>
-      <div className="text-sm flex flex-col gap-6">
+      <div className="flex flex-col gap-6 text-sm">
         {Object.keys(variables).map((variableName) => (
           <FormField
             control={form.control}

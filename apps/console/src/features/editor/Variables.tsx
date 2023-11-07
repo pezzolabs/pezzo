@@ -7,7 +7,7 @@ export const Variables = () => {
   return (
     <>
       {variables.length === 0 && (
-        <p className="text-muted-foreground italic">No variables found.</p>
+        <p className="italic text-muted-foreground">No variables found.</p>
       )}
 
       {variables.map((key) => (

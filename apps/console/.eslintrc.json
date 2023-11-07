@@ -8,7 +8,7 @@
         "@nx/enforce-module-boundaries": [
           "error",
           {
-            "allowCircularSelfDependency": true,
+            "allowCircularSelfDependency": true
           }
         ]
       }

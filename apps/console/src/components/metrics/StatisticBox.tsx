@@ -44,7 +44,6 @@ const getProperties = (
     "text-green-500": isIncrease || (reverseColors && isDecrease),
     "text-muted": !isIncrease && !isDecrease,
   });
-  
 
   if (isIncrease) {
     return {

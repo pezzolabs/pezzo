@@ -67,7 +67,7 @@ export const OrgSettingsPage = () => {
         </div>
       </div>
 
-      <div className="max-w-[800px] container space-y-6">
+      <div className="container max-w-[800px] space-y-6">
         <Card className="mx-auto flex flex-col gap-y-6 p-10">
           <div className="max-w-[640px]">
             <Form {...form}>
@@ -90,7 +90,9 @@ export const OrgSettingsPage = () => {
                   name="orgName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="font-heading text-lg">Organization Name</FormLabel>
+                      <FormLabel className="font-heading text-lg">
+                        Organization Name
+                      </FormLabel>
                       <FormControl>
                         <Input
                           className="w-80"

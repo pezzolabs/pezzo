@@ -124,22 +124,20 @@ const buildTypedRequestReportObject = (requestReport: RequestReport) => {
   }
 };
 
-export const useGetRequestReports = ({
-  offset,
-  limit,
-}: {
-  offset: number;
-  limit: number;
-}, {
-  enabled = true,
-}: UseQueryOptions) => {
+export const useGetRequestReports = (
+  {
+    offset,
+    limit,
+  }: {
+    offset: number;
+    limit: number;
+  },
+  { enabled = true }: UseQueryOptions
+) => {
   const { projectId } = useCurrentProject();
   const { filters, sort } = useFiltersAndSortParams();
 
-  return useQuery<
-    PaginatedRequestsQuery,
-    GraphQLErrorResponse
-  >({
+  return useQuery<PaginatedRequestsQuery, GraphQLErrorResponse>({
     queryFn: () =>
       gqlClient.request(GET_ALL_REQUESTS, {
         data: { projectId, offset, limit, filters, sort },

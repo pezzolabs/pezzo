@@ -3,7 +3,7 @@ import { Highlight, themes } from "prism-react-renderer";
 type Props = {
   code: string;
   language: string;
-}
+};
 
 export const HighlightCode = ({ code, language = "ts" }: Props) => (
   <Highlight theme={themes.vsDark} code={code} language={language}>

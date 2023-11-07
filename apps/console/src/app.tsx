@@ -77,168 +77,158 @@ export const RootPageHandler = () => {
 
 export function App() {
   return (
-    <div className="h-full relative">
+    <div className="relative h-full">
       <Toaster />
       <Suspense fallback={<div>Loading...</div>}>
-      <SuperTokensWrapper>
-        <QueryClientProvider client={queryClient}>
-          {/* Non-authorized routes */}
-          <Routes>
-            {/* We don't render the LayoutWrapper for non-authorized routes */}
-            <Route
-              path={paths["/login/callback/:providerId"]}
-              element={<AuthCallbackPage />}
-            />
-            <Route path={paths["/login"]} element={<LoginPage />} />
-            <Route path={paths["/logout"]} element={<LogoutPage />} />
-          </Routes>
-          {/* Authorized routes */}
-          <Routes>
-            <Route
-              element={
-                <SessionAuth>
-                  <AuthProvider>
-                    <OptionalIntercomProvider>
-                      <Outlet />
-                    </OptionalIntercomProvider>
-                  </AuthProvider>
-                </SessionAuth>
-              }
-            >
+        <SuperTokensWrapper>
+          <QueryClientProvider client={queryClient}>
+            {/* Non-authorized routes */}
+            <Routes>
+              {/* We don't render the LayoutWrapper for non-authorized routes */}
               <Route
-                path={paths["/invitations/:token/accept"]}
-                element={
-                  <LayoutWrapper withSideNav={false}>
-                    <AcceptInvitationPage />
-                  </LayoutWrapper>
-                }
+                path={paths["/login/callback/:providerId"]}
+                element={<AuthCallbackPage />}
               />
-
-              <Route
-                path={paths["/onboarding"]}
-                element={
-                  <LayoutWrapper withSideNav={false}>
-                    <OnboardingPage />
-                  </LayoutWrapper>
-                }
-              />
-
-              {/* Organizations */}
-              <Route
-                path={paths["/orgs/:orgId"]}
-                element={
-                  <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
-                    <OrgPage />
-                  </LayoutWrapper>
-                }
-              ></Route>
-
-              <Route
-                path={paths["/orgs/:orgId/members"]}
-                element={
-                  <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
-                    <OrgMembersPage />
-                  </LayoutWrapper>
-                }
-              ></Route>
-
-              <Route
-                path={paths["/orgs/:orgId/api-keys"]}
-                element={
-                  <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
-                    <OrgApiKeysPage />
-                  </LayoutWrapper>
-                }
-              ></Route>
-
-              <Route
-                path={paths["/orgs/:orgId/settings"]}
-                element={
-                  <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
-                    <OrgSettingsPage />
-                  </LayoutWrapper>
-                }
-              ></Route>
-
-              {/* Project selection */}
+              <Route path={paths["/login"]} element={<LoginPage />} />
+              <Route path={paths["/logout"]} element={<LogoutPage />} />
+            </Routes>
+            {/* Authorized routes */}
+            <Routes>
               <Route
                 element={
-                  <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
-                    <Outlet />
-                  </LayoutWrapper>
-                }
-              >
-                <Route index element={<RootPageHandler />} />
-              </Route>
-
-              {/* In-project routes */}
-              <Route
-                path={paths["/projects/:projectId"]}
-                element={
-                  <CurrentPromptProvider>
-                    <RequiredProviderApiKeyModalProvider>
-                      <LayoutWrapper withSideNav={true}>
+                  <SessionAuth>
+                    <AuthProvider>
+                      <OptionalIntercomProvider>
                         <Outlet />
-                      </LayoutWrapper>
-                    </RequiredProviderApiKeyModalProvider>
-                  </CurrentPromptProvider>
+                      </OptionalIntercomProvider>
+                    </AuthProvider>
+                  </SessionAuth>
                 }
               >
                 <Route
-                  index
-                  path={paths["/projects/:projectId/"]}
-                  element={<DashboardPage />}
+                  path={paths["/invitations/:token/accept"]}
+                  element={
+                    <LayoutWrapper withSideNav={false}>
+                      <AcceptInvitationPage />
+                    </LayoutWrapper>
+                  }
                 />
+
                 <Route
-                  path={"/projects/:projectId/dashboard"}
-                  element={<DashboardPage />}
+                  path={paths["/onboarding"]}
+                  element={
+                    <LayoutWrapper withSideNav={false}>
+                      <OnboardingPage />
+                    </LayoutWrapper>
+                  }
                 />
+
+                {/* Organizations */}
                 <Route
-                  path={"/projects/:projectId/requests"}
-                  element={<RequestsPage />}
-                />
+                  path={paths["/orgs/:orgId"]}
+                  element={
+                    <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
+                      <OrgPage />
+                    </LayoutWrapper>
+                  }
+                ></Route>
+
                 <Route
-                  path={paths["/projects/:projectId/prompts"]}
-                  element={<PromptsPage />}
-                />
+                  path={paths["/orgs/:orgId/members"]}
+                  element={
+                    <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
+                      <OrgMembersPage />
+                    </LayoutWrapper>
+                  }
+                ></Route>
+
                 <Route
-                  path={paths["/projects/:projectId/prompts/:promptId"]}
-                  element={<PromptPage />}
+                  path={paths["/orgs/:orgId/api-keys"]}
+                  element={
+                    <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
+                      <OrgApiKeysPage />
+                    </LayoutWrapper>
+                  }
+                ></Route>
+
+                <Route
+                  path={paths["/orgs/:orgId/settings"]}
+                  element={
+                    <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
+                      <OrgSettingsPage />
+                    </LayoutWrapper>
+                  }
+                ></Route>
+
+                {/* Project selection */}
+                <Route
+                  element={
+                    <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
+                      <Outlet />
+                    </LayoutWrapper>
+                  }
                 >
-                  <Route index element={<Navigate to="edit" />} />
+                  <Route index element={<RootPageHandler />} />
+                </Route>
+
+                {/* In-project routes */}
+                <Route
+                  path={paths["/projects/:projectId"]}
+                  element={
+                    <CurrentPromptProvider>
+                      <RequiredProviderApiKeyModalProvider>
+                        <LayoutWrapper withSideNav={true}>
+                          <Outlet />
+                        </LayoutWrapper>
+                      </RequiredProviderApiKeyModalProvider>
+                    </CurrentPromptProvider>
+                  }
+                >
                   <Route
                     index
-                    path="edit"
-                    element={
-                      <EditorProvider>
-                        <PromptTesterProvider>
-                          <PromptEditView />
-                        </PromptTesterProvider>
-                      </EditorProvider>
-                    }
+                    path={paths["/projects/:projectId/"]}
+                    element={<DashboardPage />}
                   />
                   <Route
-                    path="versions"
-                    element={
-                      <PromptVersionsView />
-                    }
+                    path={"/projects/:projectId/dashboard"}
+                    element={<DashboardPage />}
                   />
                   <Route
-                    path="metrics"
-                    element={
-                      <PromptMetricsView />
-                    }
+                    path={"/projects/:projectId/requests"}
+                    element={<RequestsPage />}
+                  />
+                  <Route
+                    path={paths["/projects/:projectId/prompts"]}
+                    element={<PromptsPage />}
+                  />
+                  <Route
+                    path={paths["/projects/:projectId/prompts/:promptId"]}
+                    element={<PromptPage />}
+                  >
+                    <Route index element={<Navigate to="edit" />} />
+                    <Route
+                      index
+                      path="edit"
+                      element={
+                        <EditorProvider>
+                          <PromptTesterProvider>
+                            <PromptEditView />
+                          </PromptTesterProvider>
+                        </EditorProvider>
+                      }
+                    />
+                    <Route path="versions" element={<PromptVersionsView />} />
+                    <Route path="metrics" element={<PromptMetricsView />} />
+                  </Route>
+                  <Route
+                    path={paths["/projects/:projectId/environments"]}
+                    element={<EnvironmentsPage />}
                   />
                 </Route>
-                <Route
-                  path={paths["/projects/:projectId/environments"]}
-                  element={<EnvironmentsPage />}
-                />
               </Route>
-            </Route>
-          </Routes>
-        </QueryClientProvider>
-      </SuperTokensWrapper>
+            </Routes>
+          </QueryClientProvider>
+        </SuperTokensWrapper>
       </Suspense>
 
       <BreakpointDebugger />

@@ -21,7 +21,7 @@
       "@pezzo/types": ["libs/types/src/index.ts"],
       "@pezzo/ui": ["libs/ui/src/index.ts"],
       "@pezzo/ui/*": ["libs/ui/src/*"],
-      "~/*": ["apps/console/src/*"],
+      "~/*": ["apps/console/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

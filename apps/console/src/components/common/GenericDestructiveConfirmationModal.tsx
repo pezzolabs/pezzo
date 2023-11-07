@@ -49,9 +49,7 @@ export const GenericDestructiveConfirmationModal = ({
               </AlertDescription>
             </Alert>
           )}
-          <p>
-            {description}
-          </p>
+          <p>{description}</p>
         </AlertDialogDescription>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>

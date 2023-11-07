@@ -1,6 +1,6 @@
 import { ExtendedUser } from "~/@generated/graphql/graphql";
 import { useMemo } from "react";
-import { Avatar as ShadcnAvatar, AvatarFallback, AvatarImage }from "@pezzo/ui";
+import { Avatar as ShadcnAvatar, AvatarFallback, AvatarImage } from "@pezzo/ui";
 import { cn } from "@pezzo/ui/utils";
 
 interface Props {

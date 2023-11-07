@@ -130,8 +130,7 @@ export const useDeleteOrgInvitationMutation = () => {
     GraphQLErrorResponse,
     InvitationWhereUniqueInput
   >({
-    mutationFn: (data) =>
-      gqlClient.request(DELETE_INVITATION, { data }),
+    mutationFn: (data) => gqlClient.request(DELETE_INVITATION, { data }),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["currentOrganization"],
@@ -148,8 +147,7 @@ export const useAcceptOrgInvitationMutation = () => {
     GraphQLErrorResponse,
     InvitationWhereUniqueInput
   >({
-    mutationFn: (data) =>
-      gqlClient.request(ACCEPT_ORG_INVITATION, { data }),
+    mutationFn: (data) => gqlClient.request(ACCEPT_ORG_INVITATION, { data }),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["organizations"],
@@ -161,9 +159,12 @@ export const useAcceptOrgInvitationMutation = () => {
 export const useDeleteOrgMemberMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<DeleteOrgMemberMutation, GraphQLErrorResponse, OrganizationMemberWhereUniqueInput>({
-    mutationFn: (data) =>
-      gqlClient.request(DELETE_ORG_MEMBER, { data }),
+  return useMutation<
+    DeleteOrgMemberMutation,
+    GraphQLErrorResponse,
+    OrganizationMemberWhereUniqueInput
+  >({
+    mutationFn: (data) => gqlClient.request(DELETE_ORG_MEMBER, { data }),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["currentOrganization"],

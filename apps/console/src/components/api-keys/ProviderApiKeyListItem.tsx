@@ -114,9 +114,9 @@ export const ProviderApiKeyListItem = ({
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <Card className="p-2 mb-4" key={value}>
+          <Card className="mb-4 p-2" key={value}>
             <div className="flex items-center gap-2">
-              <img src={iconBase64} className="w-10 h-10 rounded-lg" />
+              <img src={iconBase64} className="h-10 w-10 rounded-lg" />
               <div className="font-medium">{provider}</div>
               {isEditing ? (
                 <div className="flex flex-1 justify-end opacity-50">

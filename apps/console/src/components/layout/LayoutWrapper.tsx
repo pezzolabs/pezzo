@@ -18,7 +18,7 @@ export const LayoutWrapper = ({
   const location = useLocation();
 
   return (
-    <div className="flex h-full max-h-[100vh] w-full dark text-foreground">
+    <div className="dark flex h-full max-h-[100vh] w-full text-foreground">
       <div className="flex h-full w-full">
         <div className="h-full max-h-full w-full overflow-y-auto  bg-background">
           <Header />
@@ -39,7 +39,7 @@ export const LayoutWrapper = ({
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -10, opacity: 0 }}
                 transition={{ duration: 0.1 }}
-                className="pb-4 h-full overflow-y-auto no-scrollbar"
+                className="no-scrollbar h-full overflow-y-auto pb-4"
               >
                 {children}
               </motion.div>

@@ -18,7 +18,7 @@ export const DashboardPage = () => {
   return (
     <TimeframeSelectorProvider>
       <div className="border-b border-b-border">
-        <div className="flex h-24 items-center justify-between p-6 container">
+        <div className="container flex h-24 items-center justify-between p-6">
           <h1>Dashboard</h1>
           <div className="flex gap-2">
             <Popover>
@@ -37,7 +37,7 @@ export const DashboardPage = () => {
         </div>
       </div>
 
-      <div className="p-6 container">
+      <div className="container p-6">
         <div className="mb-6">
           <StatisticsSection />
         </div>

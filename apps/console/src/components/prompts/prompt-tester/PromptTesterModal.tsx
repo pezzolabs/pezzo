@@ -53,18 +53,18 @@ export const PromptTesterModal = () => {
           {!testResult && <VariablesStep onSubmit={handleSubmitVariables} />}
           {testResult && (
             <div className="w-full">
-            <RequestDetails
-              id={testResult.reportId}
-              request={testResult.request}
-              response={testResult.response}
-              provider={testResult.metadata.provider}
-              calculated={testResult.calculated}
-              metadata={testResult.metadata}
-              properties={testResult.properties}
-              cacheEnabled={testResult.cacheEnabled}
-              cacheHit={testResult.cacheHit}
+              <RequestDetails
+                id={testResult.reportId}
+                request={testResult.request}
+                response={testResult.response}
+                provider={testResult.metadata.provider}
+                calculated={testResult.calculated}
+                metadata={testResult.metadata}
+                properties={testResult.properties}
+                cacheEnabled={testResult.cacheEnabled}
+                cacheHit={testResult.cacheHit}
               />
-              </div>
+            </div>
           )}
         </div>
       </DialogContent>

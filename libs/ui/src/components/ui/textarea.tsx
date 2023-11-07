@@ -4,12 +4,11 @@ import { cn } from "@pezzo/ui/utils";
 
 export interface TextareaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-    disableAutoComplete?: boolean;
-  }
+  disableAutoComplete?: boolean;
+}
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, disableAutoComplete, ...props }, ref) => {
-
     if (disableAutoComplete) {
       props.autoComplete = "new-password";
     }

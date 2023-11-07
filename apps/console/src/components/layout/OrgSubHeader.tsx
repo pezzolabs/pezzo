@@ -33,7 +33,7 @@ export const OrgSubHeader = () => {
 
   return (
     organization && (
-      <div className="w-full px-8 text-slate-300 border-b border-b-border">
+      <div className="w-full border-b border-b-border px-8 text-slate-300">
         <ul className="flex">
           {orgNavigation.map((nav) => (
             <li

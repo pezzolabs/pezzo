@@ -31,7 +31,10 @@ import {
 } from "@pezzo/ui";
 
 const formSchema = z.object({
-  projectName: z.string().min(1, "Please enter a valid project name").max(100, "Project name must be less than 100 characters"),
+  projectName: z
+    .string()
+    .min(1, "Please enter a valid project name")
+    .max(100, "Project name must be less than 100 characters"),
 });
 
 export const OnboardingPage = () => {

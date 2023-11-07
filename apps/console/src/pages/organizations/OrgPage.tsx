@@ -1,7 +1,5 @@
 import styled from "@emotion/styled";
-import {
-  AppstoreOutlined,
-} from "@ant-design/icons";
+import { AppstoreOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
@@ -59,9 +57,9 @@ export const OrgPage = () => {
     trackEvent("organization_tab_changed", { tab: key });
   };
 
-  return organization && (
-    <>
-      {activeView === TabItemKey.Projects && <ProjectsPage />}
-    </>
+  return (
+    organization && (
+      <>{activeView === TabItemKey.Projects && <ProjectsPage />}</>
+    )
   );
 };

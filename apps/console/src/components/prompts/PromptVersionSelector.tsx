@@ -26,7 +26,7 @@ export const PromptVersionSelector = () => {
             version.createdBy.name
           })`,
           onClick: () => {
-            alert(version.sha)
+            alert(version.sha);
             setCurrentVersionSha(version.sha);
             trackEvent("prompt_version_selected");
           },

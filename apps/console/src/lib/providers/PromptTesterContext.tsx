@@ -70,7 +70,6 @@ export const PromptTesterProvider = ({ children }) => {
     });
   }, [prompt, variables, testVariablesForm]);
 
-
   const handleOpenTestModal = () => {
     setIsOpen(true);
   };

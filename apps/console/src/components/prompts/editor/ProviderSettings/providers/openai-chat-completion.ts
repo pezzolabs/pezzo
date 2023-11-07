@@ -15,7 +15,9 @@ const defaultSettings: OpenAIProviderSettings = {
   presence_penalty: 0,
 };
 
-export const generateFormSchema = (settings: OpenAIProviderSettings): FormSchema => {
+export const generateFormSchema = (
+  settings: OpenAIProviderSettings
+): FormSchema => {
   const getMaxResponseTokensMaxValue = () => {
     switch (settings.model) {
       case "gpt-3.5-turbo":

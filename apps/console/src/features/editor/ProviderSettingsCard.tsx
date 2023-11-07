@@ -11,8 +11,7 @@ const providerSettings = {
     azureOpenAIChatCompletionSettingsDefinition,
 };
 
-interface Props {
-}
+interface Props {}
 
 export const ProviderSettingsCard = ({}: Props) => {
   const { getForm } = useEditorContext();
@@ -29,7 +28,7 @@ export const ProviderSettingsCard = ({}: Props) => {
     <div className="flex flex-col gap-2">
       <ProviderSelector />
 
-      <div className="border-t my-2 border-muted"></div>
+      <div className="my-2 border-t border-muted"></div>
 
       {service && (
         <>

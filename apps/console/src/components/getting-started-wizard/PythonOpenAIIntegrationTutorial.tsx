@@ -56,7 +56,7 @@ response = await openai.ChatCompletion.create(
 `;
 
   return (
-    <div className="flex flex-col gap-4 text-sm w-full">
+    <div className="flex w-full flex-col gap-4 text-sm">
       <Alert variant="info">
         <InfoIcon className="h-4 w-4" />
         <AlertTitle>Need some more help?</AlertTitle>
@@ -73,23 +73,23 @@ response = await openai.ChatCompletion.create(
         </AlertDescription>
       </Alert>
 
-        <h1>Installation</h1>
-        <p>
-          Pezzo provides a package for intergration with Python projects. Here's
-          how to install it:
-        </p>
-        <StyledPre>
-          <code>
-            # via pip
-            <br />
-            pip install pezzo
-            <br />
-            <br />
-            # via poetry
-            <br />
-            poetry add pezzo
-          </code>
-        </StyledPre>
+      <h1>Installation</h1>
+      <p>
+        Pezzo provides a package for intergration with Python projects. Here's
+        how to install it:
+      </p>
+      <StyledPre>
+        <code>
+          # via pip
+          <br />
+          pip install pezzo
+          <br />
+          <br />
+          # via poetry
+          <br />
+          poetry add pezzo
+        </code>
+      </StyledPre>
 
       <div className="flex flex-col gap-3">
         <h1>Usage</h1>

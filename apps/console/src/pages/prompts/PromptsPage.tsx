@@ -81,7 +81,7 @@ export const PromptsPage = () => {
           {prompts &&
             prompts.map((prompt) => (
               <Card
-                className="group mb-4 flex h-20 cursor-pointer items-center gap-x-3 p-4 ring-primary hover:ring-2 transition-all"
+                className="group mb-4 flex h-20 cursor-pointer items-center gap-x-3 p-4 ring-primary transition-all hover:ring-2"
                 onClick={(e) => handleClickPrompt(e, prompt.id)}
                 key={prompt.id}
               >
@@ -101,10 +101,10 @@ export const PromptsPage = () => {
 
           {prompts && prompts.length === 0 && (
             <Card
-              className="group mb-4 flex flex-col h-24 cursor-pointer items-center justify-center gap-2 p-4 ring-primary border-2 border-dashed opacity-70 hover:opacity-100"
+              className="group mb-4 flex h-24 cursor-pointer flex-col items-center justify-center gap-2 border-2 border-dashed p-4 opacity-70 ring-primary hover:opacity-100"
               onClick={handleCreatePrompt}
             >
-              <PlusIcon className="h-5 w-5 opacity-70 font-medium" />
+              <PlusIcon className="h-5 w-5 font-medium opacity-70" />
               Create your first prompt
             </Card>
           )}

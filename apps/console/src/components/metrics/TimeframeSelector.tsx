@@ -20,8 +20,9 @@ export const TimeframeSelector = () => {
     timeframe,
     setTimeframe,
   } = useTimeframeSelector();
-  const [isCustomTimeframePopoverOpen, setIsCustomTimeframePopoverOpen] = useState(false);
-  
+  const [isCustomTimeframePopoverOpen, setIsCustomTimeframePopoverOpen] =
+    useState(false);
+
   const handleCustomDateApply = (dates: {
     startDate: string;
     endDate: string;
@@ -51,14 +52,15 @@ export const TimeframeSelector = () => {
 
   return (
     <span className="isolate inline-flex rounded-md shadow-sm">
-      <Popover open={isCustomTimeframePopoverOpen} onOpenChange={handlePopoverOpenChange}>
+      <Popover
+        open={isCustomTimeframePopoverOpen}
+        onOpenChange={handlePopoverOpenChange}
+      >
         <PopoverTrigger asChild>
           <Button
             type="button"
             variant="outline"
-            className={clsx(
-              "first:rounded-l-m rounded-r-none border"
-            )}
+            className={clsx("first:rounded-l-m rounded-r-none border")}
           >
             <CalendarDaysIcon className="mr-2 h-4 w-4" />
             Custom
@@ -83,7 +85,8 @@ export const TimeframeSelector = () => {
             className={clsx(
               "relative -ml-px inline-flex items-center rounded-none border px-3 py-2 text-sm first:rounded-l-md last:rounded-r-md focus:z-10",
               {
-                "bg-primary hover:bg-primary/90 text-primary-foreground hover:text-primary-foreground": tf === timeframe,
+                "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground":
+                  tf === timeframe,
               }
             )}
           >

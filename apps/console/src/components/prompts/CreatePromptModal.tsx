@@ -71,7 +71,7 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
       trackEvent("prompt_created", {
         promptId: data.createPrompt.id,
       });
-      navigate(`/projects/${project.id}/prompts/${data.createPrompt.id}`)
+      navigate(`/projects/${project.id}/prompts/${data.createPrompt.id}`);
     },
   });
 
@@ -88,10 +88,7 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
 
   return (
     <Dialog open={open}>
-      <DialogContent
-        onPointerDownOutside={onCancel}
-        className="sm:max-w-lg"
-      >
+      <DialogContent onPointerDownOutside={onCancel} className="sm:max-w-lg">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
@@ -113,7 +110,11 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
                     <FormItem>
                       <FormLabel>Prompt name</FormLabel>
                       <FormControl>
-                        <Input placeholder="test123" autoComplete="off" {...field} />
+                        <Input
+                          placeholder="test123"
+                          autoComplete="off"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

@@ -1,9 +1,5 @@
 import { cn } from "@pezzo/ui/utils";
-import {
-  BriefcaseIcon,
-  CheckIcon,
-  ChevronsUpDown,
-} from "lucide-react";
+import { BriefcaseIcon, CheckIcon, ChevronsUpDown } from "lucide-react";
 import LogoSquare from "~/assets/logo-square.svg";
 import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
@@ -43,7 +39,7 @@ export const OrgSelector = () => {
             ))}
         </ul>
       </div>
-      <div className="flex min-w-[200px] flex-col gap-y-2 rounded-r-lg border-l border-border 0 p-2 bg-muted/30">
+      <div className="0 flex min-w-[200px] flex-col gap-y-2 rounded-r-lg border-l border-border bg-muted/30 p-2">
         <p className="mt-2 px-2 text-gray-500">Projects</p>
         <ul className="flex h-full flex-col">
           {projects &&

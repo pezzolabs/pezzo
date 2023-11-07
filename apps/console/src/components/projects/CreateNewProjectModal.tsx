@@ -47,10 +47,7 @@ export const CreateNewProjectModal = ({ open, onClose }: Props) => {
   });
   const { organizationId } = useCurrentOrganization();
   const navigate = useNavigate();
-  const {
-    mutateAsync: createProject,
-    error,
-  } = useCreateProjectMutation({
+  const { mutateAsync: createProject, error } = useCreateProjectMutation({
     onSuccess: () => {
       form.reset();
       onClose();
@@ -88,9 +85,7 @@ export const CreateNewProjectModal = ({ open, onClose }: Props) => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
-              <DialogTitle className="mb-2">
-                New Project
-              </DialogTitle>
+              <DialogTitle className="mb-2">New Project</DialogTitle>
               <DialogDescription>
                 {error && (
                   <Alert variant="destructive" className="mb-4">

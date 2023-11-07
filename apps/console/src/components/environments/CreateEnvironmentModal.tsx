@@ -90,9 +90,7 @@ export const CreateEnvironmentModal = ({ open, onClose, onCreated }: Props) => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
-              <DialogTitle className="mb-2">
-                New Environment
-              </DialogTitle>
+              <DialogTitle className="mb-2">New Environment</DialogTitle>
               <DialogDescription>
                 {error && (
                   <Alert variant="destructive" className="mb-4">

@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 export function useQueryState(key, defaultValue = undefined) {
   const [searchParams, setSearchParams] = useSearchParams();
