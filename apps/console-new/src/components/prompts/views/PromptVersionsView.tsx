@@ -1,10 +1,67 @@
-import { Table, Typography } from "antd";
 import { usePromptVersions } from "~/lib/hooks/usePromptVersions";
 import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
-import { Avatar } from "~/components/common/Avatar";
-import { InlineCodeSnippet } from "~/components/common/InlineCodeSnippet";
 import { trackEvent } from "~/lib/utils/analytics";
-import React from "react";
+import React, { useMemo } from "react";
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@pezzo/ui";
+import { InlineCodeSnippet } from "~/components/common/InlineCodeSnippet";
+
+type PromptVersion = ReturnType<typeof usePromptVersions>["promptVersions"][0];
+
+const getTableColumns = (): ColumnDef<PromptVersion>[] => {
+  return [
+    {
+      accessorKey: "sha",
+      id: "sha",
+      header: "SHA",
+      cell: ({ row }) => (
+        <div>
+          <InlineCodeSnippet>{row.original.sha.slice(0, 7)}</InlineCodeSnippet>
+        </div>
+      ),
+    },
+    {
+      accessorKey: "author",
+      id: "author",
+      header: "Author",
+      cell: ({ row }) => <div>{row.original.createdBy.email}</div>,
+    },
+    {
+      accessorKey: "message",
+      id: "message",
+      header: "Message",
+      cell: ({ row }) => {
+        const msg = row.original.message;
+
+        if (!msg) {
+          return <div className="italic text-muted-foreground">No message</div>;
+        } else {
+          return <div>{row.original.message}</div>;
+        }
+      },
+    },
+    {
+      accessorKey: "time",
+      id: "time",
+      header: "Time",
+      cell: ({ row }) => (
+        <div>{new Date(row.original.createdAt).toLocaleString()}</div>
+      ),
+    },
+  ];
+};
 
 export const PromptVersionsView = () => {
   const { prompt } = useCurrentPrompt();
@@ -14,60 +71,93 @@ export const PromptVersionsView = () => {
     trackEvent("prompt_versions_viewed");
   }, [prompt.id]);
 
-  const columns = [
-    {
-      title: "SHA",
-      dataIndex: "sha",
-      key: "sha",
-      render: (sha) => <InlineCodeSnippet>{sha}</InlineCodeSnippet>,
+  const data = useMemo(() => promptVersions, [promptVersions]);
+  const columns: ColumnDef<PromptVersion>[] = useMemo(
+    () => getTableColumns(),
+    []
+  );
+
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    defaultColumn: {
+      minSize: 0,
+      size: Number.MAX_SAFE_INTEGER,
+      maxSize: Number.MAX_SAFE_INTEGER,
     },
-    {
-      title: "Author",
-      dataIndex: "author",
-      key: "author",
-      render: (user) => (
-        <>
-          {/* <Avatar user={user} size="small" /> */}
-          <Typography.Text style={{ marginLeft: 8 }}>
-            {user.name}
-          </Typography.Text>
-        </>
-      ),
-    },
-    {
-      title: "Message",
-      dataIndex: "message",
-      key: "message",
-      render: (message) =>
-        message ? (
-          <Typography.Text>{message}</Typography.Text>
-        ) : (
-          <Typography.Text italic type="secondary">
-            No message
-          </Typography.Text>
-        ),
-    },
-    {
-      title: "Time",
-      dataIndex: "time",
-      key: "time",
-      render: (time) => new Date(time).toLocaleString(),
-    },
-  ];
+  });
 
   return (
     promptVersions && (
-      <Table
-        pagination={false}
-        columns={columns}
-        dataSource={promptVersions.map((version) => ({
-          key: version.sha,
-          sha: version.sha.slice(0, 7),
-          message: version.message,
-          author: version.createdBy,
-          time: version.createdAt,
-        }))}
-      />
+      <div className="container mt-6">
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead
+                        key={header.id}
+                        style={{
+                          width:
+                            header.getSize() === Number.MAX_SAFE_INTEGER
+                              ? "auto"
+                              : header.getSize(),
+                        }}
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    );
+                  })}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell
+                        key={cell.id}
+                        style={{
+                          width:
+                            cell.column.getSize() === Number.MAX_SAFE_INTEGER
+                              ? "auto"
+                              : cell.column.getSize(),
+                        }}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={table.getAllColumns().length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
     )
   );
 };

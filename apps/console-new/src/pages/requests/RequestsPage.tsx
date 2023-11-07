@@ -1,5 +1,5 @@
 import { useGetRequestReports } from "~/graphql/hooks/queries";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { DEFAULT_PAGE_SIZE } from "~/lib/constants/pagination";
 import { RequestReportItem } from "./types";
 import { usePageTitle } from "~/lib/hooks/usePageTitle";

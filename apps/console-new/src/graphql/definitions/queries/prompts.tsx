@@ -53,6 +53,7 @@ export const GET_PROMPT_VERSIONS = graphql(/* GraphQL */ `
         createdBy {
           name
           photoUrl
+          email
         }
       }
     }
