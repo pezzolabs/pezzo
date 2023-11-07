@@ -8,7 +8,7 @@ import { SimpleChart } from "../metrics/SimpleChart";
 import React from "react";
 import { trackEvent } from "~/lib/utils/analytics";
 
-export const MetricsView = () => {
+export const PromptMetricsView = () => {
   const { token } = theme.useToken();
 
   React.useEffect(() => {

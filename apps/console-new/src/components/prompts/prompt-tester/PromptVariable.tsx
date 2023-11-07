@@ -1,57 +1,40 @@
-import { ExpandAltOutlined } from "@ant-design/icons";
-import { css } from "@emotion/css";
-import { Form, Input, Popover } from "antd";
-import { useRef, useState } from "react";
-import { useOnClickOutside } from "usehooks-ts";
+import { Input, Popover, PopoverContent, PopoverTrigger, Textarea } from "@pezzo/ui";
+import { Maximize2Icon, VariableIcon } from "lucide-react";
+import { ControllerRenderProps } from "react-hook-form";
+import { PromptTesterVariablesInputs } from "~/lib/providers/PromptTesterContext";
 
 interface Props {
   name: string;
   value: string;
+  field: ControllerRenderProps<
+    PromptTesterVariablesInputs,
+    `${string}`
+  >;
 }
 
-export const PromptVariable = ({ name, value }: Props) => {
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const popoverRef = useRef();
-
-  useOnClickOutside(popoverRef, (e) => {
-    const target = e.target as HTMLElement;
-    const closest = target.closest(".ant-popover");
-    if (closest === null) {
-      setIsPopoverOpen(false);
-    }
-  });
+export const PromptVariable = ({ name, value, field }: Props) => {
 
   return (
-    <div ref={popoverRef}>
-      <Popover
-        title={name}
-        open={isPopoverOpen}
-        content={
-          <div style={{ minWidth: 400 }}>
-            <Form.Item name={name}>
-              <Input.TextArea
-                value={value}
-                style={{ height: 150, fontFamily: "Roboto Mono" }}
-              />
-            </Form.Item>
-          </div>
-        }
-      >
-        <Form.Item name={name}>
-          <Input
-            addonBefore={`${name}`}
-            value={value}
-            className={css`
-              .ant-input {
-                font-family: "Roboto Mono";
-              }
-            `}
-            addonAfter={
-              <ExpandAltOutlined onClick={() => setIsPopoverOpen(true)} />
-            }
-          />
-        </Form.Item>
-      </Popover>
+    <div className="flex">
+      <div className="flex items-center justify-center gap-2 rounded-l-md bg-muted px-2">
+        <VariableIcon className="h-4 w-4" />
+        <span className="font-mono">{name}</span>
+      </div>
+      <Input className="rounded-none font-mono" {...field} />
+      <div className="flex cursor-pointer items-center justify-center rounded-r-md bg-muted px-2">
+        <Popover>
+          <PopoverTrigger>
+            <Maximize2Icon className="h-4 w-4 text-muted-foreground" />
+          </PopoverTrigger>
+          <PopoverContent className="min-w-[600px]">
+
+            <Textarea className="font-mono" {...field} disableAutoComplete rows={6}>
+
+            </Textarea>
+
+          </PopoverContent>
+        </Popover>
+      </div>
     </div>
   );
 };

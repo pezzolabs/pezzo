@@ -1,6 +1,6 @@
 interface BaseFormField {
   label: string;
-  name: string[];
+  name: string;
 }
 
 export interface SelectFormField extends BaseFormField {

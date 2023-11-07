@@ -15,22 +15,30 @@ export const SideNavigation = () => {
   const [collapsed, setCollapsed] = useState(true);
   const { projectId } = useCurrentProject();
 
-  const isActive = (href: string) => {
-    return window.location.pathname === href;
-  };
-
   const projectNavigation = [
-    { name: "Dashboard", href: `/projects/${projectId}`, icon: BarChart2 },
+    {
+      name: "Dashboard",
+      href: `/projects/${projectId}`,
+      icon: BarChart2,
+      isActive: (href: string) => window.location.pathname === href,
+    },
     {
       name: "Requests",
       href: `/projects/${projectId}/requests`,
       icon: RadioIcon,
+      isActive: (href: string) => window.location.pathname.startsWith(href),
     },
-    { name: "Prompts", href: `/projects/${projectId}/prompts`, icon: BoxIcon },
+    {
+      name: "Prompts",
+      href: `/projects/${projectId}/prompts`,
+      icon: BoxIcon,
+      isActive: (href: string) => window.location.pathname.startsWith(href),
+    },
     {
       name: "Environments",
       href: `/projects/${projectId}/environments`,
       icon: HardDriveIcon,
+      isActive: (href: string) => window.location.pathname.startsWith(href),
     },
   ];
 
@@ -39,7 +47,7 @@ export const SideNavigation = () => {
       onMouseOver={() => setCollapsed(false)}
       onMouseLeave={() => setCollapsed(true)}
       className={cn(
-        "flex z-50 h-full grow flex-col gap-y-4 overflow-y-auto overflow-x-hidden bg-stone-900 px-3 pt-2 border-r border-border",
+        "z-50 flex h-full grow flex-col gap-y-4 overflow-y-auto overflow-x-hidden border-r border-border bg-stone-900 px-3 pt-2"
       )}
     >
       <nav className="flex flex-1 flex-col">
@@ -52,7 +60,7 @@ export const SideNavigation = () => {
                     <Link
                       to={item.href}
                       className={cn(
-                        isActive(item.href)
+                        item.isActive(item.href)
                           ? "bg-stone-800 text-emerald-500"
                           : "text-stone-400 hover:bg-stone-800 hover:text-white",
                         "flex items-center rounded-md p-2 text-sm font-medium leading-3 transition-all"

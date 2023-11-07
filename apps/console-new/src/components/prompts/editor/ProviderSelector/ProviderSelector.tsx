@@ -1,74 +1,62 @@
-import { Col, Form, Row, Select, Space } from "antd";
-import styled from "@emotion/styled";
-import { useState } from "react";
 import { sortRenderedProviders } from "./providers";
 import { ProviderProps } from "./types";
-import { usePromptVersionEditorContext } from "~/lib/providers/PromptVersionEditorContext";
-import { getServiceDefaultSettings } from "../ProviderSettings/providers";
 import { PromptService } from "~/@generated/graphql/graphql";
-import { trackEvent } from "~/lib/utils/analytics";
-
-const StyledSelect = styled(Select)`
-  .actions {
-    display: none;
-  }
-`;
+import { useEditorContext } from "~/lib/providers/EditorContext";
+import {
+  FormControl,
+  SelectContent,
+  FormField,
+  FormItem,
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectItem,
+} from "@pezzo/ui";
 
 export const ProviderSelector = () => {
-  const [open, setOpen] = useState<boolean>(false);
-  const { form } = usePromptVersionEditorContext();
+  const { getForm } = useEditorContext();
+  const form = getForm();
 
-  const settings = Form.useWatch("settings", { form, preserve: true }) ?? {};
+  const settings = form.watch("settings");
   const providers = sortRenderedProviders(
     Object.keys(settings) as PromptService[]
   );
 
-  const handleSelect = (value: PromptService) => {
-    const defaultSettings = getServiceDefaultSettings(value);
-    form.setFieldsValue({ settings: defaultSettings });
-    setOpen(false);
-  };
-
   const renderProvider = (provider: ProviderProps) => {
     const isAvailable = provider.value === PromptService.OpenAiChatCompletion;
-    return {
-      disabled: !isAvailable,
-      value: provider.value,
-      label: (
-        <div>
-          <Row justify="space-between" align="middle" style={{ width: "100%" }}>
-            <Col>
-              <Space>
-                {provider.image}
-                {provider.label}
-              </Space>
-            </Col>
-          </Row>
-        </div>
-      ),
-    };
-  };
 
-  const onProviderSelectClick = () => {
-    if (!open) {
-      setOpen(true);
-      trackEvent("prompt_provider_selector_opened");
-    }
+    return (
+      <SelectItem
+        disabled={!isAvailable}
+        key={provider.value}
+        value={provider.value}
+      >
+        <div className="flex w-full items-center justify-between gap-2">
+          <div>{provider.image}</div>
+          <div className="flex-1 whitespace-nowrap">{provider.label}</div>
+        </div>
+      </SelectItem>
+    );
   };
 
   return (
-    <Form.Item name="service" style={{ marginBottom: 0 }}>
-      <StyledSelect
-        className="selector"
-        open={open}
-        onClick={onProviderSelectClick}
-        onBlur={() => setOpen(false)}
-        onSelect={handleSelect}
-        size="large"
-        style={{ width: "100%" }}
-        placeholder="Select a provider"
-        options={providers.map(renderProvider)}
-      />
-    </Form.Item>
+    <FormField
+      control={form.control}
+      name="service"
+      render={({ field }) => (
+        <FormItem>
+          <FormControl>
+            <Select defaultValue={field.value} onValueChange={field.onChange}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {providers.map((provider) => renderProvider(provider))}
+              </SelectContent>
+            </Select>
+          </FormControl>
+        </FormItem>
+      )}
+    />
   );
 };

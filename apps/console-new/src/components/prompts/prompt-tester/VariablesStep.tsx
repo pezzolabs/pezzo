@@ -1,41 +1,37 @@
-import { Button, Form, Typography } from "antd";
-import { usePromptVersionEditorContext } from "~/lib/providers/PromptVersionEditorContext";
-import { usePromptTester } from "~/lib/providers/PromptTesterContext";
+import {
+  PromptTesterVariablesInputs,
+  usePromptTester,
+} from "~/lib/providers/PromptTesterContext";
 import { PromptVariables } from "./PromptVariables";
+import { Button, DialogFooter, Form } from "@pezzo/ui";
+import { useWatch } from "react-hook-form";
 
 interface Props {
   onSubmit: () => void;
 }
 
 export const VariablesStep = ({ onSubmit }: Props) => {
-  const { testVariablesForm, isTestLoading } = usePromptTester();
-  const { variables } = usePromptVersionEditorContext();
+  const { testVariablesForm: form, isTestLoading } = usePromptTester();
+  const testVariablesFormValues = useWatch({
+    control: form.control,
+  });
 
-  const initialValues = variables.reduce((acc, key) => {
-    acc[key] = "";
-    return acc;
-  }, {});
+  const handleSubmit = (values: PromptTesterVariablesInputs) => {
+    onSubmit();
+  };
 
   return (
-    <>
-      <Typography.Title level={2}>Define Variables</Typography.Title>
-      <Form
-        disabled={isTestLoading}
-        form={testVariablesForm}
-        initialValues={initialValues}
-      >
-        <PromptVariables variables={initialValues} />
+    <div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
+          <PromptVariables form={form} variables={testVariablesFormValues} />
+          <DialogFooter className="mt-6">
+            <Button type="submit" loading={isTestLoading}>
+              Run Test
+            </Button>
+          </DialogFooter>
+        </form>
       </Form>
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <Button
-          htmlType="submit"
-          type="primary"
-          loading={isTestLoading}
-          onClick={onSubmit}
-        >
-          Run Test
-        </Button>
-      </div>
-    </>
+    </div>
   );
 };

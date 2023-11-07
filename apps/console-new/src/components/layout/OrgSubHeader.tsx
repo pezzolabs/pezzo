@@ -1,5 +1,5 @@
 import { cn } from "@pezzo/ui/utils";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
 
 const isActive = (href: string) => {

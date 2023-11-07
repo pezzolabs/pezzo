@@ -54,8 +54,8 @@ import {
 import { DELETE_ENVIRONMENT } from "../definitions/mutations/environments";
 import { DELETE_PROVIDER_API_KEY } from "../definitions/mutations/api-keys";
 import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
-import { usePromptVersionEditorContext } from "~/lib/providers/PromptVersionEditorContext";
 import { TEST_PROMPT } from "../definitions/queries/prompt-executions";
+import { useEditorContext } from "~/lib/providers/EditorContext";
 
 export const useUpdateCurrentUserMutation = () =>
   useMutation({
@@ -298,7 +298,7 @@ export const useDeleteProviderApiKeyMutation = () => {
 
 export const useCreatePromptVersion = () => {
   const { prompt } = useCurrentPrompt();
-  const { setCurrentVersionSha } = usePromptVersionEditorContext();
+  const { setCurrentVersionSha } = useEditorContext();
   const queryClient = useQueryClient();
 
   return useMutation<

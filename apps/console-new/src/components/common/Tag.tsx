@@ -4,10 +4,11 @@ import colors from "tailwindcss/colors";
 type Props = {
   children: React.ReactNode;
   color?: string;
+  className?: string;
 };
 
-export const Tag = ({ children, color = "stone" }: Props) => {
-  const baseCn = "rounded-sm border p-1 text-xs flex gap-1 items-center h-6";
+export const Tag = ({ children, color = "stone", className = "" }: Props) => {
+  const baseCn = cn("rounded-sm border p-1 text-xs inline-flex gap-1 items-center h-6", className);
 
   return (
     <div

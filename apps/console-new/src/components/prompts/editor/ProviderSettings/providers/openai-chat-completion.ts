@@ -15,7 +15,7 @@ const defaultSettings: OpenAIProviderSettings = {
   presence_penalty: 0,
 };
 
-const generateFormSchema = (settings: OpenAIProviderSettings): FormSchema => {
+export const generateFormSchema = (settings: OpenAIProviderSettings): FormSchema => {
   const getMaxResponseTokensMaxValue = () => {
     switch (settings.model) {
       case "gpt-3.5-turbo":
@@ -30,7 +30,7 @@ const generateFormSchema = (settings: OpenAIProviderSettings): FormSchema => {
   return [
     {
       label: "Model",
-      name: ["model"],
+      name: "model",
       type: "select",
       options: [
         { value: "gpt-3.5-turbo", label: "gpt-3.5-turbo" },
@@ -40,7 +40,7 @@ const generateFormSchema = (settings: OpenAIProviderSettings): FormSchema => {
     },
     {
       label: "Temperature",
-      name: ["temperature"],
+      name: "temperature",
       type: "slider",
       min: 0,
       max: 1,
@@ -48,7 +48,7 @@ const generateFormSchema = (settings: OpenAIProviderSettings): FormSchema => {
     },
     {
       label: "Max Response Length",
-      name: ["max_tokens"],
+      name: "max_tokens",
       type: "slider",
       min: 1,
       max: getMaxResponseTokensMaxValue(),
@@ -56,7 +56,7 @@ const generateFormSchema = (settings: OpenAIProviderSettings): FormSchema => {
     },
     {
       label: "Top P",
-      name: ["top_p"],
+      name: "top_p",
       type: "slider",
       min: 0,
       max: 1,
@@ -64,7 +64,7 @@ const generateFormSchema = (settings: OpenAIProviderSettings): FormSchema => {
     },
     {
       label: "Frequency Penalty",
-      name: ["frequency_penalty"],
+      name: "frequency_penalty",
       type: "slider",
       min: 0,
       max: 1,
@@ -72,7 +72,7 @@ const generateFormSchema = (settings: OpenAIProviderSettings): FormSchema => {
     },
     {
       label: "Presence Penalty",
-      name: ["presence_penalty"],
+      name: "presence_penalty",
       type: "slider",
       min: 0,
       max: 1,

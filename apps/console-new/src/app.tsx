@@ -2,6 +2,7 @@ import "./styles.css";
 import { Route, Routes, Navigate, Outlet } from "react-router-dom";
 import { hotjar } from "react-hotjar";
 import { HOTJAR_SITE_ID, HOTJAR_VERSION } from "~/env";
+import { Toaster } from "@pezzo/ui";
 
 // Auth
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -11,8 +12,8 @@ import { initSuperTokens } from "./lib/auth/supertokens";
 
 // Pages
 import { EnvironmentsPage } from "./pages/environments/EnvironmentsPage";
-import { PromptsPage } from "./pages/prompts/PromptsPage";
 import { PromptPage } from "./pages/prompts/PromptPage";
+import { PromptsPage } from "./pages/prompts/PromptsPage";
 import { OnboardingPage } from "./pages/organizations/onboarding";
 import { OrgPage } from "./pages/organizations/OrgPage";
 import { LogoutPage } from "./pages/auth/LogoutPage";
@@ -31,6 +32,13 @@ import { OrgMembersPage } from "./pages/organizations/OrgMembersPage";
 import { OrgSettingsPage } from "./pages/organizations/OrgSettingsPage";
 import { OrgApiKeysPage } from "./pages/organizations/OrgApiKeysPage";
 import { useCurrentOrganization } from "./lib/hooks/useCurrentOrganization";
+import { PromptEditView } from "./features/editor/PromptEditView";
+import { EditorProvider } from "./lib/providers/EditorContext";
+import { PromptTesterProvider } from "./lib/providers/PromptTesterContext";
+import { PromptVersionsView } from "./components/prompts/views/PromptVersionsView";
+import { PromptMetricsView } from "./components/prompts/views/PromptMetricsView";
+import { Suspense } from "react";
+import { BreakpointDebugger } from "./components/common/BreakpointDebugger";
 
 initSuperTokens();
 
@@ -64,14 +72,14 @@ export const paths = {
 export const RootPageHandler = () => {
   const { organizationId } = useCurrentOrganization();
 
-  return organizationId && (
-    <Navigate to={`/orgs/${organizationId}`} />
-  )
-}
+  return organizationId && <Navigate to={`/orgs/${organizationId}`} />;
+};
 
 export function App() {
   return (
-    <div className="h-full">
+    <div className="h-full relative">
+      <Toaster />
+      <Suspense fallback={<div>Loading...</div>}>
       <SuperTokensWrapper>
         <QueryClientProvider client={queryClient}>
           {/* Non-authorized routes */}
@@ -100,9 +108,7 @@ export function App() {
               <Route
                 path={paths["/invitations/:token/accept"]}
                 element={
-                  <LayoutWrapper
-                    withSideNav={false}
-                  >
+                  <LayoutWrapper withSideNav={false}>
                     <AcceptInvitationPage />
                   </LayoutWrapper>
                 }
@@ -198,7 +204,32 @@ export function App() {
                 <Route
                   path={paths["/projects/:projectId/prompts/:promptId"]}
                   element={<PromptPage />}
-                />
+                >
+                  <Route index element={<Navigate to="edit" />} />
+                  <Route
+                    index
+                    path="edit"
+                    element={
+                      <EditorProvider>
+                        <PromptTesterProvider>
+                          <PromptEditView />
+                        </PromptTesterProvider>
+                      </EditorProvider>
+                    }
+                  />
+                  <Route
+                    path="versions"
+                    element={
+                      <PromptVersionsView />
+                    }
+                  />
+                  <Route
+                    path="metrics"
+                    element={
+                      <PromptMetricsView />
+                    }
+                  />
+                </Route>
                 <Route
                   path={paths["/projects/:projectId/environments"]}
                   element={<EnvironmentsPage />}
@@ -208,6 +239,9 @@ export function App() {
           </Routes>
         </QueryClientProvider>
       </SuperTokensWrapper>
+      </Suspense>
+
+      <BreakpointDebugger />
     </div>
   );
 }

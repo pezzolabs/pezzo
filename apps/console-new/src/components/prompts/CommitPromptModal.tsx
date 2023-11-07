@@ -1,9 +1,29 @@
-import { Modal, Form, Input, Button, Alert } from "antd";
-import { css } from "@emotion/css";
 import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
-import { usePromptVersionEditorContext } from "~/lib/providers/PromptVersionEditorContext";
 import { useCreatePromptVersion } from "~/graphql/hooks/mutations";
 import { trackEvent } from "~/lib/utils/analytics";
+import { useEditorContext } from "~/lib/providers/EditorContext";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input,
+} from "@pezzo/ui";
+import { AlertCircle } from "lucide-react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface Props {
   open: boolean;
@@ -11,22 +31,40 @@ interface Props {
   onCommitted: () => void;
 }
 
-type Inputs = {
-  message: string;
-};
+const formSchema = z.object({
+  message: z
+    .string()
+    .min(1, "Message must be at least 1 character long")
+    .max(120, "Message can't be longer than 64 characters"),
+});
 
 export const CommitPromptModal = ({ open, onClose, onCommitted }: Props) => {
-  const [form] = Form.useForm<Inputs>();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      message: "",
+    },
+  });
   const { prompt } = useCurrentPrompt();
-  const { formValues, promptType } = usePromptVersionEditorContext();
+  const { getForm: getEditorForm } = useEditorContext();
+  const editorForm = getEditorForm();
 
-  const { mutateAsync: createPromptVersion, error } = useCreatePromptVersion();
+  const [settings, content, service, type] = editorForm.watch([
+    "settings",
+    "content",
+    "service",
+    "type",
+  ]);
 
-  const handleFormFinish = async (values: Inputs) => {
-    const { settings, content, service } = formValues;
+  const {
+    mutateAsync: createPromptVersion,
+    error,
+    isLoading,
+  } = useCreatePromptVersion();
 
+  const handleFormFinish = async (values: z.infer<typeof formSchema>) => {
     const data = {
-      type: promptType,
+      type,
       message: values.message,
       service: service,
       content,
@@ -35,56 +73,56 @@ export const CommitPromptModal = ({ open, onClose, onCommitted }: Props) => {
     };
 
     await createPromptVersion(data);
-    form.resetFields();
+    form.reset();
     onCommitted();
     trackEvent("prompt_commit_submitted");
   };
 
   const handleCancel = () => {
-    form.resetFields();
+    form.reset();
     onClose();
     trackEvent("prompt_commit_cancelled");
   };
 
   return (
-    <Modal
-      title={`Commit Prompt - ${prompt.name}`}
-      open={open}
-      onCancel={handleCancel}
-      footer={false}
-    >
-      {error && (
-        <Alert type="error" message={error.response.errors[0].message} />
-      )}
+    <Dialog open={open}>
+      <DialogContent onPointerDownOutside={handleCancel}>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleFormFinish)}>
+            <DialogHeader className="mb-2">
+              Commit Prompt - {prompt.name}
+            </DialogHeader>
+            {error && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Oops!</AlertTitle>
+                <AlertDescription>
+                  {error.response.errors[0].message}
+                </AlertDescription>
+              </Alert>
+            )}
 
-      <Form
-        form={form}
-        layout="vertical"
-        name="basic"
-        style={{ maxWidth: 600, marginTop: 20 }}
-        onFinish={handleFormFinish}
-        autoComplete="off"
-      >
-        <Form.Item
-          label="Commit message"
-          name="message"
-          fieldId="message"
-          rules={[{ required: true, message: "Commit message is required" }]}
-        >
-          <Input placeholder="e.g. Implement better instructions" />
-        </Form.Item>
-
-        <Form.Item
-          className={css`
-            display: flex;
-            justify-content: flex-end;
-          `}
-        >
-          <Button type="primary" htmlType="submit">
-            Commit
-          </Button>
-        </Form.Item>
-      </Form>
-    </Modal>
+            <FormField
+              control={form.control}
+              name="message"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Commit message</FormLabel>
+                  <FormControl>
+                    <Input autoComplete="off" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <DialogFooter className="mt-4">
+              <Button loading={isLoading} type="submit">
+                Commit
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 };

@@ -130,7 +130,9 @@ export const useGetRequestReports = ({
 }: {
   offset: number;
   limit: number;
-}) => {
+}, {
+  enabled = true,
+}: UseQueryOptions) => {
   const { projectId } = useCurrentProject();
   const { filters, sort } = useFiltersAndSortParams();
 
@@ -143,7 +145,7 @@ export const useGetRequestReports = ({
         data: { projectId, offset, limit, filters, sort },
       }),
     queryKey: ["requests", projectId, offset, limit, filters, sort],
-    enabled: !!projectId && offset !== undefined && limit !== undefined,
+    enabled,
   });
 };
 

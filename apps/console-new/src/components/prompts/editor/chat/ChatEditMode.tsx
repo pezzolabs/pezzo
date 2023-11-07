@@ -1,44 +1,20 @@
-import { Button, Form } from "antd";
 import { ChatMessage } from "./ChatMessage";
-import { PlusOutlined } from "@ant-design/icons";
-import { usePromptVersionEditorContext } from "~/lib/providers/PromptVersionEditorContext";
 import { trackEvent } from "~/lib/utils/analytics";
 import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
-import { useEffect } from "react";
-import { findVariables } from "~/lib/utils/find-variables";
+import { useEditorContext } from "~/lib/providers/EditorContext";
+import { Button } from "@pezzo/ui";
+import { PlusIcon } from "lucide-react";
 
 export const ChatEditMode = () => {
   const { promptId } = useCurrentPrompt();
-  const { form, setVariables } = usePromptVersionEditorContext();
-
-  const content = Form.useWatch(["content"], { form });
-
-  useEffect(() => {
-    if (content?.messages) {
-      let variables = [];
-      content.messages
-        .filter((message) => !!message)
-        .forEach((message) => {
-          const foundVariables = findVariables(message?.content);
-          if (message?.content) variables = [...variables, ...foundVariables];
-        });
-
-      setVariables(variables);
-    }
-  }, [content, setVariables]);
+  const { messagesArray } = useEditorContext();
+  const { fields, append, remove } = messagesArray;
 
   const handleAdd = () => {
-    const currentMessages = form.getFieldValue(["content", "messages"]);
-    form.setFieldValue(
-      ["content", "messages"],
-      [
-        ...currentMessages,
-        {
-          role: "user",
-          content: "",
-        },
-      ]
-    );
+    append({
+      role: "user",
+      content: "",
+    });
 
     trackEvent("prompt_chat_completion_message_created", {
       promptId,
@@ -46,36 +22,27 @@ export const ChatEditMode = () => {
   };
 
   return (
-    <Form.List name={["content", "messages"]}>
-      {(fields, { add, remove }) => {
-        if (fields.length === 0) {
-          add();
-        }
+    <div className="flex flex-col gap-4">
+      {fields.map((field, index) => (
+        <ChatMessage
+          key={field.id}
+          index={index}
+          canDelete={fields.length !== 1}
+          onDelete={() => {
+            remove(index);
+            trackEvent("prompt_chat_completion_message_deleted", {
+              promptId,
+            });
+          }}
+        />
+      ))}
 
-        return (
-          <div>
-            {fields.map((field, index) => {
-              return (
-                <ChatMessage
-                  key={field.key}
-                  index={index}
-                  canDelete={fields.length !== 1}
-                  onDelete={() => {
-                    remove(index);
-                    trackEvent("prompt_chat_completion_message_deleted", {
-                      promptId,
-                    });
-                  }}
-                />
-              );
-            })}
-
-            <Button icon={<PlusOutlined />} onClick={() => handleAdd()}>
-              New Message
-            </Button>
-          </div>
-        );
-      }}
-    </Form.List>
+      <div className="flex items-center justify-center">
+        <Button className="border-dashed" variant="outline" onClick={handleAdd}>
+          <PlusIcon className="mr-2 h-4 w-4" />
+          Add message
+        </Button>
+      </div>
+    </div>
   );
 };

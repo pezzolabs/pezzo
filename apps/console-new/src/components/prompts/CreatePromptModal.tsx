@@ -90,7 +90,7 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
     <Dialog open={open}>
       <DialogContent
         onPointerDownOutside={onCancel}
-        className="sm:max-w-[425px] dark"
+        className="sm:max-w-lg"
       >
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>

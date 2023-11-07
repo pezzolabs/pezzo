@@ -1,8 +1,17 @@
-import { Modal, Tabs } from "antd";
 import { TypeScriptOpenAIIntegrationTutorial } from "../getting-started-wizard";
 import { useState } from "react";
 import { PythonOpenAIIntegrationTutorial } from "../getting-started-wizard/PythonOpenAIIntegrationTutorial";
-import { trackEvent } from "~/lib/utils/analytics";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@pezzo/ui";
 
 interface Props {
   open: boolean;
@@ -10,12 +19,12 @@ interface Props {
 }
 
 export const ConsumePromptModal = ({ open, onClose }: Props) => {
-  const [tab, setTab] = useState("typescript");
+  const [integration, setIntegration] = useState("typescript");
 
   <TypeScriptOpenAIIntegrationTutorial />;
 
   const renderInsructions = () => {
-    switch (tab) {
+    switch (integration) {
       case "typescript":
         return <TypeScriptOpenAIIntegrationTutorial />;
       case "python":
@@ -24,25 +33,29 @@ export const ConsumePromptModal = ({ open, onClose }: Props) => {
   };
 
   return (
-    <Modal width={800} open={open} onCancel={onClose} footer={false}>
-      <Tabs
-        onChange={(key) => {
-          trackEvent("prompt_how_to_consume_tab_changed", { tab: key });
-          setTab(key);
-        }}
-        defaultActiveKey="1"
-        items={[
-          {
-            key: "typescript",
-            label: "TypeScript",
-          },
-          {
-            key: "python",
-            label: "Python",
-          },
-        ]}
-      />
-      {renderInsructions()}
-    </Modal>
+    <Dialog open={open}>
+      <DialogContent onPointerDownOutside={onClose} className="max-w-[800px]">
+        <DialogHeader>
+          <DialogTitle>
+            <div className="flex items-center justify-between pr-8">
+              <div className="flex-1">How to consume</div>
+
+              <div className="w-[300px]">
+                <Select value={integration} onValueChange={setIntegration}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="typescript">TypeScript</SelectItem>
+                    <SelectItem value="python">Python</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </DialogTitle>
+        </DialogHeader>
+        <div className="w-full overflow-x-hidden">{renderInsructions()}</div>
+      </DialogContent>
+    </Dialog>
   );
 };

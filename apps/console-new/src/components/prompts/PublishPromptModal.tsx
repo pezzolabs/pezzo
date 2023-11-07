@@ -1,13 +1,29 @@
-import { Alert, List, Modal, Radio, Typography } from "antd";
 import { useEnvironments } from "~/lib/hooks/useEnvironments";
 import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { gqlClient, queryClient } from "~/lib/graphql";
 import { PUBLISH_PROMPT } from "~/graphql/definitions/mutations/prompt-environments";
-import { PublishPromptInput } from "~/@generated/graphql/graphql";
-import { usePromptVersionEditorContext } from "~/lib/providers/PromptVersionEditorContext";
+import {
+  PublishPromptInput,
+  PublishPromptMutation,
+} from "~/@generated/graphql/graphql";
 import { trackEvent } from "~/lib/utils/analytics";
+import { useEditorContext } from "~/lib/providers/EditorContext";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  Button,
+  Card,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  useToast,
+} from "@pezzo/ui";
+import { AlertCircle, CheckSquare, Square } from "lucide-react";
+import { GraphQLErrorResponse } from "~/graphql/types";
 
 interface Props {
   open: boolean;
@@ -15,106 +31,108 @@ interface Props {
 }
 
 export const PublishPromptModal = ({ open, onClose }: Props) => {
-  const { currentVersion } = usePromptVersionEditorContext();
+  const { currentVersionSha } = useEditorContext();
   const { prompt } = useCurrentPrompt();
   const { environments } = useEnvironments();
   const [selectedEnvironmentId, setSelectedEnvironmentId] =
     useState<string>(undefined);
-  const [selectedEnvironmentName, setSelectedEnvironmentName] =
-    useState<string>(undefined);
+  const { toast } = useToast();
 
-  const publishPromptMutation = useMutation({
+  const {
+    mutate: publishPrompt,
+    error,
+    isLoading,
+  } = useMutation<
+    PublishPromptMutation,
+    GraphQLErrorResponse,
+    PublishPromptInput
+  >({
     mutationFn: (data: PublishPromptInput) =>
       gqlClient.request(PUBLISH_PROMPT, { data }),
-    mutationKey: ["publishPrompt", prompt.id, currentVersion.sha],
+    mutationKey: ["publishPrompt", prompt.id, currentVersionSha],
     onSuccess: () => {
       queryClient.invalidateQueries(["promptEnvironments"]);
     },
   });
 
   const handlePublish = async () => {
-    publishPromptMutation.mutate({
-      promptId: prompt.id,
-      environmentId: selectedEnvironmentId,
-      promptVersionSha: currentVersion.sha,
-    });
+    publishPrompt(
+      {
+        promptId: prompt.id,
+        environmentId: selectedEnvironmentId,
+        promptVersionSha: currentVersionSha,
+      },
+      {
+        onSuccess: () => {
+          toast({
+            title: "Prompt published!",
+            description: `Your prompt has been published successfully.`,
+          });
+          onClose();
+        },
+      }
+    );
     trackEvent("prompt_publish_clicked");
   };
 
   useEffect(() => {
     setSelectedEnvironmentId(undefined);
-    setSelectedEnvironmentName(undefined);
-    publishPromptMutation.reset();
   }, [open]);
+
+  const handleEnvironmentClick = (environmentId: string) => {
+    setSelectedEnvironmentId(environmentId);
+  };
 
   return (
     environments && (
-      <Modal
-        cancelButtonProps={{
-          style: {
-            display:
-              publishPromptMutation.isError || publishPromptMutation.isSuccess
-                ? ""
-                : "none",
-          },
-        }}
-        onCancel={onClose}
-        cancelText="Close"
-        okText="Publish"
-        okButtonProps={{
-          disabled: !selectedEnvironmentId,
-        }}
-        onOk={handlePublish}
-        open={open}
-        title={`Publish ${prompt.name}`}
-      >
-        <>
-          <p>Select the environment to publish this version to.</p>
-          {publishPromptMutation.isSuccess && (
-            <Alert
-              style={{ marginBottom: 12 }}
-              type="success"
-              showIcon
-              description={`Prompt successfully published to the ${selectedEnvironmentName} environment.`}
-            />
-          )}
+      <Dialog open={open}>
+        <DialogContent onPointerDownOutside={() => onClose()}>
+          <DialogHeader>Publish Prompt - {prompt.name}</DialogHeader>
+          <div className="flex flex-col gap-2">
+            {error && (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Oops!</AlertTitle>
+                <AlertDescription>
+                  {error.response.errors[0].message}
+                </AlertDescription>
+              </Alert>
+            )}
 
-          {publishPromptMutation.isError && (
-            <Alert
-              style={{ marginBottom: 12 }}
-              type="error"
-              showIcon
-              // eslint-disable-next-line
-              description={
-                (publishPromptMutation.error as unknown as any)?.response
-                  ?.errors[0]?.message
-              }
-            />
-          )}
+            <p className="text-sm">
+              Select the environment to publish this version to.
+            </p>
+          </div>
 
-          <Radio.Group style={{ width: "100%" }} value={selectedEnvironmentId}>
-            <List
-              bordered
-              dataSource={environments}
-              renderItem={(env) => (
-                <List.Item
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    setSelectedEnvironmentId(env.id);
-                    setSelectedEnvironmentName(env.name);
-                    trackEvent("prompt_environment_selected", {
-                      environment: env.name,
-                    });
-                  }}
-                >
-                  <Typography.Text>{env.name}</Typography.Text>
-                  <Radio value={env.id} />
-                </List.Item>
-              )}
-            />
-          </Radio.Group>
-        </>
-      </Modal>
+          <div className="flex flex-col gap-2">
+            {environments.map((environment) => (
+              <Card
+                onClick={() => handleEnvironmentClick(environment.id)}
+                className="flex cursor-pointer items-center justify-between border border-card p-4 hover:border-primary"
+              >
+                <div className="font-medium">{environment.name}</div>
+                <div>
+                  {selectedEnvironmentId === environment.id && (
+                    <CheckSquare className="h-4 w-4 text-primary" />
+                  )}
+                  {selectedEnvironmentId !== environment.id && (
+                    <Square className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </div>
+              </Card>
+            ))}
+          </div>
+          <DialogFooter>
+            <Button
+              loading={isLoading}
+              disabled={selectedEnvironmentId === undefined}
+              onClick={handlePublish}
+            >
+              Publish
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     )
   );
 };

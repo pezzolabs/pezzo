@@ -1,10 +1,12 @@
-import { Alert, Typography } from "antd";
 import { HighlightCode } from "./HighlightCode";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
 import styled from "@emotion/styled";
 import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
-import { usePromptVersionEditorContext } from "~/lib/providers/PromptVersionEditorContext";
 import { usePezzoApiKeys } from "~/graphql/hooks/queries";
+import { useEditorContext } from "~/lib/providers/EditorContext";
+import { Alert, AlertDescription, AlertTitle } from "@pezzo/ui";
+import { Link } from "react-router-dom";
+import { InfoIcon } from "lucide-react";
 
 const StyledPre = styled.pre`
   background: #000;
@@ -23,7 +25,7 @@ ${varStrings}
 };
 
 export const TypeScriptOpenAIIntegrationTutorial = () => {
-  const { variables } = usePromptVersionEditorContext();
+  const { variables } = useEditorContext();
   const { prompt } = useCurrentPrompt();
   const { pezzoApiKeys } = usePezzoApiKeys();
   const API_KEY = pezzoApiKeys && pezzoApiKeys[0].id;
@@ -53,49 +55,46 @@ const response = await openai.chat.completions.create(prompt${variablesString});
 `;
 
   return (
-    <>
-      <Typography.Title level={3}>Want to know more?</Typography.Title>
+    <div className="flex flex-col gap-4 text-sm">
+      <Alert variant="info">
+        <InfoIcon className="h-4 w-4" />
+        <AlertTitle>Need some more help?</AlertTitle>
+        <AlertDescription>
+          Check out the{" "}
+          <Link
+            target="_blank"
+            className="font-semibold text-primary underline"
+            to="https://docs.pezzo.ai/client/integrations/openai"
+          >
+            Using OpenAI With Pezzo
+          </Link>{" "}
+          page on our documentation to learn more.
+        </AlertDescription>
+      </Alert>
 
-      <Alert
-        showIcon
-        type="info"
-        message="Need some more help?"
-        description={
-          <Typography.Paragraph style={{ marginBottom: 0 }}>
-            Check out the{" "}
-            <a
-              href="https://docs.pezzo.ai/client/integrations/openai"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Using OpenAI With Pezzo
-            </a>{" "}
-            page on our documentation to learn more.
-          </Typography.Paragraph>
-        }
-        style={{ marginBottom: 12 }}
-      />
+      <div className="flex flex-col gap-3">
+        <h1>Installation</h1>
+        <p>
+          Pezzo provides a fully-typed NPM package for integration with
+          TypeScript projects.
+        </p>
+        <StyledPre>
+          <code>{"npm install @pezzo/client openai"}</code>
+        </StyledPre>
+      </div>
 
-      <Typography.Title level={3}>Installation</Typography.Title>
-      <Typography.Paragraph>
-        Pezzo provides a fully-typed NPM package for integration with TypeScript
-        projects.
-      </Typography.Paragraph>
-      <StyledPre>
-        <code>{"npm install @pezzo/client openai"}</code>
-      </StyledPre>
-      <Typography.Title level={3} style={{ marginTop: 24 }}>
-        Usage
-      </Typography.Title>
-      <Typography.Paragraph>
-        Managing your prompts with Pezzo is easy. You will fetch the prompt
-        payload from Pezzo, and then pass it to the OpenAI client as an
-        argument. As soon as you interact with OpenAI, your requests will be
-        available in the Requests view.
-      </Typography.Paragraph>
-      <HighlightCode code={codeWithPromptManagement} />
+      <div className="flex flex-col gap-3">
+        <h1>Usage</h1>
+        <p>
+          Managing your prompts with Pezzo is easy. You will fetch the prompt
+          payload from Pezzo, and then pass it to the OpenAI client as an
+          argument. As soon as you interact with OpenAI, your requests will be
+          available in the Requests view.
+        </p>
+        <HighlightCode code={codeWithPromptManagement} language="ts" />
+      </div>
 
-      <Typography.Paragraph>
+      <p>
         In addition to vriables, you can also provide{" "}
         <strong>custom properties</strong> and <strong>caching</strong> when
         executing prompts. These properties will be available in the Requests
@@ -108,7 +107,7 @@ const response = await openai.chat.completions.create(prompt${variablesString});
           Read more in the Pezzo Documentation
         </a>
         .
-      </Typography.Paragraph>
-    </>
+      </p>
+    </div>
   );
 };

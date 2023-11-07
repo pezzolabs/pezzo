@@ -1,32 +1,49 @@
-import { Space, Typography } from "antd";
+import { PromptTesterVariablesInputs } from "~/lib/providers/PromptTesterContext";
 import { PromptVariable } from "./PromptVariable";
 import { isJson } from "~/lib/utils/is-json";
+import { UseFormReturn } from "react-hook-form";
+import { FormField, FormItem, FormMessage } from "@pezzo/ui";
 
 interface Props {
   variables: Record<string, string>;
+  form: UseFormReturn<PromptTesterVariablesInputs>;
 }
 
-export const PromptVariables = ({ variables }: Props) => {
+export const PromptVariables = ({ variables, form }: Props) => {
+  if (Object.keys(variables).length === 0) {
+    return <p className="italic text-muted-foreground">No variables found</p>;
+  }
+
   return (
     <>
-      {Object.keys(variables).length === 0 && (
-        <Typography.Text type="secondary">No variables found.</Typography.Text>
-      )}
-
-      <Space direction="vertical" style={{ width: "100%" }}>
-        {Object.keys(variables).length > 0 &&
-          Object.keys(variables).map((variableName) => (
-            <PromptVariable
-              key={variableName}
-              name={variableName}
-              value={
-                isJson(variables[variableName])
-                  ? JSON.stringify(JSON.parse(variables[variableName]), null, 2)
-                  : variables[variableName]
-              }
-            />
-          ))}
-      </Space>
+      <p className="mb-4">Provide values for your variables below.</p>
+      <div className="text-sm flex flex-col gap-6">
+        {Object.keys(variables).map((variableName) => (
+          <FormField
+            control={form.control}
+            name={`${variableName}`}
+            render={({ field }) => (
+              <FormItem>
+                <PromptVariable
+                  field={field}
+                  key={variableName}
+                  name={variableName}
+                  value={
+                    isJson(variables[variableName])
+                      ? JSON.stringify(
+                          JSON.parse(variables[variableName]),
+                          null,
+                          2
+                        )
+                      : variables[variableName]
+                  }
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        ))}
+      </div>
     </>
   );
 };
