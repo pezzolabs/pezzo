@@ -33,16 +33,11 @@ export const LayoutWrapper = ({
             )}
 
             <div className="flex-1">
-              <motion.div
-                key={location.pathname}
-                initial={{ y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -10, opacity: 0 }}
-                transition={{ duration: 0.1 }}
+              <div
                 className="no-scrollbar h-full overflow-y-auto pb-4"
               >
                 {children}
-              </motion.div>
+              </div>
             </div>
           </div>
         </div>
