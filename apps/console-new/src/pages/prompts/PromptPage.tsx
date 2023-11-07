@@ -4,8 +4,6 @@ import { Outlet } from "react-router-dom";
 import { Suspense } from "react";
 
 export const PromptPage = () => {
-  const { prompt, isLoading } = useCurrentPrompt();
-
   return (
     <>
       <PromptNavigation />

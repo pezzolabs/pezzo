@@ -31,7 +31,6 @@ export const PromptNavigation = ({}) => {
     { name: "Editor", icon: PencilIcon, href: `${basePath}/edit`, isActive: (href) => window.location.pathname === href},
     { name: "Versions", icon: GitCommitIcon , href: `${basePath}/versions`, isActive: (href) => window.location.pathname === href},
     { name: "Metrics", icon: BarChart4, href: `${basePath}/metrics`, isActive: (href) => window.location.pathname === href},
-    { name: "Settings", icon: SettingsIcon, href: `${basePath}/settings`, isActive: (href) => window.location.pathname === href},
   ];
 
   return (
