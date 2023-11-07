@@ -1,9 +1,9 @@
-import { Result } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAcceptOrgInvitationMutation } from "~/graphql/hooks/mutations";
 import { useEffect, useState } from "react";
 import { GraphQLErrorResponse } from "~/graphql/types";
 import { usePageTitle } from "~/lib/hooks/usePageTitle";
+import { CheckIcon, XCircleIcon } from "lucide-react";
 
 export const AcceptInvitationPage = () => {
   usePageTitle("Accept Invitation");
@@ -36,21 +36,25 @@ export const AcceptInvitationPage = () => {
     acceptInvitation(params.token as string);
   }, [params, setError, mutateAsync, navigate]);
 
-  if (error) {
-    return (
-      <Result
-        status="error"
-        title="Could not accept invitation"
-        subTitle={error}
-      />
-    );
-  }
+  return (
+    <div className="mt-20 flex flex-col items-center gap-4">
+      {error && (
+        <>
+          <XCircleIcon className="h-28 w-28 text-destructive" />
+          <h1>Could not accept invitation</h1>
+          <p className="text-muted-foreground">{error}</p>
+        </>
+      )}
 
-  return orgName ? (
-    <Result
-      status="success"
-      title={"You're in!"}
-      subTitle={`You have successfully joined ${orgName}! Redirecting...`}
-    />
-  ) : null;
+      {orgName && (
+        <>
+          <CheckIcon className="h-28 w-28 text-green-500" />
+          <h1>You're in!</h1>
+          <p className="text-muted-foreground">
+            You have successfully joined ${orgName}! Redirecting...
+          </p>
+        </>
+      )}
+    </div>
+  );
 };
