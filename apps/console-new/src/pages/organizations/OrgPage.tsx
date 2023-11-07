@@ -1,4 +1,3 @@
-import { Tabs } from "antd";
 import styled from "@emotion/styled";
 import {
   AppstoreOutlined,

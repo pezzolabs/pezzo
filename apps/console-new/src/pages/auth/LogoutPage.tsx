@@ -1,4 +1,3 @@
-import { Typography } from "antd";
 import { useEffect } from "react";
 import { signOut } from "~/lib/utils/sign-out";
 
@@ -11,5 +10,5 @@ export const LogoutPage = () => {
     _signOut();
   }, []);
 
-  return <Typography.Text>Signing out...</Typography.Text>;
+  return <p>Signing out...</p>;
 };

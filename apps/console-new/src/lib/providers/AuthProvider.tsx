@@ -1,21 +1,11 @@
 import styled from "@emotion/styled";
 import { hotjar } from "react-hotjar";
-import { Col, Empty, Row } from "antd";
 import { createContext, useContext, useEffect, useMemo } from "react";
 import { useGetCurrentUser } from "~/graphql/hooks/queries";
 import { GetMeQuery } from "~/@generated/graphql/graphql";
 import { LayoutWrapper } from "~/components/layout/LayoutWrapper";
 import { Loader } from "~/components/common/Loader";
 import { useIdentify } from "~/lib/utils/analytics";
-
-const SpinnerOverlay = styled(Row)`
-  height: 100%;
-`;
-
-SpinnerOverlay.defaultProps = {
-  justify: "center",
-  align: "middle",
-};
 
 const AuthProviderContext = createContext<{
   currentUser: GetMeQuery["me"];
@@ -53,15 +43,9 @@ export const AuthProvider = ({ children }) => {
     <AuthProviderContext.Provider value={value}>
       {isLoading || isError || !data ? (
         <LayoutWrapper>
-          <Row justify="center" align="middle" style={{ height: "100vh" }}>
-            <Col>
-              {isLoading ? (
-                <Loader />
-              ) : (
-                <Empty description="Something went wrong" />
-              )}
-            </Col>
-          </Row>
+          <div className="h-100vh flex items-center justify-center">
+            {isLoading ? <Loader /> : <p>Something went wrong</p>}
+          </div>
         </LayoutWrapper>
       ) : (
         children
