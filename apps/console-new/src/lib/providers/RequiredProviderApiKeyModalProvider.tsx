@@ -1,8 +1,17 @@
-import { Collapse, Divider, Modal, Space, Typography } from "antd";
 import { createContext, useContext, useRef, useState } from "react";
 import { useProviderApiKeys } from "~/graphql/hooks/queries";
 import { ProviderApiKeyListItem } from "~/components/api-keys/ProviderApiKeyListItem";
 import { trackEvent } from "../utils/analytics";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@pezzo/ui";
 
 enum Reason {
   prompt_tester,
@@ -75,21 +84,15 @@ export const RequiredProviderApiKeyModalProvider = ({ children }) => {
 
   return (
     <RequiredProviderApiKeyModalContext.Provider value={value}>
-      <Modal
-        width={600}
-        open={open}
-        closable={false}
-        cancelText={"Cancel"}
-        okButtonProps={{ style: { display: "none" } }}
-        title={`API Key Required`}
-        onCancel={() => closeRequiredProviderApiKeyModal(true)}
-      >
-        <Space direction="vertical">
-          <Typography.Paragraph>
+      <Dialog open={open}>
+        <DialogContent className="text-sm">
+          <DialogHeader>
+            <DialogTitle>API Key Required</DialogTitle>
+          </DialogHeader>
+          <p>
             In order to test your prompts within the Pezzo Console, you must
             provide an OpenAI API key.
-          </Typography.Paragraph>
-
+          </p>
           <ProviderApiKeyListItem
             provider={"OpenAI"}
             value={key?.censoredValue}
@@ -98,36 +101,39 @@ export const RequiredProviderApiKeyModalProvider = ({ children }) => {
             onSave={closeRequiredProviderApiKeyModal}
           />
 
-          <Divider />
+          <div className="border-b border-muted" />
 
-          <Collapse
-            items={[
-              {
-                key: "1",
-                label: "How to create an OpenAI API key",
-                children: (
-                  <>
-                    <Typography.Paragraph>
-                      We recommend creating a new API key specifically for the
-                      Pezzo. This way, you can always revoke it if you need to.
-                    </Typography.Paragraph>
-                    <Typography.Paragraph>
-                      <a
-                        href="https://platform.openai.com/account/api-keys"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Click here to create a new OpenAI API key.
-                      </a>
-                    </Typography.Paragraph>
-                  </>
-                ),
-              },
-              {
-                key: "2",
-                label: "How Pezzo securely stores your API keys",
-                children: (
-                  <>
+          <Accordion type="multiple" className="w-full">
+            <AccordionItem value="item-1">
+              <AccordionTrigger>
+                How do I get an OpenAI API key?
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="flex flex-col space-y-4">
+                  <p>
+                    We recommend creating a new API key specifically for the
+                    Pezzo. This way, you can always revoke it if you need to.
+                  </p>
+                  <p>
+                    <a
+                      href="https://platform.openai.com/account/api-keys"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-semibold text-primary underline"
+                    >
+                      Click here to create a new OpenAI API key.
+                    </a>
+                  </p>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+              <AccordionTrigger>
+                How does Pezzo securely store my API keys?
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="flex flex-col space-y-4">
+                  <p>
                     All API keys stored on Pezzo are encrypted using AES-256
                     with a unique data key, generated per API key, using a
                     master key stored and rotated regularly on AWS KMS. This
@@ -136,30 +142,35 @@ export const RequiredProviderApiKeyModalProvider = ({ children }) => {
                       href="https://en.wikipedia.org/wiki/Key_encapsulation_mechanism"
                       target="_blank"
                       rel="noreferrer"
+                      className="font-semibold text-primary underline"
                     >
                       Key Encapsulation
                     </a>
-                    . Even in the event of a data breach, your API keys are
-                    safe.
-                  </>
-                ),
-              },
-              {
-                key: "3",
-                label: "Can I later delete my API key?",
-                children: (
-                  <>
+                    .
+                  </p>
+                  <p>
+                    Even in the event of a data breach, your API keys are safe.
+                  </p>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-3">
+              <AccordionTrigger>
+                Can I later delete my API key?
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="flex flex-col space-y-4">
+                  <p>
                     Yes. You can view and manage all API keys for your
-                    organization by navigation to your Organization page, and
+                    organization by navigating to your Organization page, and
                     then to the API Keys view.
-                  </>
-                ),
-              },
-            ]}
-          ></Collapse>
-        </Space>
-      </Modal>
-
+                  </p>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </DialogContent>
+      </Dialog>
       {children}
     </RequiredProviderApiKeyModalContext.Provider>
   );
