@@ -33,9 +33,7 @@ export const LayoutWrapper = ({
             )}
 
             <div className="flex-1">
-              <div
-                className="no-scrollbar h-full overflow-y-auto pb-4"
-              >
+              <div className="no-scrollbar h-full overflow-y-auto pb-4">
                 {children}
               </div>
             </div>
