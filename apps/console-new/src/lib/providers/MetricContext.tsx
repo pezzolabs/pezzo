@@ -8,10 +8,21 @@ import {
 } from "~/@generated/graphql/graphql";
 import { useGetPromptExecutionMetric } from "../hooks/useGetPromptExecutionMetric";
 import { format } from "date-fns";
-import { Card, Col, Empty, Radio, Row, Select, Typography, theme } from "antd";
 import { Loading3QuartersOutlined } from "@ant-design/icons";
 import ms from "ms";
 import { trackEvent } from "../utils/analytics";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@pezzo/ui";
+import { cn } from "@pezzo/ui/utils";
 
 interface MetricContextValue {
   data: GetMetricsQuery["metrics"];
@@ -45,7 +56,6 @@ export const MetricProvider = ({
   field = null,
   aggregation,
 }: Props) => {
-  const { token } = theme.useToken();
   const { prompt } = useCurrentPrompt();
   const [granularity, setGranularity] = useState<Granularity>(Granularity.Day);
   const [start, setStart] = useState<string>("-7d");
@@ -95,6 +105,25 @@ export const MetricProvider = ({
     trackEvent("prompt_metric_view_changed", { type: "time_range", start });
   };
 
+  const granularities = [
+    {
+      label: "Hour",
+      value: Granularity.Hour,
+    },
+    {
+      label: "Day",
+      value: Granularity.Day,
+    },
+    {
+      label: "Week",
+      value: Granularity.Week,
+    },
+    {
+      label: "Month",
+      value: Granularity.Month,
+    },
+  ];
+
   return (
     <MetricContext.Provider
       value={{
@@ -102,47 +131,56 @@ export const MetricProvider = ({
         formatTimestamp,
       }}
     >
-      <Card style={{ width: "100%" }}>
-        <div style={{ marginBottom: token.marginMD }}>
-          <Typography.Title level={4}>{title}</Typography.Title>
-          <Row style={{ marginBottom: token.marginLG }}>
-            <Col span={12}>
-              <Select
-                defaultValue={start}
-                style={{ width: 140 }}
-                onSelect={onTimeRangeChange}
-              >
-                <Select.Option value="-1h">Past Hour</Select.Option>
-                <Select.Option value="-1d">Past Day</Select.Option>
-                <Select.Option value="-7d">Past 7 days</Select.Option>
-                <Select.Option value="-30d">Past 30 days</Select.Option>
-                <Select.Option value="-1y">Past year</Select.Option>
+      <Card>
+        <CardHeader>
+          <h4 className="font-semibold">{title}</h4>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <Select defaultValue={start} onValueChange={onTimeRangeChange}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="-1h">Past Hour</SelectItem>
+                  <SelectItem value="-1d">Past Day</SelectItem>
+                  <SelectItem value="-7d">Past 7 days</SelectItem>
+                  <SelectItem value="-30d">Past 30 days</SelectItem>
+                  <SelectItem value="-1y">Past year</SelectItem>{" "}
+                </SelectContent>
               </Select>
-            </Col>
-            <Col
-              span={12}
-              style={{ display: "flex", justifyContent: "flex-end" }}
-            >
-              <Radio.Group
-                value={granularity}
-                onChange={(e) => onGranularityChange(e.target.value)}
-              >
-                <Radio.Button value={Granularity.Hour}>Hour</Radio.Button>
-                <Radio.Button value={Granularity.Day}>Day</Radio.Button>
-                <Radio.Button value={Granularity.Week}>Week</Radio.Button>
-                <Radio.Button value={Granularity.Month}>Month</Radio.Button>
-              </Radio.Group>
-            </Col>
-          </Row>
-          {metricsData.metrics.length === 0 ? (
-            <Empty
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description="No executions"
-            />
-          ) : (
-            <div>{children}</div>
-          )}
-        </div>
+            </div>
+            <div>
+              {granularities.map((item) => (
+                <Button
+                  key={item.value}
+                  type="button"
+                  variant="outline"
+                  onClick={() => onGranularityChange(item.value)}
+                  className={cn(
+                    "relative -ml-px inline-flex items-center rounded-none border px-3 py-2 text-sm first:rounded-l-md last:rounded-r-md focus:z-10",
+                    {
+                      "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground":
+                        granularity === item.value,
+                    }
+                  )}
+                >
+                  {item.label}
+                </Button>
+              ))}
+            </div>
+          </div>
+          <div>
+            {metricsData.metrics.length === 0 ? (
+              <div className="flex items-center justify-center italic text-muted-foreground">
+                No data available. Try again later.
+              </div>
+            ) : (
+              <div>{children}</div>
+            )}
+          </div>
+        </CardContent>
       </Card>
     </MetricContext.Provider>
   );
