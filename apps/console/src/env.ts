@@ -17,3 +17,4 @@ export const SUPERTOKENS_WEBSITE_DOMAIN = getEnvVariable(
 export const SENTRY_DSN_URL = getEnvVariable("NX_SENTRY_DSN_URL");
 export const SEGMENT_WRITE_KEY = getEnvVariable("NX_SEGMENT_WRITE_KEY");
 export const GTM_TAG_ID = getEnvVariable("NX_GTM_TAG_ID");
+export const DEBUG_MODE = getEnvVariable("NX_DEBUG_MODE");
