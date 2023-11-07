@@ -1,10 +1,5 @@
 import { cn } from "@pezzo/ui/utils";
-import {
-  BarChart4,
-  BoxIcon,
-  GitCommitIcon,
-  PencilIcon,
-} from "lucide-react";
+import { BarChart4, BoxIcon, GitCommitIcon, PencilIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
