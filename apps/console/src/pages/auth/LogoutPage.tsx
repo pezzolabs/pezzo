@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { FullScreenLoader } from "~/components/common/FullScreenLoader";
 import { signOut } from "~/lib/utils/sign-out";
 
 export const LogoutPage = () => {
@@ -10,5 +11,5 @@ export const LogoutPage = () => {
     _signOut();
   }, []);
 
-  return <p>Signing out...</p>;
+  return <FullScreenLoader />;
 };
