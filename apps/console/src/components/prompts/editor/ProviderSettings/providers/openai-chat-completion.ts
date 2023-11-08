@@ -1,5 +1,8 @@
 import OpenAI from "openai";
 import { FormSchema, ProviderSettingsDefinition } from "../types";
+import { OpenAIToolkit } from "@pezzo/llm-toolkit";
+
+const { gptModels } = OpenAIToolkit;
 
 type OpenAIProviderSettings = Omit<
   OpenAI.Chat.Completions.CompletionCreateParams,
@@ -18,27 +21,19 @@ const defaultSettings: OpenAIProviderSettings = {
 export const generateFormSchema = (
   settings: OpenAIProviderSettings
 ): FormSchema => {
-  const getMaxResponseTokensMaxValue = () => {
-    switch (settings.model) {
-      case "gpt-3.5-turbo":
-        return 8192;
-      case "gpt-3.5-turbo-16k":
-        return 16384;
-      case "gpt-4":
-        return 4096;
-    }
-  };
+  const options = Object.keys(gptModels).map((model) => ({
+    value: model,
+    label: model,
+  }));
+
+  const maxResponseTokensValue = gptModels[settings.model].maxTokens;
 
   return [
     {
       label: "Model",
       name: "model",
       type: "select",
-      options: [
-        { value: "gpt-3.5-turbo", label: "gpt-3.5-turbo" },
-        { value: "gpt-3.5-turbo-16k", label: "gpt-3.5-turbo-16k" },
-        { value: "gpt-4", label: "gpt-4" },
-      ],
+      options,
     },
     {
       label: "Temperature",
@@ -53,7 +48,7 @@ export const generateFormSchema = (
       name: "max_tokens",
       type: "slider",
       min: 1,
-      max: getMaxResponseTokensMaxValue(),
+      max: maxResponseTokensValue,
       step: 1,
     },
     {
