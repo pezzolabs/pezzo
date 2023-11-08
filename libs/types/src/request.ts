@@ -37,8 +37,8 @@ export class OpenAIObservabilityRequestBody
 export class OpenAIObservabilityResponseBody
   implements OpenAI.Chat.Completions.ChatCompletion
 {
+  object: OpenAI.Chat.Completions.ChatCompletion["object"];
   id: string;
-  object: string;
   created: number;
   model: AcceptedModels;
   choices: OpenAI.Chat.Completions.ChatCompletion["choices"];

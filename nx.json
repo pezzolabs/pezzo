@@ -63,16 +63,16 @@
   "generators": {
     "@nx/react": {
       "application": {
-        "style": "@emotion/styled",
+        "style": "css",
         "linter": "eslint",
         "bundler": "webpack",
         "babel": true
       },
       "component": {
-        "style": "@emotion/styled"
+        "style": "css"
       },
       "library": {
-        "style": "@emotion/styled",
+        "style": "css",
         "linter": "eslint"
       }
     },

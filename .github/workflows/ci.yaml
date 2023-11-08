@@ -116,6 +116,7 @@ jobs:
           tags: |
             type=raw,value=${{ github.run_id }},prefix=gh-
             type=ref,event=branch,prefix=branch-
+            type=ref,event=pr,prefix=pr-
             type=ref,event=tag
             type=sha,format=short
 
@@ -128,5 +129,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64
           # only push if the branch is main or a release branch
-          push: ${{ startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/release/') }}
+          push: true
+          # push: ${{ startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/release/') }}
           provenance: false

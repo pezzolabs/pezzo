@@ -8,10 +8,10 @@ export class GetRequestsInput {
   projectId: string;
 
   @Field(() => Number, { nullable: false })
-  page: number;
+  offset: number;
 
   @Field(() => Number, { nullable: false, defaultValue: 10 })
-  size: number;
+  limit: number;
 
   @Field(() => [FilterInput], { nullable: true })
   filters?: FilterInput[];
