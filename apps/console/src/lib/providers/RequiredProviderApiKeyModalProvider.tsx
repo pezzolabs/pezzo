@@ -85,7 +85,10 @@ export const RequiredProviderApiKeyModalProvider = ({ children }) => {
   return (
     <RequiredProviderApiKeyModalContext.Provider value={value}>
       <Dialog open={open}>
-        <DialogContent className="text-sm">
+        <DialogContent
+          onPointerDownOutside={() => setOpen(false)}
+          className="text-sm"
+        >
           <DialogHeader>
             <DialogTitle>API Key Required</DialogTitle>
           </DialogHeader>
