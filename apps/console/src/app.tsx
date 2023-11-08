@@ -46,29 +46,6 @@ if (HOTJAR_SITE_ID && HOTJAR_VERSION) {
   hotjar.initialize(Number(HOTJAR_SITE_ID), Number(HOTJAR_VERSION));
 }
 
-// We need to define the paths this way for the
-// breadcrumbs to work properly (useBreadcrumbItems)
-export const paths = {
-  "/login": "/login",
-  "/login/callback/:providerId": "/login/callback/:providerId",
-  "/logout": "/logout",
-  "/projects": "/projects",
-  "/invitations/:token/accept": "/invitations/:token/accept",
-  "/onboarding": "/onboarding",
-  "/info": "/info",
-  "/orgs/:orgId": "/orgs/:orgId",
-  "/orgs/:orgId/members": "/orgs/:orgId/members",
-  "/orgs/:orgId/settings": "/orgs/:orgId/settings",
-  "/orgs/:orgId/api-keys": "/orgs/:orgId/api-keys",
-  "/projects/:projectId": "/projects/:projectId",
-  "/projects/:projectId/dashboard": "/projects/:projectId/dashboard",
-  "/projects/:projectId/requests": "/projects/:projectId/reqeusts",
-  "/projects/:projectId/prompts": "/projects/:projectId/prompts",
-  "/projects/:projectId/prompts/:promptId":
-    "/projects/:projectId/prompts/:promptId",
-  "/projects/:projectId/environments": "/projects/:projectId/environments",
-};
-
 export const RootPageHandler = () => {
   const { organizationId } = useCurrentOrganization();
   return organizationId && <Navigate to={`/orgs/${organizationId}`} />;
@@ -85,11 +62,11 @@ export function App() {
             <Routes>
               {/* We don't render the LayoutWrapper for non-authorized routes */}
               <Route
-                path={paths["/login/callback/:providerId"]}
+                path="/login/callback/:providerId"
                 element={<AuthCallbackPage />}
               />
-              <Route path={paths["/login"]} element={<LoginPage />} />
-              <Route path={paths["/logout"]} element={<LogoutPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/logout" element={<LogoutPage />} />
             </Routes>
             {/* Authorized routes */}
             <Routes>
@@ -105,7 +82,7 @@ export function App() {
                 }
               >
                 <Route
-                  path={paths["/invitations/:token/accept"]}
+                  path="/invitations/:token/accept"
                   element={
                     <LayoutWrapper withSideNav={false}>
                       <AcceptInvitationPage />
@@ -114,7 +91,7 @@ export function App() {
                 />
 
                 <Route
-                  path={paths["/onboarding"]}
+                  path="/onboarding"
                   element={
                     <LayoutWrapper withSideNav={false}>
                       <OnboardingPage />
@@ -124,7 +101,7 @@ export function App() {
 
                 {/* Organizations */}
                 <Route
-                  path={paths["/orgs/:orgId"]}
+                  path="/orgs/:orgId"
                   element={
                     <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
                       <ProjectsPage />
@@ -133,7 +110,7 @@ export function App() {
                 ></Route>
 
                 <Route
-                  path={paths["/orgs/:orgId/members"]}
+                  path="/orgs/:orgId/members"
                   element={
                     <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
                       <OrgMembersPage />
@@ -142,7 +119,7 @@ export function App() {
                 ></Route>
 
                 <Route
-                  path={paths["/orgs/:orgId/api-keys"]}
+                  path="/orgs/:orgId/api-keys"
                   element={
                     <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
                       <OrgApiKeysPage />
@@ -151,7 +128,7 @@ export function App() {
                 ></Route>
 
                 <Route
-                  path={paths["/orgs/:orgId/settings"]}
+                  path="/orgs/:orgId/settings"
                   element={
                     <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
                       <OrgSettingsPage />
@@ -172,7 +149,7 @@ export function App() {
 
                 {/* In-project routes */}
                 <Route
-                  path={paths["/projects/:projectId"]}
+                  path="/projects/:projectId"
                   element={
                     <CurrentPromptProvider>
                       <RequiredProviderApiKeyModalProvider>
@@ -185,7 +162,7 @@ export function App() {
                 >
                   <Route
                     index
-                    path={paths["/projects/:projectId/"]}
+                    path="/projects/:projectId/"
                     element={<DashboardPage />}
                   />
                   <Route
@@ -197,11 +174,11 @@ export function App() {
                     element={<RequestsPage />}
                   />
                   <Route
-                    path={paths["/projects/:projectId/prompts"]}
+                    path="/projects/:projectId/prompts"
                     element={<PromptsPage />}
                   />
                   <Route
-                    path={paths["/projects/:projectId/prompts/:promptId"]}
+                    path="/projects/:projectId/prompts/:promptId"
                     element={<PromptPage />}
                   >
                     <Route index element={<Navigate to="edit" />} />
@@ -220,7 +197,7 @@ export function App() {
                     <Route path="metrics" element={<PromptMetricsView />} />
                   </Route>
                   <Route
-                    path={paths["/projects/:projectId/environments"]}
+                    path="/projects/:projectId/environments"
                     element={<EnvironmentsPage />}
                   />
                 </Route>
