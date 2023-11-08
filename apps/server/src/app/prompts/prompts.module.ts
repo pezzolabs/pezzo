@@ -1,7 +1,6 @@
 import { Module } from "@nestjs/common";
 import { PromptsResolver } from "./prompts.resolver";
 import { PrismaService } from "../prisma.service";
-import { PromptExecutionsResolver } from "./prompt-executions.resolver";
 import { PromptsService } from "./prompts.service";
 import { CredentialsModule } from "../credentials/credentials.module";
 import { IdentityModule } from "../identity/identity.module";
@@ -15,7 +14,6 @@ import { PromptVersionsResolver } from "./prompt-versions.resolver";
     PrismaService,
     PromptsResolver,
     PromptsService,
-    PromptExecutionsResolver,
     PromptVersionsResolver,
   ],
   controllers: [PromptsController],

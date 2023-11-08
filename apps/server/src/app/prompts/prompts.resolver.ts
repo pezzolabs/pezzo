@@ -9,7 +9,6 @@ import {
 import { Prompt } from "../../@generated/prompt/prompt.model";
 import { PrismaService } from "../prisma.service";
 import { PromptWhereUniqueInput } from "../../@generated/prompt/prompt-where-unique.input";
-import { PromptExecution } from "../../@generated/prompt-execution/prompt-execution.model";
 import { Prompt as PrismaPrompt } from "@prisma/client";
 import { CreatePromptInput } from "./inputs/create-prompt.input";
 import { PromptsService } from "./prompts.service";
@@ -264,25 +263,6 @@ export class PromptsResolver {
     });
 
     return prompt;
-  }
-
-  @ResolveField(() => [PromptExecution])
-  async executions(@Parent() prompt: PrismaPrompt) {
-    this.logger
-      .assign({ promptId: prompt.id })
-      .info("Resolving prompt executions");
-
-    try {
-      const executions = await this.prisma.promptExecution.findMany({
-        where: {
-          promptId: prompt.id,
-        },
-      });
-      return executions;
-    } catch (error) {
-      this.logger.error({ error }, "Error getting prompt executions");
-      throw new InternalServerErrorException();
-    }
   }
 
   @ResolveField(() => [PromptVersion])

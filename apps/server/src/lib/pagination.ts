@@ -6,10 +6,10 @@ export class Pagination {
   total: number;
 
   @Field(() => Number, { nullable: false })
-  page: number;
+  offset: number;
 
   @Field(() => Number, { nullable: false })
-  size: number;
+  limit: number;
 }
 
 export const MAX_PAGE_SIZE = 100;

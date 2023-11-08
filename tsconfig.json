@@ -1,14 +1,3 @@
 {
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@pezzo/ui": ["libs/ui/src/index.ts"],
-      "@pezzo/ui/*": ["libs/ui/src/*"]
-    }
-  },
-  "ts-node": {
-    "compilerOptions": {
-      "module": "commonjs"
-    }
-  }
+  "extends": "./tsconfig.base.json"
 }
