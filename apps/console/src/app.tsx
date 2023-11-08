@@ -39,6 +39,7 @@ import { PromptVersionsView } from "./components/prompts/views/PromptVersionsVie
 import { PromptMetricsView } from "./components/prompts/views/PromptMetricsView";
 import { Suspense } from "react";
 import { BreakpointDebugger } from "./components/common/BreakpointDebugger";
+import { FullScreenLoader } from "./components/common/FullScreenLoader";
 
 initSuperTokens();
 
@@ -79,7 +80,7 @@ export function App() {
   return (
     <div className="relative h-full">
       <Toaster />
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<FullScreenLoader />}>
         <SuperTokensWrapper>
           <QueryClientProvider client={queryClient}>
             {/* Non-authorized routes */}

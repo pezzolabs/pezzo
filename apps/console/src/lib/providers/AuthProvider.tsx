@@ -1,10 +1,7 @@
-import styled from "@emotion/styled";
 import { hotjar } from "react-hotjar";
 import { createContext, useContext, useEffect, useMemo } from "react";
 import { useGetCurrentUser } from "~/graphql/hooks/queries";
 import { GetMeQuery } from "~/@generated/graphql/graphql";
-import { LayoutWrapper } from "~/components/layout/LayoutWrapper";
-import { Loader } from "~/components/common/Loader";
 import { useIdentify } from "~/lib/utils/analytics";
 
 const AuthProviderContext = createContext<{
@@ -18,7 +15,7 @@ const AuthProviderContext = createContext<{
 export const useAuthContext = () => useContext(AuthProviderContext);
 
 export const AuthProvider = ({ children }) => {
-  const { data, isLoading, isError } = useGetCurrentUser();
+  const { data, isLoading } = useGetCurrentUser();
 
   const value = useMemo(
     () => ({
@@ -41,15 +38,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthProviderContext.Provider value={value}>
-      {isLoading || isError || !data ? (
-        <LayoutWrapper>
-          <div className="h-100vh flex items-center justify-center">
-            {isLoading ? <Loader /> : <p>Something went wrong</p>}
-          </div>
-        </LayoutWrapper>
-      ) : (
-        children
-      )}
+      {children}
     </AuthProviderContext.Provider>
   );
 };

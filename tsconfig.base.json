@@ -10,19 +10,39 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2017", "dom"],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@pezzo/client": ["libs/client/src/index.ts"],
-      "@pezzo/common": ["libs/common/src/index.ts"],
-      "@pezzo/kafka": ["libs/kafka/src/index.ts"],
-      "@pezzo/types": ["libs/types/src/index.ts"],
-      "@pezzo/ui": ["libs/ui/src/index.ts"],
-      "@pezzo/ui/*": ["libs/ui/src/*"],
-      "~/*": ["apps/console/src/*"]
+      "@pezzo/client": [
+        "libs/client/src/index.ts"
+      ],
+      "@pezzo/common": [
+        "libs/common/src/index.ts"
+      ],
+      "@pezzo/kafka": [
+        "libs/kafka/src/index.ts"
+      ],
+      "@pezzo/types": [
+        "libs/types/src/index.ts"
+      ],
+      "@pezzo/ui": [
+        "libs/ui/src/index.ts"
+      ],
+      "@pezzo/ui/*": [
+        "libs/ui/src/*"
+      ],
+      "~/*": [
+        "apps/console/src/*"
+      ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }
