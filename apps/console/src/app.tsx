@@ -37,7 +37,6 @@ import { PromptTesterProvider } from "./lib/providers/PromptTesterContext";
 import { PromptVersionsView } from "./components/prompts/views/PromptVersionsView";
 import { PromptMetricsView } from "./components/prompts/views/PromptMetricsView";
 import { Suspense } from "react";
-import { BreakpointDebugger } from "./components/common/BreakpointDebugger";
 import { FullScreenLoader } from "./components/common/FullScreenLoader";
 import { ProjectsPage } from "./pages/projects/ProjectsPage";
 
@@ -72,7 +71,6 @@ export const paths = {
 
 export const RootPageHandler = () => {
   const { organizationId } = useCurrentOrganization();
-
   return organizationId && <Navigate to={`/orgs/${organizationId}`} />;
 };
 

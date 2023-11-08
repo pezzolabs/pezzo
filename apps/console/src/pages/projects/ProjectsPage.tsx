@@ -12,9 +12,7 @@ import {
 import { trackEvent } from "~/lib/utils/analytics";
 import { usePageTitle } from "~/lib/hooks/usePageTitle";
 import {
-  BoxIcon,
   FolderRootIcon,
-  HomeIcon,
   MoreVertical,
   PencilIcon,
   PlusIcon,
@@ -38,7 +36,7 @@ export const ProjectsPage = () => {
   const navigate = useNavigate();
   usePageTitle("Projects");
 
-  const { mutate: deleteProject, error } = useDeleteProjectMutation();
+  const { mutate: deleteProject } = useDeleteProjectMutation();
 
   const handleDeleteProject = (projectId: string) => {
     deleteProject(
@@ -97,7 +95,7 @@ export const ProjectsPage = () => {
 
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <MoreVertical className="h-5 w-5 text-black/40" />
+            <MoreVertical className="h-5 w-5 text-muted-foreground" />
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem onClick={(e) => handleRenameClick(e, project)}>

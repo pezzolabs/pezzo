@@ -80,43 +80,47 @@ export const OnboardingPage = () => {
 
   useEffect(() => {
     if (projects && projects.length > 0) {
-      navigate("/projects", { replace: true });
+      navigate("/", { replace: true });
     }
   }, [projects, navigate]);
 
   return (
     <div className="mt-6 flex items-center justify-center">
-      <Card>
-        <CardContent>
-          <CardHeader>
-            <h3>Let's create your first project 🎉</h3>
-          </CardHeader>
-          <div>
-            <Form {...form}>
-              <FormField
-                name="projectName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      How do you want to call your first project?
-                    </FormLabel>
-                    <Input autoComplete="off" {...field} />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </Form>
-          </div>
-        </CardContent>
-        <CardFooter className="flex justify-end">
-          <Button
-            onClick={form.handleSubmit(handleCreateProject)}
-            loading={isCreatingProject}
-          >
-            Next
-          </Button>
-        </CardFooter>
-      </Card>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleCreateProject)}>
+          <Card>
+            <CardContent>
+              <CardHeader>
+                <h3>
+                  Let's create your first project{" "}
+                  <span role="img" aria-label="party">
+                    🎉
+                  </span>
+                </h3>
+              </CardHeader>
+              <div>
+                <FormField
+                  name="projectName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        How do you want to call your first project?
+                      </FormLabel>
+                      <Input autoComplete="off" {...field} />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </CardContent>
+            <CardFooter className="flex justify-end">
+              <Button type="submit" loading={isCreatingProject}>
+                Next
+              </Button>
+            </CardFooter>
+          </Card>
+        </form>
+      </Form>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import { SideNavigation } from "./SideNavigation";
 import { Header } from "./Header";
 import { OrgSubHeader } from "./OrgSubHeader";
+import { cn } from "@pezzo/ui/utils";
 
 interface Props {
   children: React.ReactNode;
@@ -16,12 +17,15 @@ export const LayoutWrapper = ({
   return (
     <div className="dark flex h-full max-h-[100vh] w-full text-foreground">
       <div className="flex h-full w-full">
-        <div className="h-full max-h-full w-full overflow-y-auto  bg-background">
-          <Header />
+        <div className="flex h-full max-h-full w-full flex-col overflow-y-auto bg-background">
+          {/* Top */}
+          <div>
+            <Header />
+            {withOrgSubHeader && <OrgSubHeader />}
+          </div>
 
-          {withOrgSubHeader && <OrgSubHeader />}
-
-          <div className="-mt-14 flex h-full pt-14">
+          {/* Bottom */}
+          <div className={cn("flex h-full flex-1")}>
             {withSideNav && (
               <div className="h-full max-w-[240px]">
                 <SideNavigation />
@@ -29,7 +33,7 @@ export const LayoutWrapper = ({
             )}
 
             <div className="flex-1">
-              <div className="no-scrollbar h-full overflow-y-auto pb-4">
+              <div className={cn("no-scrollbar overflow-y-auto  pb-4")}>
                 {children}
               </div>
             </div>
