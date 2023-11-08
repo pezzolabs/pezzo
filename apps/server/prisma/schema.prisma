@@ -148,7 +148,6 @@ model Prompt {
   id                 String              @id @default(cuid())
   projectId          String
   name               String
-  executions         PromptExecution[]
   promptEnvironments PromptEnvironment[]
   versions           PromptVersion[]
   createdAt          DateTime            @default(now())
@@ -166,34 +165,6 @@ model PromptEnvironment {
   environment      Environment    @relation(fields: [environmentId], references: [id], onDelete: Cascade)
   publishedById    String
   publishedBy      User           @relation(fields: [publishedById], references: [id])
-}
-
-model PromptExecution {
-  id                  String                @id @default(cuid())
-  prompt              Prompt                @relation(fields: [promptId], references: [id], onDelete: Cascade)
-  promptId            String
-  promptVersionSha    String
-  environmentId       String
-  timestamp           DateTime              @default(now())
-  status              PromptExecutionStatus
-  content             String
-  interpolatedContent String
-  settings            Json
-  result              String?
-  duration            Int
-  promptTokens        Int
-  completionTokens    Int
-  totalTokens         Int
-  promptCost          Float
-  completionCost      Float
-  totalCost           Float
-  error               String?
-  variables           Json                  @default("{}")
-}
-
-enum PromptExecutionStatus {
-  Success
-  Error
 }
 
 model ProviderApiKey {
