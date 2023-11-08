@@ -104,7 +104,6 @@ export const PromptEditView = () => {
   return (
     <>
       <div className="p-6">
-        {/* <pre>{JSON.stringify(form.getValues(), null, 2)}</pre> */}
         <Form {...form}>
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between gap-4">

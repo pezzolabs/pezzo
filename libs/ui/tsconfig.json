@@ -5,7 +5,6 @@
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "jsxImportSource": "@emotion/react"
   },
   "files": [],
   "include": [],

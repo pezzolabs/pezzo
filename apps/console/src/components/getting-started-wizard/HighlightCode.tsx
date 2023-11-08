@@ -1,4 +1,5 @@
 import { Highlight, themes } from "prism-react-renderer";
+import { StyledPre } from "./StyledPre";
 
 type Props = {
   code: string;
@@ -8,14 +9,11 @@ type Props = {
 export const HighlightCode = ({ code, language = "ts" }: Props) => (
   <Highlight theme={themes.vsDark} code={code} language={language}>
     {({ style, tokens, getLineProps, getTokenProps }) => (
-      <pre
+      <StyledPre
         style={{
           ...style,
           background: "#000",
-          padding: 14,
-          borderRadius: 6,
         }}
-        className="w-full overflow-x-auto"
       >
         {tokens.map((line, i) => (
           <div key={i} {...getLineProps({ line })}>
@@ -24,7 +22,7 @@ export const HighlightCode = ({ code, language = "ts" }: Props) => (
             ))}
           </div>
         ))}
-      </pre>
+      </StyledPre>
     )}
   </Highlight>
 );

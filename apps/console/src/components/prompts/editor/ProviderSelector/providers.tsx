@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import { ProviderProps } from "./types";
 import { promptProvidersMapping } from "@pezzo/types";
 import { PromptService } from "~/@generated/graphql/graphql";
@@ -6,31 +5,39 @@ import { PromptService } from "~/@generated/graphql/graphql";
 // Logos
 import OpenAILogo from "~/assets/providers/openai-logo.svg";
 import AzureOpenAILogo from "~/assets/providers/azure-logo.svg";
-import AnthropicOpenAILogo from "~/assets/providers/anthropic-logo.svg";
-
-const Icon = styled.img`
-  border-radius: 2px;
-  height: 22px;
-`;
+import AnthropicLogo from "~/assets/providers/anthropic-logo.svg";
 
 export const providersList: ProviderProps[] = [
   {
     image: (
-      <Icon
+      <img
+        alt="OpenAI"
         src={OpenAILogo}
-        style={{ backgroundColor: "#74AA9C", padding: 2 }}
+        className="w-6 rounded-sm bg-[#74AA9C] p-[2px]"
       />
     ),
     value: PromptService.OpenAiChatCompletion,
     label: promptProvidersMapping[PromptService.OpenAiChatCompletion].name,
   },
   {
-    image: <Icon src={AzureOpenAILogo} style={{ padding: 2 }} />,
+    image: (
+      <img
+        alt="Azure OpenAI"
+        src={AzureOpenAILogo}
+        className="w-6 rounded-sm bg-white p-[2px]"
+      />
+    ),
     value: PromptService.AzureOpenAiChatCompletion,
     label: promptProvidersMapping[PromptService.AzureOpenAiChatCompletion].name,
   },
   {
-    image: <Icon src={AnthropicOpenAILogo} style={{ padding: 2 }} />,
+    image: (
+      <img
+        alt="Anthropic"
+        src={AnthropicLogo}
+        className=" w-6 rounded-sm p-[2px]"
+      />
+    ),
     value: PromptService.AnthropicCompletion,
     label: promptProvidersMapping[PromptService.AnthropicCompletion].name,
   },

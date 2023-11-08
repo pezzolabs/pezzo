@@ -19,9 +19,6 @@
     "@codemirror/state": "^6.2.1",
     "@codemirror/view": "^6.13.2",
     "@dqbd/tiktoken": "^1.0.6",
-    "@emotion/css": "^11.10.6",
-    "@emotion/react": "11.11.1",
-    "@emotion/styled": "11.11.0",
     "@hookform/resolvers": "^3.3.1",
     "@hotjar/browser": "^1.0.7",
     "@monaco-editor/react": "^4.5.1",
@@ -121,7 +118,6 @@
   },
   "devDependencies": {
     "@babel/preset-react": "^7.14.5",
-    "@emotion/babel-plugin": "11.11.0",
     "@graphql-codegen/cli": "^3.3.1",
     "@graphql-codegen/client-preset": "^3.0.1",
     "@nestjs/schematics": "^9.0.0",

@@ -1,18 +1,12 @@
 import { HighlightCode } from "./HighlightCode";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
-import styled from "@emotion/styled";
 import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
 import { useEditorContext } from "~/lib/providers/EditorContext";
 import { Alert, AlertDescription, AlertTitle } from "@pezzo/ui";
 import { Link } from "react-router-dom";
 import { InfoIcon } from "lucide-react";
 import { usePezzoApiKeys } from "~/graphql/hooks/queries";
-
-const StyledPre = styled.pre`
-  background: #000;
-  border-radius: 8px;
-  padding: 14px;
-`;
+import { StyledPre } from "./StyledPre";
 
 const getVariablesString = (variables: string[]) => {
   if (!variables.length) return "";
