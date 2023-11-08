@@ -1,4 +1,4 @@
 #!/bin/sh
 set -e;
-node /scripts/inject-variables.js /index.html;
+node /app/scripts/inject-variables.js /app/index.html;
 exec "$@";
