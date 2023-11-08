@@ -38,7 +38,7 @@ import { PromptVersionsView } from "./components/prompts/views/PromptVersionsVie
 import { PromptMetricsView } from "./components/prompts/views/PromptMetricsView";
 import { Suspense } from "react";
 import { FullScreenLoader } from "./components/common/FullScreenLoader";
-import { ProjectsPage } from "./pages/projects/ProjectsPage";
+import { OrgPage } from "./pages/projects/OrgPage";
 
 initSuperTokens();
 
@@ -104,7 +104,7 @@ export function App() {
                   path="/orgs/:orgId"
                   element={
                     <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
-                      <ProjectsPage />
+                      <OrgPage />
                     </LayoutWrapper>
                   }
                 ></Route>
