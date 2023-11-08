@@ -23,7 +23,6 @@ import {
   MsearchBody,
   SearchResponse,
 } from "@opensearch-project/opensearch/api/types";
-import { OpenSearchIndex } from "../opensearch/types";
 
 const granularityMapping = {
   [Granularity.hour]: "1h",
@@ -129,7 +128,7 @@ export class MetricsResolver {
     };
 
     const query = {
-      index: OpenSearchIndex.Requests,
+      index: this.openSearchService.requestsIndexAlias,
       body,
     };
 
