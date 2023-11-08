@@ -16,8 +16,6 @@
     "@apollo/server": "^4.7.0",
     "@aws-sdk/client-kms": "^3.410.0",
     "@aws-sdk/credential-provider-node": "^3.362.0",
-    "@codemirror/state": "^6.2.1",
-    "@codemirror/view": "^6.13.2",
     "@dqbd/tiktoken": "^1.0.6",
     "@hookform/resolvers": "^3.3.1",
     "@hotjar/browser": "^1.0.7",
