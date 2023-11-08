@@ -1,0 +1,62 @@
+{
+  "name": "langchain",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/langchain/src",
+  "projectType": "library",
+  "targets": {
+    "rollup": {
+      "dependsOn": ["^build", "prebuild"],
+      "executor": "@nx/rollup:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/langchain",
+        "main": "libs/langchain/src/index.ts",
+        "tsConfig": "libs/langchain/tsconfig.lib.json",
+        "project": "libs/langchain/package.json",
+        "compiler": "tsc",
+        "format": ["cjs", "esm"],
+        "rollupConfig": ["libs/langchain/rollup.config.js"]
+      },
+      "configurations": {
+        "watch": {
+          "watch": true
+        }
+      }
+    },
+    "prebuild": {
+      "command": "node libs/langchain/scripts/prebuild.js",
+      "inputs": ["{projectRoot}/package.json"],
+      "outputs": ["{projectRoot}/src/version.ts"]
+    },
+    "build": {
+      "dependsOn": ["rollup"],
+      "command": "node libs/langchain/scripts/postbuild.js"
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs langchain {args.ver} {args.tag}",
+      "dependsOn": ["build"]
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/langchain/**/*.ts", "libs/langchain/package.json"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/langchain/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    }
+  },
+  "tags": []
+}

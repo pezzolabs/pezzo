@@ -1,0 +1,34 @@
+{
+  "name": "@pezzo/langchain",
+  "description": "Pezzo integration for LangChain",
+  "version": "0.1.0",
+  "type": "commonjs",
+  "author": "Ariel Weinberger",
+  "keywords": [
+    "pezzo",
+    "api",
+    "client",
+    "langchain",
+    "typescript",
+    "ai",
+    "prompt",
+    "repository",
+    "openai",
+    "chatgpt",
+    "gpt-3",
+    "gpt-4",
+    "gpt-3.5-turbo"
+  ],
+  "dependencies": {
+    "langchain": "^0.0.183"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pezzolabs/pezzo.git"
+  },
+  "homepage": "https://github.com/pezzolabs/pezzo",
+  "license": "MIT",
+  "peerDependencies": {
+    "openai": "^4.0.0"
+  }
+}
