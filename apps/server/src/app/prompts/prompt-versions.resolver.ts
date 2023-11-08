@@ -108,6 +108,7 @@ export class PromptVersionsResolver {
   @ResolveField(() => ExtendedUser)
   async createdBy(@Parent() parent: PromptVersion) {
     const user = await this.usersService.getById(parent.createdById);
+    console.log("user", user);
     const extendedUser = this.usersService.serializeExtendedUser(user);
     return extendedUser;
   }

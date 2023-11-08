@@ -47,8 +47,8 @@ export class RequestReportsResolver {
       const response = await this.reportingService.getReports({
         projectId: data.projectId,
         organizationId: project.organizationId,
-        page: data.page,
-        size: data.size,
+        offset: data.offset,
+        limit: data.limit,
         filters: data.filters,
         sort: data.sort,
       });
@@ -56,8 +56,8 @@ export class RequestReportsResolver {
       return {
         data: response.body.hits.hits.map((hit) => hit._source),
         pagination: {
-          page: data.page,
-          size: data.size,
+          offset: data.offset,
+          limit: data.limit,
           total: response.body.hits.total.value,
         },
       };
