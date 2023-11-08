@@ -1,5 +1,3 @@
-import { motion } from "framer-motion";
-import { useLocation } from "react-router-dom";
 import { SideNavigation } from "./SideNavigation";
 import { Header } from "./Header";
 import { OrgSubHeader } from "./OrgSubHeader";
@@ -15,8 +13,6 @@ export const LayoutWrapper = ({
   withSideNav = false,
   withOrgSubHeader = false,
 }: Props) => {
-  const location = useLocation();
-
   return (
     <div className="dark flex h-full max-h-[100vh] w-full text-foreground">
       <div className="flex h-full w-full">
