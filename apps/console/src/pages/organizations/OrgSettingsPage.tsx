@@ -18,6 +18,7 @@ import {
   FormMessage,
   Button,
   Card,
+  toast,
 } from "@pezzo/ui";
 
 const formSchema = z.strictObject({
@@ -50,6 +51,10 @@ export const OrgSettingsPage = () => {
       {
         onSuccess: () => {
           form.reset({ orgName: values.orgName });
+          toast({
+            title: "Settings updated",
+            description: "Your organization settings have been updated.",
+          });
         },
       }
     );
@@ -67,7 +72,7 @@ export const OrgSettingsPage = () => {
         </div>
       </div>
 
-      <div className="container max-w-[800px] space-y-6">
+      <div className="container space-y-6">
         <Card className="mx-auto flex flex-col gap-y-6 p-10">
           <div className="max-w-[640px]">
             <Form {...form}>

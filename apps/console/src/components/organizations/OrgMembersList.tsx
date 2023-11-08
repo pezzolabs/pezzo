@@ -8,7 +8,7 @@ import {
 } from "~/graphql/hooks/mutations";
 import { useAuthContext } from "~/lib/providers/AuthProvider";
 import { useCurrentOrgMembership } from "~/lib/hooks/useCurrentOrgMembership";
-import { Button, Card } from "@pezzo/ui";
+import { Button, Card, toast } from "@pezzo/ui";
 import { TrashIcon } from "lucide-react";
 import { GenericDestructiveConfirmationModal } from "../common/GenericDestructiveConfirmationModal";
 
@@ -32,6 +32,10 @@ export const OrgMembersList = ({ members }: Props) => {
       {
         onSuccess: () => {
           setDeletingMember(null);
+          toast({
+            title: "Member removed",
+            description: `${member.user.name} has been removed from your organization.`,
+          });
         },
       }
     );

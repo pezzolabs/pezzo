@@ -1,4 +1,4 @@
-import { Button, Card } from "@pezzo/ui";
+import { Button, Card, toast } from "@pezzo/ui";
 import { GetOrgQuery, OrgRole } from "~/@generated/graphql/graphql";
 import { OrgRoleSelector } from "./OrgRoleSelector";
 import { useCopyToClipboard } from "usehooks-ts";
@@ -47,13 +47,6 @@ export const OrgInvitationsList = ({ invitations }: Props) => {
   const { mutate: updateOrgInvitation } = useUpdateOrgInvitationMutation();
   const [deletingInvitation, setDeletingInvitation] =
     useState<Invitation>(null);
-  const [, copy] = useCopyToClipboard();
-
-  const handleCopyInvitation = (invitation: Invitation) => {
-    const url = new URL(window.location.origin);
-    url.pathname = `/invitations/${invitation.id}/accept`;
-    copy(url.toString());
-  };
 
   const handleDeleteInvitation = async (invitation: Invitation) => {
     deleteOrgInvitation(
@@ -61,6 +54,10 @@ export const OrgInvitationsList = ({ invitations }: Props) => {
       {
         onSuccess: () => {
           setDeletingInvitation(null);
+          toast({
+            title: "Invitation deleted",
+            description: `The invitation for ${invitation.email} has been deleted.`,
+          });
         },
       }
     );

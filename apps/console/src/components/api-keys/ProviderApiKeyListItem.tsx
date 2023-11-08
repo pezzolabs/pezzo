@@ -16,6 +16,7 @@ import {
   FormItem,
   FormControl,
   Input,
+  useToast,
 } from "@pezzo/ui";
 import { PencilIcon, SaveIcon, TrashIcon, XIcon } from "lucide-react";
 import { GenericDestructiveConfirmationModal } from "../common/GenericDestructiveConfirmationModal";
@@ -42,6 +43,7 @@ export const ProviderApiKeyListItem = ({
   initialIsEditing = false,
   canCancelEdit = true,
 }: Props) => {
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,8 +52,7 @@ export const ProviderApiKeyListItem = ({
   });
 
   const { currentOrgId } = useCurrentOrganization();
-  const { mutateAsync: deleteProviderApiKey } =
-    useDeleteProviderApiKeyMutation();
+  const { mutate: deleteProviderApiKey } = useDeleteProviderApiKeyMutation();
   const [deletingProviderApiKey, setDeletingProviderApiKey] =
     useState<string>(null);
   const updateKeyMutation = useMutation({
@@ -67,13 +68,29 @@ export const ProviderApiKeyListItem = ({
       queryClient.invalidateQueries({ queryKey: ["providerApiKeys"] });
       onSave && onSave();
       setIsEditing(false);
+      toast({
+        title: "API key saved!",
+        description: `The provider API key has been saved successfully.`,
+      });
+      form.reset();
     },
   });
 
   const handleDeleteProvider = async (provider: string) => {
-    await deleteProviderApiKey({ provider, organizationId: currentOrgId });
-    trackEvent("provider_api_key_deleted", { provider });
-    setDeletingProviderApiKey(null);
+    deleteProviderApiKey(
+      { provider, organizationId: currentOrgId },
+      {
+        onSuccess: () => {
+          trackEvent("provider_api_key_deleted", { provider });
+          setDeletingProviderApiKey(null);
+          toast({
+            title: "API key deleted!",
+            description: `The provider API key has been deleted successfully.`,
+          });
+          form.reset();
+        },
+      }
+    );
   };
 
   const [isEditing, setIsEditing] = useState(initialIsEditing);

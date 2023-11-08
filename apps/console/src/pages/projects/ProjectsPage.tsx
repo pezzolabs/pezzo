@@ -8,6 +8,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  toast,
 } from "@pezzo/ui";
 import { trackEvent } from "~/lib/utils/analytics";
 import { usePageTitle } from "~/lib/hooks/usePageTitle";
@@ -44,6 +45,10 @@ export const ProjectsPage = () => {
       {
         onSuccess: () => {
           setProjectToDelete(null);
+          toast({
+            title: "Project deleted",
+            description: "The project has been deleted.",
+          });
         },
       }
     );

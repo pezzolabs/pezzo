@@ -17,6 +17,7 @@ import {
   Alert,
   AlertTitle,
   AlertDescription,
+  useToast,
 } from "@pezzo/ui";
 import { gqlClient, queryClient } from "~/lib/graphql";
 import { CREATE_ENVIRONMENT } from "~/graphql/definitions/mutations/environments";
@@ -44,6 +45,7 @@ const formSchema = z.object({
 
 export const CreateEnvironmentModal = ({ open, onClose, onCreated }: Props) => {
   const { projectId } = useCurrentProject();
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -66,6 +68,10 @@ export const CreateEnvironmentModal = ({ open, onClose, onCreated }: Props) => {
     onSuccess: (data) => {
       onCreated(data.createEnvironment.name);
       queryClient.invalidateQueries({ queryKey: ["environments"] });
+      toast({
+        title: "Environment created!",
+        description: `Your new environment was created successfully.`,
+      });
     },
   });
 

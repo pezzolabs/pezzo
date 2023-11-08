@@ -19,6 +19,7 @@ import {
   Alert,
   AlertTitle,
   AlertDescription,
+  toast,
 } from "@pezzo/ui";
 import { AlertCircle } from "lucide-react";
 import z from "zod";
@@ -63,6 +64,10 @@ export const InviteOrgMemberModal = ({ open, onClose }: Props) => {
       {
         onSuccess: () => {
           onClose();
+          toast({
+            title: "Invitation sent",
+            description: `An invitation has been sent to ${inviteeEmail}`,
+          });
         },
       }
     );

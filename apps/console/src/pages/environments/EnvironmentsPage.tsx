@@ -1,4 +1,4 @@
-import { Button, Card } from "@pezzo/ui";
+import { Button, Card, toast } from "@pezzo/ui";
 import { CreateEnvironmentModal } from "~/components/environments/CreateEnvironmentModal";
 import { useState } from "react";
 import { useEnvironments } from "~/lib/hooks/useEnvironments";
@@ -40,6 +40,10 @@ export const EnvironmentsPage = () => {
             name: environmentToDelete?.name,
           });
           setEnvironmentToDelete(null);
+          toast({
+            title: "Environment deleted",
+            description: "The environment has been deleted.",
+          });
         },
       }
     );

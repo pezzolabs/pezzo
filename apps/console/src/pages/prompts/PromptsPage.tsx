@@ -1,4 +1,4 @@
-import { Button, Card } from "@pezzo/ui";
+import { Button, Card, toast } from "@pezzo/ui";
 import { CreatePromptModal } from "~/components/prompts/CreatePromptModal";
 import { useState } from "react";
 import { usePrompts } from "~/lib/hooks/usePrompts";
@@ -44,6 +44,10 @@ export const PromptsPage = () => {
     deletePrompt(promptToDelete.id, {
       onSuccess: () => {
         setPromptToDelete(null);
+        toast({
+          title: "Prompt deleted",
+          description: "The prompt has been deleted.",
+        });
       },
     });
     trackEvent("prompt_delete_confirmed");

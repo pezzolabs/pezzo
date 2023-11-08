@@ -9,7 +9,6 @@ import {
   Button,
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   Form,
@@ -19,6 +18,7 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  useToast,
 } from "@pezzo/ui";
 import { AlertCircle } from "lucide-react";
 import { z } from "zod";
@@ -48,6 +48,7 @@ export const CommitPromptModal = ({ open, onClose, onCommitted }: Props) => {
   const { prompt } = useCurrentPrompt();
   const { getForm: getEditorForm } = useEditorContext();
   const editorForm = getEditorForm();
+  const { toast } = useToast();
 
   const [settings, content, service, type] = editorForm.watch([
     "settings",
@@ -57,7 +58,7 @@ export const CommitPromptModal = ({ open, onClose, onCommitted }: Props) => {
   ]);
 
   const {
-    mutateAsync: createPromptVersion,
+    mutate: createPromptVersion,
     error,
     isLoading,
   } = useCreatePromptVersion();
@@ -72,10 +73,17 @@ export const CommitPromptModal = ({ open, onClose, onCommitted }: Props) => {
       promptId: prompt.id,
     };
 
-    await createPromptVersion(data);
-    form.reset();
-    onCommitted();
-    trackEvent("prompt_commit_submitted");
+    createPromptVersion(data, {
+      onSuccess: () => {
+        form.reset();
+        onCommitted();
+        trackEvent("prompt_commit_submitted");
+        toast({
+          title: "Changes committed!",
+          description: `Your commit has been created successfully.`,
+        });
+      },
+    });
   };
 
   const handleCancel = () => {
