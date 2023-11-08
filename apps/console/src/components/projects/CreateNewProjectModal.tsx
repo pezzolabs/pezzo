@@ -30,7 +30,11 @@ const formSchema = z.object({
   projectName: z
     .string()
     .min(1, "Name must be at least 1 character long")
-    .max(100, "Name can't be longer than 100 characters"),
+    .max(100, "Name can't be longer than 100 characters")
+    .regex(
+      /^[a-zA-Z]+(?:[ ]+[a-zA-Z]+)*$/,
+      "Name can only contain letters and spaces, e.g. My Project"
+    ),
 });
 
 interface Props {

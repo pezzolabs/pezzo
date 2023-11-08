@@ -7,13 +7,20 @@ import { RequestsTable } from "./RequestsTable";
 import { ColumnDef } from "@tanstack/react-table";
 import { cn } from "@pezzo/ui/utils";
 import { ReportRequestResponse } from "~/graphql/types";
-import { useSearchParams } from "react-router-dom";
 import { CheckIcon, CircleSlash, MoveRightIcon } from "lucide-react";
 import { RequestItemTags } from "./RequestTags";
 import { RequestDetails } from "~/components/requests";
 import { Drawer } from "~/components/common/Drawer";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
 import { useQueryState } from "~/lib/hooks/useQueryState";
+import { RequestFilters } from "~/components/requests/RequestFilters";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+  Card,
+} from "@pezzo/ui";
 
 const getTableColumns = (): ColumnDef<RequestReportItem>[] => {
   const columns: ColumnDef<RequestReportItem>[] = [
@@ -97,7 +104,6 @@ const getTableColumns = (): ColumnDef<RequestReportItem>[] => {
 export const RequestsPage = () => {
   usePageTitle("Requests");
   const { projectId } = useCurrentProject();
-  const [searchParams, setSearchParams] = useSearchParams();
   const [inspectedRequestId, setInspectedRequestId] =
     useQueryState("inspectedRequestId");
   const [offset, setOffset] = useQueryState("offset", 0);
@@ -182,7 +188,18 @@ export const RequestsPage = () => {
         </div>
       </div>
 
-      <div className="container">
+      <div className="container flex flex-col gap-4">
+        <Card className="px-4">
+          <Accordion type="single" collapsible>
+            <AccordionItem className="mb-0 border-0" value="filters">
+              <AccordionTrigger>Filters</AccordionTrigger>
+              <AccordionContent className="p-0">
+                <RequestFilters />
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </Card>
+
         {isSuccess && (
           <RequestsTable
             limit={Number(limit)}
@@ -190,10 +207,11 @@ export const RequestsPage = () => {
             data={data}
             columns={columns}
             totalResults={pagination.total}
-            onPaginationChange={(offset, limit) => {
-              searchParams.set("offset", offset.toString());
-              searchParams.set("limit", limit.toString());
-              setSearchParams(searchParams);
+            onOffsetChange={(offset) => {
+              setOffset(offset);
+            }}
+            onLimitChange={(limit) => {
+              setLimit(limit);
             }}
             onClickReport={(reportId) => {
               setInspectedRequestId(reportId);

@@ -71,7 +71,11 @@ export const RequestItemTags = ({
 
   return (
     <div className="flex pr-2 text-muted-foreground">
-      <div className="flex gap-1">{tags}</div>
+      <div className="flex gap-1">
+        {tags.map((tag, i) => (
+          <div key={i}>{tag}</div>
+        ))}
+      </div>
     </div>
   );
 };

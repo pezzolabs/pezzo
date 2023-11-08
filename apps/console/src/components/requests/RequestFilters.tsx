@@ -12,21 +12,23 @@ export const RequestFilters = () => {
     <div className="flex flex-col gap-4">
       <AddFilterItem onAdd={addFilter} />
 
-      <div className="flex flex-wrap gap-4">
-        {filters.map((filter) => (
-          <FilterItem
-            key={`${filter.field}-${filter.operator}-${filter.value}`}
-            field={filter.field}
-            operator={
-              [...STRING_FILTER_OPERATORS, ...NUMBER_FILTER_OPERATORS].find(
-                (op) => op.value === filter.operator
-              )?.label
-            }
-            value={filter.value}
-            onRemoveFilter={() => removeFilter(filter)}
-          />
-        ))}
-      </div>
+      {filters.length > 0 && (
+        <div className="mb-4 flex flex-wrap gap-4">
+          {filters.map((filter) => (
+            <FilterItem
+              key={`${filter.field}-${filter.operator}-${filter.value}`}
+              field={filter.field}
+              operator={
+                [...STRING_FILTER_OPERATORS, ...NUMBER_FILTER_OPERATORS].find(
+                  (op) => op.value === filter.operator
+                )?.label
+              }
+              value={filter.value}
+              onRemoveFilter={() => removeFilter(filter)}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
