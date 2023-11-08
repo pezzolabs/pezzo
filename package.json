@@ -13,8 +13,6 @@
   "dependencies": {
     "@analytics/google-tag-manager": "^0.5.5",
     "@analytics/segment": "^1.1.4",
-    "@ant-design/icons": "^5.0.1",
-    "@ant-design/icons-svg": "^4.2.1",
     "@apollo/server": "^4.7.0",
     "@aws-sdk/client-kms": "^3.410.0",
     "@aws-sdk/credential-provider-node": "^3.362.0",

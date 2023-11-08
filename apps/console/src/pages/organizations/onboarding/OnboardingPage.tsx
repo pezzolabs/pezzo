@@ -1,4 +1,3 @@
-import { LoadingOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useGetProjects } from "~/graphql/hooks/queries";
 import {
@@ -76,7 +75,7 @@ export const OnboardingPage = () => {
       await Promise.all(actions.filter(Boolean));
       return navigate("/");
     },
-    [updateCurrentUser, createProject, organization?.id, hasName, navigate]
+    [createProject, organization?.id, navigate]
   );
 
   useEffect(() => {
@@ -84,10 +83,6 @@ export const OnboardingPage = () => {
       navigate("/projects", { replace: true });
     }
   }, [projects, navigate]);
-
-  if (isProjectsLoading) {
-    return <LoadingOutlined />;
-  }
 
   return (
     <div className="mt-6 flex items-center justify-center">

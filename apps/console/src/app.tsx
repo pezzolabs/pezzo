@@ -15,7 +15,6 @@ import { EnvironmentsPage } from "./pages/environments/EnvironmentsPage";
 import { PromptPage } from "./pages/prompts/PromptPage";
 import { PromptsPage } from "./pages/prompts/PromptsPage";
 import { OnboardingPage } from "./pages/organizations/onboarding";
-import { OrgPage } from "./pages/organizations/OrgPage";
 import { LogoutPage } from "./pages/auth/LogoutPage";
 import { RequestsPage } from "./pages/requests/RequestsPage";
 import { DashboardPage } from "./pages/projects/overview/DashboardPage";
@@ -40,6 +39,7 @@ import { PromptMetricsView } from "./components/prompts/views/PromptMetricsView"
 import { Suspense } from "react";
 import { BreakpointDebugger } from "./components/common/BreakpointDebugger";
 import { FullScreenLoader } from "./components/common/FullScreenLoader";
+import { ProjectsPage } from "./pages/projects/ProjectsPage";
 
 initSuperTokens();
 
@@ -129,7 +129,7 @@ export function App() {
                   path={paths["/orgs/:orgId"]}
                   element={
                     <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
-                      <OrgPage />
+                      <ProjectsPage />
                     </LayoutWrapper>
                   }
                 ></Route>

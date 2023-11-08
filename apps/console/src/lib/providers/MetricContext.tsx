@@ -8,7 +8,6 @@ import {
 } from "~/@generated/graphql/graphql";
 import { useGetPromptExecutionMetric } from "../hooks/useGetPromptExecutionMetric";
 import { format } from "date-fns";
-import { Loading3QuartersOutlined } from "@ant-design/icons";
 import ms from "ms";
 import { trackEvent } from "../utils/analytics";
 import {
@@ -74,7 +73,7 @@ export const MetricProvider = ({
   );
 
   if (!startDate || isLoading || !metricsData) {
-    return <Loading3QuartersOutlined spin />;
+    return null;
   }
 
   const formatTimestamp = (timestamp) => {
