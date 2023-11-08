@@ -231,7 +231,7 @@ export const AddFilterItem = ({
     );
   }
   return (
-    <Button size="sm" onClick={() => setAddFormOpen(true)}>
+    <Button size="sm" className="w-24" onClick={() => setAddFormOpen(true)}>
       <PlusIcon className="mr-2 h-4 w-4" /> Add Filter
     </Button>
   );

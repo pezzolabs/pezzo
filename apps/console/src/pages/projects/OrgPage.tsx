@@ -9,7 +9,6 @@ export const OrgPage = () => {
   const [, setCurrentOrgId] = useLocalStorage("currentOrgId", orgId);
 
   useEffect(() => {
-    console.log("orgId", orgId);
     setCurrentOrgId(orgId);
   }, [orgId, setCurrentOrgId]);
 

@@ -30,7 +30,8 @@ interface DataTableProps<TData, TValue> {
   totalResults: number;
   limit: number;
   offset: number;
-  onPaginationChange: (offset: number, limit: number) => void;
+  onOffsetChange: (offset: number) => void;
+  onLimitChange: (limit: number) => void;
   onClickReport: (reportId: string) => void;
 }
 
@@ -40,7 +41,8 @@ export function RequestsTable<TData, TValue>({
   totalResults,
   limit,
   offset,
-  onPaginationChange,
+  onOffsetChange,
+  onLimitChange,
   onClickReport,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
@@ -137,16 +139,14 @@ export function RequestsTable<TData, TValue>({
           totalResults={totalResults}
           onChange={(page, limit) => {
             const offset = (page - 1) * limit;
-            onPaginationChange(offset, limit);
+            onOffsetChange(offset);
           }}
         />
         <div className="flex items-center gap-2">
           <span>Results per page</span>
           <Select
             value={`${limit}`}
-            onValueChange={(value) =>
-              onPaginationChange(offset, parseInt(value))
-            }
+            onValueChange={(value) => onLimitChange(parseInt(value))}
           >
             <SelectTrigger className="w-[70px]">
               <SelectValue />
