@@ -24,7 +24,6 @@
     "@emotion/css": "^11.10.6",
     "@emotion/react": "11.11.1",
     "@emotion/styled": "11.11.0",
-    "@heroicons/react": "^2.0.17",
     "@hookform/resolvers": "^3.3.1",
     "@hotjar/browser": "^1.0.7",
     "@monaco-editor/react": "^4.5.1",
