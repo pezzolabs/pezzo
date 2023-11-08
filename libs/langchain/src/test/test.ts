@@ -1,6 +1,4 @@
 import { ChatOpenAI } from "langchain/chat_models/openai";
-import { OpenAI } from "langchain/llms/openai";
-import { PromptTemplate } from "langchain/prompts";
 import { HumanMessage, SystemMessage } from "langchain/schema";
 
 import { PezzoCallbackHandler } from "../PezzoCallbackHandler";
