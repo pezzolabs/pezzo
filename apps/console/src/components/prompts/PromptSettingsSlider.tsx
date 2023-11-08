@@ -33,26 +33,11 @@ export const PromptSettingsSlider = ({
         type="number"
         min={min}
         max={max}
+        value={field.value}
+        onChange={(e) => field.onChange(e.target.valueAsNumber)}
         size="sm"
-        {...field}
         className="w-20"
       />
     </div>
-    // <Row>
-    //   <Col flex={1}>
-
-    //   </Col>
-    //   <Col flex="70px">
-    //     <InputNumber
-    //       min={min}
-    //       max={max}
-    //       step={step}
-    //       style={{ marginLeft: 16, width: 70 }}
-    //       size="small"
-    //       value={value}
-    //       onChange={onChange}
-    //     />
-    //   </Col>
-    // </Row>
   );
 };
