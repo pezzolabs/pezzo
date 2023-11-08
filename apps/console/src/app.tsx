@@ -231,8 +231,6 @@ export function App() {
           </QueryClientProvider>
         </SuperTokensWrapper>
       </Suspense>
-
-      <BreakpointDebugger />
     </div>
   );
 }
