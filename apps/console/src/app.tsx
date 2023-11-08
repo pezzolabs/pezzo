@@ -30,7 +30,6 @@ import { RequiredProviderApiKeyModalProvider } from "./lib/providers/RequiredPro
 import { OrgMembersPage } from "./pages/organizations/OrgMembersPage";
 import { OrgSettingsPage } from "./pages/organizations/OrgSettingsPage";
 import { OrgApiKeysPage } from "./pages/organizations/OrgApiKeysPage";
-import { useCurrentOrganization } from "./lib/hooks/useCurrentOrganization";
 import { PromptEditView } from "./features/editor/PromptEditView";
 import { EditorProvider } from "./lib/providers/EditorContext";
 import { PromptTesterProvider } from "./lib/providers/PromptTesterContext";
@@ -38,14 +37,26 @@ import { PromptVersionsView } from "./components/prompts/views/PromptVersionsVie
 import { PromptMetricsView } from "./components/prompts/views/PromptMetricsView";
 import { Suspense } from "react";
 import { FullScreenLoader } from "./components/common/FullScreenLoader";
-import { ProjectsPage } from "./pages/projects/ProjectsPage";
 import { OrgPage } from "./pages/projects/OrgPage";
+import { useCurrentOrganization } from "./lib/hooks/useCurrentOrganization";
 
 initSuperTokens();
 
 if (HOTJAR_SITE_ID && HOTJAR_VERSION) {
   hotjar.initialize(Number(HOTJAR_SITE_ID), Number(HOTJAR_VERSION));
 }
+
+const RootHandler = () => {
+  const { organizationId, isLoading } = useCurrentOrganization();
+
+  if (isLoading) {
+    return <FullScreenLoader />;
+  }
+
+  if (organizationId) {
+    return <Navigate to={`/orgs/${organizationId}`} />;
+  }
+};
 
 export function App() {
   return (
@@ -76,6 +87,8 @@ export function App() {
                 </SessionAuth>
               }
             >
+              <Route index element={<RootHandler />} />
+
               <Route
                 path="/invitations/:token/accept"
                 element={
