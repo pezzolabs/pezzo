@@ -40,7 +40,8 @@ const formSchema = z.object({
   environmentName: z
     .string()
     .min(1, "Name must be at least 1 character long")
-    .max(64, "Name can't be longer than 64 characters"),
+    .max(64, "Name can't be longer than 64 characters")
+    .regex(/^[a-zA-Z]+$/, "Name can only contain letters, e.g. Production"),
 });
 
 export const CreateEnvironmentModal = ({ open, onClose, onCreated }: Props) => {
