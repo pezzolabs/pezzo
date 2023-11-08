@@ -1,7 +1,10 @@
 export const StyledPre = ({ children, style = {} }) => {
   return (
-    <pre className="bg-black p-4 rounded-md w-full overflow-x-auto" style={{ ...style }}>
+    <pre
+      className="w-full overflow-x-auto rounded-md bg-black p-4"
+      style={{ ...style }}
+    >
       {children}
     </pre>
-  )
-}
+  );
+};

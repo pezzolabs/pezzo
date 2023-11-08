@@ -1,7 +1,7 @@
 export const InlineCodeSnippet = ({ children }) => {
   return (
-    <div className="p-1 inline-block bg-foreground/10 rounded-sm font-mono">
+    <div className="inline-block rounded-sm bg-foreground/10 p-1 font-mono">
       {children}
     </div>
-  )
+  );
 };
