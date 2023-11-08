@@ -1,8 +1,9 @@
 import { Provider } from "@pezzo/types";
+import OpenAI from "openai";
 
 export type ChatMessage = {
   icon: string | React.ReactNode;
-  role: "user" | "assistant" | "function" | "system";
+  role: OpenAI.ChatCompletionRole;
   content: string | React.ReactNode;
 };
 

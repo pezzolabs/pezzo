@@ -4,7 +4,7 @@ import { Provider } from "@pezzo/types";
 import { cn } from "@pezzo/ui/utils";
 import { BotIcon, UserIcon, WrenchIcon } from "lucide-react";
 
-export const getIcon = (role: OpenAI.Chat.ChatCompletionMessage["role"]) => {
+export const getIcon = (role: OpenAI.ChatCompletionRole) => {
   const baseCn = cn(
     "w-10 h-10 flex items-center justify-center rounded-sm border"
   );
@@ -58,7 +58,7 @@ export const normalizeOpenAIChatResponse = (
     messages.push({
       icon: getIcon(message.role),
       role: message.role,
-      content: message.content,
+      content: message.content as string, // TODO: support vision model
     });
   });
 
