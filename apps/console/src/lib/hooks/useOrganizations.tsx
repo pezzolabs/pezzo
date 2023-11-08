@@ -3,7 +3,7 @@ import { gqlClient } from "../graphql";
 import { GET_ORGANIZATIONS } from "~/graphql/definitions/queries/organizations";
 
 export const useOrganizations = () => {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isSuccess, isError, error } = useQuery({
     queryKey: ["organizations"],
     queryFn: async () => gqlClient.request(GET_ORGANIZATIONS),
   });
@@ -11,5 +11,8 @@ export const useOrganizations = () => {
   return {
     organizations: data?.organizations,
     isLoading,
+    isSuccess,
+    isError,
+    error,
   };
 };
