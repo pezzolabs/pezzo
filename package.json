@@ -18,7 +18,6 @@
     "@aws-sdk/credential-provider-node": "^3.362.0",
     "@dqbd/tiktoken": "^1.0.6",
     "@hookform/resolvers": "^3.3.1",
-    "@hotjar/browser": "^1.0.7",
     "@monaco-editor/react": "^4.5.1",
     "@nestjs/apollo": "^11.0.6",
     "@nestjs/common": "^9.0.0",
