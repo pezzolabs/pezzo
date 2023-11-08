@@ -13,7 +13,7 @@ export const RequestFilters = () => {
       <AddFilterItem onAdd={addFilter} />
 
       {filters.length > 0 && (
-        <div className="mb-4 flex flex-wrap gap-4">
+        <div className="flex flex-wrap gap-4">
           {filters.map((filter) => (
             <FilterItem
               key={`${filter.field}-${filter.operator}-${filter.value}`}

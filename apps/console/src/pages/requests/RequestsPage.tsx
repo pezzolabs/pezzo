@@ -193,7 +193,7 @@ export const RequestsPage = () => {
           <Accordion type="single" collapsible>
             <AccordionItem className="mb-0 border-0" value="filters">
               <AccordionTrigger>Filters</AccordionTrigger>
-              <AccordionContent className="p-0">
+              <AccordionContent className="p-0 pb-4">
                 <RequestFilters />
               </AccordionContent>
             </AccordionItem>
