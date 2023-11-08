@@ -6,7 +6,6 @@ import {
   buildBaseProjectMetricQuery,
   getStartAndEndDates,
 } from "./metrics.utils";
-import { OpenSearchIndex } from "../opensearch/types";
 import { FilterInput } from "../common/filters/filter.input";
 import { mapFiltersToDql } from "../reporting/utils/dql-utils";
 
@@ -27,7 +26,7 @@ export class ProjectMetricsService {
       body = buildBaseProjectMetricQuery(body, projectId, startDate, endDate);
 
       const result = await this.openSearchService.client.search({
-        index: OpenSearchIndex.Requests,
+        index: this.openSearchService.requestsIndexAlias,
         body: body.build(),
       });
 
@@ -63,7 +62,7 @@ export class ProjectMetricsService {
       ).aggregation("sum", "calculated.totalCost", "total_cost");
 
       const query = {
-        index: OpenSearchIndex.Requests,
+        index: this.openSearchService.requestsIndexAlias,
         body: body.build(),
       };
 
@@ -100,7 +99,7 @@ export class ProjectMetricsService {
         endDate
       ).aggregation("avg", "calculated.duration", "avg_duration");
       const result = await this.openSearchService.client.search({
-        index: OpenSearchIndex.Requests,
+        index: this.openSearchService.requestsIndexAlias,
         body: body.build(),
       });
 
@@ -136,7 +135,7 @@ export class ProjectMetricsService {
       ).filter("term", "response.status", 200);
 
       const result = await this.openSearchService.client.search({
-        index: OpenSearchIndex.Requests,
+        index: this.openSearchService.requestsIndexAlias,
         body: body.build(),
       });
 
@@ -172,7 +171,7 @@ export class ProjectMetricsService {
       ).notFilter("term", "response.status", 200);
 
       const result = await this.openSearchService.client.search({
-        index: OpenSearchIndex.Requests,
+        index: this.openSearchService.requestsIndexAlias,
         body: body.build(),
       });
 
@@ -242,7 +241,7 @@ export class ProjectMetricsService {
     body = body.size(0);
 
     const result = await this.openSearchService.client.search({
-      index: OpenSearchIndex.Requests,
+      index: this.openSearchService.requestsIndexAlias,
       body: body.build(),
     });
 

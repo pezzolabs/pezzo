@@ -1,5 +1,4 @@
 import { OpenSearchService } from "../opensearch/opensearch.service";
-import { OpenSearchIndex } from "../opensearch/types";
 import { Injectable } from "@nestjs/common";
 import { CreateReportDto } from "./dto/create-report.dto";
 import { randomUUID } from "crypto";
@@ -33,7 +32,7 @@ export class ReportingService {
       report;
 
     await this.openSearchService.client.index({
-      index: OpenSearchIndex.Requests,
+      index: this.openSearchService.requestsIndexAlias,
       body: {
         timestamp: request.timestamp,
         ownership,
@@ -106,7 +105,7 @@ export class ReportingService {
         total: { value: number };
       };
     }>({
-      index: OpenSearchIndex.Requests,
+      index: this.openSearchService.requestsIndexAlias,
       body: dql,
       size,
       from,
