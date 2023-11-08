@@ -8,7 +8,13 @@ import { UseFormReturn, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-const formSchema = z.record(z.string(), z.string().min(1));
+const formSchema = z.record(
+  z.string(),
+  z
+    .string()
+    .min(1)
+    .regex(/^[^\s].*[^\s]$/, "Must be a valid value")
+);
 
 export type PromptTesterVariablesInputs = z.infer<typeof formSchema>;
 

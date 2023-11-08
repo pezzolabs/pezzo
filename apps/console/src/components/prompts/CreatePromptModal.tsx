@@ -40,7 +40,11 @@ const formSchema = z.object({
   promptName: z
     .string()
     .min(1, "Name must be at least 1 character long")
-    .max(100, "Name can't be longer than 64 characters"),
+    .max(100, "Name can't be longer than 64 characters")
+    .regex(
+      /^[a-zA-Z0-9]+$/,
+      "Name can only contain letters and numbers, e.g. SentimentAnalysis"
+    ),
 });
 
 export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
@@ -111,7 +115,7 @@ export const CreatePromptModal = ({ open, onClose, onCreated }: Props) => {
                       <FormLabel>Prompt name</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="test123"
+                          placeholder="e.g. SentimentAnalysis"
                           autoComplete="off"
                           {...field}
                         />
