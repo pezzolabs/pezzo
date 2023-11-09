@@ -6,7 +6,7 @@ import {
   TooltipTrigger,
 } from "@pezzo/ui";
 import { RequestReportItem } from "./types";
-import { AlertTriangleIcon, FlaskConicalIcon, ZapIcon } from "lucide-react";
+import { AlertTriangleIcon, BugPlayIcon, ZapIcon } from "lucide-react";
 
 export const Tooltip = ({
   text,
@@ -49,7 +49,7 @@ export const RequestItemTags = ({
         <div
           className={cn(baseCn, "border-blue-900 bg-blue-950 text-blue-500")}
         >
-          <FlaskConicalIcon className="h-3 w-3" />
+          <BugPlayIcon className="h-3 w-3" />
           Test
         </div>
       </Tooltip>
