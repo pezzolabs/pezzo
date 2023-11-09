@@ -11,4 +11,5 @@ export interface RequestReportItem {
   isTestPrompt: boolean;
   cacheEnabled: boolean;
   cacheHit: boolean;
+  model: string;
 }

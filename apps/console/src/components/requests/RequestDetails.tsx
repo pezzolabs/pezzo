@@ -39,6 +39,7 @@ import { useCopyToClipboard } from "usehooks-ts";
 type Mode = "chat" | "json";
 
 interface Props {
+  disableCopy?: boolean;
   id: string;
   request: ObservabilityRequest;
   response: ObservabilityResponse;
@@ -62,6 +63,7 @@ const getClientDisplayName = (client: string) => {
 };
 
 export const RequestDetails = (props: Props) => {
+  const disableCopy = props.disableCopy || false;
   const request = props.request as ObservabilityRequest<Provider.OpenAI>;
   const response = props.response as ObservabilityResponse<Provider.OpenAI>;
   const isSuccess = response.status >= 200 && response.status < 300;
@@ -110,11 +112,11 @@ export const RequestDetails = (props: Props) => {
     },
     {
       title: "Provider",
-      description: <>{props.provider}</>,
+      description: props.provider,
     },
     {
       title: "Model",
-      description: <>{request.body.model}</>,
+      description: request.body.model,
     },
     {
       title: "Tokens",
@@ -181,28 +183,6 @@ export const RequestDetails = (props: Props) => {
       title: "Duration",
       description: ms(props.calculated.duration),
     },
-    {
-      title: "Display mode",
-      description: (
-        <Tabs
-          value={selectedMode}
-          onValueChange={(value: Mode) => handleDisplayModeChange(value)}
-        >
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger
-              disabled={!isSuccess}
-              className="flex gap-1"
-              value="chat"
-            >
-              <MessageSquare className="h-4 w-4" /> Chat
-            </TabsTrigger>
-            <TabsTrigger className="flex gap-1" value="json">
-              <BracesIcon className="h-4 w-4" /> JSON
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-      ),
-    },
   ];
 
   const renderResponse = () => {
@@ -219,53 +199,80 @@ export const RequestDetails = (props: Props) => {
   };
 
   return (
-    <div className="p-4 text-sm">
-      <div className="flex items-center justify-between">
+    <div className=" text-sm">
+      <div className="flex items-center justify-between border-b p-4">
         <h3>Request Details</h3>
-        <div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              copy(window.location.href);
-            }}
-          >
-            {!copied && (
-              <>
-                <Link className="mr-2 h-4 w-4" /> Copy Link
-              </>
-            )}
 
-            {copied && (
-              <>
-                <CheckIcon className="mr-2 h-4 w-4" /> Copied
-              </>
-            )}
-          </Button>
-        </div>
+        {!disableCopy && (
+          <div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                copy(window.location.href);
+              }}
+            >
+              {!copied && (
+                <>
+                  <Link className="mr-2 h-4 w-4" /> Copy Link
+                </>
+              )}
+
+              {copied && (
+                <>
+                  <CheckIcon className="mr-2 h-4 w-4" /> Copied
+                </>
+              )}
+            </Button>
+          </div>
+        )}
       </div>
 
-      {props.metadata?.isTestPrompt && (
-        <Alert className="my-4 border-blue-900 bg-blue-950/40 text-blue-500">
-          <AlertDescription className="flex items-center gap-1">
-            <InfoIcon className="h-4 w-4" />
-            This is a test request from the Pezzo Console
-          </AlertDescription>
-        </Alert>
-      )}
+      <div className="px-4">
+        {props.metadata?.isTestPrompt && (
+          <Alert className="my-4 border-blue-900 bg-blue-950/40 text-blue-500">
+            <AlertDescription className="flex items-center gap-1">
+              <InfoIcon className="h-4 w-4" />
+              This is a test request from the Pezzo Console
+            </AlertDescription>
+          </Alert>
+        )}
 
-      <div className="flex flex-col gap-1">
-        {listData.map((item) => (
-          <div
-            key={item.title}
-            className="flex h-12 items-center justify-between border-b px-4 py-3"
-          >
-            <div className="font-semibold">{item.title}</div>
-            <div>{item.description}</div>
+        <div className="flex flex-col gap-1">
+          {listData.map((item) => (
+            <div
+              key={item.title}
+              className="flex h-12 items-center justify-between border-b py-3"
+            >
+              <div className="font-semibold">{item.title}</div>
+              <div>{item.description}</div>
+            </div>
+          ))}
+
+          <div className="mt-2">
+            <div className="mb-3 flex items-center justify-center">
+              <Tabs
+                value={selectedMode}
+                onValueChange={(value: Mode) => handleDisplayModeChange(value)}
+              >
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger
+                    disabled={!isSuccess}
+                    className="flex gap-1"
+                    value="chat"
+                  >
+                    <MessageSquare className="h-4 w-4" /> Chat
+                  </TabsTrigger>
+                  <TabsTrigger className="flex gap-1" value="json">
+                    <BracesIcon className="h-4 w-4" /> JSON
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
+
+            {renderResponse()}
           </div>
-        ))}
-
-        <div className="p-4">{renderResponse()}</div>
+        </div>
       </div>
     </div>
   );
