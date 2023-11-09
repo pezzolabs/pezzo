@@ -120,30 +120,33 @@ export const RequestDetails = (props: Props) => {
     },
     {
       title: "Tokens",
-      description: (
-        <div className="flex items-center gap-1">
-          <span>{props.calculated.totalTokens}</span>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <CoinsIcon className="h-4 w-4 opacity-70" />
-              </TooltipTrigger>
-              <TooltipContent>
-                <div className="flex flex-col gap-2">
-                  <div className="flex justify-between gap-4">
-                    <span className="font-semibold">Completion tokens:</span>{" "}
-                    <span>{response.body.usage?.completion_tokens}</span>
+      description:
+        response.status !== 200 ? (
+          "0"
+        ) : (
+          <div className="flex items-center gap-1">
+            <span>{props.calculated.totalTokens}</span>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <CoinsIcon className="h-4 w-4 opacity-70" />
+                </TooltipTrigger>
+                <TooltipContent side="left">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex justify-between gap-4">
+                      <span className="font-semibold">Completion tokens:</span>{" "}
+                      <span>{response.body.usage?.completion_tokens}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-semibold">Prompt tokens:</span>
+                      <span> {response.body.usage?.prompt_tokens}</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="font-semibold">Prompt tokens:</span>
-                    <span> {response.body.usage?.prompt_tokens}</span>
-                  </div>
-                </div>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-      ),
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        ),
     },
     {
       title: "Cost",
