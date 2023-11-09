@@ -21,7 +21,7 @@ export const VariablesStep = ({ onSubmit }: Props) => {
   };
 
   return (
-    <div>
+    <div className="p-6">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <PromptVariables form={form} variables={testVariablesFormValues} />
