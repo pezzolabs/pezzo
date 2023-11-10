@@ -8,7 +8,6 @@ import {
   AlertTitle,
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@pezzo/ui";
@@ -32,14 +31,11 @@ export const PromptTesterModal = () => {
   return (
     <Dialog open={isOpen}>
       <DialogContent
-        onPointerDownOutside={closeTestModal}
-        className={cn({
+        onPointerDownOutside={handleCancel}
+        className={cn("p-0", {
           "max-w-3xl": testResult,
         })}
       >
-        <DialogHeader>
-          <DialogTitle>Prompt Tester</DialogTitle>
-        </DialogHeader>
         <div>
           {testError && (
             <Alert variant="destructive" className="mb-4">
@@ -54,6 +50,7 @@ export const PromptTesterModal = () => {
           {testResult && (
             <div className="w-full">
               <RequestDetails
+                disableCopy
                 id={testResult.reportId}
                 request={testResult.request}
                 response={testResult.response}

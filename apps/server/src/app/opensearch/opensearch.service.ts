@@ -4,18 +4,20 @@ import { Client } from "@opensearch-project/opensearch";
 import { AwsSigv4Signer } from "@opensearch-project/opensearch/aws";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
 import { createLogger } from "../logger/create-logger";
-import { createIndexes } from "./create-indexes";
 import { pino } from "pino";
 
 @Injectable()
 export class OpenSearchService implements OnModuleInit {
   public client: Client;
   private logger: pino.Logger;
+  public requestsIndexAlias: string;
 
   constructor(private config: ConfigService) {
     this.logger = createLogger({
       scope: "OpenSearchService",
     });
+
+    this.requestsIndexAlias = config.get("OPENSEARCH_INDEX_REQUESTS_ALIAS");
   }
 
   async onModuleInit() {
@@ -46,7 +48,6 @@ export class OpenSearchService implements OnModuleInit {
     }
 
     await this.healthCheck();
-    await createIndexes(this.client, this.logger);
   }
 
   async healthCheck() {

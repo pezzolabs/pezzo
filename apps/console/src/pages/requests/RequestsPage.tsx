@@ -64,6 +64,13 @@ const getTableColumns = (): ColumnDef<RequestReportItem>[] => {
       enableSorting: true,
     },
     {
+      accessorKey: "model",
+      id: "model",
+      header: "Model",
+      cell: ({ row }) => <div className="font-mono">{row.original.model}</div>,
+      enableSorting: true,
+    },
+    {
       accessorKey: "duration",
       id: "duration",
       header: "Duration",
@@ -148,6 +155,7 @@ export const RequestsPage = () => {
           promptId: report.metadata?.promptId ?? null,
           cacheEnabled: report.cacheEnabled ?? false,
           cacheHit: report.cacheHit ?? false,
+          model: report.response.body.model as string,
         };
       }),
     [paginatedResults]
