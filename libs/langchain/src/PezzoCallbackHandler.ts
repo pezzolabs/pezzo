@@ -129,7 +129,7 @@ export class PezzoCallbackHandler extends BaseCallbackHandler {
     this.logRecords[runId] = {
       ...currentRunIdLog,
       response: {
-        timestamp: new Date(error.headers.date).toISOString(),
+        timestamp: new Date().toISOString(),
         body: error.error,
         status: error.status,
       },
