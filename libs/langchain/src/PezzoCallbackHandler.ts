@@ -166,9 +166,9 @@ export class PezzoCallbackHandler extends BaseCallbackHandler {
             finish_reason: generation.generationInfo["finish_reason"],
           })),
           usage: {
-            prompt_tokens: llmOutput["tokenUsage"]["prompt_tokens"],
-            completion_tokens: llmOutput["tokenUsage"]["completion_tokens"],
-            total_tokens: llmOutput["tokenUsage"]["total_tokens"],
+            prompt_tokens: llmOutput["tokenUsage"]["promptTokens"],
+            completion_tokens: llmOutput["tokenUsage"]["completionTokens"],
+            total_tokens: llmOutput["tokenUsage"]["totalTokens"],
           },
           system_fingerprint: null,
         },
