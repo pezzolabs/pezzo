@@ -68,6 +68,7 @@ export class PezzoCallbackHandler extends BaseCallbackHandler {
         provider: LC_PROVIDER_TO_PEZZO_PROVIDER[llm.id[2]],
         type: "",
         runId,
+        environment: this.pezzo.options.environment,
       },
       request: {
         ...currentRunIdLog.request,
@@ -146,6 +147,8 @@ export class PezzoCallbackHandler extends BaseCallbackHandler {
     const { llmOutput, generations } = output;
     const currentRunIdLog = this.getCurrentRunIdLog(runId);
 
+    console.log(JSON.stringify(llmOutput, null, 2));
+
     this.logRecords[runId] = {
       ...currentRunIdLog,
       response: {
@@ -163,9 +166,9 @@ export class PezzoCallbackHandler extends BaseCallbackHandler {
             finish_reason: generation.generationInfo["finish_reason"],
           })),
           usage: {
-            prompt_tokens: llmOutput["prompt_tokens"],
-            completion_tokens: llmOutput["completion_tokens"],
-            total_tokens: llmOutput["total_tokens"],
+            prompt_tokens: llmOutput["tokenUsage"]["prompt_tokens"],
+            completion_tokens: llmOutput["tokenUsage"]["completion_tokens"],
+            total_tokens: llmOutput["tokenUsage"]["total_tokens"],
           },
           system_fingerprint: null,
         },
