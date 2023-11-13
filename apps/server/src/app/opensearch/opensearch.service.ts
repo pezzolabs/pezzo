@@ -5,6 +5,7 @@ import { AwsSigv4Signer } from "@opensearch-project/opensearch/aws";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
 import { createLogger } from "../logger/create-logger";
 import { pino } from "pino";
+import { createIndexes } from "./create-indexes";
 
 @Injectable()
 export class OpenSearchService implements OnModuleInit {
@@ -48,6 +49,8 @@ export class OpenSearchService implements OnModuleInit {
     }
 
     await this.healthCheck();
+    const alias = this.config.get("OPENSEARCH_INDEX_REQUESTS_ALIAS");
+    await createIndexes(alias, this.client, this.logger);
   }
 
   async healthCheck() {

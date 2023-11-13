@@ -1,10 +1,14 @@
 import { Client } from "@opensearch-project/opensearch";
 import { pino } from "pino";
 
-export async function createIndexes(client: Client, _logger: pino.Logger) {
+export async function createIndexes(
+  indexName: string,
+  client: Client,
+  _logger: pino.Logger
+) {
   const logger = _logger.child({ step: "createIndexes" });
   logger.info("Creating indexes");
-  // await createRequestsIndex(client, logger);
+  await createRequestsIndex(indexName, client, logger);
 }
 
 export async function createRequestsIndex(
