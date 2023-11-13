@@ -65,7 +65,9 @@ export const useIdentify = (user: GetMeQuery["me"]) => {
     const window = (global as any).window;
 
     // GTM data layer
-    window.dataLayer.push({ ...identifyRequest });
+    if (window.dataLayer) {
+      window.dataLayer.push({ ...identifyRequest });
+    }
   }, [user, organizationId, projectId]);
 };
 
