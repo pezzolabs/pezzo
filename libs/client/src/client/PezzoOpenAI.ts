@@ -45,13 +45,11 @@ class Chat {
   }
 }
 class Completions {
-  constructor(private readonly pezzo: Pezzo, private openai: OpenAI) {}
+  constructor(private readonly pezzo: Pezzo, private openai: OpenAI) { }
 
   async create(
     _arg1: PezzoCreateChatCompletionRequest | OpenAIChatCompletionCreateParams,
-    optionsOrPezzoProps:
-      | Parameters<OpenAI["chat"]["completions"]["create"]>[1]
-      | PezzoProps = {}
+    optionsWithPezzoProps: Parameters<OpenAI["chat"]["completions"]["create"]>[1] & PezzoProps = {}
   ): Promise<OpenAI.Chat.ChatCompletion> {
     const arg1 = _arg1 as PezzoCreateChatCompletionRequest;
 
@@ -72,20 +70,28 @@ class Completions {
     }
 
     const requestBody: Partial<OpenAI.Chat.CompletionCreateParamsNonStreaming> =
-      {
-        messages: managedMessages,
-        ...(pezzoPrompt?.settings ?? {}),
-        ...nativeOptions,
-      };
+    {
+      messages: managedMessages,
+      ...(pezzoPrompt?.settings ?? {}),
+      ...nativeOptions,
+    };
 
     let pezzoOptions: PezzoProps | undefined;
 
     if (
-      "variables" in optionsOrPezzoProps ||
-      "properties" in optionsOrPezzoProps ||
-      "cache" in optionsOrPezzoProps
+      "variables" in optionsWithPezzoProps ||
+      "properties" in optionsWithPezzoProps ||
+      "cache" in optionsWithPezzoProps
     ) {
-      pezzoOptions = optionsOrPezzoProps as PezzoProps;
+      const { variables, properties, cache, ...rest } = optionsWithPezzoProps
+
+      pezzoOptions = {
+        variables,
+        properties,
+        cache
+      } as PezzoProps;
+
+      optionsWithPezzoProps = rest
     }
 
     if (pezzoOptions?.variables) {
@@ -155,11 +161,9 @@ class Completions {
           {
             ...(requestBody as OpenAI.Chat.CompletionCreateParamsNonStreaming),
           },
-          "variables" in optionsOrPezzoProps
-            ? undefined
-            : (optionsOrPezzoProps as Parameters<
-                OpenAI["chat"]["completions"]["create"]
-              >[1])
+          (optionsWithPezzoProps as Parameters<
+            OpenAI["chat"]["completions"]["create"]
+          >[1])
         );
 
         reportPayload = {
