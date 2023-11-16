@@ -50,7 +50,7 @@ class Completions {
   async create(
     _arg1: PezzoCreateChatCompletionRequest | OpenAIChatCompletionCreateParams,
     pezzoOptions: PezzoProps = {},
-    openaiOptions: Parameters<OpenAI["chat"]["completions"]["create"]>[1]
+    openaiOptions?: Parameters<OpenAI["chat"]["completions"]["create"]>[1]
   ): Promise<OpenAI.Chat.ChatCompletion> {
     const arg1 = _arg1 as PezzoCreateChatCompletionRequest;
 
