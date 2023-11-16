@@ -45,12 +45,12 @@ class Chat {
   }
 }
 class Completions {
-  constructor(private readonly pezzo: Pezzo, private openai: OpenAI) { }
+  constructor(private readonly pezzo: Pezzo, private openai: OpenAI) {}
 
   async create(
     _arg1: PezzoCreateChatCompletionRequest | OpenAIChatCompletionCreateParams,
     pezzoOptions: PezzoProps = {},
-    openaiOptions: Parameters<OpenAI["chat"]["completions"]["create"]>[1],
+    openaiOptions: Parameters<OpenAI["chat"]["completions"]["create"]>[1]
   ): Promise<OpenAI.Chat.ChatCompletion> {
     const arg1 = _arg1 as PezzoCreateChatCompletionRequest;
 
@@ -71,11 +71,11 @@ class Completions {
     }
 
     const requestBody: Partial<OpenAI.Chat.CompletionCreateParamsNonStreaming> =
-    {
-      messages: managedMessages,
-      ...(pezzoPrompt?.settings ?? {}),
-      ...nativeOptions,
-    };
+      {
+        messages: managedMessages,
+        ...(pezzoPrompt?.settings ?? {}),
+        ...nativeOptions,
+      };
 
     if (pezzoOptions?.variables) {
       const messages = interpolateVariablesRecursively<
@@ -144,7 +144,7 @@ class Completions {
           {
             ...(requestBody as OpenAI.Chat.CompletionCreateParamsNonStreaming),
           },
-          openaiOptions,
+          openaiOptions
         );
 
         reportPayload = {
