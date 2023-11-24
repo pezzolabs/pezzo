@@ -46,6 +46,7 @@
         "platform/proxy/overview",
         "platform/observability/overview",
         "client/request-caching",
+        "features/langchain",
         "platform/prompt-management/environments",
         "platform/prompt-management/prompt-editor",
         "platform/prompt-management/versioning-and-deployments"

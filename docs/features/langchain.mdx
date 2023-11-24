@@ -1,0 +1,48 @@
+---
+title: "LangChain Integration"
+---
+Pezzo supports integration with LangChain for observability and monitoring. Integration is as easy as configuring the LLM to proxy requests to Pezzo.
+
+## Example: LangChain with OpenAI
+
+Below is an example using `ChatOpenAI`. The same can be applied to chains and agents.
+
+<Tabs>
+  <Tab title="LangChain + Node.js">
+```ts
+import { ChatOpenAI } from "langchain/chat_models/openai";
+
+const llm = new ChatOpenAI({
+  openAIApiKey: process.env.OPENAI_API_KEY,
+  temperature: 0,
+  configuration: {
+    baseURL: "https://proxy.pezzo.ai/openai/v1",
+    defaultHeaders: {
+      "X-Pezzo-Api-Key": "<Your API Key>",
+      "X-Pezzo-Project-Id": "<Your Project ID>",
+      "X-Pezzo-Environment": "Production",
+    },
+  },
+});
+
+const llmResult = await llm.predict("Tell me 5 fun facts about yourself!");
+```
+  </Tab>
+  <Tab title="LangChain + Python">
+```py
+from langchain.chat_models import ChatOpenAI
+
+llm = ChatOpenAI(
+    openai_api_key='<>',
+    openai_api_base="https://proxy.pezzo.ai/openai/v1",
+    default_headers={
+      "X-Pezzo-Api-Key": "<Your API Key>",
+      "X-Pezzo-Project-Id": "<Your Project ID>",
+      "X-Pezzo-Environment": "Production",
+    }
+)
+
+llm_result = llm.predict("Tell me 5 fun facts about yourself!")
+```
+  </Tab>
+</Tabs>
