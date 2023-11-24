@@ -65,3 +65,18 @@ services:
     depends_on:
       pezzo-server:
         condition: service_healthy
+
+  pezzo-proxy:
+    image: ghcr.io/pezzolabs/pezzo/proxy:latest
+    build:
+      context: .
+      dockerfile: ./apps/proxy/Dockerfile
+    restart: always
+    env_file:
+      - ./.env
+      - ./apps/proxy/.env
+    ports:
+      - "3001:3000"
+    depends_on:
+      pezzo-server:
+        condition: service_healthy
