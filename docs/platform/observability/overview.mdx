@@ -1,6 +1,5 @@
 ---
-title: 'Observability Overview'
-sidebarTitle: 'Overview'
+title: 'Monitoring & Observability'
 ---
 Pezzo enabels you to easily observe your Geneartive AI operations. This includes:
 
@@ -8,3 +7,41 @@ Pezzo enabels you to easily observe your Geneartive AI operations. This includes
 - **Advanced Filtering** - Filter your traces and requests by any field, including custom fields (e.g. user ID, correlation ID, etc).
 - **Metrics** - Pezzo automatically collects metrics from your LLM calls (execution time, cost, error rate, and more) and provides you with detailed dashboards.
 - **Alerts** *(Coming Soon)* - Define alerts on your metrics and get notified when something goes wrong.
+
+Observe your Generative AI operations with Pezzo.
+
+# Requests View
+
+Every project on Pezzo has a dedicated Requests view. This view shows you all the requests that have been made to your project.
+
+<Frame caption="Pezzo Project Requests View">
+  <img src="/platform/observability/requests-view.png" />
+</Frame>
+
+## Filters
+
+You can filter requests by various criteria. For example, you can filter by the status of the request, by date/time, or by the cost of execution.
+
+<Frame caption="Filters">
+  <img src="/platform/observability/filters.png" />
+</Frame>
+
+## Inspector
+
+You can inspect the details of any request by clicking on it. This will open the Inspector view.
+
+<Frame caption="Request Inspector">
+  <img src="/platform/observability/request-inspector.png" />
+</Frame>
+
+# Prompt Metrics
+
+<Tip>
+If you feel that there are metrics that are missing, please let us know by [creating an issue on GitHub](https://github.com/pezzolabs/pezzo/issues).
+</Tip>
+
+If you manage your prompts with Pezzo, you are able to view insights and metrics for a specific prompt.
+
+<Frame caption="Prompt Metrics">
+  <img src="/platform/observability/prompt-metrics.png" />
+</Frame>
