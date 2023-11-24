@@ -48,5 +48,6 @@ schema.graphql
 
 # temp
 temp
+tmp
 
 kms/data
