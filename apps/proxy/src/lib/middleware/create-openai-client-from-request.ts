@@ -34,6 +34,8 @@ export function createPezzoClientFromRequest(
     options.serverUrl = req.headers["x-pezzo-server-url"] as string;
   }
 
+  console.log("Creating Pezzo client with options", options);
+
   req.pezzo = new Pezzo(options);
   next();
 }
