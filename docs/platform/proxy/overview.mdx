@@ -1,0 +1,35 @@
+---
+title: 'Pezzo Proxy'
+---
+
+# What is the Pezzo Proxy?
+
+The Pezzo Proxy is a proxy server that can be used to automatically proxy requests to LLMs through Pezzo.
+
+Contrary to other solutions that force you to install SDKs and change the way you write code, we chose to build a proxy that can be used with any existing codebase. Here is why:
+
+- **Easy to integrate:** It allows you to integrate Pezzo into your codebase with zero changes to your LLM consumption code.
+- **Always up-to-date:** The proxy will never prevent you from using new features released by OpenAI. As soon as OpenAI releases new feautres, they are immediately supported by Pezzo.
+- **Language agnostic:** Whether you use Node.js, Python, Golang or any other language - Pezzo Proxy supports them all!
+- **Enhanced LLM capabilities:** The proxy layer allows us to build powerful features on top of LLMs, for example a caching layer that allows you to save money on your API calls.
+- **Maintainable:** We are able to push fixes to the Pezzo Proxy without requiring you to update any integration in your code base. It's completely transparent.
+
+# Is the Pezzo Proxy open source?
+
+Yes! As with any component at Pezzo, the Pezzo Proxy is open source under Apache 2.0 license.
+
+For more information, you can refer to:
+
+- [Pezzo Proxy source coude on GitHub](https://github.com/pezzolabs/pezzo/tree/main/apps/proxy)
+- [Pezzo Proxy container on GitHub container registry](https://github.com/pezzolabs/pezzo/pkgs/container/pezzo%2Fproxy)
+
+# Next Steps
+<CardGroup cols={2}>
+  <Card
+    title="Observability & Monitoring"
+    icon="code"
+    href="/introduction/tutorial-observability/overview"
+  >
+    Learn about Pezzo's robust observability & monitoring features.
+  </Card>
+</CardGroup>

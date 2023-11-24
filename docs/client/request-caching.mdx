@@ -11,8 +11,10 @@ Utilizing caching can sometimes reduce your development costs and execution time
 
 ## Usage
 
-To enable caching, simply set `cache: enabled` in the Pezzo Options parameter. Here is an example:
+To enable caching, simply set the `X-Pezzo-Cache-Enabled: true` header. Here is an example:
 
+<Tabs>
+  <Tab title="Node.js">
 ```ts
 const response = await openai.chat.completions.create({
   model: "gpt-3.5-turbo",
@@ -23,9 +25,30 @@ const response = await openai.chat.completions.create({
     }
   ]
 }, {
-  cache: true
+  headers: {
+    "X-Pezzo-Cache-Enabled": true,
+  }
 });
+
 ```
+  </Tab>
+  <Tab title="Python">
+```py
+chat_completion = openai.chat.completions.create(
+  model="gpt-3.5-turbo",
+  messages=[
+    {
+      "role": "user",
+      "content": "Tell me 5 fun facts about yourself",
+    }
+  ],
+  headers={
+    "X-Pezzo-Cache-Enabled": "true"
+  }
+)
+```
+  </Tab>
+</Tabs>
 
 ## Cached Requests in the Console
 

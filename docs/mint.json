@@ -36,35 +36,25 @@
       "group": "Getting Started",
       "pages": [
         "introduction/what-is-pezzo",
-        "introduction/tutorial-prompt-management/overview",
         "introduction/tutorial-observability/overview",
-        "introduction/docker-compose"
+        "introduction/tutorial-prompt-management/overview"
       ]
     },
     {
-      "group": "Observability",
+      "group": "Features",
       "pages": [
+        "platform/proxy/overview",
         "platform/observability/overview",
-        "platform/observability/requests",
-        "platform/observability/metrics"
-      ]
-    },
-    {
-      "group": "Prompt Management",
-      "pages": [
-        "platform/prompt-management/overview",
+        "client/request-caching",
         "platform/prompt-management/environments",
         "platform/prompt-management/prompt-editor",
         "platform/prompt-management/versioning-and-deployments"
       ]
     },
     {
-      "group": "Pezzo SDK",
+      "group": "Deployment",
       "pages": [
-        "client/pezzo-client-node",
-        "client/pezzo-client-python",
-        "client/integrations/openai",
-        "client/request-caching"
+        "deployment/docker-compose"
       ]
     },
     {

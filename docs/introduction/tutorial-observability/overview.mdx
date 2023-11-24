@@ -3,30 +3,6 @@ title: "Tutorial: Observability"
 description: "In just a few lines of code, monitor your AI operations seamlessly."
 ---
 
-<Tip>
-This tutorial is for users who want to use Pezzo for observability and monitoring only.
-
-If you also want to use Pezzo to manage your prompts, version control and prompt deployment, check out the [Prompt Management tutorial](/introduction/tutorial-prompt-management/overview).
-</Tip>
-
-**Prefer a video tutorial?** We've prepared a 5-minute video for you! If you want to see the code example, [it's available on Codesandbox](https://codesandbox.io/p/sandbox/pezzo-example-observability-6d2qp6?file=%2Fsrc%2Fapp.ts%3A1%2C1).
-
-
-<div style={{
-  position: "relative",
-  paddingBottom: "62.5%",
-  height: 0
-}}>
-  <iframe
-    src="https://www.loom.com/embed/dd2276e912834b6c8d67f1355e449cae?sid=d6cea226-90bc-4586-ab6c-7150369b06c9"
-    frameborder="0"
-    webkitallowfullscreen
-    mozallowfullscreen
-    allowfullscreen
-    style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
-  ></iframe>
-</div>
-
 ## What you'll learn
 
 You're going to learn how to easily use Pezzo to supercharge your AI operations with monitoring and observability. It takes just a few lines of code!
@@ -37,30 +13,24 @@ You're going to learn how to easily use Pezzo to supercharge your AI operations 
   Cloud](https://app.pezzo.ai).
 </Note>
 
-## Install depdendencies
-
-Install the Pezzo Client and the OpenAI SDK:
-
-```bash
-npm i @pezzo/client openai
-```
-
-## Making calls to OpenAI
+## Using Pezzo with OpenAI
 
 Here is a code example:
 
-```ts app.ts
-import { Pezzo, PezzoOpenAI } from "@pezzo/client";
+<Tabs>
+  <Tab title="Node.js">
+```ts
+import OpenAI from "openai";
 
 // Initialize the Pezzo client
-const pezzo = new Pezzo({
-  apiKey: "<Your Pezzo API key>",
-  projectId: "<Your Pezzo project ID>",
-  environment: "Production",
+const openai = new OpenAI({
+  baseURL: "https://proxy.pezzo.ai/openai/v1",
+  defaultHeaders: {
+    "X-Pezzo-Api-Key": "<Your API Key>",
+    "X-Pezzo-Project-Id": "<Your Project ID>",
+    "X-Pezzo-Environment": "Production",
+  }
 });
-
-// Initialize the OpenAI client
-const openai = new PezzoOpenAI(pezzo);
 
 async function main() {
   // Make calls to the OpenAI API as you normally would!
@@ -71,37 +41,48 @@ async function main() {
       messages: [
         {
           role: "user",
-          content: "Tell me {numFacts} fun facts about {topic}",
+          content: "Tell me 5 fun facts about yourself",
         },
       ],
-    },
-    {
-      variables: {
-        // You can define variables that will be interpolated during execution.
-        numFacts: 3,
-        topic: "Artificial Intelligence",
-      },
-      properties: {
-        // You can optionally specify custom properties that will be associated with the request.
-        someProperty: "someValue",
-      },
     }
   );
 }
 
 main();
-
 ```
+  </Tab>
+  <Tab title="Python">
+```py
+import openai
 
-[Click here to run this example on CodeSandbox](https://codesandbox.io/p/sandbox/pezzo-example-observability-6d2qp6?file=%2Fsrc%2Fapp.ts%3A1%2C1)
+openai.base_url = "https://proxy.pezzo.ai/openai/v1"
+openai.default_headers = {
+  "X-Pezzo-Api-Key": "<Your API Key>",
+  "X-Pezzo-Project-Id": "<Your Project ID>",
+  "X-Pezzo-Environment": "Production"
+}
+
+chat_completion = openai.chat.completions.create(
+  model="gpt-3.5-turbo",
+  messages=[
+    {
+        "role": "user",
+        "content": "Tell me 5 fun facts about yourself",
+    }
+  ]
+)
+```
+  </Tab>
+</Tabs>
 
 **Let's explain what's going on here:**
 
-- First, we initialize the Pezzo client and the OpenAI client. We pass the Pezzo client to the OpenAI client so it can use it to fetch the prompt.
-- Then, we make a call to the OpenAI API as we normally would.
-- (Optional) We specify additional parameters in the second argument, these are `variables` and `properties`.
+We import and instantiate the OpenAI client with a few additional parameters. First, the `baseURL` which tells the OpenAI client to proxy the request through Pezzo.
 
-The result will go directly to OpenAI and the response will be reported to Pezzo.
+Then, we set a few default headers that will be present at any request made to OpenAI. These are:
+- `X-Pezzo-Api-Key` - Your Pezzo API key. You can find it in your Organization page in [Pezzo Cloud](https://app.pezzo.ai).
+- `X-Pezzo-Project-Id` - The ID of the project you want to use. You can find it anywhere [Pezzo Cloud](https://app.pezzo.ai).
+- `X-Pezzo-Environment` - The name of the environment to use. By default, any Pezzo project is automatically created with a `Production` environment.
 
 ## Monitoring Requests
 
@@ -112,3 +93,15 @@ If you want to learn more about Pezzo's observability feature, check out the [Ob
 <Frame caption="Pezzo Project Requests View">
   <img src="/platform/observability/requests-view.png" />
 </Frame>
+
+# Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Request Caching"
+    icon="bolt"
+    href="/client/request-caching"
+  >
+    Save up to 90% of your AI costs with Pezzo's request caching.
+  </Card>
+</CardGroup>
