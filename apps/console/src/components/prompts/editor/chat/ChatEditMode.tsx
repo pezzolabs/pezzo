@@ -4,11 +4,17 @@ import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
 import { useEditorContext } from "~/lib/providers/EditorContext";
 import { Button } from "@pezzo/ui";
 import { PlusIcon } from "lucide-react";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "react-beautiful-dnd";
 
 export const ChatEditMode = () => {
   const { promptId } = useCurrentPrompt();
   const { messagesArray } = useEditorContext();
-  const { fields, append, remove } = messagesArray;
+  const { fields, append, remove, move } = messagesArray;
 
   const handleAdd = () => {
     append({
@@ -21,21 +27,49 @@ export const ChatEditMode = () => {
     });
   };
 
+  const onDragEnd = (result: DropResult) => {
+    if (!result.destination) {
+      return;
+    }
+
+    move(result.source.index, result.destination.index);
+  };
+
   return (
     <div className="flex flex-col gap-4">
-      {fields.map((field, index) => (
-        <ChatMessage
-          key={field.id}
-          index={index}
-          canDelete={fields.length !== 1}
-          onDelete={() => {
-            remove(index);
-            trackEvent("prompt_chat_completion_message_deleted", {
-              promptId,
-            });
-          }}
-        />
-      ))}
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="prompts">
+          {(provided) => (
+            <div ref={provided.innerRef} {...provided.droppableProps}>
+              {fields.map((field, index) => (
+                <Draggable key={field.id} draggableId={field.id} index={index}>
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      className="mb-4"
+                    >
+                      <ChatMessage
+                        key={field.id}
+                        index={index}
+                        canDelete={fields.length !== 1}
+                        onDelete={() => {
+                          remove(index);
+                          trackEvent("prompt_chat_completion_message_deleted", {
+                            promptId,
+                          });
+                        }}
+                      />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
 
       <div className="flex items-center justify-center">
         <Button className="border-dashed" variant="outline" onClick={handleAdd}>
