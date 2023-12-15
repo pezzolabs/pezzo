@@ -16,6 +16,7 @@ import {
 import {
   ArrowDownUpIcon,
   BotIcon,
+  GripVertical,
   LucideIcon,
   TrashIcon,
   UserIcon,
@@ -73,7 +74,8 @@ export const ChatMessage = ({ index, canDelete = true, onDelete }: Props) => {
 
   return (
     <Card className="flex flex-col gap-4 border">
-      <div className="group flex h-14 items-center justify-between border-b border-muted px-4 py-2 font-medium">
+      <div className="group flex h-14 items-center justify-start border-b border-muted px-4 py-2 font-medium">
+        <GripVertical className="-mt-[3px] mr-[2px] h-4 w-4 text-muted-foreground" />
         <DropdownMenu>
           <DropdownMenuTrigger>
             <div className="inline-flex items-center gap-2">
@@ -97,7 +99,7 @@ export const ChatMessage = ({ index, canDelete = true, onDelete }: Props) => {
         {canDelete && (
           <TrashIcon
             onClick={onDelete}
-            className="hidden h-4 w-4 cursor-pointer text-destructive group-hover:inline-flex"
+            className="ml-auto hidden h-4 w-4 cursor-pointer text-destructive group-hover:inline-flex"
           />
         )}
       </div>
