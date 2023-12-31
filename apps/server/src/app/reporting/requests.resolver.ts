@@ -50,6 +50,9 @@ export class RequestReportsResolver {
       data.reportId,
       data.projectId
     );
+
+    console.log(result);
+
     return result;
   }
 

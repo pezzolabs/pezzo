@@ -60,12 +60,12 @@ export class ReportingService {
       type: "ChatCompletion",
       requestTimestamp: request.timestamp,
       requestBody: JSON.stringify(request.body),
-      isError: (response as any).status !== 200 ? 1 : 0,
+      isError: (response as any).status !== 200,
       responseStatusCode: (response as any).status,
       responseTimestamp: response.timestamp,
       responseBody: JSON.stringify(response.body),
-      cacheEnabled: cacheEnabled ? 1 : 0,
-      cacheHit: cacheHit ? 1 : 0,
+      cacheEnabled: cacheEnabled,
+      cacheHit: cacheHit,
       promptId: report.metadata.promptId || null,
     };
 
