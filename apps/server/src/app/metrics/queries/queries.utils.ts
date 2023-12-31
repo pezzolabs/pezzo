@@ -36,13 +36,13 @@ export const generateBucketsSubquery = (
   const subquery = knex
     .select(
       knex.raw(
-        `${timeProps.roundFn}(parseDateTimeBestEffort(?) + INTERVAL number hour) AS timestamp`,
+        `${timeProps.roundFn}(parseDateTimeBestEffort(?) + INTERVAL number ${timeProps.interval}) AS timestamp`,
         [startDate]
       )
     )
     .from(
       knex.raw(
-        "numbers(dateDiff('hour', parseDateTimeBestEffort(?), parseDateTimeBestEffort(?)) + 1)",
+        `numbers(dateDiff('${timeProps.interval}', parseDateTimeBestEffort(?), parseDateTimeBestEffort(?)) + 1)`,
         [startDate, endDate]
       )
     );
