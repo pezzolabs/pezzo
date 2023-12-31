@@ -22,7 +22,9 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      pezzo-server-migrate:
+      pezzo-prisma-migrate:
+        condition: service_completed_successfully
+      pezzo-clickhouse-migrate:
         condition: service_completed_successfully
       postgres:
         condition: service_healthy

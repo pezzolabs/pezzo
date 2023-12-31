@@ -7,7 +7,7 @@ services:
       dockerfile: ./apps/server/Dockerfile
     entrypoint: /bin/sh
     working_dir: /app/clickhouse
-    command: -c "npx knex migrate:latest"
+    command: -c "./migrate.sh"
     environment:
       CLICKHOUSE_HOST: clickhouse
       CLICKHOUSE_PORT: "8123"
