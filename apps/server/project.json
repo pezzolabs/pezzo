@@ -105,7 +105,7 @@
       "options": {},
       "configurations": {
         "local": {
-          "tags": ["pezzolabs/pezzo/server"],
+          "tags": ["ghcr.io/pezzolabs/pezzo/server"],
           "push": false
         }
       }

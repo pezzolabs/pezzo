@@ -9,6 +9,8 @@ import { RequestUser } from "../identity/users.types";
 import { PinoLogger } from "../logger/pino-logger";
 import { isOrgMemberOrThrow } from "../identity/identity.utils";
 import { RequestReport } from "../reporting/object-types/request-report.model";
+import { SerializedReport } from "@pezzo/types";
+import GraphQLJSON from "graphql-type-json";
 
 @UseGuards(AuthGuard)
 @Resolver(() => RequestReport)
@@ -19,11 +21,11 @@ export class PromptTesterResolver {
     private logger: PinoLogger
   ) {}
 
-  @Mutation(() => RequestReport)
+  @Mutation(() => GraphQLJSON)
   async testPrompt(
     @Args("data") data: TestPromptInput,
     @CurrentUser() user: RequestUser
-  ): Promise<RequestReport> {
+  ): Promise<SerializedReport> {
     this.logger
       .assign({
         projectId: data.projectId,

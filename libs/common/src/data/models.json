@@ -1,0 +1,26 @@
+{
+  "models": {
+    "mistralai/Mixtral-8x7B-Instruct-v0.1": {
+      "by": "mistral",
+      "providers": [
+        {
+          "provider_id": "anyscale",
+          "full_model_id": "anyscale/mistralai/Mixtral-8x7B-Instruct-v0.1"
+        }
+      ]
+    },
+    "meta-llama/llama-2-7b": {
+      "by": "meta",
+      "providers": [
+        {
+          "provider_id": "together_ai",
+          "full_model_id": "together_ai/togethercomputer/llama-2-7b"
+        },
+        {
+          "provider_id": "anyscale",
+          "full_model_id": "anyscale/meta-llama/Llama-2-7b-chat-hf"
+        }
+      ]
+    }
+  }
+}

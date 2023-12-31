@@ -12,4 +12,6 @@ export interface RequestReportItem {
   cacheEnabled: boolean;
   cacheHit: boolean;
   model: string;
+  modelAuthor: string;
+  provider: string;
 }

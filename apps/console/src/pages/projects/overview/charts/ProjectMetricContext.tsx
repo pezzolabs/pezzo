@@ -31,7 +31,7 @@ const timeframeToTimestampFormatterMapping = {
 };
 
 const timeframeToBucketSizeMapping = {
-  [Timeframe.PastHour]: ProjectMetricHistogramBucketSize.Hourly,
+  [Timeframe.PastHour]: ProjectMetricHistogramBucketSize.Minutely,
   [Timeframe.PastDay]: ProjectMetricHistogramBucketSize.Hourly,
   [Timeframe.PastWeek]: ProjectMetricHistogramBucketSize.Daily,
   [Timeframe.PastMonth]: ProjectMetricHistogramBucketSize.Daily,

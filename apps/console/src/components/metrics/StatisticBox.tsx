@@ -33,6 +33,7 @@ const getProperties = (
   const calculatedPreviousValue = previousValue === 0 ? 1 : previousValue;
 
   const percentage = Math.abs((diff / calculatedPreviousValue) * 100);
+
   const percentageToRender =
     percentage < 1 ? percentage.toFixed(3) : percentage;
 

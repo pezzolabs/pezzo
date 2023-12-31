@@ -3,12 +3,12 @@ import { DefaultTooltipContent } from "recharts";
 
 export const TooltipWithTimestamp = (props) => {
   // payload[0] doesn't exist when tooltip isn't visible
-  if (props.payload[0] != null) {
+  if (props.payload && props.payload[0] != null) {
     // mutating props directly is against react's conventions
     // so we create a new payload with the name and value fields set to what we want
     const newPayload = [
       {
-        name: "timestamp",
+        name: "Timestamp",
         // all your data which created the tooltip is located in the .payload property
         value: moment(props.payload[0].payload.timestamp).format(
           "YYYY-MM-DD HH:mm"

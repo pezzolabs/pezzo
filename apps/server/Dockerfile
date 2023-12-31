@@ -14,6 +14,10 @@ COPY ./dist/apps/server .
 
 RUN npx prisma generate
 
+COPY ./clickhouse ./clickhouse
+
+RUN cd clickhouse && npm i
+
 ENV PORT=3000
 EXPOSE $PORT
 

@@ -1,21 +1,30 @@
-import { OpenSearchService } from "../opensearch/opensearch.service";
-import { Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from "@nestjs/common";
 import { CreateReportDto } from "./dto/create-report.dto";
 import { randomUUID } from "crypto";
 import { buildRequestReport } from "./utils/build-request-report";
-import { RequestReport } from "./object-types/request-report.model";
 import { MAX_PAGE_SIZE } from "../../lib/pagination";
-import { FilterInput } from "../common/filters/filter.input";
+import {
+  FilterInput,
+  getSQLOperatorByFilterOperator,
+} from "../common/filters/filter.input";
 import { SortInput } from "../common/filters/sort.input";
-import { mapFiltersToDql } from "./utils/dql-utils";
-import { AnalyticsService } from "../analytics/analytics.service";
+import { ClickHouseService } from "../clickhouse/clickhouse.service";
+import {
+  PaginatedReportsSchema,
+  ReportSchema,
+  SerializedReport,
+  serializePaginatedReport,
+  serializeReport,
+} from "@pezzo/types";
+import { PaginatedReportsResult } from "./object-types/request-report-result.model";
 
 @Injectable()
 export class ReportingService {
-  constructor(
-    private openSearchService: OpenSearchService,
-    private analytics: AnalyticsService
-  ) {}
+  constructor(private clickHouseService: ClickHouseService) {}
 
   async saveReport(
     dto: CreateReportDto,
@@ -24,92 +33,164 @@ export class ReportingService {
       projectId: string;
     },
     isTestPrompt = false
-  ): Promise<RequestReport> {
+  ): Promise<SerializedReport> {
     const reportId = randomUUID();
     const { report, calculated } = buildRequestReport(dto);
 
-    const { properties, metadata, request, response, cacheEnabled, cacheHit } =
-      report;
+    const { metadata, request, response, cacheEnabled, cacheHit } = report;
 
-    await this.openSearchService.client.index({
-      index: this.openSearchService.requestsIndexAlias,
-      body: {
-        timestamp: request.timestamp,
-        ownership,
-        reportId,
-        calculated,
-        properties,
-        metadata,
-        request,
-        response,
-        cacheEnabled,
-        cacheHit,
-      },
-    });
-
-    this.analytics.trackEvent("request_reported", {
+    const reportToSave: ReportSchema = {
+      id: reportId,
+      timestamp: request.timestamp,
       organizationId: ownership.organizationId,
       projectId: ownership.projectId,
-      reportId,
-      isTestPrompt: isTestPrompt,
-      promptId: dto.metadata.promptId as string,
-      client: (dto.metadata.client as string) || null,
-      clientVersion: (dto.metadata.clientVersion as string) || null,
-      cacheEnabled,
-    });
-
-    return {
-      reportId,
-      calculated,
-      properties,
-      metadata: metadata as unknown as RequestReport["metadata"],
-      request: request as any,
-      response: response as any,
-      cacheEnabled,
-      cacheHit,
+      promptCost: (calculated as any).promptCost,
+      completionCost: (calculated as any).completionCost,
+      totalCost: (calculated as any).totalCost,
+      promptTokens: (calculated as any).promptTokens,
+      completionTokens: (calculated as any).completionTokens,
+      totalTokens: (calculated as any).totalTokens,
+      duration: (calculated as any).duration,
+      environment: isTestPrompt ? "PLAYGROUND" : metadata.environment,
+      client: metadata.client,
+      clientVersion: metadata.clientVersion,
+      model: request.body.model,
+      provider: metadata.provider,
+      modelAuthor: "openai",
+      type: "ChatCompletion",
+      requestTimestamp: request.timestamp,
+      requestBody: JSON.stringify(request.body),
+      isError: (response as any).status !== 200 ? 1 : 0,
+      responseStatusCode: (response as any).status,
+      responseTimestamp: response.timestamp,
+      responseBody: JSON.stringify(response.body),
+      cacheEnabled: cacheEnabled ? 1 : 0,
+      cacheHit: cacheHit ? 1 : 0,
+      promptId: report.metadata.promptId || null,
     };
+
+    try {
+      await this.clickHouseService.client.insert({
+        format: "JSONEachRow",
+        table: "reports",
+        values: [reportToSave],
+      });
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException(`Could not save report`);
+    }
+
+    return serializeReport(reportToSave);
+  }
+
+  async getReportById(
+    reportId: string,
+    projectId: string
+  ): Promise<SerializedReport> {
+    const rows = await this.clickHouseService.knex
+      .select<ReportSchema[]>("*")
+      .from("reports")
+      .where({
+        id: reportId,
+        projectId,
+      })
+      .limit(1);
+
+    const result = serializeReport(rows[0]);
+    return result;
   }
 
   async getReports({
     projectId,
-    organizationId,
     offset,
     limit,
-    filters,
+    filters = [],
     sort,
   }: {
     projectId: string;
-    organizationId: string;
     offset: number;
     limit: number;
     filters: FilterInput[];
     sort: SortInput;
-  }) {
+  }): Promise<PaginatedReportsResult> {
     const size = limit > MAX_PAGE_SIZE ? MAX_PAGE_SIZE : limit;
     const from = offset > 0 ? offset : 0;
 
-    const body = mapFiltersToDql({
-      restrictions: {
-        "ownership.projectId": projectId,
-        "ownership.organizationId": organizationId,
-      },
-      sort,
-      filters,
-    });
+    const knex = this.clickHouseService.knex;
 
-    const dql = body.build();
+    let totalRowsQuery = knex
+      .select(knex.raw("COUNT() as total"))
+      .from("reports")
+      .where("projectId", projectId)
+      .first();
 
-    return this.openSearchService.client.search<{
-      hits: {
-        hits: Array<{ _source: RequestReport }>;
-        total: { value: number };
+    let query = knex
+      .select<PaginatedReportsSchema[]>({
+        id: "id",
+        environment: "environment",
+        timestamp: "timestamp",
+        responseStatusCode: "responseStatusCode",
+        model: "model",
+        modelAuthor: "modelAuthor",
+        provider: "provider",
+        duration: "duration",
+        totalTokens: "totalTokens",
+        totalCost: "totalCost",
+        cacheEnabled: "cacheEnabled",
+        cacheHit: "cacheHit",
+      })
+      .from("reports");
+
+    query = query.where("projectId", "=", projectId);
+
+    for (const filter of filters) {
+      try {
+        const operator = getSQLOperatorByFilterOperator(filter.operator);
+        let field = filter.field;
+        let value = filter.value;
+
+        if (filter.field === ("timestamp" as any)) {
+          const d = new Date(value as string).toISOString();
+          value = knex.raw(`parseDateTimeBestEffort('${d}')`) as any;
+        }
+
+        if (filter.operator === "like") {
+          field = knex.raw(`lower(${filter.field})`) as any;
+          value = (value as string).toLowerCase();
+        }
+
+        query = query.where(field, operator, value);
+        totalRowsQuery = totalRowsQuery.where(field, operator, value);
+      } catch (error) {
+        throw new BadRequestException(
+          `Invalid filter operator ${filter.operator}`
+        );
+      }
+    }
+
+    query = query.limit(size).offset(offset);
+
+    if (sort) {
+      query.orderBy(sort.field, sort.order);
+    } else {
+      query.orderBy("timestamp", "desc");
+    }
+
+    try {
+      const result = await query;
+      const totalRowsResult = await totalRowsQuery;
+
+      return {
+        data: result.map((report) => serializePaginatedReport(report)),
+        pagination: {
+          offset: from,
+          limit,
+          total: totalRowsResult.total,
+        },
       };
-    }>({
-      index: this.openSearchService.requestsIndexAlias,
-      body: dql,
-      size,
-      from,
-      track_total_hits: true,
-    });
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException(`Could not get reports`);
+    }
   }
 }

@@ -18,7 +18,6 @@ import { MetricsModule } from "./metrics/metrics.module";
 import { LoggerModule } from "./logger/logger.module";
 import { AnalyticsModule } from "./analytics/analytics.module";
 import { ReportingModule } from "./reporting/reporting.module";
-import { OpenSearchModule } from "./opensearch/opensearch.module";
 import { NotificationsModule } from "./notifications/notifications.module";
 import { getConfigSchema } from "./config/common-config-schema";
 import { PromptTesterModule } from "./prompt-tester/prompt-tester.module";
@@ -26,6 +25,7 @@ import { ClsModule } from "./cls.module";
 import { CacheModule } from "./cache/cache.module";
 import { RedisModule } from "./redis/redis.module";
 import { EncryptionModule } from "./encryption/encryption.module";
+import { ClickhHouseModule } from "./clickhouse/clickhouse.module";
 
 const isCloud = process.env.PEZZO_CLOUD === "true";
 
@@ -41,7 +41,7 @@ const isCloud = process.env.PEZZO_CLOUD === "true";
       validate:
         process.env.SKIP_CONFIG_VALIDATION === "true" ? () => ({}) : undefined,
     }),
-    OpenSearchModule,
+    ClickhHouseModule,
     RedisModule,
     EncryptionModule,
     EventEmitterModule.forRoot(),

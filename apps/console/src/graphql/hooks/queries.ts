@@ -8,25 +8,26 @@ import { GET_ME } from "../definitions/queries/users";
 import { GET_ALL_PROJECTS } from "../definitions/queries/projects";
 import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
-import { GET_ALL_REQUESTS } from "../definitions/queries/requests";
+import { GET_ALL_REQUESTS, GET_REPORT } from "../definitions/queries/requests";
 import {
-  GetProjectMetricHistogramQuery,
-  GetProjectMetricHistogramQueryVariables,
-  GetProjectMetricQuery,
-  GetProjectMetricQueryVariables,
   GetPromptQuery,
   GetPromptVersionQuery,
   PaginatedRequestsQuery,
-  RequestReport,
+  GetGenericProjectMetricHistogramQueryVariables,
+  GetGenericProjectMetricHistogramQuery,
+  GetProjectMetricDeltaQueryVariables,
+  GetProjectMetricDeltaQuery,
+  GetReportQuery,
+  GetReportQueryVariables,
 } from "~/@generated/graphql/graphql";
-import { GraphQLErrorResponse, ReportRequestResponse } from "../types";
-import { Provider } from "@pezzo/types";
+import { GraphQLErrorResponse } from "../types";
 import { GET_PROMPT, GET_PROMPT_VERSION } from "../definitions/queries/prompts";
 import { useFiltersAndSortParams } from "~/lib/hooks/useFiltersAndSortParams";
 import {
-  GET_PROJECT_METRIC,
-  GET_PROJECT_METRIC_HISTOGRAM,
+  GET_GENERIC_PROJECT_METRIC_HISTOGRAM,
+  GET_PROJECT_METRIC_DELTA,
 } from "../definitions/queries/metrics";
+import { SerializedReport } from "@pezzo/types";
 
 export const useProviderApiKeys = () => {
   const { organization } = useCurrentOrganization();
@@ -115,15 +116,6 @@ export const useGetPromptVersion = (
   return { ...result, promptVersion: result.data?.promptVersion };
 };
 
-const buildTypedRequestReportObject = (requestReport: RequestReport) => {
-  switch (requestReport.metadata.providers) {
-    case Provider.OpenAI:
-      return requestReport as ReportRequestResponse<Provider.OpenAI>;
-    default:
-      return requestReport as ReportRequestResponse<Provider.OpenAI>;
-  }
-};
-
 export const useGetRequestReports = (
   {
     offset,
@@ -147,39 +139,59 @@ export const useGetRequestReports = (
   });
 };
 
-export const useProjectMetric = (
-  data: GetProjectMetricQueryVariables["data"],
-  options: UseQueryOptions<GetProjectMetricQuery, GraphQLErrorResponse> = {}
+export const useReport = (
+  data: GetReportQueryVariables["data"],
+  options: UseQueryOptions<GetReportQuery, GraphQLErrorResponse> = {}
 ) => {
-  const { project } = useCurrentProject();
   const result = useQuery({
-    enabled: !!project,
-    queryKey: ["projectMetric", ...Object.values(data)],
+    queryKey: ["report", data.reportId],
     queryFn: () =>
-      gqlClient.request(GET_PROJECT_METRIC, {
+      gqlClient.request(GET_REPORT, {
         data,
       }),
     ...options,
   });
 
-  return { ...result, data: result.data?.projectMetric };
+  return { ...result, report: result.data?.report as SerializedReport };
 };
 
-export const useProjectMetricHistogram = (
-  data: GetProjectMetricHistogramQueryVariables["data"],
+export const useGenericProjectMetricHistogram = <T>(
+  data: GetGenericProjectMetricHistogramQueryVariables["data"],
   options: UseQueryOptions<
-    GetProjectMetricHistogramQuery,
+    GetGenericProjectMetricHistogramQuery,
     GraphQLErrorResponse
   > = {}
 ) => {
   const result = useQuery({
-    queryKey: ["projectMetricHistogram", ...Object.values(data)],
+    queryKey: ["genericProjectMetricHistogram", ...Object.values(data)],
     queryFn: () =>
-      gqlClient.request(GET_PROJECT_METRIC_HISTOGRAM, {
+      gqlClient.request(GET_GENERIC_PROJECT_METRIC_HISTOGRAM, {
         data,
       }),
     ...options,
   });
 
-  return { ...result, histogram: result.data?.projectMetricHistogram };
+  return {
+    ...result,
+    histogram: result.data?.genericProjectMetricHistogram as { data: T },
+  };
+};
+
+export const useProjctMetricDelta = (
+  data: GetProjectMetricDeltaQueryVariables["data"],
+  options: UseQueryOptions<
+    GetProjectMetricDeltaQuery,
+    GraphQLErrorResponse
+  > = {}
+) => {
+  const result = useQuery({
+    queryKey: ["projectMetricDelta", ...Object.values(data)],
+    queryFn: () =>
+      gqlClient.request(GET_PROJECT_METRIC_DELTA, {
+        data,
+      }),
+    ...options,
+  });
+
+  return { ...result, data: result.data?.projectMetricDelta };
 };

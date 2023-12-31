@@ -2,11 +2,11 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useTestPrompt } from "~/graphql/hooks/mutations";
 import { useCurrentProject } from "../hooks/useCurrentProject";
 import { useCurrentPrompt } from "./CurrentPromptContext";
-import { RequestReport } from "~/@generated/graphql/graphql";
 import { EditorFormInputs, useEditorContext } from "./EditorContext";
 import { UseFormReturn, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { SerializedReport } from "@pezzo/types";
 
 const formSchema = z.record(
   z.string(),
@@ -26,7 +26,7 @@ interface PromptTesterContextValue {
   runTest: () => void;
   isTestLoading: boolean;
   testError: any;
-  testResult: RequestReport;
+  testResult: SerializedReport;
 }
 
 const PromptTesterContext = createContext<PromptTesterContextValue>({

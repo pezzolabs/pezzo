@@ -41,7 +41,7 @@ export class ReportingController {
         organizationId,
         projectId,
       })
-      .info("Saving report to OpenSearch");
+      .info("Saving report");
 
     try {
       return this.reportingService.saveReport(dto, {
@@ -49,7 +49,7 @@ export class ReportingController {
         projectId,
       });
     } catch (error) {
-      this.logger.error(error, "Error saving report to OpenSearch");
+      this.logger.error(error, "Error saving report");
       throw new InternalServerErrorException();
     }
   }

@@ -13,20 +13,11 @@ import colors from "tailwindcss/colors";
 import { useProjectMetricControls } from "./ProjectMetricContext";
 import { TooltipWithTimestamp } from "./TooltipWithTimestamp";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
-import { useProjectMetricHistogram } from "~/graphql/hooks/queries";
-import {
-  HistogramMetric,
-  ProjectMetricType,
-} from "~/@generated/graphql/graphql";
+import { useGenericProjectMetricHistogram } from "~/graphql/hooks/queries";
+import { HistogramIdType } from "~/@generated/graphql/graphql";
 import { useFiltersAndSortParams } from "~/lib/hooks/useFiltersAndSortParams";
 import { Loader2Icon } from "lucide-react";
-
-const histogramToChartData = (requests: HistogramMetric[]) => {
-  return requests.map((entry) => ({
-    timestamp: entry.date,
-    duration: entry.value,
-  }));
-};
+import { MetricsTypes } from "@pezzo/common";
 
 export const ExecutionTimeChart = () => {
   const { project } = useCurrentProject();
@@ -34,19 +25,20 @@ export const ExecutionTimeChart = () => {
   const controls = useProjectMetricControls();
   const { filters } = useFiltersAndSortParams();
 
-  const durationHistogram = useProjectMetricHistogram(
-    {
-      projectId: project?.id,
-      metric: ProjectMetricType.Duration,
-      bucketSize: controls.bucketSize,
-      startDate: startDate,
-      endDate: endDate,
-      filters,
-    },
-    {
-      enabled: !!project && !!startDate && !!endDate,
-    }
-  );
+  const durationHistogram =
+    useGenericProjectMetricHistogram<MetricsTypes.ExeceutionTypeChartResultDataType>(
+      {
+        projectId: project?.id,
+        histogramId: HistogramIdType.RequestDuration,
+        bucketSize: controls.bucketSize,
+        startDate: startDate,
+        endDate: endDate,
+        filters,
+      },
+      {
+        enabled: !!project && !!startDate && !!endDate,
+      }
+    );
 
   if (durationHistogram.isLoading) {
     return (
@@ -65,7 +57,10 @@ export const ExecutionTimeChart = () => {
     );
   }
 
-  const data = histogramToChartData(durationHistogram.histogram);
+  const data = durationHistogram.histogram.data.map((d) => ({
+    timestamp: d.timestamp,
+    value: d.value,
+  }));
 
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -85,19 +80,21 @@ export const ExecutionTimeChart = () => {
         />
         <YAxis
           domain={["dataMin", "dataMax"]}
-          tickFormatter={(value) => `${value / 1000}s`}
+          tickFormatter={(value) => `${(value / 1000).toFixed(2)}s`}
         />
         <Tooltip
           cursor={{ opacity: 0.2 }}
           content={TooltipWithTimestamp}
           formatter={(value, key) =>
-            key !== "duration" ? value : `${(value as number) / 1000}s`
+            key !== "value"
+              ? value
+              : `${((value as number) / 1000).toFixed(2)}s`
           }
         />
         <Legend
           payload={[
             {
-              id: "duration",
+              id: "value",
               value: `Duration (seconds)`,
               color: colors.neutral["400"],
             },
@@ -105,13 +102,8 @@ export const ExecutionTimeChart = () => {
         />
         <Line
           type="monotone"
-          dataKey="error"
-          stroke={colors.red["400"]}
-          activeDot={{ r: 8 }}
-        />
-        <Line
-          type="monotone"
-          dataKey="duration"
+          name="Duration"
+          dataKey="value"
           stroke={colors.neutral["400"]}
         />
       </LineChart>
