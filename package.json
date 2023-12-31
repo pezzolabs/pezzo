@@ -28,7 +28,7 @@
     "@nestjs/swagger": "^7.1.12",
     "@nx/nest": "16.6.0",
     "@nx/next": "16.6.0",
-    "@pezzo/knex-clickhouse-dialect": "^1.2.0",
+    "@pezzo/knex-clickhouse-dialect": "^1.3.0",
     "@pezzo/llm-toolkit": "^0.5.0",
     "@prisma/client": "^5.1.1",
     "@radix-ui/react-accordion": "^1.1.2",

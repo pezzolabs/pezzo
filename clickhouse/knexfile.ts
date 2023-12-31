@@ -8,11 +8,12 @@ const {
   CLICKHOUSE_PASSWORD = "default",
 } = process.env;
 
+const str = `https://${CLICKHOUSE_USER}:${CLICKHOUSE_PASSWORD}@${CLICKHOUSE_HOST}:${CLICKHOUSE_PORT}/default`
+
 const config: { [key: string]: Knex.Config } = {
   default: {
     client: clickhouse as any,
-    connection: () =>
-      `clickhouse://${CLICKHOUSE_USER}:${CLICKHOUSE_PASSWORD}@${CLICKHOUSE_HOST}:${CLICKHOUSE_PORT}/default` as any,
+    connection: () => str as any,
     migrations: {
       disableTransactions: true,
       disableMigrationsListValidation: true,
