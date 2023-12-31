@@ -67,9 +67,12 @@ export class ProjectMetricsService {
 
     switch (metric) {
       case DeltaMetricType.AverageRequestDuration:
+        const currentValue = /*sql*/ `avgIf(r.duration, r.isError = false AND r.requestTimestamp >= currentStartDate AND r.responseTimestamp <= currentEndDate)`;
+        const previousValue = /*sql*/ `avgIf(r.duration, r.isError = false AND r.requestTimestamp >= previousStartDate AND r.responseTimestamp <= previousEndDate)`;
+
         selectStatement = /*sql*/ `
-          avgIf(r.duration, r.isError = false AND r.requestTimestamp >= currentStartDate AND r.responseTimestamp <= currentEndDate) AS currentValue,
-          avgIf(r.duration, r.isError = false AND r.requestTimestamp >= previousStartDate AND r.responseTimestamp <= previousEndDate) AS previousValue
+          if(isNaN(${currentValue}), 0, ${currentValue}) AS currentValue,
+          if(isNaN(${previousValue}), 0, ${previousValue}) AS previousValue
         `;
         break;
       case DeltaMetricType.TotalRequests:

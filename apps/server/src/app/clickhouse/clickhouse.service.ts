@@ -4,6 +4,7 @@ import { createLogger } from "../logger/create-logger";
 import { pino } from "pino";
 import { createClient, ClickHouseClient } from "@clickhouse/client"; // or '@clickhouse/client-web'
 import { knex, Knex } from "knex";
+import clickhouesDialect from "@pezzo/knex-clickhouse-dialect";
 
 @Injectable()
 export class ClickHouseService implements OnModuleInit {
@@ -36,17 +37,12 @@ export class ClickHouseService implements OnModuleInit {
     });
 
     this.logger.info("Creating Knex instance");
+    const connectionStr =
+      `${protocol}://${username}:${password}@${host}:${port}/${database}` as any;
 
     this.knex = knex({
-      client: "mysql2",
-      connection: {
-        host,
-        port: 9004,
-        user: username,
-        password,
-        database,
-        timezone: "Z",
-      },
+      client: clickhouesDialect as any,
+      connection: () => connectionStr,
     });
 
     await this.healthCheck();
@@ -59,7 +55,14 @@ export class ClickHouseService implements OnModuleInit {
         format: "JSONEachRow",
       });
     } catch (error) {
-      this.logger.error({ error }, "ClickHouse healthcheck failed");
+      this.logger.error({ error }, "ClickHouse client healthcheck failed");
+      throw error;
+    }
+
+    try {
+      await this.knex.raw("SELECT 1");
+    } catch (error) {
+      this.logger.error({ error }, "Knex healthcheck failed");
       throw error;
     }
   }
