@@ -27,12 +27,14 @@ export const successErrorRateQuery = (
     .with("buckets", bucketsSubquery)
     .select({
       timestamp: "b.timestamp",
-      requests: knex.raw("count(*)"),
+      requests: knex.raw(
+        `countIf(${timeProps.roundFn}(r.requestTimestamp) = timestamp)`
+      ),
       error: knex.raw(
-        "countIf(r.isError = true AND toStartOfHour(r.requestTimestamp) = timestamp)"
+        `countIf(r.isError = true AND ${timeProps.roundFn}(r.requestTimestamp) = timestamp)`
       ),
       success: knex.raw(
-        "countIf(r.isError = false AND toStartOfHour(r.requestTimestamp) = timestamp)"
+        `countIf(r.isError = false AND ${timeProps.roundFn}(r.requestTimestamp) = timestamp)`
       ),
     })
     .from("buckets as b")
