@@ -1,23 +1,19 @@
-import {
-  ObservabilityRequest,
-  ObservabilityResponse,
-  Provider,
-} from "@pezzo/types";
 import { Card } from "@pezzo/ui";
+import OpenAI from "openai";
 
 interface Props {
-  request: ObservabilityRequest<Provider.OpenAI>;
-  response: ObservabilityResponse<Provider.OpenAI>;
+  requestBody: OpenAI.ChatCompletionCreateParams;
+  responseBody: OpenAI.ChatCompletion;
 }
 
-export const RequestResponseViewJsonView = ({ request, response }: Props) => {
+export const RequestResponseViewJsonView = ({ requestBody, responseBody }: Props) => {
   return (
     <div className="flex flex-col gap-4">
       <div>
         <p className="mb-4 font-semibold">Request</p>
         <Card className="bg-background p-2">
           <pre className="overflow-y-auto whitespace-break-spaces break-words">
-            {JSON.stringify(request.body, null, 2)}
+            {JSON.stringify(requestBody, null, 2)}
           </pre>
         </Card>
       </div>
@@ -25,7 +21,7 @@ export const RequestResponseViewJsonView = ({ request, response }: Props) => {
         <p className="mb-4 font-semibold">Response</p>
         <Card className="bg-background p-2">
           <pre className="overflow-y-auto whitespace-break-spaces break-words">
-            {JSON.stringify(response.body, null, 2)}
+            {JSON.stringify(responseBody, null, 2)}
           </pre>
         </Card>
       </div>

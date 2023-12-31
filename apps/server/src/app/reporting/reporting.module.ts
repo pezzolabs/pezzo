@@ -4,11 +4,11 @@ import { AuthModule } from "../auth/auth.module";
 import { LoggerModule } from "../logger/logger.module";
 import { IdentityModule } from "../identity/identity.module";
 import { ReportingService } from "./reporting.service";
-import { OpenSearchModule } from "../opensearch/opensearch.module";
 import { RequestReportsResolver } from "./requests.resolver";
+import { ClickhHouseModule } from "../clickhouse/clickhouse.module";
 
 @Module({
-  imports: [OpenSearchModule, LoggerModule, AuthModule, IdentityModule],
+  imports: [ClickhHouseModule, LoggerModule, AuthModule, IdentityModule],
   exports: [ReportingService],
   controllers: [ReportingController],
   providers: [ReportingService, RequestReportsResolver],

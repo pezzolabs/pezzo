@@ -38,12 +38,8 @@ export const FilterItem = ({
   onRemoveFilter,
 }: Props) => {
   const translatedField = useMemo(() => {
-    if (field.includes(".")) {
-      const fieldParts = field.split(".");
-      return fieldParts.reduce((acc, part) => `${acc} ${part}`, "");
-    }
-
-    return field;
+    const found = FILTER_FIELDS_LIST.find((f) => f.value === field);
+    return found?.label.toLocaleLowerCase();
   }, [field]);
 
   return (
@@ -62,7 +58,7 @@ const formSchema = z.object({
   field: z.string().min(1).max(100),
   operator: z.nativeEnum(FilterOperator),
   value: z.string().min(1).max(100),
-  property: z.string().min(1).max(100).optional(),
+  // property: z.string().min(1).max(100).optional(),
 });
 
 export const AddFilterForm = ({
@@ -78,16 +74,13 @@ export const AddFilterForm = ({
       field: "",
       operator: FilterOperator.Eq,
       value: "",
-      property: undefined,
+      // property: undefined,
     },
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const filterValue: FilterInput = {
-      field:
-        values.field !== "property"
-          ? values.field
-          : `properties.${values.property}.keyword`,
+      field: values.field,
       operator: values.operator,
       value: values.value,
     };
@@ -96,7 +89,8 @@ export const AddFilterForm = ({
     form.reset();
   };
 
-  const field = form.watch("field");
+  const formValues = form.watch();
+  const { field } = formValues;
   const selectedFilterField = FILTER_FIELDS_LIST.find(
     (fieldInList) => fieldInList.value === field
   );
@@ -137,7 +131,7 @@ export const AddFilterForm = ({
               </FormItem>
             )}
           />
-          {form.watch("field") === "property" && (
+          {/* {form.watch("field") === "property" && (
             <FormField
               control={form.control}
               name="property"
@@ -149,7 +143,7 @@ export const AddFilterForm = ({
                 </FormItem>
               )}
             />
-          )}
+          )} */}
           <FormField
             control={form.control}
             name="operator"

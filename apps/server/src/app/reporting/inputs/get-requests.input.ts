@@ -19,3 +19,12 @@ export class GetRequestsInput {
   @Field(() => SortInput, { nullable: true })
   sort?: SortInput;
 }
+
+@InputType()
+export class GetReportInput {
+  @Field(() => String, { nullable: false })
+  projectId: string;
+
+  @Field(() => String, { nullable: false })
+  reportId: string;
+}

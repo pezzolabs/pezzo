@@ -1,256 +1,128 @@
-import { Injectable } from "@nestjs/common";
-import { ProjectMetricType } from "./inputs/get-project-metrics.input";
-import { OpenSearchService } from "../opensearch/opensearch.service";
-import { HistogramMetric, ProjectMetric } from "./models/project-metric.model";
+import { BadRequestException, Injectable, InternalServerErrorException } from "@nestjs/common";
 import {
-  buildBaseProjectMetricQuery,
-  getStartAndEndDates,
-} from "./metrics.utils";
+  DeltaMetricType,
+  HistogramIdType,
+  ProjectMetricHistogramBucketSize,
+} from "./inputs/get-project-metrics.input";
+import {
+  GenericProjectHistogramResult,
+  ProjectMetricDeltaResult,
+} from "./models/project-metric.model";
 import { FilterInput } from "../common/filters/filter.input";
-import { mapFiltersToDql } from "../reporting/utils/dql-utils";
+import { ClickHouseService } from "../clickhouse/clickhouse.service";
+import { averageRequestDurationQuery } from "./queries/average-request-duration-query";
+import { Knex } from "knex";
+import { successErrorRateQuery } from "./queries/success-error-rate-query";
 
 @Injectable()
 export class ProjectMetricsService {
-  constructor(private openSearchService: OpenSearchService) {}
+  constructor(
+    private clickHouseService: ClickHouseService
+  ) {}
 
-  async getRequests(
+  async getGenericHistogram(
     projectId: string,
+    histogramId: HistogramIdType,
     startDate: Date,
     endDate: Date,
+    bucketSize: ProjectMetricHistogramBucketSize,
     filters: FilterInput[]
-  ): Promise<ProjectMetric> {
-    const { current, previous } = getStartAndEndDates(startDate, endDate);
+  ): Promise<GenericProjectHistogramResult> {
+    let queryBuilder: Knex.QueryBuilder;
 
-    const buildAndExecuteQuery = async (startDate: string, endDate: string) => {
-      let body = mapFiltersToDql({ filters, restrictions: {} });
-      body = buildBaseProjectMetricQuery(body, projectId, startDate, endDate);
-
-      const result = await this.openSearchService.client.search({
-        index: this.openSearchService.requestsIndexAlias,
-        body: body.build(),
-      });
-
-      return result.body.hits.total.value || 0;
-    };
-
-    const [currentRequestCount, previousRequestCount] = await Promise.all([
-      buildAndExecuteQuery(current.startDate, current.endDate),
-      buildAndExecuteQuery(previous.startDate, previous.endDate),
-    ]);
-
-    return {
-      currentValue: currentRequestCount,
-      previousValue: previousRequestCount,
-    };
-  }
-
-  async getCost(
-    projectId: string,
-    startDate: Date,
-    endDate: Date,
-    filters: FilterInput[]
-  ): Promise<ProjectMetric> {
-    const { current, previous } = getStartAndEndDates(startDate, endDate);
-
-    const buildAndExecuteQuery = async (startDate: string, endDate: string) => {
-      let body = mapFiltersToDql({ filters, restrictions: {} });
-      body = buildBaseProjectMetricQuery(
-        body,
-        projectId,
-        startDate,
-        endDate
-      ).aggregation("sum", "calculated.totalCost", "total_cost");
-
-      const query = {
-        index: this.openSearchService.requestsIndexAlias,
-        body: body.build(),
-      };
-
-      const result = await this.openSearchService.client.search(query);
-
-      return result.body.aggregations.total_cost.value || 0;
-    };
-
-    const [currentRequestCount, previousRequestCount] = await Promise.all([
-      buildAndExecuteQuery(current.startDate, current.endDate),
-      buildAndExecuteQuery(previous.startDate, previous.endDate),
-    ]);
-
-    return {
-      currentValue: parseFloat(currentRequestCount.toFixed(5)),
-      previousValue: parseFloat(previousRequestCount.toFixed(5)),
-    };
-  }
-
-  async getAvgDuration(
-    projectId: string,
-    startDate: Date,
-    endDate: Date,
-    filters: FilterInput[]
-  ): Promise<ProjectMetric> {
-    const { current, previous } = getStartAndEndDates(startDate, endDate);
-
-    const buildAndExecuteQuery = async (startDate: string, endDate: string) => {
-      let body = mapFiltersToDql({ filters, restrictions: {} });
-      body = buildBaseProjectMetricQuery(
-        body,
-        projectId,
-        startDate,
-        endDate
-      ).aggregation("avg", "calculated.duration", "avg_duration");
-      const result = await this.openSearchService.client.search({
-        index: this.openSearchService.requestsIndexAlias,
-        body: body.build(),
-      });
-
-      return result.body.aggregations.avg_duration.value || 0;
-    };
-
-    const [currentRequestCount, previousRequestCount] = await Promise.all([
-      buildAndExecuteQuery(current.startDate, current.endDate),
-      buildAndExecuteQuery(previous.startDate, previous.endDate),
-    ]);
-
-    return {
-      currentValue: parseInt(currentRequestCount),
-      previousValue: parseInt(previousRequestCount),
-    };
-  }
-
-  async getSuccessfulRequests(
-    projectId: string,
-    startDate: Date,
-    endDate: Date,
-    filters: FilterInput[]
-  ): Promise<ProjectMetric> {
-    const { current, previous } = getStartAndEndDates(startDate, endDate);
-
-    const buildAndExecuteQuery = async (startDate: string, endDate: string) => {
-      let body = mapFiltersToDql({ filters, restrictions: {} });
-      body = buildBaseProjectMetricQuery(
-        body,
-        projectId,
-        startDate,
-        endDate
-      ).filter("term", "response.status", 200);
-
-      const result = await this.openSearchService.client.search({
-        index: this.openSearchService.requestsIndexAlias,
-        body: body.build(),
-      });
-
-      return result.body.hits.total.value || 0;
-    };
-
-    const [currentRequestCount, previousRequestCount] = await Promise.all([
-      buildAndExecuteQuery(current.startDate, current.endDate),
-      buildAndExecuteQuery(previous.startDate, previous.endDate),
-    ]);
-
-    return {
-      currentValue: parseInt(currentRequestCount),
-      previousValue: parseInt(previousRequestCount),
-    };
-  }
-
-  async getErroneousRequests(
-    projectId: string,
-    startDate: Date,
-    endDate: Date,
-    filters: FilterInput[]
-  ): Promise<ProjectMetric> {
-    const { current, previous } = getStartAndEndDates(startDate, endDate);
-
-    const buildAndExecuteQuery = async (startDate: string, endDate: string) => {
-      let body = mapFiltersToDql({ filters, restrictions: {} });
-      body = buildBaseProjectMetricQuery(
-        body,
-        projectId,
-        startDate,
-        endDate
-      ).notFilter("term", "response.status", 200);
-
-      const result = await this.openSearchService.client.search({
-        index: this.openSearchService.requestsIndexAlias,
-        body: body.build(),
-      });
-
-      return result.body.hits.total.value || 0;
-    };
-
-    const [currentRequestCount, previousRequestCount] = await Promise.all([
-      buildAndExecuteQuery(current.startDate, current.endDate),
-      buildAndExecuteQuery(previous.startDate, previous.endDate),
-    ]);
-
-    return {
-      currentValue: parseInt(currentRequestCount),
-      previousValue: parseInt(previousRequestCount),
-    };
-  }
-
-  async getHistogram(
-    projectId: string,
-    metricType: ProjectMetricType,
-    startDate: Date,
-    endDate: Date,
-    bucketSize: string,
-    filters: FilterInput[]
-  ): Promise<HistogramMetric[]> {
-    let body = mapFiltersToDql({ filters, restrictions: {} });
-
-    body = body
-      .addFilter("term", "ownership.projectId", projectId)
-      .andFilter("range", "timestamp", {
-        gte: startDate.toISOString(),
-        lte: endDate.toISOString(),
-      });
-
-    let aggType, aggField;
-
-    switch (metricType) {
-      case ProjectMetricType.requests:
-        aggType = "value_count";
-        aggField = "timestamp";
+    switch (histogramId) {
+      case HistogramIdType.requestDuration:
+        queryBuilder = averageRequestDurationQuery(
+          this.clickHouseService.knex,
+          { projectId, bucketSize, startDate, endDate }
+        );
         break;
-      case ProjectMetricType.duration:
-        aggType = "avg";
-        aggField = "calculated.duration";
+      case HistogramIdType.successErrorRate:
+        queryBuilder = successErrorRateQuery(this.clickHouseService.knex, {
+          projectId,
+          bucketSize,
+          startDate,
+          endDate,
+        });
         break;
-      case ProjectMetricType.erroneousRequests:
-        aggType = "value_count";
-        aggField = "timestamp";
-        body = body.notFilter("term", "response.status", 200);
-        break;
+      default:
+        throw new BadRequestException(
+          `HistogramId ${histogramId} is not supported`
+        );
     }
 
-    body = body.aggregation(
-      "date_histogram",
-      "timestamp",
-      {
-        interval: bucketSize,
-        extended_bounds: {
-          min: startDate.toISOString(),
-          max: endDate.toISOString(),
-        },
-      },
-      "metrics_over_time",
-      (agg) => agg.aggregation(aggType, aggField, "metric_value")
-    );
+    const result = await queryBuilder;
+    return { data: result };
+  }
 
-    body = body.size(0);
+  async getProjectMetricDelta(
+    projectId: string,
+    startDate: Date,
+    endDate: Date,
+    metric: DeltaMetricType
+  ): Promise<ProjectMetricDeltaResult> {
+    let selectStatement: string;
 
-    const result = await this.openSearchService.client.search({
-      index: this.openSearchService.requestsIndexAlias,
-      body: body.build(),
-    });
+    switch (metric) {
+      case DeltaMetricType.AverageRequestDuration:
+        selectStatement = /*sql*/ `
+          avgIf(r.duration, r.isError = false AND r.requestTimestamp >= currentStartDate AND r.responseTimestamp <= currentEndDate) AS currentValue,
+          avgIf(r.duration, r.isError = false AND r.requestTimestamp >= previousStartDate AND r.responseTimestamp <= previousEndDate) AS previousValue
+        `;
+        break;
+      case DeltaMetricType.TotalRequests:
+        selectStatement = /*sql*/ `
+          countIf(r.requestTimestamp >= currentStartDate AND r.responseTimestamp <= currentEndDate) AS currentValue,
+          countIf(r.requestTimestamp >= previousStartDate AND r.responseTimestamp <= previousEndDate) AS previousValue
+        `;
+        break;
+      case DeltaMetricType.TotalCost:
+        selectStatement = /*sql*/ `
+          sumIf(r.totalCost, r.requestTimestamp >= currentStartDate AND r.responseTimestamp <= currentEndDate) AS currentValue,
+          sumIf(r.totalCost, r.requestTimestamp >= previousStartDate AND r.responseTimestamp <= previousEndDate) AS previousValue
+        `;
+        break;
+      case DeltaMetricType.SuccessResponses:
+        selectStatement = /*sql*/ `
+          countIf(r.isError = false AND r.requestTimestamp >= currentStartDate AND r.responseTimestamp <= currentEndDate) AS currentSuccess,
+          countIf(r.isError = false AND r.requestTimestamp >= previousStartDate AND r.responseTimestamp <= previousEndDate) AS previousSuccess,
+          countIf(r.requestTimestamp >= currentStartDate AND r.responseTimestamp <= currentEndDate) AS currentTotal,
+          countIf(r.requestTimestamp >= previousStartDate AND r.responseTimestamp <= previousEndDate) AS previousTotal,
+          if(currentTotal = 0, 0, (currentSuccess / currentTotal)) as currentValue,
+          if(previousTotal = 0, 0, (previousSuccess / previousTotal)) as previousValue
+        `;
+        break;
+      default:
+        throw new BadRequestException(`Metric ${metric} is not supported`);
+    }
 
-    // Convert the response to the HistogramMetric format
-    const buckets = result.body.aggregations.metrics_over_time.buckets;
+    const query = /*sql*/ `
+      WITH (
+        parseDateTimeBestEffort('${startDate.toISOString()}') AS currentStartDate,
+        parseDateTimeBestEffort('${endDate.toISOString()}') AS currentEndDate,
+        datediff(second, currentStartDate, currentEndDate) AS diff,
+        subtractSeconds(currentStartDate, diff) AS previousStartDate,
+        subtractSeconds(currentEndDate, diff) AS previousEndDate
+      )
+      SELECT
+          ${selectStatement}
+      FROM
+          reports r
+      WHERE
+          projectId = '${projectId}'
+    `;
 
-    return buckets.map((bucket) => ({
-      date: bucket.key_as_string,
-      value: parseInt(bucket.metric_value.value || 0),
-    }));
+    try {
+      const result = await this.clickHouseService.knex.raw(query);
+      const data = result[0][0];
+
+      return {
+        currentValue: data.currentValue,
+        previousValue: data.previousValue,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException(`Failed to get metric delta`);
+    }
   }
 }

@@ -18,13 +18,26 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class PromptExecutionMetadataDto {
   @ApiProperty({
-    description: "LLM provider",
+    description: "Model",
     type: String,
-    enum: Provider,
   })
-  @IsEnum(Provider)
-  provider: Provider;
+  @IsString()
+  model: string;
 
+  @ApiProperty({
+    description: "Model Author",
+    type: String,
+  })
+  @IsString()
+  modelAuthor: string;
+
+  @ApiProperty({
+    description: "Execution provider",
+    type: String,
+  })
+  @IsString()
+  provider: string
+  
   @ApiProperty({
     description: "Client name identifier",
     type: String,
@@ -150,4 +163,19 @@ export class CreateReportDto<
   @IsOptional()
   @IsBoolean()
   cacheHit?: boolean = null;
+}
+
+export class ExecutionCalculatedDto {
+  promptCost: number;
+  completionCost: number;
+  totalCost: number;
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
+  duration: number;
+}
+
+export class CreateReportV3Dto extends CreateReportDto {
+  @ValidateNested({ each: true })
+  calculated: ExecutionCalculatedDto;
 }

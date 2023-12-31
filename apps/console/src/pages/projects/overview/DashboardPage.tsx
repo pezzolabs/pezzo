@@ -36,15 +36,12 @@ export const DashboardPage = () => {
           </div>
         </div>
       </div>
-
-      <div className="container p-6">
-        <div className="mb-6">
-          <StatisticsSection />
-        </div>
+      <div className="container p-6 space-y-6">
+        <StatisticsSection />
         <div className="grid grid-cols-12 gap-6">
           <Card className="col-span-6 p-6">
             <div className="mb-4 text-muted-foreground">
-              Requests/Errors (Total)
+              Success/Error (Total)
             </div>
             <div className="h-[360px]">
               <ProjectMetricControlsProvider>
@@ -64,6 +61,18 @@ export const DashboardPage = () => {
             </div>
           </Card>
         </div>
+        {/* <div className="grid grid-cols-12 gap-6">
+          <Card className="col-span-12 p-6">
+            <div className="mb-4 text-muted-foreground">
+              Model Usage
+            </div>
+            <div className="h-[360px]">
+              <ProjectMetricControlsProvider>
+                <ModelUsageChart />
+              </ProjectMetricControlsProvider>
+            </div>
+          </Card>
+        </div> */}
       </div>
     </TimeframeSelectorProvider>
   );

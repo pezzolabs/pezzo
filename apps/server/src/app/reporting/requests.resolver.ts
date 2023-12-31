@@ -11,9 +11,11 @@ import { PinoLogger } from "../logger/pino-logger";
 import { CurrentUser } from "../identity/current-user.decorator";
 import { RequestUser } from "../identity/users.types";
 import { isOrgMemberOrThrow } from "../identity/identity.utils";
-import { GetRequestsInput } from "./inputs/get-requests.input";
+import { GetReportInput, GetRequestsInput } from "./inputs/get-requests.input";
 import { ProjectsService } from "../identity/projects.service";
-import { RequestReportResult } from "./object-types/request-report-result.model";
+import { PaginatedReportsResult } from "./object-types/request-report-result.model";
+import GraphQLJSON from "graphql-type-json";
+import { SerializedReport } from "@pezzo/types";
 
 @UseGuards(AuthGuard)
 @Resolver(() => RequestReport)
@@ -24,12 +26,13 @@ export class RequestReportsResolver {
     private readonly logger: PinoLogger
   ) {}
 
-  @Query(() => RequestReportResult)
-  async paginatedRequests(
-    @Args("data") data: GetRequestsInput,
+  @Query(() => GraphQLJSON)
+  async report(
+    @Args("data") data: GetReportInput,
     @CurrentUser() user: RequestUser
-  ): Promise<RequestReportResult> {
+  ): Promise<SerializedReport> {
     let project;
+    
     try {
       project = await this.projectsService.getProjectById(data.projectId);
 
@@ -43,27 +46,38 @@ export class RequestReportsResolver {
       throw new InternalServerErrorException();
     }
 
-    try {
-      const response = await this.reportingService.getReports({
-        projectId: data.projectId,
-        organizationId: project.organizationId,
-        offset: data.offset,
-        limit: data.limit,
-        filters: data.filters,
-        sort: data.sort,
-      });
+    const result = await this.reportingService.getReportById(data.reportId, data.projectId);
+    return result;
+  }
 
-      return {
-        data: response.body.hits.hits.map((hit) => hit._source),
-        pagination: {
-          offset: data.offset,
-          limit: data.limit,
-          total: response.body.hits.total.value,
-        },
-      };
+  @Query(() => PaginatedReportsResult)
+  async paginatedRequests(
+    @Args("data") data: GetRequestsInput,
+    @CurrentUser() user: RequestUser
+  ): Promise<PaginatedReportsResult> {
+    let project;
+
+    try {
+      project = await this.projectsService.getProjectById(data.projectId);
+
+      if (!project) {
+        throw new NotFoundException();
+      }
+
+      isOrgMemberOrThrow(user, project.organizationId);
     } catch (error) {
-      this.logger.error(error, "Error getting reports from OpenSearch");
+      this.logger.error(error, "Error getting projects");
       throw new InternalServerErrorException();
     }
+
+    const result = await this.reportingService.getReports({
+      projectId: data.projectId,
+      offset: data.offset,
+      limit: data.limit,
+      filters: data.filters,
+      sort: data.sort,
+    });
+
+    return result;
   }
 }

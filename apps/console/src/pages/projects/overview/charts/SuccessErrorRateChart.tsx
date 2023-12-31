@@ -9,10 +9,8 @@ import {
   BarChart,
 } from "recharts";
 import colors from "tailwindcss/colors";
-import { useProjectMetricHistogram } from "~/graphql/hooks/queries";
 import {
-  HistogramMetric,
-  ProjectMetricType,
+  HistogramIdType,
 } from "~/@generated/graphql/graphql";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
 import { useTimeframeSelector } from "~/lib/providers/TimeframeSelectorContext";
@@ -20,21 +18,8 @@ import { useProjectMetricControls } from "./ProjectMetricContext";
 import { TooltipWithTimestamp } from "./TooltipWithTimestamp";
 import { useFiltersAndSortParams } from "~/lib/hooks/useFiltersAndSortParams";
 import { Loader2Icon } from "lucide-react";
-
-const histogramToChartData = (
-  totalRequests: HistogramMetric[],
-  erroneousRequests: HistogramMetric[]
-) => {
-  return totalRequests.map((entry) => {
-    const errorEntry = erroneousRequests.find((e) => e.date === entry.date);
-
-    return {
-      timestamp: entry.date,
-      requests: entry.value,
-      errors: errorEntry ? errorEntry.value : 0,
-    };
-  });
-};
+import { useGenericProjectMetricHistogram } from "~/graphql/hooks/queries";
+import { MetricsTypes } from "@pezzo/common";
 
 export const SuccessErrorRateChart = () => {
   const { startDate, endDate } = useTimeframeSelector();
@@ -42,10 +27,10 @@ export const SuccessErrorRateChart = () => {
   const { filters } = useFiltersAndSortParams();
 
   const { project } = useCurrentProject();
-  const totalRequestsHistogram = useProjectMetricHistogram(
+  const histogram = useGenericProjectMetricHistogram<MetricsTypes.SuccessErrorRateResultDataType>(
     {
       projectId: project?.id,
-      metric: ProjectMetricType.Requests,
+      histogramId: HistogramIdType.SuccessErrorRate,
       bucketSize: controls.bucketSize,
       startDate: startDate,
       endDate: endDate,
@@ -56,22 +41,8 @@ export const SuccessErrorRateChart = () => {
     }
   );
 
-  const erroneousRequestsHistogram = useProjectMetricHistogram(
-    {
-      projectId: project?.id,
-      metric: ProjectMetricType.ErroneousRequests,
-      bucketSize: controls.bucketSize,
-      startDate: startDate,
-      endDate: endDate,
-    },
-    {
-      enabled: !!project && !!startDate && !!endDate,
-    }
-  );
-
   if (
-    totalRequestsHistogram.isLoading ||
-    erroneousRequestsHistogram.isLoading
+    histogram.isLoading
   ) {
     return (
       <div
@@ -89,10 +60,7 @@ export const SuccessErrorRateChart = () => {
     );
   }
 
-  const data = histogramToChartData(
-    totalRequestsHistogram.histogram,
-    erroneousRequestsHistogram.histogram
-  );
+  const data = histogram.histogram.data;
 
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -117,24 +85,19 @@ export const SuccessErrorRateChart = () => {
         <Legend
           payload={[
             {
-              id: "requests",
-              value: `Requests`,
-              color: colors.neutral["400"],
+              id: "success",
+              value: `Success`,
+              color: colors.emerald["400"],
             },
             {
-              id: "errors",
-              value: `Errors`,
+              id: "error",
+              value: `Error`,
               color: colors.red["400"],
             },
           ]}
         />
-        <Bar dataKey="errors" stackId="a" fill={colors.red["400"]} />
-        <Bar
-          dataKey="requests"
-          stackId="a"
-          stroke={colors.neutral["700"]}
-          fill={colors.neutral["800"]}
-        />
+        <Bar name="Error" dataKey="error" stackId="a" fill={colors.red["400"]} />
+        <Bar name="Success" dataKey="success" stackId="a" fill={colors.emerald["400"]} />
       </BarChart>
     </ResponsiveContainer>
   );

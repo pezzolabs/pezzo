@@ -1,13 +1,19 @@
 import { Field, ObjectType } from "@nestjs/graphql";
-import { RequestReport } from "./request-report.model";
 import { Pagination } from "../../../lib/pagination";
-import { PaginationResult } from "../../../lib/ts-helpers";
+import { GraphQLJSONObject } from "graphql-type-json";
+import { SerializedPaginatedReport, SerializedReport } from "@pezzo/types";
 
 @ObjectType()
-export class RequestReportResult implements PaginationResult<RequestReport> {
-  @Field(() => [RequestReport], { nullable: false })
-  data: RequestReport[];
+export class PaginatedReportsResult {
+  @Field(() => [GraphQLJSONObject], { nullable: false })
+  data: SerializedPaginatedReport[];
 
   @Field(() => Pagination, { nullable: false })
   pagination: Pagination;
+}
+
+@ObjectType()
+export class ReportResult {
+  @Field(() => GraphQLJSONObject, { nullable: false })
+  data: SerializedReport;
 }

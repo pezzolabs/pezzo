@@ -2,19 +2,6 @@ include:
   - ./docker-compose.infra.yaml
 
 services:
-  pezzo-server-migrate:
-    image: ghcr.io/pezzolabs/pezzo/server:latest
-    build:
-      context: .
-      dockerfile: ./apps/server/Dockerfile
-    entrypoint: /bin/sh
-    command: -c "npx prisma migrate deploy"
-    environment:
-      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/pezzo
-    depends_on:
-      postgres:
-        condition: service_healthy
-
   pezzo-server:
     image: ghcr.io/pezzolabs/pezzo/server:latest
     build:
@@ -29,7 +16,7 @@ services:
     environment:
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/pezzo
       - SUPERTOKENS_CONNECTION_URI=http://supertokens:3567
-      - OPENSEARCH_URL=http://opensearch-node1:9200
+      - CLICKHOUSE_HOST=clickhouse
       - REDIS_URL=redis://redis-stack-server:6379
       - KMS_LOCAL_ENDPOINT=http://local-kms:9981
     ports:
@@ -41,7 +28,7 @@ services:
         condition: service_healthy
       supertokens:
         condition: service_healthy
-      opensearch-node1:
+      clickhouse:
         condition: service_healthy
       redis-stack-server:
         condition: service_healthy

@@ -7,39 +7,34 @@ export type FilterDefinition = {
 
 export const FILTER_FIELDS_LIST: FilterDefinition[] = [
   {
-    value: "calculated.duration",
+    value: "duration",
     type: "number",
     label: "Duration (ms)",
   },
   {
-    value: "metadata.environment",
+    value: "environment",
     type: "string",
     label: "Environment",
   },
   {
-    value: "response.status",
+    value: "responseStatusCode",
     type: "number",
     label: "Status",
   },
   {
-    value: "request.timestamp",
+    value: "timestamp",
     type: "date",
     label: "Timestamp",
   },
   {
-    value: "calculated.totalCost",
+    value: "totalCost",
     type: "number",
     label: "Total Cost",
   },
   {
-    value: "calculated.totalTokens",
+    value: "totalTokens",
     type: "number",
     label: "Total Tokens",
-  },
-  {
-    value: "property",
-    type: "string",
-    label: "Custom Property",
   },
 ];
 
@@ -80,7 +75,7 @@ export const STRING_FILTER_OPERATORS: { value: string; label: string }[] = [
     label: "!=",
   },
   {
-    value: "contains",
+    value: "like",
     label: "LIKE",
   },
 ];

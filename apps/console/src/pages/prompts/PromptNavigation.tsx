@@ -1,5 +1,5 @@
 import { cn } from "@pezzo/ui/utils";
-import { BarChart4, BoxIcon, GitCommitIcon, PencilIcon } from "lucide-react";
+import { BoxIcon, GitCommitIcon, PencilIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
@@ -39,13 +39,7 @@ export const PromptNavigation = () => {
       icon: GitCommitIcon,
       href: `${basePath}/versions`,
       isActive: (href) => window.location.pathname === href,
-    },
-    {
-      name: "Metrics",
-      icon: BarChart4,
-      href: `${basePath}/metrics`,
-      isActive: (href) => window.location.pathname === href,
-    },
+    }
   ];
 
   return (

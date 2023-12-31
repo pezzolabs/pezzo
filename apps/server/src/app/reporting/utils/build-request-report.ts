@@ -47,6 +47,8 @@ const buildOpenAIReport = (
     promptCost: parseFloat(promptCost.toFixed(6)),
     completionCost: parseFloat(completionCost.toFixed(6)),
     totalCost: parseFloat((promptCost + completionCost).toFixed(6)),
+    promptTokens: usage.prompt_tokens,
+    completionTokens: usage.completion_tokens,
     totalTokens,
     duration: requestDuration,
   };

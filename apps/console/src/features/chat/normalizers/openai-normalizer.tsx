@@ -60,8 +60,6 @@ export const normalizeOpenAIChatResponse = (
 ): Chat => {
   const messages: ChatMessage[] = [];
 
-  console.log("request", request);
-
   // First, populate messages from the request
   request.messages.forEach((message) => {
     if (Array.isArray(message.content)) {

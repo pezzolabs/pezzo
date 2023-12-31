@@ -13,7 +13,7 @@ export const useFiltersAndSortParams = () => {
   );
 
   useEffect(() => {
-    if (!sort) setSearchParams({ sort: "request.timestamp:desc" });
+    if (!sort) setSearchParams({ sort: "timestamp:desc" });
   }, [setSearchParams, sort]);
 
   const addFilter = useCallback(

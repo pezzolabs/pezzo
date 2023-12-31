@@ -6,7 +6,7 @@ export enum FilterOperator {
   neq = "neq",
   in = "in",
   nin = "nin",
-  contains = "contains",
+  like = "like",
   gt = "gt",
   gte = "gte",
   lt = "lt",
@@ -15,6 +15,31 @@ export enum FilterOperator {
 registerEnumType(FilterOperator, {
   name: "FilterOperator",
 });
+
+export const getSQLOperatorByFilterOperator = (operator: FilterOperator): string => {
+  switch (operator) {
+    case FilterOperator.eq:
+      return "=";
+    case FilterOperator.neq:
+      return "!=";
+    case FilterOperator.in:
+      return "IN";
+    case FilterOperator.nin:
+      return "NOT IN";
+    case FilterOperator.like:
+      return "LIKE";
+    case FilterOperator.gt:
+      return ">";
+    case FilterOperator.gte:
+      return ">=";
+    case FilterOperator.lt:
+      return "<";
+    case FilterOperator.lte:
+      return "<=";
+    default:
+      throw new Error(`Unknown filter operator: ${operator}`);
+  }
+}
 
 @InputType()
 export class FilterInput {

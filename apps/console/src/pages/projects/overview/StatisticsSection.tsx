@@ -6,7 +6,7 @@ export const StatisticsSection = () => {
   const metrics = useProjectOverviewMetrics();
 
   return (
-    <div className="mb-4 grid grid-cols-12 gap-6">
+    <div className="grid grid-cols-12 gap-6">
       <Card className="col-span-3 p-6">
         <StatisticBox
           title="Requests"
@@ -43,7 +43,8 @@ export const StatisticsSection = () => {
           currentValue={metrics?.successRate?.data?.currentValue}
           previousValue={metrics?.successRate?.data?.previousValue}
           numberSuffix="%"
-          numberSeparator=""
+          numberSeparator="."
+          precision={2}
           loading={metrics?.successRate?.isLoading}
         />
       </Card>

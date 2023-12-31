@@ -136,7 +136,7 @@ npm install
 
 ### Spin up infrastructure dependencies via Docker Compose
 
-Pezzo is entirely cloud-native and relies solely on open-source technologies such as [PostgreSQL](https://www.postgresql.org/), [OpenSearch](https://github.com/opensearch-project/OpenSearch), [Redis](https://github.com/redis/redis) and [Supertokens](https://supertokens.com/).
+Pezzo is entirely cloud-native and relies solely on open-source technologies such as [PostgreSQL](https://www.postgresql.org/), [ClickHouse](https://github.com/ClickHouse/ClickHouse), [Redis](https://github.com/redis/redis) and [Supertokens](https://supertokens.com/).
 
 You can run these dependencies via Docker Compose:
 

@@ -81,7 +81,7 @@
       "options": {},
       "configurations": {
         "local": {
-          "tags": ["pezzolabs/pezzo/proxy"],
+          "tags": ["ghcr.io/pezzolabs/pezzo/proxy"],
           "push": false
         }
       }
