@@ -49,7 +49,7 @@ function generatePackageJson() {
     "prisma",
     "prisma-nestjs-graphql",
     "pino-pretty",
-    "mysql2"
+    "mysql2",
   ];
   const dependencies = implicitDeps.reduce((acc, dep) => {
     acc[dep] = packageJson.dependencies[dep];
