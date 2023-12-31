@@ -6,3 +6,4 @@
 libs/common/src/version.json
 **/.next
 /docs
+volumes

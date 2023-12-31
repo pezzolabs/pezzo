@@ -171,9 +171,9 @@ export class ReportingService {
     query = query.limit(size).offset(offset);
 
     if (sort) {
-      query.orderBy(sort.field, sort.order)
+      query.orderBy(sort.field, sort.order);
     } else {
-      query.orderBy("timestamp", "desc")
+      query.orderBy("timestamp", "desc");
     }
 
     try {

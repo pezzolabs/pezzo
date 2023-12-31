@@ -45,7 +45,7 @@ export class ClickHouseService implements OnModuleInit {
         user: username,
         password,
         database,
-        timezone: "Z"
+        timezone: "Z",
       },
     });
 

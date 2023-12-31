@@ -39,7 +39,7 @@ export const PromptNavigation = () => {
       icon: GitCommitIcon,
       href: `${basePath}/versions`,
       isActive: (href) => window.location.pathname === href,
-    }
+    },
   ];
 
   return (

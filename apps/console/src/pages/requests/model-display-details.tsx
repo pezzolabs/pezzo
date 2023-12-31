@@ -6,17 +6,17 @@ export const modelAuthorDetails = {
   openai: {
     image: OpenAILogo,
     name: "OpenAI",
-    color: "#3B976B"
+    color: "#3B976B",
   },
   mistral: {
     image: MistralLogo,
     name: "Mistral",
-    color: "#cf651f"
+    color: "#cf651f",
   },
   meta: {
     image: MetaLogo,
     name: "Meta",
-    color: "#579BE0"
+    color: "#579BE0",
   },
 };
 
@@ -26,9 +26,9 @@ export const getModelDisplayDetails = (modelAuthor: string) => {
   if (!authorDetails) {
     return {
       image: <span></span>,
-      name: "Unknown"
-    }
+      name: "Unknown",
+    };
   }
 
   return authorDetails;
-}
+};

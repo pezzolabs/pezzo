@@ -40,9 +40,7 @@ export interface SerializedReport
   cacheHit: boolean;
 }
 
-export const serializeReport = (
-  doc: ReportSchema
-): SerializedReport => {
+export const serializeReport = (doc: ReportSchema): SerializedReport => {
   return {
     ...doc,
     requestBody: JSON.parse(doc.requestBody),
@@ -52,7 +50,6 @@ export const serializeReport = (
     cacheHit: doc.cacheHit === 1,
   };
 };
-
 
 export interface PaginatedReportsSchema {
   id: string;
@@ -70,7 +67,8 @@ export interface PaginatedReportsSchema {
   promptId: string;
 }
 
-export interface SerializedPaginatedReport extends Omit<PaginatedReportsSchema, "cacheEnabled" | "cacheHit"> {
+export interface SerializedPaginatedReport
+  extends Omit<PaginatedReportsSchema, "cacheEnabled" | "cacheHit"> {
   cacheEnabled: boolean;
   cacheHit: boolean;
 }

@@ -1,5 +1,8 @@
 import { ProjectMetricHistogramBucketSize } from "../inputs/get-project-metrics.input";
-import { generateBucketsSubquery, timePropertiesFromBucketSize } from "./queries.utils";
+import {
+  generateBucketsSubquery,
+  timePropertiesFromBucketSize,
+} from "./queries.utils";
 import { Knex } from "knex";
 
 export const averageRequestDurationQuery = (
@@ -28,7 +31,11 @@ export const averageRequestDurationQuery = (
     })
     .from("buckets as b")
     .leftJoin("reports as r", (join) =>
-      join.on(knex.raw(`${timeProps.roundFn}(r.requestTimestamp) = b.timestamp AND r."projectId" = '${projectId}'`))
+      join.on(
+        knex.raw(
+          `${timeProps.roundFn}(r.requestTimestamp) = b.timestamp AND r."projectId" = '${projectId}'`
+        )
+      )
     )
     .groupBy("b.timestamp")
     .orderBy("b.timestamp");

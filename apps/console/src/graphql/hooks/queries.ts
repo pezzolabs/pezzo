@@ -18,7 +18,7 @@ import {
   GetProjectMetricDeltaQueryVariables,
   GetProjectMetricDeltaQuery,
   GetReportQuery,
-  GetReportQueryVariables
+  GetReportQueryVariables,
 } from "~/@generated/graphql/graphql";
 import { GraphQLErrorResponse } from "../types";
 import { GET_PROMPT, GET_PROMPT_VERSION } from "../definitions/queries/prompts";
@@ -141,10 +141,7 @@ export const useGetRequestReports = (
 
 export const useReport = (
   data: GetReportQueryVariables["data"],
-  options: UseQueryOptions<
-    GetReportQuery,
-    GraphQLErrorResponse
-  > = {}
+  options: UseQueryOptions<GetReportQuery, GraphQLErrorResponse> = {}
 ) => {
   const result = useQuery({
     queryKey: ["report", data.reportId],
@@ -155,7 +152,7 @@ export const useReport = (
     ...options,
   });
 
-  return { ...result, report: result.data?.report as SerializedReport};
+  return { ...result, report: result.data?.report as SerializedReport };
 };
 
 export const useGenericProjectMetricHistogram = <T>(
@@ -174,7 +171,10 @@ export const useGenericProjectMetricHistogram = <T>(
     ...options,
   });
 
-  return { ...result, histogram: result.data?.genericProjectMetricHistogram as { data: T }};
+  return {
+    ...result,
+    histogram: result.data?.genericProjectMetricHistogram as { data: T },
+  };
 };
 
 export const useProjctMetricDelta = (

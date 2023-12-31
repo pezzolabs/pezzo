@@ -14,9 +14,7 @@ import { useProjectMetricControls } from "./ProjectMetricContext";
 import { TooltipWithTimestamp } from "./TooltipWithTimestamp";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
 import { useGenericProjectMetricHistogram } from "~/graphql/hooks/queries";
-import {
-  HistogramIdType,
-} from "~/@generated/graphql/graphql";
+import { HistogramIdType } from "~/@generated/graphql/graphql";
 import { useFiltersAndSortParams } from "~/lib/hooks/useFiltersAndSortParams";
 import { Loader2Icon } from "lucide-react";
 import { MetricsTypes } from "@pezzo/common";
@@ -27,19 +25,20 @@ export const ExecutionTimeChart = () => {
   const controls = useProjectMetricControls();
   const { filters } = useFiltersAndSortParams();
 
-  const durationHistogram = useGenericProjectMetricHistogram<MetricsTypes.ExeceutionTypeChartResultDataType>(
-    {
-      projectId: project?.id,
-      histogramId: HistogramIdType.RequestDuration,
-      bucketSize: controls.bucketSize,
-      startDate: startDate,
-      endDate: endDate,
-      filters,
-    },
-    {
-      enabled: !!project && !!startDate && !!endDate,
-    }
-  );
+  const durationHistogram =
+    useGenericProjectMetricHistogram<MetricsTypes.ExeceutionTypeChartResultDataType>(
+      {
+        projectId: project?.id,
+        histogramId: HistogramIdType.RequestDuration,
+        bucketSize: controls.bucketSize,
+        startDate: startDate,
+        endDate: endDate,
+        filters,
+      },
+      {
+        enabled: !!project && !!startDate && !!endDate,
+      }
+    );
 
   if (durationHistogram.isLoading) {
     return (
@@ -58,8 +57,10 @@ export const ExecutionTimeChart = () => {
     );
   }
 
-
-  const data = durationHistogram.histogram.data.map((d) => ({ timestamp: d.timestamp, value: d.value }));
+  const data = durationHistogram.histogram.data.map((d) => ({
+    timestamp: d.timestamp,
+    value: d.value,
+  }));
 
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -85,7 +86,9 @@ export const ExecutionTimeChart = () => {
           cursor={{ opacity: 0.2 }}
           content={TooltipWithTimestamp}
           formatter={(value, key) =>
-            key !== "value" ? value : `${((value as number) / 1000).toFixed(2)}s`
+            key !== "value"
+              ? value
+              : `${((value as number) / 1000).toFixed(2)}s`
           }
         />
         <Legend

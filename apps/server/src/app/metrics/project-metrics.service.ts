@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from "@nestjs/common";
 import {
   DeltaMetricType,
   HistogramIdType,
@@ -16,9 +20,7 @@ import { successErrorRateQuery } from "./queries/success-error-rate-query";
 
 @Injectable()
 export class ProjectMetricsService {
-  constructor(
-    private clickHouseService: ClickHouseService
-  ) {}
+  constructor(private clickHouseService: ClickHouseService) {}
 
   async getGenericHistogram(
     projectId: string,

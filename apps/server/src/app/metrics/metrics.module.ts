@@ -8,10 +8,6 @@ import { ClickhHouseModule } from "../clickhouse/clickhouse.module";
 
 @Module({
   imports: [IdentityModule, PromptsModule, ClickhHouseModule],
-  providers: [
-    ProjectMetricsResolver,
-    PrismaService,
-    ProjectMetricsService,
-  ],
+  providers: [ProjectMetricsResolver, PrismaService, ProjectMetricsService],
 })
 export class MetricsModule {}

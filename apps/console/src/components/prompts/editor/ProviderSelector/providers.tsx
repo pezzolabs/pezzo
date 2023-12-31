@@ -9,13 +9,7 @@ import AnthropicLogo from "~/assets/providers/anthropic-logo.png";
 
 export const providersList: ProviderProps[] = [
   {
-    image: (
-      <img
-        alt="OpenAI"
-        src={OpenAILogo}
-        className="w-6 rounded-sm"
-      />
-    ),
+    image: <img alt="OpenAI" src={OpenAILogo} className="w-6 rounded-sm" />,
     value: PromptService.OpenAiChatCompletion,
     label: promptProvidersMapping[PromptService.OpenAiChatCompletion].name,
   },
@@ -32,11 +26,7 @@ export const providersList: ProviderProps[] = [
   },
   {
     image: (
-      <img
-        alt="Anthropic"
-        src={AnthropicLogo}
-        className=" w-6 rounded-sm"
-      />
+      <img alt="Anthropic" src={AnthropicLogo} className=" w-6 rounded-sm" />
     ),
     value: PromptService.AnthropicCompletion,
     label: promptProvidersMapping[PromptService.AnthropicCompletion].name,

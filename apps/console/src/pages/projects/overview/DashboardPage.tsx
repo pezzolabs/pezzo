@@ -36,7 +36,7 @@ export const DashboardPage = () => {
           </div>
         </div>
       </div>
-      <div className="container p-6 space-y-6">
+      <div className="container space-y-6 p-6">
         <StatisticsSection />
         <div className="grid grid-cols-12 gap-6">
           <Card className="col-span-6 p-6">

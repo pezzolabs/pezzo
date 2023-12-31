@@ -27,7 +27,7 @@ export class ModelUsageHistogramValue {
 
   @Field(() => String, { nullable: false })
   modelAuthor: string;
- 
+
   @Field(() => Number, { nullable: false })
   value: number;
 }
@@ -36,7 +36,7 @@ export class ModelUsageHistogramValue {
 export class ModelUsageHistogramBucket {
   @Field(() => String, { nullable: false })
   timestamp: string;
- 
+
   @Field(() => [ModelUsageHistogramValue], { nullable: false })
   values: ModelUsageHistogramValue[]; // Value for the metric at that date
 }

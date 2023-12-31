@@ -9,9 +9,7 @@ import {
   BarChart,
 } from "recharts";
 import colors from "tailwindcss/colors";
-import {
-  HistogramIdType,
-} from "~/@generated/graphql/graphql";
+import { HistogramIdType } from "~/@generated/graphql/graphql";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
 import { useTimeframeSelector } from "~/lib/providers/TimeframeSelectorContext";
 import { useProjectMetricControls } from "./ProjectMetricContext";
@@ -27,23 +25,22 @@ export const SuccessErrorRateChart = () => {
   const { filters } = useFiltersAndSortParams();
 
   const { project } = useCurrentProject();
-  const histogram = useGenericProjectMetricHistogram<MetricsTypes.SuccessErrorRateResultDataType>(
-    {
-      projectId: project?.id,
-      histogramId: HistogramIdType.SuccessErrorRate,
-      bucketSize: controls.bucketSize,
-      startDate: startDate,
-      endDate: endDate,
-      filters,
-    },
-    {
-      enabled: !!project && !!startDate && !!endDate,
-    }
-  );
+  const histogram =
+    useGenericProjectMetricHistogram<MetricsTypes.SuccessErrorRateResultDataType>(
+      {
+        projectId: project?.id,
+        histogramId: HistogramIdType.SuccessErrorRate,
+        bucketSize: controls.bucketSize,
+        startDate: startDate,
+        endDate: endDate,
+        filters,
+      },
+      {
+        enabled: !!project && !!startDate && !!endDate,
+      }
+    );
 
-  if (
-    histogram.isLoading
-  ) {
+  if (histogram.isLoading) {
     return (
       <div
         style={{
@@ -96,8 +93,18 @@ export const SuccessErrorRateChart = () => {
             },
           ]}
         />
-        <Bar name="Error" dataKey="error" stackId="a" fill={colors.red["400"]} />
-        <Bar name="Success" dataKey="success" stackId="a" fill={colors.emerald["400"]} />
+        <Bar
+          name="Error"
+          dataKey="error"
+          stackId="a"
+          fill={colors.red["400"]}
+        />
+        <Bar
+          name="Success"
+          dataKey="success"
+          stackId="a"
+          fill={colors.emerald["400"]}
+        />
       </BarChart>
     </ResponsiveContainer>
   );

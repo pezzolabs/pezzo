@@ -10,7 +10,7 @@ services:
     command: -c "npx knex migrate:latest"
     environment:
       CLICKHOUSE_HOST: clickhouse
-      CLICKHOUSE_PORT: '8123'
+      CLICKHOUSE_PORT: "8123"
       CLICKHOUSE_USER: default
       CLICKHOUSE_PASSWORD: default
     depends_on:
@@ -45,7 +45,7 @@ services:
       - "9000:9000"
       - "9004:9004"
     healthcheck:
-      test: ["CMD-SHELL", "clickhouse-client --query \"SELECT 1\""]
+      test: ["CMD-SHELL", 'clickhouse-client --query "SELECT 1"']
       interval: 5s
       timeout: 5s
       retries: 3

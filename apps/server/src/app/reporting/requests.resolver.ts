@@ -32,7 +32,7 @@ export class RequestReportsResolver {
     @CurrentUser() user: RequestUser
   ): Promise<SerializedReport> {
     let project;
-    
+
     try {
       project = await this.projectsService.getProjectById(data.projectId);
 
@@ -46,7 +46,10 @@ export class RequestReportsResolver {
       throw new InternalServerErrorException();
     }
 
-    const result = await this.reportingService.getReportById(data.reportId, data.projectId);
+    const result = await this.reportingService.getReportById(
+      data.reportId,
+      data.projectId
+    );
     return result;
   }
 

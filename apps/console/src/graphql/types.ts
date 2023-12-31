@@ -1,6 +1,4 @@
-import {
-  Provider,
-} from "@pezzo/types";
+import { Provider } from "@pezzo/types";
 import { GraphQLError } from "graphql-request/build/esm/types";
 
 export interface GraphQLErrorResponse {

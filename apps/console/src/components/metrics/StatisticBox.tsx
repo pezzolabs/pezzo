@@ -26,7 +26,7 @@ interface Props {
 const getProperties = (
   currentValue: number,
   previousValue: number,
-  reverseColors: boolean,
+  reverseColors: boolean
 ) => {
   const diff = currentValue - previousValue;
   // Handle case where previousValue is 0

@@ -7,7 +7,7 @@ export type SuccessErrorRateResultDataType = {
   timestamp: string;
   success: number;
   error: number;
-  total: number; 
+  total: number;
 }[];
 
 export type ModelUsageResultDataType = {

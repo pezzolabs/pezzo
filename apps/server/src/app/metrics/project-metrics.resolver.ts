@@ -34,7 +34,8 @@ export class ProjectMetricsResolver {
     this.logger.assign({ data });
     this.logger.info("Getting project metric histogram");
 
-    const { projectId, histogramId, startDate, endDate, bucketSize, filters } = data;
+    const { projectId, histogramId, startDate, endDate, bucketSize, filters } =
+      data;
 
     const project = await this.prismaService.project.findUnique({
       where: {
@@ -75,7 +76,7 @@ export class ProjectMetricsResolver {
       projectId,
       startDate,
       endDate,
-      metric,
+      metric
     );
 
     return result;

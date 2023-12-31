@@ -1,5 +1,8 @@
 import { ProjectMetricHistogramBucketSize } from "../inputs/get-project-metrics.input";
-import { generateBucketsSubquery, timePropertiesFromBucketSize } from "./queries.utils";
+import {
+  generateBucketsSubquery,
+  timePropertiesFromBucketSize,
+} from "./queries.utils";
 import { Knex } from "knex";
 
 export const modelUsageQuery = (
@@ -30,14 +33,18 @@ export const modelUsageQuery = (
         NULL, 
         toJSONString(arrayReduce('sumMap', arrayMap((model, duration) -> map(model, duration), groupArray(r.model), groupArray(r.duration))))
        )
-    `)
+    `),
     })
     .from(bucketsSubquery)
     .leftJoin("reports as r", (join) =>
-      join.on(knex.raw(`${timeProps.roundFn}(r."request.timestamp") = s.timeframe AND r."projectId" = '${projectId}'`))
+      join.on(
+        knex.raw(
+          `${timeProps.roundFn}(r."request.timestamp") = s.timeframe AND r."projectId" = '${projectId}'`
+        )
+      )
     )
     .groupBy(["s.timeframe"])
-    .orderBy(["s.timeframe"])
+    .orderBy(["s.timeframe"]);
 
   return mainquery;
 };

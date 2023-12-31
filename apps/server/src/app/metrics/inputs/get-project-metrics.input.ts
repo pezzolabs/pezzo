@@ -7,7 +7,7 @@ export enum ProjectMetricType {
   duration = "duration",
   successfulRequests = "successfulRequests",
   erroneousRequests = "erroneousRequests",
-  model = "model"
+  model = "model",
 }
 
 registerEnumType(ProjectMetricType, {
@@ -104,7 +104,6 @@ export class GetProjectMetricHistogramInput extends BaseProjectMetricInput {
   metric: ProjectMetricType;
 }
 
-
 @InputType()
 export class GetProjectGenericHistogramInput extends BaseProjectMetricInput {
   @Field(() => HistogramIdType, { nullable: false })
@@ -112,8 +111,7 @@ export class GetProjectGenericHistogramInput extends BaseProjectMetricInput {
 }
 
 @InputType()
-export class GetProjectModelUsageHistogramInput extends BaseProjectMetricInput {
-}
+export class GetProjectModelUsageHistogramInput extends BaseProjectMetricInput {}
 
 @InputType()
 export class GetProjectMetricDeltaInput {

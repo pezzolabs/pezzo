@@ -36,8 +36,8 @@ export class PromptExecutionMetadataDto {
     type: String,
   })
   @IsString()
-  provider: string
-  
+  provider: string;
+
   @ApiProperty({
     description: "Client name identifier",
     type: String,

@@ -6,7 +6,10 @@ interface Props {
   responseBody: OpenAI.ChatCompletion;
 }
 
-export const RequestResponseViewJsonView = ({ requestBody, responseBody }: Props) => {
+export const RequestResponseViewJsonView = ({
+  requestBody,
+  responseBody,
+}: Props) => {
   return (
     <div className="flex flex-col gap-4">
       <div>

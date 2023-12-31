@@ -16,7 +16,9 @@ registerEnumType(FilterOperator, {
   name: "FilterOperator",
 });
 
-export const getSQLOperatorByFilterOperator = (operator: FilterOperator): string => {
+export const getSQLOperatorByFilterOperator = (
+  operator: FilterOperator
+): string => {
   switch (operator) {
     case FilterOperator.eq:
       return "=";
@@ -39,7 +41,7 @@ export const getSQLOperatorByFilterOperator = (operator: FilterOperator): string
     default:
       throw new Error(`Unknown filter operator: ${operator}`);
   }
-}
+};
 
 @InputType()
 export class FilterInput {
