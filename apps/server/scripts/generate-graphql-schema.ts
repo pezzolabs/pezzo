@@ -5,7 +5,7 @@ import { PrismaClient } from "@prisma/client";
 import supertokens from "supertokens-node";
 import { AppModule } from "../src/app/app.module";
 import { KafkaConsumerService, KafkaProducerService } from "@pezzo/kafka";
-import { OpenSearchService } from "../src/app/opensearch/opensearch.service";
+import { ClickHouseService } from "../src/app/clickhouse/clickhouse.service";
 import { RedisService } from "../src/app/redis/redis.service";
 
 // This script only runs in GitHub Actions
@@ -29,7 +29,7 @@ export default async function generateGraphQLSchema(): Promise<void> {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   KafkaProducerService.prototype.connect = async () => {};
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  OpenSearchService.prototype.onModuleInit = async () => {};
+  ClickHouseService.prototype.onModuleInit = async () => {};
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   RedisService.prototype.onModuleInit = async () => {};
 

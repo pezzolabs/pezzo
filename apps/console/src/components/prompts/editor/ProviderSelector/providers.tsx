@@ -3,19 +3,13 @@ import { promptProvidersMapping } from "@pezzo/types";
 import { PromptService } from "~/@generated/graphql/graphql";
 
 // Logos
-import OpenAILogo from "~/assets/providers/openai-logo.svg";
-import AzureOpenAILogo from "~/assets/providers/azure-logo.svg";
-import AnthropicLogo from "~/assets/providers/anthropic-logo.svg";
+import OpenAILogo from "~/assets/providers/openai-logo.png";
+import AzureOpenAILogo from "~/assets/providers/azure-logo.png";
+import AnthropicLogo from "~/assets/providers/anthropic-logo.png";
 
 export const providersList: ProviderProps[] = [
   {
-    image: (
-      <img
-        alt="OpenAI"
-        src={OpenAILogo}
-        className="w-6 rounded-sm bg-[#74AA9C] p-[2px]"
-      />
-    ),
+    image: <img alt="OpenAI" src={OpenAILogo} className="w-6 rounded-sm" />,
     value: PromptService.OpenAiChatCompletion,
     label: promptProvidersMapping[PromptService.OpenAiChatCompletion].name,
   },
@@ -24,7 +18,7 @@ export const providersList: ProviderProps[] = [
       <img
         alt="Azure OpenAI"
         src={AzureOpenAILogo}
-        className="w-6 rounded-sm bg-white p-[2px]"
+        className="w-6 rounded-sm"
       />
     ),
     value: PromptService.AzureOpenAiChatCompletion,
@@ -32,11 +26,7 @@ export const providersList: ProviderProps[] = [
   },
   {
     image: (
-      <img
-        alt="Anthropic"
-        src={AnthropicLogo}
-        className=" w-6 rounded-sm p-[2px]"
-      />
+      <img alt="Anthropic" src={AnthropicLogo} className=" w-6 rounded-sm" />
     ),
     value: PromptService.AnthropicCompletion,
     label: promptProvidersMapping[PromptService.AnthropicCompletion].name,

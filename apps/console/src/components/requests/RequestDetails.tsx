@@ -35,20 +35,16 @@ import { cn } from "@pezzo/ui/utils";
 import { normalizeOpenAIChatResponse } from "~/features/chat/normalizers/openai-normalizer";
 import { ChatView } from "~/features/chat/ChatView";
 import { useCopyToClipboard } from "usehooks-ts";
+import { ModelDetails } from "~/pages/requests/ModelDetails";
+import { useReport } from "~/graphql/hooks/queries";
+import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
+import OpenAI from "openai";
 
 type Mode = "chat" | "json";
 
 interface Props {
   disableCopy?: boolean;
   id: string;
-  request: ObservabilityRequest;
-  response: ObservabilityResponse;
-  provider: Provider;
-  metadata: ObservabilityReportMetadata;
-  properties: ObservabilityReportProperties;
-  calculated: Record<string, any>;
-  cacheEnabled: boolean;
-  cacheHit: boolean;
 }
 
 const getClientDisplayName = (client: string) => {
@@ -63,11 +59,15 @@ const getClientDisplayName = (client: string) => {
 };
 
 export const RequestDetails = (props: Props) => {
+  const { projectId } = useCurrentProject();
   const disableCopy = props.disableCopy || false;
-  const request = props.request as ObservabilityRequest<Provider.OpenAI>;
-  const response = props.response as ObservabilityResponse<Provider.OpenAI>;
-  const isSuccess = response.status >= 200 && response.status < 300;
-  const isError = !isSuccess;
+  const { report } = useReport(
+    { projectId, reportId: props.id },
+    { enabled: !!projectId && !!props.id }
+  );
+
+  const isSuccess = report.isError === false;
+  const isError = report.isError === true;
 
   const [selectedMode, setSelectedMode] = useState<Mode>(
     isSuccess ? "chat" : "json"
@@ -80,29 +80,23 @@ export const RequestDetails = (props: Props) => {
     trackEvent("prompt_test_display_mode_changed", { mode });
   };
 
-  if (props.provider !== Provider.OpenAI) {
-    return null;
-  }
-
   const clientString =
-    props.metadata.client && props.metadata.clientVersion
-      ? `${getClientDisplayName(props.metadata.client)} - v${
-          props.metadata.clientVersion
-        }`
+    report.client && report.clientVersion
+      ? `${getClientDisplayName(report.client)} - v${report.clientVersion}`
       : "Unknown";
 
   const listData = [
     {
       title: "Request ID",
-      description: props.id,
+      description: report.id,
     },
     {
       title: "Cache",
       description: (
         <div className="flex gap-1">
-          <Tag>{props.cacheEnabled ? "enabled" : "disabled"}</Tag>
+          <Tag>{report.cacheEnabled ? "enabled" : "disabled"}</Tag>
 
-          {props.cacheEnabled && <Tag>{props.cacheHit ? "hit" : "miss"}</Tag>}
+          {report.cacheEnabled && <Tag>{report.cacheHit ? "hit" : "miss"}</Tag>}
         </div>
       ),
     },
@@ -112,45 +106,46 @@ export const RequestDetails = (props: Props) => {
     },
     {
       title: "Provider",
-      description: props.provider,
+      description: <div className="font-mono">{report.provider}</div>,
     },
     {
       title: "Model",
-      description: request.body.model,
+      description: (
+        <ModelDetails model={report.model} modelAuthor={report.modelAuthor} />
+      ),
     },
     {
       title: "Tokens",
-      description:
-        response.status !== 200 ? (
-          "0"
-        ) : (
-          <div className="flex items-center gap-1">
-            <span>{props.calculated.totalTokens}</span>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <CoinsIcon className="h-4 w-4 opacity-70" />
-                </TooltipTrigger>
-                <TooltipContent side="left">
-                  <div className="flex flex-col gap-2">
-                    <div className="flex justify-between gap-4">
-                      <span className="font-semibold">Completion tokens:</span>{" "}
-                      <span>{response.body.usage?.completion_tokens}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="font-semibold">Prompt tokens:</span>
-                      <span> {response.body.usage?.prompt_tokens}</span>
-                    </div>
+      description: report.isError ? (
+        "0"
+      ) : (
+        <div className="flex items-center gap-1">
+          <span>{report.totalTokens}</span>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <CoinsIcon className="h-4 w-4 opacity-70" />
+              </TooltipTrigger>
+              <TooltipContent side="left">
+                <div className="flex flex-col gap-2">
+                  <div className="flex justify-between gap-4">
+                    <span className="font-semibold">Prompt tokens:</span>
+                    <span> {report.promptTokens}</span>
                   </div>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        ),
+                  <div className="flex justify-between gap-4">
+                    <span className="font-semibold">Completion tokens:</span>{" "}
+                    <span>{report.completionTokens}</span>
+                  </div>
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      ),
     },
     {
       title: "Cost",
-      description: `$${props.calculated?.totalCost?.toFixed(3) ?? 0}`,
+      description: `$${report?.totalCost?.toFixed(5) ?? 0}`,
     },
     {
       title: "Status",
@@ -167,7 +162,7 @@ export const RequestDetails = (props: Props) => {
           {isError ? (
             <>
               <CircleSlash className="h-4 w-4" />
-              <span>{response.status} Error</span>
+              <span>{report.responseStatusCode} Error</span>
             </>
           ) : (
             <>
@@ -180,25 +175,29 @@ export const RequestDetails = (props: Props) => {
     },
     {
       title: "Environment",
-      description: props.metadata.environment,
+      description: report.environment,
     },
     {
       title: "Duration",
-      description: ms(props.calculated.duration),
+      description: ms(report.duration),
     },
   ];
 
   const renderResponse = () => {
     if (selectedMode === "json") {
       return (
-        <RequestResponseViewJsonView request={request} response={response} />
+        <RequestResponseViewJsonView
+          requestBody={report.requestBody as OpenAI.ChatCompletionCreateParams}
+          responseBody={report.responseBody as OpenAI.ChatCompletion}
+        />
       );
     }
 
-    if (props.provider === Provider.OpenAI) {
-      const chat = normalizeOpenAIChatResponse(request.body, response.body);
-      return <ChatView chat={chat} />;
-    }
+    const chat = normalizeOpenAIChatResponse(
+      report.requestBody as OpenAI.ChatCompletionCreateParams,
+      report.responseBody as OpenAI.ChatCompletion
+    );
+    return <ChatView chat={chat} />;
   };
 
   return (
@@ -232,7 +231,7 @@ export const RequestDetails = (props: Props) => {
       </div>
 
       <div className="px-4">
-        {props.metadata?.isTestPrompt && (
+        {report.environment === "PLAYGROUND" && (
           <Alert className="my-4 border-blue-900 bg-blue-950/40 text-blue-500">
             <AlertDescription className="flex items-center gap-1">
               <InfoIcon className="h-4 w-4" />

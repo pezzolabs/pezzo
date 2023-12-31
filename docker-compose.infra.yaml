@@ -1,62 +1,54 @@
 version: "3"
 services:
-  opensearch-node1:
-    image: opensearchproject/opensearch:2.5.0
-    container_name: opensearch-node1
+  pezzo-clickhouse-migrate:
+    image: ghcr.io/pezzolabs/pezzo/server:latest
+    build:
+      context: .
+      dockerfile: ./apps/server/Dockerfile
+    entrypoint: /bin/sh
+    working_dir: /app/clickhouse
+    command: -c "./migrate.sh"
     environment:
-      - cluster.name=opensearch-cluster
-      - node.name=opensearch-node1
-      - discovery.type=single-node
-      - bootstrap.memory_lock=true
-      - "plugins.security.disabled=true"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
-    volumes:
-      - opensearch-data1:/usr/share/opensearch/data
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "curl --silent --fail localhost:9200/_cluster/health || exit 1",
-        ]
-      interval: 20s
-      timeout: 5s
-      retries: 10
-    ports:
-      - 9200:9200 # REST API
-      - 9600:9600 # Performance Analyzer
-    deploy:
-      resources:
-        limits:
-          memory: 3g
-
-  opensearch-dashboards:
-    image: opensearchproject/opensearch-dashboards:2.5.0
-    container_name: opensearch-dashboards
-    ports:
-      - 5601:5601
+      CLICKHOUSE_HOST: clickhouse
+      CLICKHOUSE_PORT: "8123"
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: default
     depends_on:
-      opensearch-node1:
+      clickhouse:
         condition: service_healthy
-    expose:
-      - "5601"
+
+  pezzo-prisma-migrate:
+    image: ghcr.io/pezzolabs/pezzo/server:latest
+    build:
+      context: .
+      dockerfile: ./apps/server/Dockerfile
+    entrypoint: /bin/sh
+    command: -c "npx prisma migrate deploy"
     environment:
-      - "DISABLE_SECURITY_DASHBOARDS_PLUGIN=true"
-      - "OPENSEARCH_HOSTS=http://opensearch-node1:9200"
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/pezzo
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:23-alpine
+    environment:
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: default
+    volumes:
+      - ./volumes/clickhouse/data:/var/lib/clickhouse
+      - ./volumes/clickhouse/logs:/var/log/clickhouse-server
+      - ./clickhouse/config/users.d/config.xml:/etc/clickhouse-server/users.d/config.xml
+      - ./clickhouse/config/config.d/config.xml:/etc/clickhouse-server/config.d/config.xml
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+      - "9004:9004"
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "curl --silent --fail localhost:5601/api/status || exit 1",
-        ]
-      interval: 10s
+      test: ["CMD-SHELL", 'clickhouse-client --query "SELECT 1"']
+      interval: 5s
       timeout: 5s
-      retries: 20
+      retries: 3
 
   postgres:
     image: postgres:15-alpine3.17
@@ -116,4 +108,3 @@ services:
 
 volumes:
   postgres_data: ~
-  opensearch-data1: ~

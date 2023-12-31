@@ -1,12 +1,11 @@
 import { useGetRequestReports } from "~/graphql/hooks/queries";
-import { useMemo } from "react";
+import { Suspense, useMemo } from "react";
 import { DEFAULT_PAGE_SIZE } from "~/lib/constants/pagination";
 import { RequestReportItem } from "./types";
 import { usePageTitle } from "~/lib/hooks/usePageTitle";
 import { RequestsTable } from "./RequestsTable";
 import { ColumnDef } from "@tanstack/react-table";
 import { cn } from "@pezzo/ui/utils";
-import { ReportRequestResponse } from "~/graphql/types";
 import { CheckIcon, CircleSlash, MoveRightIcon } from "lucide-react";
 import { RequestItemTags } from "./RequestTags";
 import { RequestDetails } from "~/components/requests";
@@ -21,6 +20,8 @@ import {
   AccordionTrigger,
   Card,
 } from "@pezzo/ui";
+import { ModelDetails } from "./ModelDetails";
+import { SerializedPaginatedReport } from "@pezzo/types";
 
 const getTableColumns = (): ColumnDef<RequestReportItem>[] => {
   const columns: ColumnDef<RequestReportItem>[] = [
@@ -67,7 +68,19 @@ const getTableColumns = (): ColumnDef<RequestReportItem>[] => {
       accessorKey: "model",
       id: "model",
       header: "Model",
-      cell: ({ row }) => <div className="font-mono">{row.original.model}</div>,
+      cell: ({ row }) => {
+        const { model, modelAuthor } = row.original;
+        return <ModelDetails model={model} modelAuthor={modelAuthor} />;
+      },
+      enableSorting: true,
+    },
+    {
+      accessorKey: "provider",
+      id: "provider",
+      header: "Provider",
+      cell: ({ row }) => (
+        <div className="font-mono">{row.original.provider}</div>
+      ),
       enableSorting: true,
     },
     {
@@ -88,7 +101,7 @@ const getTableColumns = (): ColumnDef<RequestReportItem>[] => {
       accessorKey: "cost",
       id: "cost",
       header: "Cost",
-      cell: ({ row }) => <div>${row.original.cost.toFixed(3)}</div>,
+      cell: ({ row }) => <div>${row.original.cost.toFixed(5)}</div>,
     },
     {
       id: "tags",
@@ -143,60 +156,46 @@ export const RequestsPage = () => {
 
   const data: RequestReportItem[] = useMemo(
     () =>
-      paginatedResults.map((report: ReportRequestResponse) => {
+      paginatedResults.map((report: SerializedPaginatedReport) => {
         return {
-          reportId: report.reportId,
-          timestamp: report.request.timestamp,
-          status: report.response.status,
-          duration: report.calculated.duration ?? 0,
-          totalTokens: report.calculated.totalTokens ?? 0,
-          cost: report.calculated.totalCost ?? 0,
-          isTestPrompt: (report.metadata?.isTestPrompt as boolean) || false,
-          promptId: report.metadata?.promptId ?? null,
-          cacheEnabled: report.cacheEnabled ?? false,
-          cacheHit: report.cacheHit ?? false,
-          model: report.response.body.model as string,
+          reportId: report.id,
+          timestamp: report.timestamp,
+          status: report.responseStatusCode,
+          duration: report.duration ?? 0,
+          totalTokens: report.totalTokens ?? 0,
+          cost: report.totalCost ?? 0,
+          isTestPrompt: report.environment === "PLAYGROUND" || false,
+          promptId: null,
+          cacheEnabled: report.cacheEnabled,
+          cacheHit: report.cacheHit,
+          model: report.model,
+          modelAuthor: report.modelAuthor,
+          provider: report.provider,
         };
       }),
     [paginatedResults]
-  );
-
-  const currentReport = useMemo(
-    () =>
-      requests?.paginatedRequests.data.find(
-        (r) => r.reportId === inspectedRequestId
-      ),
-    [requests?.paginatedRequests.data, inspectedRequestId]
   );
 
   return (
     <>
       <Drawer
         onClose={() => setInspectedRequestId(undefined)}
-        open={!!currentReport}
+        open={!!inspectedRequestId}
       >
-        {currentReport != null && (
-          <RequestDetails
-            id={inspectedRequestId}
-            request={currentReport.request}
-            response={currentReport.response}
-            provider={currentReport.metadata.provider}
-            calculated={currentReport.calculated}
-            metadata={currentReport.metadata}
-            properties={currentReport.properties}
-            cacheEnabled={currentReport.cacheEnabled}
-            cacheHit={currentReport.cacheHit}
-          />
+        {inspectedRequestId && (
+          <Suspense>
+            <RequestDetails id={inspectedRequestId} />
+          </Suspense>
         )}
       </Drawer>
 
-      <div className="mb-6 border-b border-b-border">
-        <div className="container flex h-24 items-center justify-between">
+      <div className="border-b border-b-border">
+        <div className="flex h-24 items-center justify-between px-6">
           <h1>Requests</h1>
         </div>
       </div>
 
-      <div className="container flex flex-col gap-4">
+      <div className="flex flex-col gap-4 p-6">
         <Card className="px-4">
           <Accordion type="single" collapsible>
             <AccordionItem className="mb-0 border-0" value="filters">

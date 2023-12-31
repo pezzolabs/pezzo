@@ -112,7 +112,7 @@
       "options": {},
       "configurations": {
         "local": {
-          "tags": ["pezzolabs/pezzo/console"],
+          "tags": ["ghcr.io/pezzolabs/pezzo/console"],
           "push": false
         }
       }

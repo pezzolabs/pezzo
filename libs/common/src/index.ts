@@ -1,5 +1,4 @@
 import * as versionJson from "./version.json";
-
-export const version = versionJson.version;
-
+export * as MetricsTypes from "./metrics/types";
 export * from "./utils";
+export const version = versionJson.version;

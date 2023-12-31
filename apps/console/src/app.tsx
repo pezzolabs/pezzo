@@ -34,7 +34,6 @@ import { PromptEditView } from "./features/editor/PromptEditView";
 import { EditorProvider } from "./lib/providers/EditorContext";
 import { PromptTesterProvider } from "./lib/providers/PromptTesterContext";
 import { PromptVersionsView } from "./components/prompts/views/PromptVersionsView";
-import { PromptMetricsView } from "./components/prompts/views/PromptMetricsView";
 import { Suspense } from "react";
 import { FullScreenLoader } from "./components/common/FullScreenLoader";
 import { OrgPage } from "./pages/projects/OrgPage";
@@ -158,7 +157,6 @@ export function App() {
                     }
                   />
                   <Route path="versions" element={<PromptVersionsView />} />
-                  <Route path="metrics" element={<PromptMetricsView />} />
                 </Route>
               </Route>
             </Route>

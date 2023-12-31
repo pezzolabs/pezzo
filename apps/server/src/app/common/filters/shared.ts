@@ -1,10 +1,10 @@
-import { RequestReport } from "../../reporting/object-types/request-report.model";
+import { ReportSchema } from "@pezzo/types";
 
-export type FilterFields<TMainKey extends keyof RequestReport> =
-  RequestReport[TMainKey] extends Record<never, never>
-    ? keyof RequestReport[TMainKey] extends string
-      ? `${TMainKey}.${keyof RequestReport[TMainKey]}`
+export type FilterFields<TMainKey extends keyof ReportSchema> =
+  ReportSchema[TMainKey] extends Record<never, never>
+    ? keyof ReportSchema[TMainKey] extends string
+      ? `${TMainKey}.${keyof ReportSchema[TMainKey]}`
       : `${TMainKey}`
     : `${TMainKey}`;
 
-export type RequestReportFilterFields = FilterFields<keyof RequestReport>;
+export type RequestReportFilterFields = FilterFields<keyof ReportSchema>;

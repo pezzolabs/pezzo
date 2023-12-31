@@ -12,7 +12,9 @@ export type AcceptedModels = ExtractModelNames<
 
 export type ObservabilityReportProperties = RecursiveObject<Primitive>;
 export type ObservabilityReportMetadata = {
-  provider: Provider;
+  provider: string;
+  model: string;
+  modelAuthor: string;
   client?: string;
   clientVersion?: string;
   environment: string;

@@ -63,7 +63,7 @@ export class OpenAIV1Handler {
       );
     }
 
-    const baseMetadata: ObservabilityReportMetadata = {
+    const baseMetadata: any = {
       environment: pezzo.options.environment,
       provider: Provider.OpenAI,
       type: PromptExecutionType.ChatCompletion,
