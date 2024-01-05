@@ -83,6 +83,7 @@ model Organization {
   apiKeys         ApiKey[]
   providerApiKeys ProviderApiKey[]
   invitations     Invitation[]
+  waitlisted      Boolean              @default(false)
 }
 
 model OrganizationMember {

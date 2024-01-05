@@ -6,6 +6,7 @@ import { ExtendedUser } from "./models/extended-user.model";
 import UserMetadata from "supertokens-node/recipe/usermetadata";
 import { SupertokensMetadata } from "../auth/auth.types";
 import { randomBytes } from "crypto";
+import { ConfigService } from "@nestjs/config";
 
 export type UserWithOrgMemberships = User & {
   orgMemberships: OrganizationMember[];
@@ -13,7 +14,10 @@ export type UserWithOrgMemberships = User & {
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private config: ConfigService
+  ) {}
 
   async createUser(
     userCreateRequest: UserCreateRequest
@@ -28,9 +32,12 @@ export class UsersService {
       },
     });
 
+    const waitlisted = this.config.get("WAITLIST_ENABLED");
+
     const organization = await this.prisma.organization.create({
       data: {
         name: `${userCreateRequest.name}'s Organization`,
+        waitlisted,
         members: {
           create: {
             userId: userCreateRequest.id,

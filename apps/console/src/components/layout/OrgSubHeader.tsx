@@ -8,9 +8,9 @@ const isActive = (href: string) => {
 
 export const OrgSubHeader = () => {
   const navigate = useNavigate();
-  const { organization } = useCurrentOrganization();
+  const { organization, waitlisted } = useCurrentOrganization();
 
-  if (!organization) {
+  if (!organization || waitlisted) {
     return;
   }
 

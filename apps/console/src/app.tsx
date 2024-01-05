@@ -38,6 +38,7 @@ import { Suspense } from "react";
 import { FullScreenLoader } from "./components/common/FullScreenLoader";
 import { OrgPage } from "./pages/projects/OrgPage";
 import { useCurrentOrganization } from "./lib/hooks/useCurrentOrganization";
+import { WaitlistWrapper } from "~/pages/WaitlistWrapper";
 
 initSuperTokens();
 
@@ -101,7 +102,9 @@ export function App() {
                 path="/onboarding"
                 element={
                   <LayoutWrapper withSideNav={false}>
-                    <OnboardingPage />
+                    <WaitlistWrapper>
+                      <OnboardingPage />
+                    </WaitlistWrapper>
                   </LayoutWrapper>
                 }
               />
@@ -112,7 +115,9 @@ export function App() {
                 element={
                   <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
                     <Suspense fallback={<FullScreenLoader />}>
-                      <Outlet />
+                      <WaitlistWrapper>
+                        <Outlet />
+                      </WaitlistWrapper>
                     </Suspense>
                   </LayoutWrapper>
                 }
@@ -131,7 +136,9 @@ export function App() {
                     <CurrentPromptProvider>
                       <RequiredProviderApiKeyModalProvider>
                         <LayoutWrapper withSideNav={true}>
-                          <Outlet />
+                          <WaitlistWrapper>
+                            <Outlet />
+                          </WaitlistWrapper>
                         </LayoutWrapper>
                       </RequiredProviderApiKeyModalProvider>
                     </CurrentPromptProvider>

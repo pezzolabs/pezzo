@@ -18,6 +18,7 @@ export const GET_ORGANIZATION = graphql(/* GraphQL */ `
     organization(data: $data) {
       id
       name
+      waitlisted
       members @include(if: $includeMembers) {
         id
         role
