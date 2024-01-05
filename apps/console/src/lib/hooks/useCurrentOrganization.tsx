@@ -59,5 +59,6 @@ export const useCurrentOrganization = ({
     error,
     currentOrgId,
     selectOrg,
+    waitlisted: data?.organization?.waitlisted,
   };
 };

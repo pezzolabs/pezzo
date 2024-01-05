@@ -1,10 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { OrgRole } from "@prisma/client";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class OrganizationsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private config: ConfigService
+  ) {}
 
   async getById(id: string) {
     return await this.prisma.organization.findUnique({ where: { id } });
@@ -108,9 +112,12 @@ export class OrganizationsService {
   }
 
   async createOrg(name: string, creatorUserId: string) {
+    const waitlisted = this.config.get("WAITLIST_ENABLED");
+
     return await this.prisma.organization.create({
       data: {
         name,
+        waitlisted,
         members: {
           create: {
             userId: creatorUserId,

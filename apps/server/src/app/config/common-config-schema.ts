@@ -22,6 +22,7 @@ const commonConfigSchema = {
   KMS_KEY_ARN: Joi.string().default(
     "arn:aws:kms:us-east-1:111122223333:key/demo-master-key"
   ),
+  WAITLIST_ENABLED: Joi.boolean().default(false),
 };
 
 const cloudConfigSchema = {
