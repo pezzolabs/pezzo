@@ -1,18 +1,11 @@
-import { useMemo } from "react";
 import { useGetCurrentUser } from "~/graphql/hooks/queries";
-import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
+import { useWaitlist } from "~/lib/hooks/useWaitlist";
 
 export const WaitlistWrapper = ({ children }) => {
-  const { isSuccess, currentOrgId, waitlisted } = useCurrentOrganization();
+  const { shouldRenderWaitlistNotice } = useWaitlist();
   const { data: currentUserData } = useGetCurrentUser();
 
-  const shouldRenderWaitlistNotice = useMemo(() => {
-    return isSuccess && currentOrgId && waitlisted;
-  }, [isSuccess, currentOrgId, waitlisted]);
-
   if (shouldRenderWaitlistNotice) {
-    console.log(currentUserData.me.email);
-
     return (
       <div className="container mx-auto p-8 text-center">
         <h1 className="mb-4 font-heading font-medium">

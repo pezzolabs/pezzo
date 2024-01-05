@@ -102,7 +102,9 @@ export function App() {
                 path="/onboarding"
                 element={
                   <LayoutWrapper withSideNav={false}>
-                    <OnboardingPage />
+                    <WaitlistWrapper>
+                      <OnboardingPage />
+                    </WaitlistWrapper>
                   </LayoutWrapper>
                 }
               />
