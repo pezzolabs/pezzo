@@ -18,12 +18,19 @@ git clone https://github.com/pezzolabs/pezzo.git
 cd pezzo
 ```
 
+## Add the necessary environmental variables
+
+Append the environmental variables from the `apps/` folder to the root directory
+
+```bash
+cat apps/server/.env >> .env.local
+cat apps/console/.env >> .env.local
 ## Running with Docker Compose
 
 Run the following command to start the Pezzo stack:
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
 This command will spin up all infrastructure services (PostgreSQL, Redis, etc.) and the Pezzo components (Server, Console). It will also automatically apply database migration to the PostgreSQL database.
