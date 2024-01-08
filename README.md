@@ -95,19 +95,19 @@ In the documentation, you can find information on how to use Pezzo, its architec
       <td>Prompt Management</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
-      <td align="center">🚧</td>
+      <td align="center">✅</td>
     </tr>
     <tr>
       <td>Observability</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
-      <td align="center">🚧</td>
+      <td align="center">✅</td>
     </tr>
     <tr>
       <td>Caching</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
-      <td align="center">🚧</td>
+      <td align="center">✅</td>
     </tr>
   </tbody>
 </table>
