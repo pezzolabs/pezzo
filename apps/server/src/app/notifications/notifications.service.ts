@@ -30,6 +30,10 @@ export class NotificationsService {
       },
     };
 
-    await sgMail.send(mailData);
+    try {
+      await sgMail.send(mailData);
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 }
