@@ -31,6 +31,20 @@ profiles:
       kustomize:
         paths:
           - ./kubernetes/base/local-kms
+  - name: common-0-dev-tokyo-server
+    build:
+      tagPolicy:
+        gitCommit:
+          variant: AbbrevCommitSha
+      artifacts:
+        - image: llm-ops-server
+          docker:
+            dockerfile: ./apps/server/Dockerfile
+    deploy:
+      statusCheckDeadlineSeconds: 1200
+      kustomize:
+        paths:
+          - ./kubernetes/base/server
 #  - name: common-0-dev-tokyo-server
 #    build:
 #      tagPolicy:
