@@ -1,0 +1,8 @@
+namespace: realtime-streaming
+resources:
+  - clickhouse-deployment.yaml
+  - clickhouse-service.yaml
+  - clickhouse-claim0-persistentvolumeclaim.yaml
+  - clickhouse-claim1-persistentvolumeclaim.yaml
+  - clickhouse-claim2-persistentvolumeclaim.yaml
+  - clickhouse-claim3-persistentvolumeclaim.yaml

@@ -1,0 +1,4 @@
+namespace: realtime-streaming
+resources:
+  - supertokens-deployment.yaml
+  - supertokens-service.yaml

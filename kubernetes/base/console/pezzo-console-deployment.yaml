@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.32.0 (HEAD)
+  labels:
+    io.kompose.service: pezzo-console
+  name: pezzo-console
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: pezzo-console
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.32.0 (HEAD)
+      labels:
+        io.kompose.network/dp-llm-ops-default: "true"
+        io.kompose.service: pezzo-console
+    spec:
+      containers:
+        - env:
+            - name: NX_BASE_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: NX_BASE_API_URL
+                  name: -env
+            - name: NX_DEBUG_MODE
+              valueFrom:
+                configMapKeyRef:
+                  key: NX_DEBUG_MODE
+                  name: -env
+            - name: NX_SUPERTOKENS_API_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  key: NX_SUPERTOKENS_API_DOMAIN
+                  name: -env
+            - name: NX_SUPERTOKENS_WEBSITE_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  key: NX_SUPERTOKENS_WEBSITE_DOMAIN
+                  name: -env
+          image: ghcr.io/pezzolabs/pezzo/console:latest
+          name: pezzo-console
+          ports:
+            - containerPort: 8080
+              hostPort: 4200
+              protocol: TCP
+      restartPolicy: Always

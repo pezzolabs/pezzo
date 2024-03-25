@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.32.0 (HEAD)
+  labels:
+    io.kompose.service: redis-stack-server
+  name: redis-stack-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: redis-stack-server
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.32.0 (HEAD)
+      labels:
+        io.kompose.network/dp-llm-ops-default: "true"
+        io.kompose.service: redis-stack-server
+    spec:
+      containers:
+        - image: redis/redis-stack-server:7.2.0-v0
+          livenessProbe:
+            exec:
+              command:
+                - redis-cli ping | grep PONG
+            failureThreshold: 5
+            periodSeconds: 1
+            timeoutSeconds: 3
+          name: redis-stack-server
+          ports:
+            - containerPort: 6379
+              hostPort: 6379
+              protocol: TCP
+      restartPolicy: Always

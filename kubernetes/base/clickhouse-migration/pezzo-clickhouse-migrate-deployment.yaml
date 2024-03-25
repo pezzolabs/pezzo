@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.32.0 (HEAD)
+  labels:
+    io.kompose.service: pezzo-clickhouse-migrate
+  name: pezzo-clickhouse-migrate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: pezzo-clickhouse-migrate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.32.0 (HEAD)
+      labels:
+        io.kompose.network/dp-llm-ops-default: "true"
+        io.kompose.service: pezzo-clickhouse-migrate
+    spec:
+      containers:
+        - args:
+            - -c
+            - ./migrate.sh
+          command:
+            - /bin/sh
+          env:
+            - name: CLICKHOUSE_HOST
+              value: clickhouse
+            - name: CLICKHOUSE_PASSWORD
+              value: default
+            - name: CLICKHOUSE_PORT
+              value: "8123"
+            - name: CLICKHOUSE_USER
+              value: default
+          image: ghcr.io/pezzolabs/pezzo/server:latest
+          name: pezzo-clickhouse-migrate
+          workingDir: /app/clickhouse
+      restartPolicy: Always

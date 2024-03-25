@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.32.0 (HEAD)
+  labels:
+    io.kompose.service: clickhouse
+  name: clickhouse
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: clickhouse
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.32.0 (HEAD)
+      labels:
+        io.kompose.network/dp-llm-ops-default: "true"
+        io.kompose.service: clickhouse
+    spec:
+      containers:
+        - env:
+            - name: CLICKHOUSE_PASSWORD
+              value: default
+            - name: CLICKHOUSE_USER
+              value: default
+          image: clickhouse/clickhouse-server:23-alpine
+          livenessProbe:
+            exec:
+              command:
+                - clickhouse-client --query "SELECT 1"
+            failureThreshold: 3
+            periodSeconds: 5
+            timeoutSeconds: 5
+          name: clickhouse
+          ports:
+            - containerPort: 8123
+              hostPort: 8123
+              protocol: TCP
+            - containerPort: 9000
+              hostPort: 9000
+              protocol: TCP
+            - containerPort: 9004
+              hostPort: 9004
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/lib/clickhouse
+              name: clickhouse-claim0
+            - mountPath: /var/log/clickhouse-server
+              name: clickhouse-claim1
+            - mountPath: /etc/clickhouse-server/users.d/config.xml
+              name: clickhouse-claim2
+            - mountPath: /etc/clickhouse-server/config.d/config.xml
+              name: clickhouse-claim3
+      restartPolicy: Always
+      volumes:
+        - name: clickhouse-claim0
+          persistentVolumeClaim:
+            claimName: clickhouse-claim0
+        - name: clickhouse-claim1
+          persistentVolumeClaim:
+            claimName: clickhouse-claim1
+        - name: clickhouse-claim2
+          persistentVolumeClaim:
+            claimName: clickhouse-claim2
+        - name: clickhouse-claim3
+          persistentVolumeClaim:
+            claimName: clickhouse-claim3

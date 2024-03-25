@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.32.0 (HEAD)
+  labels:
+    io.kompose.service: pezzo-proxy
+  name: pezzo-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: pezzo-proxy
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.32.0 (HEAD)
+      labels:
+        io.kompose.network/dp-llm-ops-default: "true"
+        io.kompose.service: pezzo-proxy
+    spec:
+      containers:
+        - image: ghcr.io/pezzolabs/pezzo/proxy:latest
+          name: pezzo-proxy
+          ports:
+            - containerPort: 3000
+              hostPort: 3001
+              protocol: TCP
+      restartPolicy: Always

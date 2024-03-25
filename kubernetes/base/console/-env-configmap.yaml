@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  NX_BASE_API_URL: http://localhost:3000
+  NX_DEBUG_MODE: "true"
+  NX_SUPERTOKENS_API_DOMAIN: http://localhost:3000
+  NX_SUPERTOKENS_WEBSITE_DOMAIN: http://localhost:4200
+kind: ConfigMap
+metadata:
+  labels:
+    io.kompose.service: pezzo-console--env
+  name: -env

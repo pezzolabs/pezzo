@@ -1,0 +1,4 @@
+namespace: realtime-streaming
+resources:
+  - local-kms-deployment.yaml
+  - local-kms-service.yaml

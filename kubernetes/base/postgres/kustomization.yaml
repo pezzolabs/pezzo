@@ -1,0 +1,5 @@
+namespace: realtime-streaming
+resources:
+  - postgres-deployment.yaml
+  - postgres-service.yaml
+  - postgres-data-persistentvolumeclaim.yaml

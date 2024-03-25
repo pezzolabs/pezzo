@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.32.0 (HEAD)
+  labels:
+    io.kompose.service: local-kms
+  name: local-kms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: local-kms
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.32.0 (HEAD)
+      labels:
+        io.kompose.network/dp-llm-ops-default: "true"
+        io.kompose.service: local-kms
+    spec:
+      containers:
+        - args:
+            - -c
+            - echo "S2V5czoKICBTeW1tZXRyaWM6CiAgICBBZXM6CiAgICAgIC0gTWV0YWRhdGE6CiAgICAgICAgICBLZXlJZDogZGVtby1tYXN0ZXIta2V5CiAgICAgICAgQmFja2luZ0tleXM6CiAgICAgICAgICAtIDVjZGFlYWQyN2ZlN2RhMmRlNDc5NDVkNzNjZDZkNzllMzY0OTRlNzM4MDJmM2NkMzg2OWYxZDJjYjBiNWQ3YTkKCkFsaWFzZXM6CiAgLSBBbGlhc05hbWU6IGFsaWFzL3Rlc3RpbmcKICAgIFRhcmdldEtleUlkOiBkZW1vLW1hc3Rlci1rZXk=" | base64 -d >> /init/seed.yaml && local-kms
+          command:
+            - /bin/sh
+          env:
+            - name: KMS_REGION
+              value: us-east-1
+            - name: PORT
+              value: "9981"
+          image: nsmithuk/local-kms:latest
+          name: local-kms
+          ports:
+            - containerPort: 9981
+              hostPort: 9981
+              protocol: TCP
+      restartPolicy: Always

@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.32.0 (HEAD)
+  labels:
+    io.kompose.service: pezzo-prisma-migrate
+  name: pezzo-prisma-migrate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: pezzo-prisma-migrate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.32.0 (HEAD)
+      labels:
+        io.kompose.network/dp-llm-ops-default: "true"
+        io.kompose.service: pezzo-prisma-migrate
+    spec:
+      containers:
+        - args:
+            - -c
+            - npx prisma migrate deploy
+          command:
+            - /bin/sh
+          env:
+            - name: DATABASE_URL
+              value: postgres://postgres:postgres@postgres:5432/pezzo
+          image: ghcr.io/pezzolabs/pezzo/server:latest
+          name: pezzo-prisma-migrate
+      restartPolicy: Always

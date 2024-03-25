@@ -1,0 +1,309 @@
+version: 2.1
+
+orbs:
+  gradle: smartnews/gradle@3
+  terraform: smartnews/terraform@1
+
+orb_dockers:
+  gradle: &orb_docker_gradle 165463520094.dkr.ecr.ap-northeast-1.amazonaws.com/circleci-orbs/gradle:3
+  terraform: &orb_docker_terraform 165463520094.dkr.ecr.ap-northeast-1.amazonaws.com/circleci-orbs/terraform:1
+
+workflow_filters:
+  branch-filter: &branch-filter
+    filters:
+      branches:
+        ignore:
+          - master
+          - dev
+  master-filter: &master-filter
+    filters:
+      branches:
+        only: master
+  dev-filter: &dev-filter
+    filters:
+      branches:
+        only: dev
+
+workflows:
+  deliver-dev:
+    jobs:
+      - approve:
+          <<: *dev-filter
+          name: approve/postgres
+          type: approval
+      - gradle/deliver:
+          <<: *dev-filter
+          name: deliver/dev/postgres
+          docker: *orb_docker_gradle
+          aws_account: dev
+          env: ""
+          region: tokyo
+          cluster: common-0
+          system: realtime-streaming
+          target: postgres
+          skaffold_use_cluster_profile: true
+          requires:
+            - approve/postgres
+      - approve:
+          <<: *dev-filter
+          name: approve/clickhouse
+          type: approval
+      - gradle/deliver:
+          <<: *dev-filter
+          name: deliver/dev/clickhouse
+          docker: *orb_docker_gradle
+          aws_account: dev
+          env: ""
+          region: tokyo
+          cluster: common-0
+          system: realtime-streaming
+          target: clickhouse
+          skaffold_use_cluster_profile: true
+          requires:
+            - approve/clickhouse
+      - approve:
+          <<: *dev-filter
+          name: approve/supertokens
+          type: approval
+      - gradle/deliver:
+          <<: *dev-filter
+          name: deliver/dev/supertokens
+          docker: *orb_docker_gradle
+          aws_account: dev
+          env: ""
+          region: tokyo
+          cluster: common-0
+          system: realtime-streaming
+          target: supertokens
+          skaffold_use_cluster_profile: true
+          requires:
+            - approve/supertokens
+      - approve:
+          <<: *dev-filter
+          name: approve/redis
+          type: approval
+      - gradle/deliver:
+          <<: *dev-filter
+          name: deliver/dev/redis
+          docker: *orb_docker_gradle
+          aws_account: dev
+          env: ""
+          region: tokyo
+          cluster: common-0
+          system: realtime-streaming
+          target: redis
+#          resourceClass: large
+          skaffold_use_cluster_profile: true
+          requires:
+            - approve/redis
+      - approve:
+          <<: *dev-filter
+          name: approve/local-kms
+          type: approval
+      - gradle/deliver:
+          <<: *dev-filter
+          name: deliver/dev/local-kms
+          docker: *orb_docker_gradle
+          aws_account: dev
+          env: ""
+          region: tokyo
+          cluster: common-0
+          system: realtime-streaming
+          target: local-kms
+          skaffold_use_cluster_profile: true
+          requires:
+            - approve/local-kms
+
+#  deliver-prd:
+#    jobs:
+#      - approve:
+#          <<: *master-filter
+#          name: approve/upgrade
+#          type: approval
+#      - gradle/deliver:
+#          <<: *master-filter
+#          name: deliver/prd/upgrade
+#          docker: *orb_docker_gradle
+#          env: prd
+#          region: tokyo
+#          cluster: spaas_sn
+#          system: data-catalogue
+#          target: upgrade
+#          requires:
+#            - approve/upgrade
+#      - approve:
+#          <<: *master-filter
+#          name: approve/gms
+#          type: approval
+#      - gradle/deliver:
+#          <<: *master-filter
+#          name: deliver/prd/gms
+#          docker: *orb_docker_gradle
+#          env: prd
+#          region: tokyo
+#          cluster: spaas_sn
+#          system: data-catalogue
+#          target: gms
+#          requires:
+#            - approve/gms
+#      - approve:
+#          <<: *master-filter
+#          name: approve/frontend
+#          type: approval
+#      - gradle/deliver:
+#          <<: *master-filter
+#          name: deliver/prd/frontend
+#          docker: *orb_docker_gradle
+#          env: prd
+#          region: tokyo
+#          cluster: spaas_sn
+#          system: data-catalogue
+#          target: frontend
+#          resourceClass: large
+#          requires:
+#            - approve/frontend
+#      - approve:
+#          <<: *master-filter
+#          name: approve/mae-consumer
+#          type: approval
+#      - gradle/deliver:
+#          <<: *master-filter
+#          name: deliver/prd/mae-consumer
+#          docker: *orb_docker_gradle
+#          env: prd
+#          region: tokyo
+#          cluster: spaas_sn
+#          system: data-catalogue
+#          target: mae-consumer
+#          requires:
+#            - approve/mae-consumer
+#      - approve:
+#          <<: *master-filter
+#          name: approve/mce-consumer
+#          type: approval
+#      - gradle/deliver:
+#          <<: *master-filter
+#          name: deliver/prd/mce-consumer
+#          docker: *orb_docker_gradle
+#          env: prd
+#          region: tokyo
+#          cluster: spaas_sn
+#          system: data-catalogue
+#          target: mce-consumer
+#          requires:
+#            - approve/mce-consumer
+#      - approve:
+#          <<: *master-filter
+#          name: approve/elasticsearch-setup
+#          type: approval
+#      - gradle/deliver:
+#          <<: *master-filter
+#          name: deliver/prd/elasticsearch-setup
+#          docker: *orb_docker_gradle
+#          env: prd
+#          region: tokyo
+#          cluster: spaas_sn
+#          system: data-catalogue
+#          target: elasticsearch-setup
+#          requires:
+#            - approve/elasticsearch-setup
+#      - approve:
+#          <<: *master-filter
+#          name: approve/kafka-setup
+#          type: approval
+#      - gradle/deliver:
+#          <<: *master-filter
+#          name: deliver/prd/kafka-setup
+#          docker: *orb_docker_gradle
+#          env: prd
+#          region: tokyo
+#          cluster: spaas_sn
+#          system: data-catalogue
+#          target: kafka-setup
+#          requires:
+#            - approve/kafka-setup
+#      - approve:
+#          <<: *master-filter
+#          name: approve/ingestion
+#          type: approval
+#      - gradle/deliver:
+#          <<: *master-filter
+#          name: deliver/prd/ingestion
+#          docker: *orb_docker_gradle
+#          env: prd
+#          region: tokyo
+#          cluster: spaas_sn
+#          system: data-catalogue
+#          target: ingestion
+#          requires:
+#            - approve/ingestion
+#      - approve:
+#          <<: *master-filter
+#          name: approve/dependencies
+#          type: approval
+#      - gradle/deliver:
+#          <<: *master-filter
+#          name: deliver/prd/dependencies
+#          docker: *orb_docker_gradle
+#          env: prd
+#          region: tokyo
+#          cluster: spaas_sn
+#          system: data-catalogue
+#          target: dependencies
+#          requires:
+#            - approve/dependencies
+
+  main:
+    when: << pipeline.parameters.workflow_main >>
+    jobs:
+      - terraform/trigger:
+          docker: *orb_docker_terraform
+          name: terraform/trigger
+          system: realtime-streaming
+          path: .
+  terraform:
+    when: << pipeline.parameters.workflow_terraform >>
+    jobs:
+      - terraform/plan:
+          docker: *orb_docker_terraform
+          name: << pipeline.parameters.env >>/<< pipeline.parameters.region >>/<< pipeline.parameters.system >>/plan
+          env: << pipeline.parameters.env >>
+          region: << pipeline.parameters.region >>
+          system: << pipeline.parameters.system >>
+          path: << pipeline.parameters.path >>
+      - approve:
+          <<: *master-filter
+          name: << pipeline.parameters.env >>/<< pipeline.parameters.region >>/<< pipeline.parameters.system >>/approve
+          type: approval
+          requires:
+            - << pipeline.parameters.env >>/<< pipeline.parameters.region >>/<< pipeline.parameters.system >>/plan
+      - terraform/apply:
+          <<: *master-filter
+          docker: *orb_docker_terraform
+          name: << pipeline.parameters.env >>/<< pipeline.parameters.region >>/<< pipeline.parameters.system >>/apply
+          env: << pipeline.parameters.env >>
+          region: << pipeline.parameters.region >>
+          system: << pipeline.parameters.system >>
+          path: << pipeline.parameters.path >>
+          requires:
+            - << pipeline.parameters.env >>/<< pipeline.parameters.region >>/<< pipeline.parameters.system >>/approve
+
+parameters:
+  workflow_main:
+    type: boolean
+    default: true
+  workflow_terraform:
+    type: boolean
+    default: false
+  env:
+    type: string
+    default: ""
+  region:
+    type: string
+    default: ""
+  system:
+    type: string
+    default: ""
+  path:
+    type: string
+    default: ""

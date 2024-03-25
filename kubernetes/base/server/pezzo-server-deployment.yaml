@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.32.0 (HEAD)
+  labels:
+    io.kompose.service: pezzo-server
+  name: pezzo-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: pezzo-server
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.32.0 (HEAD)
+      labels:
+        io.kompose.network/dp-llm-ops-default: "true"
+        io.kompose.service: pezzo-server
+    spec:
+      containers:
+        - env:
+            - name: CLICKHOUSE_HOST
+              value: clickhouse
+            - name: CONSOLE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: CONSOLE_HOST
+                  name: -env
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: DATABASE_URL
+                  name: -env
+            - name: KAFKA_BROKERS
+              valueFrom:
+                configMapKeyRef:
+                  key: KAFKA_BROKERS
+                  name: -env
+            - name: KMS_LOCAL_ENDPOINT
+              value: http://local-kms:9981
+            - name: OPENSEARCH_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: OPENSEARCH_URL
+                  name: -env
+            - name: PINO_PRETTIFY
+              valueFrom:
+                configMapKeyRef:
+                  key: PINO_PRETTIFY
+                  name: -env
+            - name: REDIS_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: REDIS_URL
+                  name: -env
+            - name: SUPERTOKENS_CONNECTION_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: SUPERTOKENS_CONNECTION_URI
+                  name: -env
+          image: ghcr.io/pezzolabs/pezzo/server:latest
+          livenessProbe:
+            exec:
+              command:
+                - curl 'http://pezzo-server:3000/api/healthz'
+            failureThreshold: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+          name: pezzo-server
+          ports:
+            - containerPort: 3000
+              hostPort: 3000
+              protocol: TCP
+      restartPolicy: Always

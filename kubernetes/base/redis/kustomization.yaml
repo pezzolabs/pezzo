@@ -1,0 +1,4 @@
+namespace: realtime-streaming
+resources:
+  - redis-stack-server-deployment.yaml
+  - redis-stack-server-service.yaml

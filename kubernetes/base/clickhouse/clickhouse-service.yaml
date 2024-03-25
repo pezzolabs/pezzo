@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.32.0 (HEAD)
+  labels:
+    io.kompose.service: clickhouse
+  name: clickhouse
+spec:
+  ports:
+    - name: "8123"
+      port: 8123
+      targetPort: 8123
+    - name: "9000"
+      port: 9000
+      targetPort: 9000
+    - name: "9004"
+      port: 9004
+      targetPort: 9004
+  selector:
+    io.kompose.service: clickhouse

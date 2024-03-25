@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.32.0 (HEAD)
+  labels:
+    io.kompose.service: local-kms
+  name: local-kms
+spec:
+  ports:
+    - name: "9981"
+      port: 9981
+      targetPort: 9981
+    - name: 9981-tcp
+      port: 9981
+      targetPort: 9981
+  selector:
+    io.kompose.service: local-kms
