@@ -5,13 +5,13 @@ metadata:
     kompose.cmd: kompose convert
     kompose.version: 1.32.0 (HEAD)
   labels:
-    io.kompose.service: llm-ops-local-kms
-  name: llm-ops-local-kms
+    io.kompose.service: local-kms
+  name: local-kms
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: llm-ops-local-kms
+      io.kompose.service: local-kms
   template:
     metadata:
       annotations:
@@ -19,7 +19,7 @@ spec:
         kompose.version: 1.32.0 (HEAD)
       labels:
         io.kompose.network/dp-llm-ops-default: "true"
-        io.kompose.service: llm-ops-local-kms
+        io.kompose.service: local-kms
     spec:
       containers:
         - args:
@@ -33,7 +33,7 @@ spec:
             - name: PORT
               value: "9981"
           image: nsmithuk/local-kms:latest
-          name: llm-ops-local-kms
+          name: local-kms
           ports:
             - containerPort: 9981
               hostPort: 9981
