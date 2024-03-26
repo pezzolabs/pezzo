@@ -5,13 +5,13 @@ metadata:
     kompose.cmd: kompose convert
     kompose.version: 1.32.0 (HEAD)
   labels:
-    io.kompose.service: clickhouse
-  name: clickhouse
+    io.kompose.service: llm-ops-clickhouse
+  name: llm-ops-clickhouse
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: clickhouse
+      io.kompose.service: llm-ops-clickhouse
   strategy:
     type: Recreate
   template:
@@ -21,7 +21,7 @@ spec:
         kompose.version: 1.32.0 (HEAD)
       labels:
         io.kompose.network/dp-llm-ops-default: "true"
-        io.kompose.service: clickhouse
+        io.kompose.service: llm-ops-clickhouse
     spec:
       containers:
         - env:
@@ -37,7 +37,7 @@ spec:
             failureThreshold: 3
             periodSeconds: 5
             timeoutSeconds: 5
-          name: clickhouse
+          name: llm-ops-clickhouse
           ports:
             - containerPort: 8123
               hostPort: 8123

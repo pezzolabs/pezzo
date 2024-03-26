@@ -5,8 +5,8 @@ metadata:
     kompose.cmd: kompose convert
     kompose.version: 1.32.0 (HEAD)
   labels:
-    io.kompose.service: clickhouse
-  name: clickhouse
+    io.kompose.service: llm-ops-clickhouse
+  name: llm-ops-clickhouse
 spec:
   ports:
     - name: "8123"
@@ -19,4 +19,4 @@ spec:
       port: 9004
       targetPort: 9004
   selector:
-    io.kompose.service: clickhouse
+    io.kompose.service: llm-ops-clickhouse

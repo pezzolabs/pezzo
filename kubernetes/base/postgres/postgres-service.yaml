@@ -5,12 +5,12 @@ metadata:
     kompose.cmd: kompose convert
     kompose.version: 1.32.0 (HEAD)
   labels:
-    io.kompose.service: postgres
-  name: postgres
+    io.kompose.service: llm-ops-postgres
+  name: llm-ops-postgres
 spec:
   ports:
     - name: "5433"
       port: 5433
       targetPort: 5432
   selector:
-    io.kompose.service: postgres
+    io.kompose.service: llm-ops-postgres
