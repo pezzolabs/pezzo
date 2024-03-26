@@ -113,6 +113,23 @@ workflows:
           skaffold_use_cluster_profile: true
           requires:
             - approve/local-kms
+      - approve:
+          <<: *dev-filter
+          name: approve/server
+          type: approval
+      - gradle/deliver:
+          <<: *dev-filter
+          name: deliver/dev/server
+          docker: *orb_docker_gradle
+          aws_account: dev
+          env: ""
+          region: tokyo
+          cluster: common-0
+          system: realtime-streaming
+          target: server
+          skaffold_use_cluster_profile: true
+          requires:
+            - approve/server
 
 #  deliver-prd:
 #    jobs:
