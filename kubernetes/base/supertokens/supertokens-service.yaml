@@ -5,12 +5,12 @@ metadata:
     kompose.cmd: kompose convert
     kompose.version: 1.32.0 (HEAD)
   labels:
-    io.kompose.service: supertokens
-  name: supertokens
+    io.kompose.service: llm-ops-supertokens
+  name: llm-ops-supertokens
 spec:
   ports:
     - name: "3567"
       port: 3567
       targetPort: 3567
   selector:
-    io.kompose.service: supertokens
+    io.kompose.service: llm-ops-supertokens
