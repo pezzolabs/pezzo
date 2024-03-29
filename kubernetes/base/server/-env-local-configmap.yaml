@@ -1,6 +1,14 @@
 apiVersion: v1
+data:
+  CONSOLE_HOST: http://localhost:4200
+  DATABASE_URL: postgresql://postgres:postgres@localhost:5433/pezzo
+  KAFKA_BROKERS: localhost:9092
+  OPENSEARCH_URL: http://localhost:9200
+  PINO_PRETTIFY: "true"
+  REDIS_URL: redis://localhost:6379
+  SUPERTOKENS_CONNECTION_URI: http://localhost:3567
 kind: ConfigMap
 metadata:
   labels:
-    io.kompose.service: pezzo-server--env-local
-  name: -env-local
+    io.kompose.service: llm-ops-server-env
+  name: llm-ops-server-env
