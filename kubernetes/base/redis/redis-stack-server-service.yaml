@@ -5,12 +5,12 @@ metadata:
     kompose.cmd: kompose convert
     kompose.version: 1.32.0 (HEAD)
   labels:
-    io.kompose.service: redis-stack-server
-  name: redis-stack-server
+    io.kompose.service: llm-ops-redis-stack-server
+  name: llm-ops-redis-stack-server
 spec:
   ports:
     - name: "6379"
       port: 6379
       targetPort: 6379
   selector:
-    io.kompose.service: redis-stack-server
+    io.kompose.service: llm-ops-redis-stack-server
