@@ -12,8 +12,8 @@ spec:
     - name: "9981"
       port: 9981
       targetPort: 9981
-    - name: 9981-tcp
-      port: 9981
-      targetPort: 9981
+#    - name: 9981-tcp
+#      port: 9981
+#      targetPort: 9981
   selector:
     io.kompose.service: local-kms
