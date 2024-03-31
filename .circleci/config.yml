@@ -130,6 +130,40 @@ workflows:
           skaffold_use_cluster_profile: true
           requires:
             - approve/server
+      - approve:
+          <<: *dev-filter
+          name: approve/console
+          type: approval
+      - gradle/deliver:
+          <<: *dev-filter
+          name: deliver/dev/console
+          docker: *orb_docker_gradle
+          aws_account: dev
+          env: ""
+          region: tokyo
+          cluster: common-0
+          system: realtime-streaming
+          target: console
+          skaffold_use_cluster_profile: true
+          requires:
+            - approve/console
+      - approve:
+          <<: *dev-filter
+          name: approve/proxy
+          type: approval
+      - gradle/deliver:
+          <<: *dev-filter
+          name: deliver/dev/proxy
+          docker: *orb_docker_gradle
+          aws_account: dev
+          env: ""
+          region: tokyo
+          cluster: common-0
+          system: realtime-streaming
+          target: proxy
+          skaffold_use_cluster_profile: true
+          requires:
+            - approve/proxy
 
 #  deliver-prd:
 #    jobs:

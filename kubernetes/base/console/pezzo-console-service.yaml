@@ -2,15 +2,15 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    kompose.cmd: kompose convert
+    kompose.cmd: kompose convert -f ./proxy.yaml
     kompose.version: 1.32.0 (HEAD)
   labels:
-    io.kompose.service: pezzo-console
-  name: pezzo-console
+    io.kompose.service: llm-ops-pezzo-console
+  name: llm-ops-pezzo-console
 spec:
   ports:
     - name: "4200"
       port: 4200
       targetPort: 8080
   selector:
-    io.kompose.service: pezzo-console
+    io.kompose.service: llm-ops-pezzo-console

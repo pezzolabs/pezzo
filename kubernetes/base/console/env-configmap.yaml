@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  labels:
-    io.kompose.service: pezzo-console-env
-  name: env
