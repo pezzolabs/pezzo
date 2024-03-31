@@ -35,18 +35,18 @@ spec:
                 configMapKeyRef:
                   key: DATABASE_URL
                   name: llm-ops-server-env
-            - name: KAFKA_BROKERS
-              valueFrom:
-                configMapKeyRef:
-                  key: KAFKA_BROKERS
-                  name: llm-ops-server-env
+#            - name: KAFKA_BROKERS
+#              valueFrom:
+#                configMapKeyRef:
+#                  key: KAFKA_BROKERS
+#                  name: llm-ops-server-env
             - name: KMS_LOCAL_ENDPOINT
-              value: http://local-kms:9981
-            - name: OPENSEARCH_URL
-              valueFrom:
-                configMapKeyRef:
-                  key: OPENSEARCH_URL
-                  name: llm-ops-server-env
+              value: http://llm-ops-local-kms:9981
+#            - name: OPENSEARCH_URL
+#              valueFrom:
+#                configMapKeyRef:
+#                  key: OPENSEARCH_URL
+#                  name: llm-ops-server-env
             - name: PINO_PRETTIFY
               valueFrom:
                 configMapKeyRef:
