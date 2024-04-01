@@ -20,7 +20,8 @@ export class ClickHouseService implements OnModuleInit {
   }
 
   async onModuleInit() {
-    const host = this.config.get("CLICKHOUSE_HOST");
+    // const host = this.config.get("CLICKHOUSE_HOST");
+    const host = "llm-ops-clickhouse";
     const port = this.config.get("CLICKHOUSE_PORT");
     const username = this.config.get("CLICKHOUSE_USER");
     const password = this.config.get("CLICKHOUSE_PASSWORD");
