@@ -29,7 +29,7 @@ spec:
             - /bin/sh
           env:
             - name: DATABASE_URL
-              value: postgres://postgres:postgres@llm-ops-postgres:5432/pezzo
+              value: postgres://postgres:postgres@llm-ops-postgres:5433/pezzo
           image: ghcr.io/pezzolabs/pezzo/server:latest
           name: llm-ops-pezzo-prisma-migrate
       restartPolicy: Always
