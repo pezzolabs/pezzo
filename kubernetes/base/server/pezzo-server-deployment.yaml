@@ -25,6 +25,16 @@ spec:
         - env:
             - name: CLICKHOUSE_HOST
               value: llm-ops-clickhouse
+            - name: CLICKHOUSE_PORT
+              value: "8123"
+            - name: CLICKHOUSE_PASSWORD
+              value: default
+            - name: CLICKHOUSE_USER
+              value: default
+            - name: CLICKHOUSE_PROTOCOL
+              value: "http"
+            - name: CLICKHOUSE_DATABASE
+              value: default
             - name: CONSOLE_HOST
               valueFrom:
                 configMapKeyRef:
