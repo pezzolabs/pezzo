@@ -9,7 +9,7 @@ metadata:
   name: llm-ops-server
 spec:
   ports:
-    - name: "3000"
+    - protocol: TCP
       port: 3000
       targetPort: 3000
   selector:

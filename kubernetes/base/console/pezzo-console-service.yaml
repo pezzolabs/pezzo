@@ -9,7 +9,7 @@ metadata:
   name: llm-ops-pezzo-console
 spec:
   ports:
-    - name: "4200"
+    - protocol: TCP
       port: 4200
       targetPort: 8080
   selector:

@@ -32,4 +32,4 @@ spec:
               service:
                 name: llm-ops-pezzo-console
                 port:
-                  number: 4200
+                  number: 8080

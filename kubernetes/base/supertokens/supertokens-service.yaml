@@ -9,7 +9,7 @@ metadata:
   name: llm-ops-supertokens
 spec:
   ports:
-    - name: "3567"
+    - protocol: TCP
       port: 3567
       targetPort: 3567
   selector:
