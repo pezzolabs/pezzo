@@ -7,5 +7,5 @@ data:
 kind: ConfigMap
 metadata:
   labels:
-    io.kompose.service: pezzo-console--env
-  name: -env
+    io.kompose.service: llm-ops-console-env
+  name: llm-ops-console-env
