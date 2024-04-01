@@ -164,6 +164,23 @@ workflows:
           skaffold_use_cluster_profile: true
           requires:
             - approve/proxy
+      - approve:
+          <<: *dev-filter
+          name: approve/prisma-migrate
+          type: approval
+      - gradle/deliver:
+          <<: *dev-filter
+          name: deliver/dev/prisma-migrate
+          docker: *orb_docker_gradle
+          aws_account: dev
+          env: ""
+          region: tokyo
+          cluster: common-0
+          system: realtime-streaming
+          target: prisma-migrate
+          skaffold_use_cluster_profile: true
+          requires:
+            - approve/prisma-migrate
 
 #  deliver-prd:
 #    jobs:
