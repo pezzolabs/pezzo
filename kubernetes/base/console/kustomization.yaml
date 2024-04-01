@@ -3,3 +3,4 @@ resources:
   - pezzo-console-deployment.yaml
   - pezzo-console-service.yaml
   - -env-configmap.yaml
+  - ingress.yaml
