@@ -46,7 +46,7 @@ spec:
           image: ghcr.io/pezzolabs/pezzo/console:latest
           name: llm-ops-pezzo-console
           ports:
-            - containerPort: 8080
+            - containerPort: 4200
               hostPort: 4200
               protocol: TCP
       restartPolicy: Always
