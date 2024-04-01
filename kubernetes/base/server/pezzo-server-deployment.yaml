@@ -24,7 +24,7 @@ spec:
       containers:
         - env:
             - name: CLICKHOUSE_HOST
-              value: clickhouse
+              value: llm-ops-clickhouse
             - name: CONSOLE_HOST
               valueFrom:
                 configMapKeyRef:

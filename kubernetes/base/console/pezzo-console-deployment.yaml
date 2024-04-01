@@ -27,22 +27,22 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   key: NX_BASE_API_URL
-                  name: -env
+                  name: llm-ops-console-env
             - name: NX_DEBUG_MODE
               valueFrom:
                 configMapKeyRef:
                   key: NX_DEBUG_MODE
-                  name: -env
+                  name: llm-ops-console-env
             - name: NX_SUPERTOKENS_API_DOMAIN
               valueFrom:
                 configMapKeyRef:
                   key: NX_SUPERTOKENS_API_DOMAIN
-                  name: -env
+                  name: llm-ops-console-env
             - name: NX_SUPERTOKENS_WEBSITE_DOMAIN
               valueFrom:
                 configMapKeyRef:
                   key: NX_SUPERTOKENS_WEBSITE_DOMAIN
-                  name: -env
+                  name: llm-ops-console-env
           image: ghcr.io/pezzolabs/pezzo/console:latest
           name: llm-ops-pezzo-console
           ports:
