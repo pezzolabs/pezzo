@@ -46,14 +46,14 @@ profiles:
         paths:
           - ./kubernetes/base/server
   - name: common-0-dev-tokyo-console
-#    build:
-#      tagPolicy:
-#        gitCommit:
-#          variant: AbbrevCommitSha
-#      artifacts:
-#      - image: llm-ops-console
-#        docker:
-#          dockerfile: ./apps/console/Dockerfile
+    build:
+      tagPolicy:
+        gitCommit:
+          variant: AbbrevCommitSha
+      artifacts:
+      - image: llm-ops-console
+        docker:
+          dockerfile: ./apps/console/Dockerfile
     deploy:
       statusCheckDeadlineSeconds: 1200
       kustomize:
