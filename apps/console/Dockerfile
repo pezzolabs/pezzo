@@ -6,9 +6,10 @@ RUN apk add --update nodejs
 WORKDIR /app
 
 #COPY dist/apps/console/nginx.conf /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY apps/console/nginx.conf /etc/nginx/conf.d/default.conf
+#ADD nginx.conf /etc/nginx/conf.d/default.conf
 #COPY dist/apps/console .
-COPY / .
+COPY apps/console/ .
 
 RUN chmod +x scripts/entrypoint.sh
 
