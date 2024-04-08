@@ -1,5 +1,5 @@
 FROM node:20-alpine
-LABEL llm-ops-proxy
+LABEL org.opencontainers.image.source https://github.com/pezzolabs/pezzo/proxy
 
 RUN apk update
 

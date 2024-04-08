@@ -24,8 +24,8 @@ spec:
       containers:
         - image: ghcr.io/pezzolabs/pezzo/proxy:latest
           name: llm-ops-pezzo-proxy
-          ports:
-            - containerPort: 3000
-              hostPort: 3001
-              protocol: TCP
+#          ports:
+#            - containerPort: 3000
+#              hostPort: 3001
+#              protocol: TCP
       restartPolicy: Always
