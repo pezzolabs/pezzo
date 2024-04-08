@@ -43,7 +43,7 @@ spec:
                 configMapKeyRef:
                   key: NX_SUPERTOKENS_WEBSITE_DOMAIN
                   name: llm-ops-console-env
-          image: llm-ops-console
+          image: llm-ops-console:latest
           name: llm-ops-console
 #          ports:
 #            - containerPort: 4200
