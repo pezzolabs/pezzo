@@ -67,7 +67,7 @@ profiles:
       artifacts:
       - image: llm-ops-proxy
         docker:
-          dockerfile: ./docker/proxy/Dockerfile
+          dockerfile: ./apps/proxy/Dockerfile
     deploy:
       statusCheckDeadlineSeconds: 3600
       kustomize:
@@ -145,7 +145,7 @@ profiles:
       artifacts:
         - image: llm-ops-proxy
           docker:
-            dockerfile: ./docker/proxy/Dockerfile
+            dockerfile: ./apps/proxy/Dockerfile
     deploy:
       statusCheckDeadlineSeconds: 3600
       kustomize:
