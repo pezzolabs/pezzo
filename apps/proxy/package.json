@@ -1,0 +1,14 @@
+{
+  "name": "proxy",
+  "version": "0.0.1",
+  "dependencies": {
+    "@pezzo/llm-toolkit": "0.5.0",
+    "axios": "1.6.8",
+    "class-transformer": "0.5.1",
+    "cross-fetch": "4.0.0",
+    "express": "4.18.2",
+    "openai": "4.16.1",
+    "reflect-metadata": "0.1.13"
+  },
+  "main": "./main.js"
+}
