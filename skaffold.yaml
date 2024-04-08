@@ -44,7 +44,7 @@ profiles:
       statusCheckDeadlineSeconds: 1200
       kustomize:
         paths:
-          - ./kubernetes/dev/server
+          - ./kubernetes/base/server
   - name: common-0-dev-tokyo-console
     build:
       tagPolicy:
@@ -58,7 +58,7 @@ profiles:
       statusCheckDeadlineSeconds: 1200
       kustomize:
         paths:
-          - ./kubernetes/dev/console
+          - ./kubernetes/base/console
   - name: common-0-dev-tokyo-proxy
     build:
       tagPolicy:
@@ -72,7 +72,7 @@ profiles:
       statusCheckDeadlineSeconds: 3600
       kustomize:
         paths:
-          - ./kubernetes/dev/proxy
+          - ./kubernetes/base/proxy
   - name: common-0-dev-tokyo-prisma-migrate
     deploy:
       statusCheckDeadlineSeconds: 3600
