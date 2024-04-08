@@ -5,15 +5,15 @@ metadata:
     kompose.cmd: kompose convert
     kompose.version: 1.32.0 (HEAD)
   labels:
-    io.kompose.service: local-kms
-  name: local-kms
+    io.kompose.service: llm-ops-local-kms
+  name: llm-ops-local-kms
 spec:
   ports:
-    - name: "9981"
+    - protocol: TCP
       port: 9981
       targetPort: 9981
-    - name: 9981-tcp
-      port: 9981
-      targetPort: 9981
+#    - name: 9981-tcp
+#      port: 9981
+#      targetPort: 9981
   selector:
-    io.kompose.service: local-kms
+    io.kompose.service: llm-ops-local-kms

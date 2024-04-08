@@ -5,13 +5,13 @@ metadata:
     kompose.cmd: kompose convert
     kompose.version: 1.32.0 (HEAD)
   labels:
-    io.kompose.service: supertokens
-  name: supertokens
+    io.kompose.service: llm-ops-supertokens
+  name: llm-ops-supertokens
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: supertokens
+      io.kompose.service: llm-ops-supertokens
   template:
     metadata:
       annotations:
@@ -19,7 +19,7 @@ spec:
         kompose.version: 1.32.0 (HEAD)
       labels:
         io.kompose.network/dp-llm-ops-default: "true"
-        io.kompose.service: supertokens
+        io.kompose.service: llm-ops-supertokens
     spec:
       containers:
         - env:
@@ -30,11 +30,12 @@ spec:
             exec:
               command:
                 - |
-                  bash -c 'exec 3<>/dev/tcp/127.0.0.1/3567 && echo -e "GET /hello HTTP/1.1\r\nhost: 127.0.0.1:3567\r\nConnection: close\r\n\r\n" >&3 && cat <&3 | grep "Hello"'
+                  bash -c 'exec 3<>/dev/tcp/127.0.0.1/3567 && echo -e "GET /hello HTTP/1.1\r\nhost: ::1:3567\r\nConnection: close\r\n\r\n" >&3 && cat <&3 | grep "Hello"'
+#                  bash -c 'exec 3<>/dev/tcp/127.0.0.1/3567 && echo -e "GET /hello HTTP/1.1\r\nhost: 127.0.0.1:3567\r\nConnection: close\r\n\r\n" >&3 && cat <&3 | grep "Hello"'
             failureThreshold: 5
             periodSeconds: 10
             timeoutSeconds: 5
-          name: supertokens
+          name: llm-ops-supertokens
           ports:
             - containerPort: 3567
               hostPort: 3567

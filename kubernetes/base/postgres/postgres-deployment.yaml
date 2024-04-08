@@ -5,13 +5,13 @@ metadata:
     kompose.cmd: kompose convert
     kompose.version: 1.32.0 (HEAD)
   labels:
-    io.kompose.service: postgres
-  name: postgres
+    io.kompose.service: llm-ops-postgres
+  name: llm-ops-postgres
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: postgres
+      io.kompose.service: llm-ops-postgres
   strategy:
     type: Recreate
   template:
@@ -21,10 +21,12 @@ spec:
         kompose.version: 1.32.0 (HEAD)
       labels:
         io.kompose.network/dp-llm-ops-default: "true"
-        io.kompose.service: postgres
+        io.kompose.service: llm-ops-postgres
     spec:
       containers:
         - env:
+            - name: PGDATA
+              value: /var/lib/postgresql/data/db-files/
             - name: POSTGRES_PASSWORD
               value: postgres
             - name: POSTGRES_USER
@@ -37,7 +39,7 @@ spec:
             failureThreshold: 3
             periodSeconds: 5
             timeoutSeconds: 5
-          name: postgres
+          name: llm-ops-postgres
           ports:
             - containerPort: 5432
               hostPort: 5433

@@ -1,0 +1,4 @@
+namespace: realtime-streaming
+resources:
+  - pezzo-proxy-deployment.yaml
+  - pezzo-proxy-service.yaml

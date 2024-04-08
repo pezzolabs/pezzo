@@ -5,13 +5,13 @@ metadata:
     kompose.cmd: kompose convert
     kompose.version: 1.32.0 (HEAD)
   labels:
-    io.kompose.service: redis-stack-server
-  name: redis-stack-server
+    io.kompose.service: llm-ops-redis-stack-server
+  name: llm-ops-redis-stack-server
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: redis-stack-server
+      io.kompose.service: llm-ops-redis-stack-server
   template:
     metadata:
       annotations:
@@ -19,7 +19,7 @@ spec:
         kompose.version: 1.32.0 (HEAD)
       labels:
         io.kompose.network/dp-llm-ops-default: "true"
-        io.kompose.service: redis-stack-server
+        io.kompose.service: llm-ops-redis-stack-server
     spec:
       containers:
         - image: redis/redis-stack-server:7.2.0-v0
@@ -30,7 +30,7 @@ spec:
             failureThreshold: 5
             periodSeconds: 1
             timeoutSeconds: 3
-          name: redis-stack-server
+          name: llm-ops-redis-stack-server
           ports:
             - containerPort: 6379
               hostPort: 6379

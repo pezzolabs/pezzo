@@ -5,11 +5,13 @@ RUN apk update
 
 WORKDIR /app
 
-COPY ./dist/apps/proxy/package*.json ./
+#COPY ./dist/apps/proxy/package*.json ./
+COPY apps/proxy/package*.json ./
 
 RUN npm i --omit=dev
 
-COPY ./dist/apps/proxy .
+#COPY ./dist/apps/proxy .
+COPY apps/proxy .
 
 ENV HOST=0.0.0.0
 ENV PORT=3000

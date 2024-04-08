@@ -1,0 +1,5 @@
+namespace: realtime-streaming
+resources:
+  - pezzo-server-deployment.yaml
+  - pezzo-server-service.yaml
+  - -env-local-configmap.yaml
