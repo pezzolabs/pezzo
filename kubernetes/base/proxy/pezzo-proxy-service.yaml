@@ -5,12 +5,12 @@ metadata:
     kompose.cmd: kompose convert -f ./proxy.yaml
     kompose.version: 1.32.0 (HEAD)
   labels:
-    io.kompose.service: llm-ops-pezzo-proxy
-  name: llm-ops-pezzo-proxy
+    io.kompose.service: llm-ops-proxy
+  name: llm-ops-proxy
 spec:
   ports:
     - protocol: TCP
       port: 3001
       targetPort: 3000
   selector:
-    io.kompose.service: llm-ops-pezzo-proxy
+    io.kompose.service: llm-ops-proxy

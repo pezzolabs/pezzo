@@ -44,7 +44,7 @@ profiles:
       statusCheckDeadlineSeconds: 1200
       kustomize:
         paths:
-          - ./kubernetes/base/server
+          - ./kubernetes/dev/server
   - name: common-0-dev-tokyo-console
     build:
       tagPolicy:
@@ -58,7 +58,7 @@ profiles:
       statusCheckDeadlineSeconds: 1200
       kustomize:
         paths:
-          - ./kubernetes/base/console
+          - ./kubernetes/dev/console
   - name: common-0-dev-tokyo-proxy
     build:
       tagPolicy:
@@ -72,7 +72,7 @@ profiles:
       statusCheckDeadlineSeconds: 3600
       kustomize:
         paths:
-          - ./kubernetes/base/proxy
+          - ./kubernetes/dev/proxy
   - name: common-0-dev-tokyo-prisma-migrate
     deploy:
       statusCheckDeadlineSeconds: 3600
@@ -122,7 +122,7 @@ profiles:
       statusCheckDeadlineSeconds: 1200
       kustomize:
         paths:
-          - ./kubernetes/base/server
+          - ./kubernetes/prd/server
   - name: common-0-prd-tokyo-console
     build:
       tagPolicy:
@@ -136,7 +136,7 @@ profiles:
       statusCheckDeadlineSeconds: 1200
       kustomize:
         paths:
-          - ./kubernetes/base/console
+          - ./kubernetes/prd/console
   - name: common-0-prd-tokyo-proxy
     build:
       tagPolicy:
@@ -150,7 +150,7 @@ profiles:
       statusCheckDeadlineSeconds: 3600
       kustomize:
         paths:
-          - ./kubernetes/base/proxy
+          - ./kubernetes/prd/proxy
   - name: common-0-prd-tokyo-prisma-migrate
     deploy:
       statusCheckDeadlineSeconds: 3600
