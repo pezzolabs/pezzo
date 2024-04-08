@@ -79,3 +79,81 @@ profiles:
       kustomize:
         paths:
           - ./kubernetes/base/prisma-migration
+  - name: common-0-prd-tokyo-postgres
+    deploy:
+      statusCheckDeadlineSeconds: 1800
+      kustomize:
+        paths:
+          - ./kubernetes/base/postgres
+  - name: common-0-prd-tokyo-clickhouse
+    deploy:
+      statusCheckDeadlineSeconds: 1800
+      kustomize:
+        paths:
+          - ./kubernetes/base/clickhouse
+  - name: common-0-prd-tokyo-supertokens
+    deploy:
+      statusCheckDeadlineSeconds: 1800
+      kustomize:
+        paths:
+          - ./kubernetes/base/supertokens
+  - name: common-0-prd-tokyo-redis
+    deploy:
+      statusCheckDeadlineSeconds: 1800
+      kustomize:
+        paths:
+          - ./kubernetes/base/redis
+  - name: common-0-prd-tokyo-local-kms
+    deploy:
+      statusCheckDeadlineSeconds: 1800
+      kustomize:
+        paths:
+          - ./kubernetes/base/local-kms
+  - name: common-0-prd-tokyo-server
+    build:
+      tagPolicy:
+        gitCommit:
+          variant: AbbrevCommitSha
+      artifacts:
+        - image: llm-ops-server
+          docker:
+            dockerfile: ./apps/server/Dockerfile
+    deploy:
+      statusCheckDeadlineSeconds: 1200
+      kustomize:
+        paths:
+          - ./kubernetes/base/server
+  - name: common-0-prd-tokyo-console
+    build:
+      tagPolicy:
+        gitCommit:
+          variant: AbbrevCommitSha
+      artifacts:
+        - image: llm-ops-console
+          docker:
+            dockerfile: ./apps/console/Dockerfile
+    deploy:
+      statusCheckDeadlineSeconds: 1200
+      kustomize:
+        paths:
+          - ./kubernetes/base/console
+  - name: common-0-prd-tokyo-proxy
+    build:
+      tagPolicy:
+        gitCommit:
+          variant: AbbrevCommitSha
+      artifacts:
+        - image: llm-ops-proxy
+          docker:
+            dockerfile: ./docker/proxy/Dockerfile
+    deploy:
+      statusCheckDeadlineSeconds: 3600
+      kustomize:
+        paths:
+          - ./kubernetes/base/proxy
+  - name: common-0-prd-tokyo-prisma-migrate
+    deploy:
+      statusCheckDeadlineSeconds: 3600
+      kustomize:
+        paths:
+          - ./kubernetes/base/prisma-migration
