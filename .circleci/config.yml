@@ -182,144 +182,162 @@ workflows:
           requires:
             - approve/prisma-migrate
 
-#  deliver-prd:
-#    jobs:
-#      - approve:
-#          <<: *master-filter
-#          name: approve/upgrade
-#          type: approval
-#      - gradle/deliver:
-#          <<: *master-filter
-#          name: deliver/prd/upgrade
-#          docker: *orb_docker_gradle
-#          env: prd
-#          region: tokyo
-#          cluster: spaas_sn
-#          system: data-catalogue
-#          target: upgrade
-#          requires:
-#            - approve/upgrade
-#      - approve:
-#          <<: *master-filter
-#          name: approve/gms
-#          type: approval
-#      - gradle/deliver:
-#          <<: *master-filter
-#          name: deliver/prd/gms
-#          docker: *orb_docker_gradle
-#          env: prd
-#          region: tokyo
-#          cluster: spaas_sn
-#          system: data-catalogue
-#          target: gms
-#          requires:
-#            - approve/gms
-#      - approve:
-#          <<: *master-filter
-#          name: approve/frontend
-#          type: approval
-#      - gradle/deliver:
-#          <<: *master-filter
-#          name: deliver/prd/frontend
-#          docker: *orb_docker_gradle
-#          env: prd
-#          region: tokyo
-#          cluster: spaas_sn
-#          system: data-catalogue
-#          target: frontend
-#          resourceClass: large
-#          requires:
-#            - approve/frontend
-#      - approve:
-#          <<: *master-filter
-#          name: approve/mae-consumer
-#          type: approval
-#      - gradle/deliver:
-#          <<: *master-filter
-#          name: deliver/prd/mae-consumer
-#          docker: *orb_docker_gradle
-#          env: prd
-#          region: tokyo
-#          cluster: spaas_sn
-#          system: data-catalogue
-#          target: mae-consumer
-#          requires:
-#            - approve/mae-consumer
-#      - approve:
-#          <<: *master-filter
-#          name: approve/mce-consumer
-#          type: approval
-#      - gradle/deliver:
-#          <<: *master-filter
-#          name: deliver/prd/mce-consumer
-#          docker: *orb_docker_gradle
-#          env: prd
-#          region: tokyo
-#          cluster: spaas_sn
-#          system: data-catalogue
-#          target: mce-consumer
-#          requires:
-#            - approve/mce-consumer
-#      - approve:
-#          <<: *master-filter
-#          name: approve/elasticsearch-setup
-#          type: approval
-#      - gradle/deliver:
-#          <<: *master-filter
-#          name: deliver/prd/elasticsearch-setup
-#          docker: *orb_docker_gradle
-#          env: prd
-#          region: tokyo
-#          cluster: spaas_sn
-#          system: data-catalogue
-#          target: elasticsearch-setup
-#          requires:
-#            - approve/elasticsearch-setup
-#      - approve:
-#          <<: *master-filter
-#          name: approve/kafka-setup
-#          type: approval
-#      - gradle/deliver:
-#          <<: *master-filter
-#          name: deliver/prd/kafka-setup
-#          docker: *orb_docker_gradle
-#          env: prd
-#          region: tokyo
-#          cluster: spaas_sn
-#          system: data-catalogue
-#          target: kafka-setup
-#          requires:
-#            - approve/kafka-setup
-#      - approve:
-#          <<: *master-filter
-#          name: approve/ingestion
-#          type: approval
-#      - gradle/deliver:
-#          <<: *master-filter
-#          name: deliver/prd/ingestion
-#          docker: *orb_docker_gradle
-#          env: prd
-#          region: tokyo
-#          cluster: spaas_sn
-#          system: data-catalogue
-#          target: ingestion
-#          requires:
-#            - approve/ingestion
-#      - approve:
-#          <<: *master-filter
-#          name: approve/dependencies
-#          type: approval
-#      - gradle/deliver:
-#          <<: *master-filter
-#          name: deliver/prd/dependencies
-#          docker: *orb_docker_gradle
-#          env: prd
-#          region: tokyo
-#          cluster: spaas_sn
-#          system: data-catalogue
-#          target: dependencies
-#          requires:
-#            - approve/dependencies
+  deliver-prd:
+    jobs:
+      - approve:
+          <<: *master-filter
+          name: approve/postgres
+          type: approval
+      - gradle/deliver:
+          <<: *master-filter
+          name: deliver/prd/postgres
+          docker: *orb_docker_gradle
+          aws_account: prd
+          env: ""
+          region: tokyo
+          cluster: common-0
+          system: realtime-streaming
+          target: postgres
+          skaffold_use_cluster_profile: true
+          requires:
+            - approve/postgres
+      - approve:
+          <<: *master-filter
+          name: approve/clickhouse
+          type: approval
+      - gradle/deliver:
+          <<: *master-filter
+          name: deliver/prd/clickhouse
+          docker: *orb_docker_gradle
+          aws_account: prd
+          env: ""
+          region: tokyo
+          cluster: common-0
+          system: realtime-streaming
+          target: clickhouse
+          skaffold_use_cluster_profile: true
+          requires:
+            - approve/clickhouse
+      - approve:
+          <<: *master-filter
+          name: approve/supertokens
+          type: approval
+      - gradle/deliver:
+          <<: *master-filter
+          name: deliver/prd/supertokens
+          docker: *orb_docker_gradle
+          aws_account: prd
+          env: ""
+          region: tokyo
+          cluster: common-0
+          system: realtime-streaming
+          target: supertokens
+          skaffold_use_cluster_profile: true
+          requires:
+            - approve/supertokens
+      - approve:
+          <<: *master-filter
+          name: approve/redis
+          type: approval
+      - gradle/deliver:
+          <<: *master-filter
+          name: deliver/prd/redis
+          docker: *orb_docker_gradle
+          aws_account: prd
+          env: ""
+          region: tokyo
+          cluster: common-0
+          system: realtime-streaming
+          target: redis
+          #          resourceClass: large
+          skaffold_use_cluster_profile: true
+          requires:
+            - approve/redis
+      - approve:
+          <<: *master-filter
+          name: approve/local-kms
+          type: approval
+      - gradle/deliver:
+          <<: *master-filter
+          name: deliver/prd/local-kms
+          docker: *orb_docker_gradle
+          aws_account: prd
+          env: ""
+          region: tokyo
+          cluster: common-0
+          system: realtime-streaming
+          target: local-kms
+          skaffold_use_cluster_profile: true
+          requires:
+            - approve/local-kms
+      - approve:
+          <<: *master-filter
+          name: approve/server
+          type: approval
+      - gradle/deliver:
+          <<: *master-filter
+          name: deliver/prd/server
+          docker: *orb_docker_gradle
+          aws_account: prd
+          env: ""
+          region: tokyo
+          cluster: common-0
+          system: realtime-streaming
+          target: server
+          skaffold_use_cluster_profile: true
+          requires:
+            - approve/server
+      - approve:
+          <<: *master-filter
+          name: approve/console
+          type: approval
+      - gradle/deliver:
+          <<: *master-filter
+          name: deliver/prd/console
+          docker: *orb_docker_gradle
+          aws_account: prd
+          env: ""
+          region: tokyo
+          cluster: common-0
+          system: realtime-streaming
+          target: console
+          skaffold_use_cluster_profile: true
+          requires:
+            - approve/console
+      - approve:
+          <<: *master-filter
+          name: approve/proxy
+          type: approval
+      - gradle/deliver:
+          <<: *master-filter
+          name: deliver/prd/proxy
+          docker: *orb_docker_gradle
+          aws_account: prd
+          env: ""
+          region: tokyo
+          cluster: common-0
+          system: realtime-streaming
+          target: proxy
+          skaffold_use_cluster_profile: true
+          requires:
+            - approve/proxy
+      - approve:
+          <<: *master-filter
+          name: approve/prisma-migrate
+          type: approval
+      - gradle/deliver:
+          <<: *master-filter
+          name: deliver/prd/prisma-migrate
+          docker: *orb_docker_gradle
+          aws_account: prd
+          env: ""
+          region: tokyo
+          cluster: common-0
+          system: realtime-streaming
+          target: prisma-migrate
+          skaffold_use_cluster_profile: true
+          requires:
+            - approve/prisma-migrate
 
   main:
     when: << pipeline.parameters.workflow_main >>
