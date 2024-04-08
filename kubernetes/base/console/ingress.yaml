@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: llm-ops-pezzo-console-ingress
+  name: llm-ops-console-ingress
   annotations:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
@@ -9,7 +9,7 @@ metadata:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-1:226604077721:certificate/6b062dcc-c020-4580-bee0-34fd5a6a23a8
     alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
-    alb.ingress.kubernetes.io/tags: Env=development,Cost=smartnews,System=realtime-streaming,Component=llm-ops-pezzo-console,Team=Data-Platform-SH
+    alb.ingress.kubernetes.io/tags: Env=development,Cost=smartnews,System=realtime-streaming,Component=llm-ops-console,Team=Data-Platform-SH
     alb.ingress.kubernetes.io/healthcheck-path: /ping
     external-dns.alpha.kubernetes.io/hostname: llm-ops.dev.smartnews.net
     alb.ingress.kubernetes.io/ip-address-type: dualstack
@@ -30,6 +30,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: llm-ops-pezzo-console
+                name: llm-ops-console
                 port:
                   number: 4200

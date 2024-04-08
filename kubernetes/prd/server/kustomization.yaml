@@ -1,0 +1,4 @@
+namespace: realtime-streaming
+
+resources:
+  - ../../base/console

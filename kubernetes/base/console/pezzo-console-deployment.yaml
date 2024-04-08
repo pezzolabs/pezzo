@@ -43,8 +43,8 @@ spec:
                 configMapKeyRef:
                   key: NX_SUPERTOKENS_WEBSITE_DOMAIN
                   name: llm-ops-console-env
-          image: ghcr.io/pezzolabs/pezzo/console:latest
-          name: llm-ops-pezzo-console
+          image: llm-ops-console
+          name: llm-ops-console
 #          ports:
 #            - containerPort: 4200
 #              hostPort: 4200
