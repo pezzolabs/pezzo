@@ -64,7 +64,7 @@ profiles:
       tagPolicy:
         gitCommit:
           variant: AbbrevCommitSha
-          prefix: dev
+          prefix: dev-
       artifacts:
       - image: llm-ops-proxy
         docker:
