@@ -36,6 +36,7 @@ profiles:
       tagPolicy:
         gitCommit:
           variant: AbbrevCommitSha
+          prefix: dev-
       artifacts:
         - image: llm-ops-server
           docker:
@@ -50,6 +51,7 @@ profiles:
       tagPolicy:
         gitCommit:
           variant: AbbrevCommitSha
+          prefix: dev-
       artifacts:
       - image: llm-ops-console
         docker:
@@ -64,7 +66,7 @@ profiles:
       tagPolicy:
         gitCommit:
           variant: AbbrevCommitSha
-          prefix: dev
+          prefix: dev-
       artifacts:
       - image: llm-ops-proxy
         docker:

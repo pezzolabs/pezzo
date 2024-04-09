@@ -45,8 +45,8 @@ spec:
                   name: llm-ops-console-env
           image: llm-ops-console:latest
           name: llm-ops-console
-#          ports:
-#            - containerPort: 4200
-#              hostPort: 4200
-#              protocol: TCP
+          ports:
+            - containerPort: 4200
+              hostPort: 4200
+              protocol: TCP
       restartPolicy: Always
