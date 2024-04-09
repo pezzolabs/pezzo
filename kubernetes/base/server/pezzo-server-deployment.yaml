@@ -81,8 +81,8 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 5
           name: llm-ops-server
-#          ports:
-#            - containerPort: 3000
-#              hostPort: 3000
-#              protocol: TCP
+          ports:
+            - containerPort: 3000
+              hostPort: 3000
+              protocol: TCP
       restartPolicy: Always
