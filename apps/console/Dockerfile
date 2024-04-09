@@ -5,7 +5,7 @@ RUN apk add --update nodejs
 
 WORKDIR /app
 
-RUN nx run console:build
+RUN npx nx run console:build
 
 # update file path based on real path
 COPY dist/apps/console/nginx.conf /etc/nginx/conf.d/default.conf
