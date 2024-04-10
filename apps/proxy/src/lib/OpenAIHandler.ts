@@ -1,8 +1,4 @@
-import {
-  ObservabilityReportMetadata,
-  PromptExecutionType,
-  Provider,
-} from "@pezzo/types";
+import { PromptExecutionType, Provider } from "@pezzo/types";
 import { RequestWithPezzoClient } from "../types/common.types";
 import { Response } from "express";
 import axios from "axios";
