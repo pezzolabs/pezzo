@@ -1,6 +1,7 @@
 apiVersion: v1
 data:
-  NX_BASE_API_URL: http://llm-ops-server:3000
+#  NX_BASE_API_URL: http://llm-ops-server:3000
+  NX_BASE_API_URL: llm-ops.dev.smartnews.net
   NX_DEBUG_MODE: "true"
   NX_SUPERTOKENS_API_DOMAIN: http://llm-ops-server:3000
 #  NX_SUPERTOKENS_WEBSITE_DOMAIN: http://llm-ops-console:4200
