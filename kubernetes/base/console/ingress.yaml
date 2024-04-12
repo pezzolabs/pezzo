@@ -25,4 +25,11 @@ spec:
               service:
                 name: llm-ops-console
                 port:
-                  number: 8080
+                  number: 4200
+          - path: /api/
+            pathType: Prefix
+            backend:
+              service:
+                name: llm-ops-server
+                port:
+                  number: 3000
