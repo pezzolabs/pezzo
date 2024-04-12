@@ -16,7 +16,7 @@ WORKDIR /app
 COPY --from=builder dist/apps/console/nginx.conf /etc/nginx/conf.d/default.conf
 #COPY apps/console/nginx.conf /etc/nginx/conf.d/default.conf
 #COPY apps/dist/apps/console/nginx.conf /etc/nginx/conf.d/default.conf
-COPY dist/apps/console .
+COPY --from=builder dist/apps/console .
 #COPY apps/dist/apps/console .
 #COPY apps/console/ .
 
