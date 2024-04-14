@@ -19,7 +19,7 @@ COPY --from=base app/dist/apps/server/package*.json ./
 
 RUN npm i --omit=dev
 
-COPY --from=builder app/dist/apps/server .
+COPY --from=base app/dist/apps/server .
 #COPY apps/server .
 
 RUN npx prisma generate
