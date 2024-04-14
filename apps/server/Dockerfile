@@ -14,6 +14,8 @@ LABEL org.opencontainers.image.source https://github.com/pezzolabs/pezzo
 RUN apt-get update
 RUN apt-get install -y openssl curl
 
+WORKDIR /app
+
 COPY --from=base app/dist/apps/server/package*.json ./
 #COPY apps/server/package*.json ./
 
