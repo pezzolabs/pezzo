@@ -6,6 +6,7 @@ RUN apt-get install -y openssl curl
 
 WORKDIR /app
 COPY . .
+RUN npm install
 RUN npx nx run server:build
 
 RUN echo $(ls -la)
