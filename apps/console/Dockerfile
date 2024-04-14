@@ -14,11 +14,9 @@ WORKDIR /app
 
 # update file path based on real path
 COPY --from=builder app/dist/apps/console/nginx.conf /etc/nginx/conf.d/default.conf
-#COPY apps/console/nginx.conf /etc/nginx/conf.d/default.conf
 #COPY apps/dist/apps/console/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder app/dist/apps/console .
 #COPY apps/dist/apps/console .
-#COPY apps/console/ .
 
 RUN chmod +x scripts/entrypoint.sh
 
