@@ -5,14 +5,16 @@ RUN apt-get update
 RUN apt-get install -y openssl curl
 
 WORKDIR /app
+COPY . .
+RUN npx nx run server:build
 
-#COPY ./dist/apps/server/package*.json ./
-COPY apps/server/package*.json ./
+COPY ./dist/apps/server/package*.json ./
+#COPY apps/server/package*.json ./
 
 RUN npm i --omit=dev
 
-#COPY ./dist/apps/server .
-COPY apps/server .
+COPY ./dist/apps/server .
+#COPY apps/server .
 
 RUN npx prisma generate
 
