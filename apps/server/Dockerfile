@@ -8,12 +8,14 @@ WORKDIR /app
 COPY . .
 RUN npx nx run server:build
 
-COPY app/dist/apps/server/package*.json ./
+RUN echo $(ls -la)
+
+#COPY app/dist/apps/server/package*.json ./
 #COPY apps/server/package*.json ./
 
 RUN npm i --omit=dev
 
-COPY app/dist/apps/server .
+#COPY app/dist/apps/server .
 #COPY apps/server .
 
 RUN npx prisma generate
