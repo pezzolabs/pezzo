@@ -14,12 +14,12 @@ RUN apk update
 
 WORKDIR /app
 
-COPY app/dist/apps/proxy/package*.json ./
+COPY --from=builder app/dist/apps/proxy/package*.json ./
 #COPY apps/proxy/package*.json ./
 
 RUN npm i --omit=dev
 
-COPY app/dist/apps/proxy .
+COPY --from=builder app/dist/apps/proxy .
 #COPY apps/proxy .
 
 ENV HOST=0.0.0.0
