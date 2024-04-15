@@ -5,7 +5,8 @@ orbs:
   terraform: smartnews/terraform@1
 
 orb_dockers:
-  gradle: &orb_docker_gradle 165463520094.dkr.ecr.ap-northeast-1.amazonaws.com/circleci-orbs/gradle:3
+#  gradle: &orb_docker_gradle 165463520094.dkr.ecr.ap-northeast-1.amazonaws.com/circleci-orbs/gradle:3
+  gradle: &orb_docker_gradle 165463520094.dkr.ecr.ap-northeast-1.amazonaws.com/circleci-orbs/gradle:8.0-3
   terraform: &orb_docker_terraform 165463520094.dkr.ecr.ap-northeast-1.amazonaws.com/circleci-orbs/terraform:1
 
 workflow_filters:
