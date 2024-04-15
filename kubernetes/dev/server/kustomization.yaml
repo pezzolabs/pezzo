@@ -3,3 +3,4 @@ namespace: realtime-streaming
 
 resources:
   - ../../base/server
+  - ./-env-local-configmap.yaml
