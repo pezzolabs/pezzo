@@ -1,0 +1,7 @@
+namespace: realtime-streaming
+#namePrefix: dev-
+
+resources:
+  - ../../base/console
+  - ./ingress.yaml
+  - ./-env-configmap.yaml

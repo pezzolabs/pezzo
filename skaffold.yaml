@@ -36,6 +36,7 @@ profiles:
       tagPolicy:
         gitCommit:
           variant: AbbrevCommitSha
+          prefix: dev-
       artifacts:
         - image: llm-ops-server
           docker:
@@ -50,6 +51,7 @@ profiles:
       tagPolicy:
         gitCommit:
           variant: AbbrevCommitSha
+          prefix: dev-
       artifacts:
       - image: llm-ops-console
         docker:
@@ -58,21 +60,22 @@ profiles:
       statusCheckDeadlineSeconds: 1200
       kustomize:
         paths:
-          - ./kubernetes/base/console
+          - ./kubernetes/dev/console
   - name: common-0-dev-tokyo-proxy
     build:
       tagPolicy:
         gitCommit:
           variant: AbbrevCommitSha
+          prefix: dev-
       artifacts:
       - image: llm-ops-proxy
         docker:
-          dockerfile: ./docker/proxy/Dockerfile
+          dockerfile: ./apps/proxy/Dockerfile
     deploy:
       statusCheckDeadlineSeconds: 3600
       kustomize:
         paths:
-          - ./kubernetes/base/proxy
+          - ./kubernetes/dev/proxy
   - name: common-0-dev-tokyo-prisma-migrate
     deploy:
       statusCheckDeadlineSeconds: 3600
@@ -114,6 +117,7 @@ profiles:
       tagPolicy:
         gitCommit:
           variant: AbbrevCommitSha
+          prefix: prd-
       artifacts:
         - image: llm-ops-server
           docker:
@@ -122,12 +126,13 @@ profiles:
       statusCheckDeadlineSeconds: 1200
       kustomize:
         paths:
-          - ./kubernetes/base/server
+          - ./kubernetes/prd/server
   - name: common-0-prd-tokyo-console
     build:
       tagPolicy:
         gitCommit:
           variant: AbbrevCommitSha
+          prefix: prd-
       artifacts:
         - image: llm-ops-console
           docker:
@@ -136,21 +141,22 @@ profiles:
       statusCheckDeadlineSeconds: 1200
       kustomize:
         paths:
-          - ./kubernetes/base/console
+          - ./kubernetes/prd/console
   - name: common-0-prd-tokyo-proxy
     build:
       tagPolicy:
         gitCommit:
           variant: AbbrevCommitSha
+          prefix: prd-
       artifacts:
         - image: llm-ops-proxy
           docker:
-            dockerfile: ./docker/proxy/Dockerfile
+            dockerfile: ./apps/proxy/Dockerfile
     deploy:
       statusCheckDeadlineSeconds: 3600
       kustomize:
         paths:
-          - ./kubernetes/base/proxy
+          - ./kubernetes/prd/proxy
   - name: common-0-prd-tokyo-prisma-migrate
     deploy:
       statusCheckDeadlineSeconds: 3600

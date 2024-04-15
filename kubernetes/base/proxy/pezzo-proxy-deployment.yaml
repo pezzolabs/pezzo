@@ -5,13 +5,13 @@ metadata:
     kompose.cmd: kompose convert -f ./proxy.yaml
     kompose.version: 1.32.0 (HEAD)
   labels:
-    io.kompose.service: llm-ops-pezzo-proxy
-  name: llm-ops-pezzo-proxy
+    io.kompose.service: llm-ops-proxy
+  name: llm-ops-proxy
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: llm-ops-pezzo-proxy
+      io.kompose.service: llm-ops-proxy
   template:
     metadata:
       annotations:
@@ -19,13 +19,13 @@ spec:
         kompose.version: 1.32.0 (HEAD)
       labels:
         io.kompose.network/dp-llm-ops-default: "true"
-        io.kompose.service: llm-ops-pezzo-proxy
+        io.kompose.service: llm-ops-proxy
     spec:
       containers:
         - image: ghcr.io/pezzolabs/pezzo/proxy:latest
-          name: llm-ops-pezzo-proxy
-#          ports:
-#            - containerPort: 3000
-#              hostPort: 3001
-#              protocol: TCP
+          name: llm-ops-proxy
+          ports:
+            - containerPort: 3000
+              hostPort: 3001
+              protocol: TCP
       restartPolicy: Always

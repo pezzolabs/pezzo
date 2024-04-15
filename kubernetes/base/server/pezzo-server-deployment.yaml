@@ -72,17 +72,17 @@ spec:
                 configMapKeyRef:
                   key: SUPERTOKENS_CONNECTION_URI
                   name: llm-ops-server-env
-          image: ghcr.io/pezzolabs/pezzo/server:latest
+          image: llm-ops-server:latest
           livenessProbe:
             exec:
               command:
-                - curl 'http://pezzo-server:3000/api/healthz'
+                - curl 'http://llm-ops-server:3000/api/healthz'
             failureThreshold: 5
             periodSeconds: 10
             timeoutSeconds: 5
           name: llm-ops-server
-#          ports:
-#            - containerPort: 3000
-#              hostPort: 3000
-#              protocol: TCP
+          ports:
+            - containerPort: 3000
+              hostPort: 3000
+              protocol: TCP
       restartPolicy: Always

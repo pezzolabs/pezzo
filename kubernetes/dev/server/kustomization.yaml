@@ -1,0 +1,6 @@
+namespace: realtime-streaming
+#namePrefix: dev-
+
+resources:
+  - ../../base/server
+  - ./-env-local-configmap.yaml
