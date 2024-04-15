@@ -2,3 +2,5 @@ namespace: realtime-streaming
 
 resources:
   - ../../base/console
+  - ./ingress.yaml
+  - ./-env-configmap.yaml

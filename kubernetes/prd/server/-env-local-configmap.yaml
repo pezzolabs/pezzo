@@ -1,0 +1,14 @@
+apiVersion: v1
+data:
+  CONSOLE_HOST: https://llm-ops.smartnews.net
+  DATABASE_URL: postgresql://postgres:postgres@llm-ops-postgres:5433/pezzo
+  KAFKA_BROKERS: localhost:9092
+  OPENSEARCH_URL: http://localhost:9200
+  PINO_PRETTIFY: "true"
+  REDIS_URL: redis://llm-ops-redis-stack-server:6379
+  SUPERTOKENS_CONNECTION_URI: http://llm-ops-supertokens:3567
+kind: ConfigMap
+metadata:
+  labels:
+    io.kompose.service: llm-ops-server-env
+  name: llm-ops-server-env
