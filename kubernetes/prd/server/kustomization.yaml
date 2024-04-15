@@ -2,3 +2,4 @@ namespace: realtime-streaming
 
 resources:
   - ../../base/console
+  - ./-env-local-configmap.yaml
