@@ -60,7 +60,7 @@ profiles:
       statusCheckDeadlineSeconds: 1200
       kustomize:
         paths:
-          - ./kubernetes/base/console
+          - ./kubernetes/dev/console
   - name: common-0-dev-tokyo-proxy
     build:
       tagPolicy:
