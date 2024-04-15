@@ -3,11 +3,21 @@ version: 2.1
 orbs:
   gradle: smartnews/gradle@3
   terraform: smartnews/terraform@1
+  kubernetes: smartnews/kubernetes@3
 
 orb_dockers:
 #  gradle: &orb_docker_gradle 165463520094.dkr.ecr.ap-northeast-1.amazonaws.com/circleci-orbs/gradle:3
   gradle: &orb_docker_gradle 165463520094.dkr.ecr.ap-northeast-1.amazonaws.com/circleci-orbs/gradle:8.0-3
   terraform: &orb_docker_terraform 165463520094.dkr.ecr.ap-northeast-1.amazonaws.com/circleci-orbs/terraform:1
+  kubernetes: &orb_docker_kubernetes 165463520094.dkr.ecr.ap-northeast-1.amazonaws.com/circleci-orbs/kubernetes:3
+
+executors:
+  deploy:
+    docker:
+      - image: *orb_docker_kubernetes
+  test:
+    docker:
+      - image: 165463520094.dkr.ecr.ap-northeast-1.amazonaws.com/circleci-orbs/kubernetes:2
 
 workflow_filters:
   branch-filter: &branch-filter
@@ -24,6 +34,102 @@ workflow_filters:
     filters:
       branches:
         only: dev
+
+jobs:
+  build:
+    executor: test
+    parameters:
+      Env:
+        type: string
+        default: dev
+      Repo:
+        type: string
+      DockerfilePath:
+        type: string
+    environment:
+      AWS_ECR_ACCOUNT_URL: 165463520094.dkr.ecr.ap-northeast-1.amazonaws.com
+      AWS_DEFAULT_REGION: ap-northeast-1
+      DOCKER_NS: realtime-streaming
+    steps:
+      - checkout
+      - aws-cli/setup
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - restore_cache:
+          keys:
+            - m2-{{ checksum "pom.xml" }}
+            - m2-
+      - run:
+          command: |
+            unset CIRCLE_OIDC_TOKEN
+            $(spaas kubernetes configure --system realtime-streaming --env dev)
+            echo "[prd-exp]" >> ~/.aws/credentials
+            echo "aws_access_key_id = $(aws configure get default.aws_access_key_id)" >> ~/.aws/credentials
+            echo "aws_secret_access_key = $(aws configure get default.aws_secret_access_key)" >> ~/.aws/credentials
+            aws configure set --profile smartnews-global-prd-exp role_arn arn:aws:iam::165463520094:role/smartnews-global-developer
+            aws configure set --profile smartnews-global-prd-exp source_profile prd-exp
+            aws configure set --profile smartnews-global-prd-exp region ap-northeast-1
+            spaas aws ssh configure -s realtime-streaming
+            ssh -fND 8157 tunnel -4 -o StrictHostKeyChecking=no
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: m2-{{ checksum "pom.xml" }}
+      - run:
+          name: docker build
+          command: |
+            cd << parameters.DockerfilePath >>
+            docker build -t << parameters.Repo >>:latest ../..
+      - run:
+          name: Set variable
+          command: |
+            TAG=<< parameters.Env >>-$(echo $CIRCLE_SHA1 | cut -c -7)
+            echo "export TAG=$TAG" >> $BASH_ENV
+      - run: docker tag << parameters.Repo >>:latest ${AWS_ECR_ACCOUNT_URL}/${DOCKER_NS}/<< parameters.Repo >>:$TAG
+
+      - run:
+          name: aws
+          command: |
+            aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ECR_ACCOUNT_URL}
+            docker push ${AWS_ECR_ACCOUNT_URL}/${DOCKER_NS}/<< parameters.Repo >>:$TAG
+
+            if [ << parameters.Env >> = "prd" ]; then
+              docker tag << parameters.Repo >>:latest ${AWS_ECR_ACCOUNT_URL}/${DOCKER_NS}/<< parameters.Repo >>:latest
+              docker push ${AWS_ECR_ACCOUNT_URL}/${DOCKER_NS}/<< parameters.Repo >>:latest
+            fi
+
+  deploy:
+    executor: deploy
+    environment:
+      AWS_ECR_ACCOUNT_URL: 165463520094.dkr.ecr.ap-northeast-1.amazonaws.com
+      AWS_DEFAULT_REGION: ap-northeast-1
+      REPO_NAME: dp-flink-platform-backend
+      DOCKER_NS: realtime-streaming
+    parameters:
+      Env:
+        type: string
+        default: dev
+      Repo:
+        type: string
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /home/circleci/.aws
+      - run:
+          name: update deployment
+          command: |
+            NAMESPACE=realtime-streaming
+            DEPLOY_ENV=<< parameters.Env >>
+            export EKS_CLUSTER_NAME=common-0
+            unset CIRCLE_OIDC_TOKEN
+            if [ << parameters.Repo >> = "llm-ops-console" ] || [ << parameters.Repo >> = "llm-ops-server" ] || [ << parameters.Repo >> = "llm-ops-proxy" ]; then
+              cd kubernetes/$DEPLOY_ENV/<< parameters.Repo >>
+            elif [ $DEPLOY_ENV = "ipv6prd" ]; then
+              cd kubernetes/base/<< parameters.Repo >>
+            fi
+            $(spaas kubernetes configure --system realtime-streaming -C common-0 -A $DEPLOY_ENV)
+            kustomize build . | kubectl apply -f -
+
 
 workflows:
   deliver-dev:
@@ -189,17 +295,11 @@ workflows:
           <<: *master-filter
           name: approve/postgres
           type: approval
-      - gradle/deliver:
+      - deploy:
           <<: *master-filter
           name: deliver/prd/postgres
-          docker: *orb_docker_gradle
-          aws_account: prd
-          env: ""
-          region: tokyo
-          cluster: common-0
-          system: realtime-streaming
-          target: postgres
-          skaffold_use_cluster_profile: true
+          Env: prd
+          Repo: postgres
           requires:
             - approve/postgres
       - approve:
