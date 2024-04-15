@@ -77,6 +77,15 @@ profiles:
         paths:
           - ./kubernetes/dev/proxy
   - name: common-0-dev-tokyo-prisma-migrate
+    build:
+      tagPolicy:
+        gitCommit:
+          variant: AbbrevCommitSha
+          prefix: dev-
+      artifacts:
+        - image: llm-ops-server
+          docker:
+            dockerfile: ./apps/server/Dockerfile
     deploy:
       statusCheckDeadlineSeconds: 3600
       kustomize:
