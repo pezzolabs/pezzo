@@ -33,3 +33,10 @@ spec:
                 name: llm-ops-server
                 port:
                   number: 3000
+          - path: /graphql
+            pathType: Prefix
+            backend:
+              service:
+                name: llm-ops-server
+                port:
+                  number: 3000

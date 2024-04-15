@@ -117,6 +117,7 @@ profiles:
       tagPolicy:
         gitCommit:
           variant: AbbrevCommitSha
+          prefix: prd-
       artifacts:
         - image: llm-ops-server
           docker:
@@ -131,6 +132,7 @@ profiles:
       tagPolicy:
         gitCommit:
           variant: AbbrevCommitSha
+          prefix: prd-
       artifacts:
         - image: llm-ops-console
           docker:
@@ -145,6 +147,7 @@ profiles:
       tagPolicy:
         gitCommit:
           variant: AbbrevCommitSha
+          prefix: prd-
       artifacts:
         - image: llm-ops-proxy
           docker:
