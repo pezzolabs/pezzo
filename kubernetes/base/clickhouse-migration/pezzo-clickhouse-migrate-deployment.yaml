@@ -36,7 +36,7 @@ spec:
               value: "8123"
             - name: CLICKHOUSE_USER
               value: test
-          image: ghcr.io/pezzolabs/pezzo/server:latest
+          image: llm-ops-server:latest
           name: pezzo-clickhouse-migrate
           workingDir: /app/clickhouse
       restartPolicy: Always

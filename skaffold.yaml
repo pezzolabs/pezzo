@@ -45,7 +45,7 @@ profiles:
       statusCheckDeadlineSeconds: 1200
       kustomize:
         paths:
-          - ./kubernetes/base/server
+          - ./kubernetes/dev/server
   - name: common-0-dev-tokyo-console
     build:
       tagPolicy:
