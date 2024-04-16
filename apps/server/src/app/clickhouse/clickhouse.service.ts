@@ -20,16 +20,16 @@ export class ClickHouseService implements OnModuleInit {
   }
 
   async onModuleInit() {
-    // const host = this.config.get("CLICKHOUSE_HOST");
-    const host = "llm-ops-clickhouse";
-    // const port = this.config.get("CLICKHOUSE_PORT");
-    const port = 8123;
-    // const username = this.config.get("CLICKHOUSE_USER");
-    const username = "default";
-    // const password = this.config.get("CLICKHOUSE_PASSWORD");
-    const password = "default";
-    // const protocol = this.config.get("CLICKHOUSE_PROTOCOL");
-    const protocol = "http";
+    const host = this.config.get("CLICKHOUSE_HOST");
+    // const host = "llm-ops-clickhouse";
+    const port = this.config.get("CLICKHOUSE_PORT");
+    // const port = 8123;
+    const username = this.config.get("CLICKHOUSE_USER");
+    // const username = "default";
+    const password = this.config.get("CLICKHOUSE_PASSWORD");
+    // const password = "default";
+    const protocol = this.config.get("CLICKHOUSE_PROTOCOL");
+    // const protocol = "http";
     const database = "default";
 
     this.logger.info("Creating ClickHouse client");
