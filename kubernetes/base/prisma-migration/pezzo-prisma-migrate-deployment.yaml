@@ -29,7 +29,7 @@ spec:
             - /bin/sh
           env:
             - name: DATABASE_URL
-              value: postgres://postgres:dp_sh_admin@llm-ops-dev.cxxqejepe5mj.ap-northeast-1.rds.amazonaws.com:5432/pezzo
+              value: postgres://postgres:postgres@llm-ops-dev-postgres-1.cluster-cxxqejepe5mj.ap-northeast-1.rds.amazonaws.com:5432/pezzo
           image: llm-ops-server:latest
           name: llm-ops-pezzo-prisma-migrate
       restartPolicy: Always
