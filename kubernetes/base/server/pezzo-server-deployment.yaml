@@ -23,18 +23,6 @@ spec:
     spec:
       containers:
         - env:
-            - name: CLICKHOUSE_HOST
-              value: clickhouse.dev.smartnews.com
-            - name: CLICKHOUSE_PORT
-              value: "8123"
-            - name: CLICKHOUSE_PASSWORD
-              value: test
-            - name: CLICKHOUSE_USER
-              value: test
-            - name: CLICKHOUSE_PROTOCOL
-              value: "http"
-            - name: CLICKHOUSE_DATABASE
-              value: default
             - name: CONSOLE_HOST
               valueFrom:
                 configMapKeyRef:
@@ -61,11 +49,6 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   key: PINO_PRETTIFY
-                  name: llm-ops-server-env
-            - name: REDIS_URL
-              valueFrom:
-                configMapKeyRef:
-                  key: REDIS_URL
                   name: llm-ops-server-env
             - name: SUPERTOKENS_CONNECTION_URI
               valueFrom:
