@@ -1,7 +1,8 @@
 import OpenAI from "openai";
 import { FormSchema, ProviderSettingsDefinition } from "../types";
 import { OpenAIToolkit } from "@pezzo/llm-toolkit";
-import * as gaiPrompt from "~/lib/gai-client/gaiPrompt";
+// import * as gaiPrompt from "~/lib/gai-client/gaiPrompt";
+import { useModels } from "~/lib/hooks/useModels";
 
 const { gptModels } = OpenAIToolkit;
 
@@ -19,11 +20,12 @@ const defaultSettings: OpenAIProviderSettings = {
   presence_penalty: 0,
 };
 
-const models = gaiPrompt.getModels();
+// const models = models;
 
-export const generateFormSchema = (
+export const GenerateFormSchema = (
   settings: OpenAIProviderSettings
 ): FormSchema => {
+  const { models } = useModels()
   const options = Object.keys(models).map((model) => ({
     value: model,
     label: model,
@@ -84,5 +86,5 @@ export const generateFormSchema = (
 export const openAIChatCompletionSettingsDefinition: ProviderSettingsDefinition<OpenAIProviderSettings> =
   {
     defaultSettings,
-    generateFormSchema,
+    GenerateFormSchema,
   };

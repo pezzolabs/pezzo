@@ -11,12 +11,12 @@ import {
 } from "@pezzo/ui";
 import { PromptSettingsSlider } from "../../PromptSettingsSlider";
 import { useEditorContext } from "~/lib/providers/EditorContext";
-import { generateFormSchema } from "./providers/openai-chat-completion";
+import { GenerateFormSchema } from "./providers/openai-chat-completion";
 import { SelectFormField, SliderFormField } from "./types";
 import { ControllerRenderProps, FieldValues } from "react-hook-form";
 
 interface Props {
-  schema: ReturnType<typeof generateFormSchema>;
+  schema: ReturnType<typeof GenerateFormSchema>;
 }
 
 export const ProviderSettingsSchemaRenderer = ({ schema }: Props) => {

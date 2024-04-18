@@ -30,7 +30,7 @@ export const ProviderSettingsCard = () => {
 
       {service && (
         <ProviderSettingsSchemaRenderer
-          schema={providerSettings[service].generateFormSchema(settings)}
+          schema={providerSettings[service].GenerateFormSchema(settings)}
         />
       )}
     </div>

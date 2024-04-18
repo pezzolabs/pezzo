@@ -59,3 +59,12 @@ export const GET_PROMPT_VERSIONS = graphql(/* GraphQL */ `
     }
   }
 `);
+
+export const GET_MODELS = graphql(/* GraphQL */ `
+  query getModels($data: GetProjectPromptsInput!) {
+    models(data: $data) {
+      gai_req_id
+      models
+    }
+  }
+`);

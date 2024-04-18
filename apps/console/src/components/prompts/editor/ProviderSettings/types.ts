@@ -24,5 +24,5 @@ export type FormSchema = FormField[];
 
 export interface ProviderSettingsDefinition<TSettings = unknown> {
   defaultSettings: TSettings;
-  generateFormSchema: (settings: TSettings) => FormSchema;
+  GenerateFormSchema: (settings: TSettings) => FormSchema;
 }
