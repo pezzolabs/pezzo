@@ -41,6 +41,39 @@ export class PromptsResolver {
     private analytics: AnalyticsService
   ) {}
 
+  // @Query(() => [String])
+  // async models(
+  //   @Args("data") data: GetProjectPromptsInput,
+  //   @CurrentUser() user: RequestUser
+  // ) {
+  //   const { projectId } = data;
+  //
+  //   const project = await this.prisma.project.findUnique({
+  //     where: {
+  //       id: projectId,
+  //     },
+  //   });
+  //
+  //   isOrgMemberOrThrow(user, project.organizationId);
+  //
+  //   this.logger.assign({ projectId }).info("Getting prompts");
+  //
+  //   try {
+  //     const prompts = await this.prisma.prompt.findMany({
+  //       where: {
+  //         projectId: data.projectId,
+  //       },
+  //       orderBy: {
+  //         createdAt: "desc",
+  //       },
+  //     });
+  //     return prompts;
+  //   } catch (error) {
+  //     this.logger.error({ error }, "Error getting prompts");
+  //     throw new InternalServerErrorException();
+  //   }
+  // }
+
   @Query(() => [Prompt])
   async prompts(
     @Args("data") data: GetProjectPromptsInput,

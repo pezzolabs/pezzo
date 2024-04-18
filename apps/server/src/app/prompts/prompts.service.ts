@@ -1,8 +1,9 @@
-import { PrismaService } from "../prisma.service";
+import {PrismaService} from "../prisma.service";
 import sha256 from "sha256";
-import { Injectable } from "@nestjs/common";
-import { CreatePromptVersionInput } from "./inputs/create-prompt-version.input";
-import { CreatePromptInput } from "./inputs/create-prompt.input";
+import {Injectable} from "@nestjs/common";
+import {CreatePromptVersionInput} from "./inputs/create-prompt-version.input";
+import {CreatePromptInput} from "./inputs/create-prompt.input";
+import {GaiPlatform} from "@pezzo/client";
 
 @Injectable()
 export class PromptsService {
@@ -115,5 +116,10 @@ export class PromptsService {
       },
     });
     return promptVersion;
+  }
+
+  async getModels() {
+    const gaiPlatform = new GaiPlatform({});
+    return await gaiPlatform.getModels();
   }
 }
