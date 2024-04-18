@@ -1,9 +1,9 @@
 import fetch from "cross-fetch";
 
-const serverUrl = "http://sn-gai-api.ai.smartnews.net";
+const serverUrl = "llm-ops.dev.smartnews.net";
 
 export async function getModels(): Promise<[string]> {
-  const response = await fetch(serverUrl + "/v3/models", {
+  const response = await fetch(serverUrl + "/api/prompts/v2/models", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

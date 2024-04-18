@@ -152,4 +152,31 @@ export class PromptsController {
       content: promptVersion.content,
     };
   }
+
+  @Get("/models")
+  @ApiOperation({
+    summary: "Get the model list",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Get model list successfully",
+  })
+  @ApiResponse({
+    status: 404,
+    description:
+      "Not found for the model list",
+  })
+  @ApiResponse({ status: 500, description: "Internal server error" })
+  async getModelList(
+    @Headers() headers
+  ) {
+    this.logger.info("Getting GAI platform models");
+
+    try {
+      return await this.promptsService.getModels();
+    } catch (error) {
+      this.logger.error({ error }, "Error getting GAI platform models");
+      throw new InternalServerErrorException();
+    }
+  }
 }
