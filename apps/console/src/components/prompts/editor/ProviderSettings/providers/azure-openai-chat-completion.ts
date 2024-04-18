@@ -15,7 +15,7 @@ const defaultSettings: OpenAIProviderSettings = {
   presence_penalty: 0,
 };
 
-const generateFormSchema = (settings: OpenAIProviderSettings): FormSchema => {
+const GenerateFormSchema = (settings: OpenAIProviderSettings): FormSchema => {
   const getMaxResponseTokensMaxValue = () => {
     switch (settings.model) {
       case "gpt-35-turbo":
@@ -81,5 +81,5 @@ const generateFormSchema = (settings: OpenAIProviderSettings): FormSchema => {
 export const azureOpenAIChatCompletionSettingsDefinition: ProviderSettingsDefinition<OpenAIProviderSettings> =
   {
     defaultSettings,
-    generateFormSchema,
+    GenerateFormSchema,
   };

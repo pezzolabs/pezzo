@@ -20,13 +20,12 @@ const defaultSettings: OpenAIProviderSettings = {
   presence_penalty: 0,
 };
 
-const { models } = useModels();
-
 // const models = models;
 
-export const generateFormSchema = (
+export const GenerateFormSchema = (
   settings: OpenAIProviderSettings
 ): FormSchema => {
+  const { models } = useModels()
   const options = Object.keys(models).map((model) => ({
     value: model,
     label: model,
@@ -87,5 +86,5 @@ export const generateFormSchema = (
 export const openAIChatCompletionSettingsDefinition: ProviderSettingsDefinition<OpenAIProviderSettings> =
   {
     defaultSettings,
-    generateFormSchema,
+    GenerateFormSchema,
   };
