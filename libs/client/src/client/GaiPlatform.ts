@@ -1,4 +1,5 @@
 import fetch from "cross-fetch";
+import {GetModelsResult} from "../types/prompts";
 
 export interface GaiClientOptions {
   apiKey?: string;
@@ -24,7 +25,7 @@ export class GaiPlatform {
     };
   }
 
-  async getModels(): Promise<[string]> {
+  async getModels(): Promise<GetModelsResult> {
     const url = new URL(`${this.options.serverUrl}/v3/models`);
 
     const response = await fetch(url.toString(), {
@@ -43,7 +44,10 @@ export class GaiPlatform {
       }
     }
 
-    return data.models;
+    return {
+      models: data.models,
+      gai_req_id: data.gai_req_id,
+    };
   }
 
 }
