@@ -57,3 +57,8 @@ export enum PromptExecutionStatus {
   Success = "Success",
   Error = "Error",
 }
+
+export interface GetModelsResult {
+  models: string[];
+  gai_req_id: string;
+}

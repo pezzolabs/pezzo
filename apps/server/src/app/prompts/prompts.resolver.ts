@@ -29,6 +29,7 @@ import { PinoLogger } from "../logger/pino-logger";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { PromptVersion } from "../../@generated/prompt-version/prompt-version.model";
 import { OrganizationsService } from "../identity/organizations.service";
+import { Models } from "./models/models.model";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Prompt)
@@ -41,7 +42,7 @@ export class PromptsResolver {
     private analytics: AnalyticsService
   ) {}
 
-  @Query(() => [String])
+  @Query(() => Models)
   async models() {
     this.logger.info("Getting GAI platform models");
 
