@@ -16,7 +16,7 @@ export const useModels = () => {
   });
 
   return {
-    models: data.models || [],
+    models: data.models.models || [],
     isLoading,
   };
 };
