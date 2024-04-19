@@ -26,7 +26,7 @@ export const GenerateFormSchema = (
   settings: OpenAIProviderSettings
 ): FormSchema => {
   const { models } = useModels()
-  const options = Object.keys(models).map((model) => ({
+  const options = Object.values(models).map((model) => ({
     value: model,
     label: model,
   }));
