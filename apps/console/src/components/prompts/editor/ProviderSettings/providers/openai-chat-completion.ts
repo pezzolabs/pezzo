@@ -1,10 +1,10 @@
 import OpenAI from "openai";
 import { FormSchema, ProviderSettingsDefinition } from "../types";
-import { OpenAIToolkit } from "@pezzo/llm-toolkit";
+import { GaiToolkit } from "./gai-tool-kit";
 // import * as gaiPrompt from "~/lib/gai-client/gaiPrompt";
 import { useModels } from "~/lib/hooks/useModels";
 
-const { gptModels } = OpenAIToolkit;
+const { gptModels } = GaiToolkit;
 
 type OpenAIProviderSettings = Omit<
   OpenAI.Chat.Completions.CompletionCreateParams,
@@ -19,8 +19,6 @@ const defaultSettings: OpenAIProviderSettings = {
   frequency_penalty: 0,
   presence_penalty: 0,
 };
-
-// const models = models;
 
 export const GenerateFormSchema = (
   settings: OpenAIProviderSettings
@@ -48,6 +46,7 @@ export const GenerateFormSchema = (
       max: 1,
       step: 0.1,
     },
+    // TODO: make sure if this is needed, if need have to make new toolkit to show each model promptCostPer1000Tokens / completionsCostPer1000Tokens / maxTokens
     {
       label: "Max Response Length",
       name: "max_tokens",
