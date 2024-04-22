@@ -80,6 +80,11 @@ export class GaiPlatform {
       }
     }
 
+    console.log("model: " + data.model);
+    console.log("completion: " + data.completion);
+    console.log("prompt_tokens: " + data.prompt_tokens);
+    console.log("completion_tokens: " + data.completion_tokens);
+
     return {
       gai_req_id: data.gai_req_id,
       model: data.model,
