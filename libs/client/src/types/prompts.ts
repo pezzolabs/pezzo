@@ -62,3 +62,19 @@ export interface GetModelsResult {
   models: string[];
   gai_req_id: string;
 }
+
+export interface GetPromptCompletionInput {
+  model: string;
+  system_hint: string;
+  prompt: string;
+  temperature: number;
+  max_tokens: number;
+}
+
+export interface GetPromptCompletionResult {
+  gai_req_id: string;
+  model: string;
+  completion: string;
+  prompt_tokens: number;
+  completion_tokens: number;
+}

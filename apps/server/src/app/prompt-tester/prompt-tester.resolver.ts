@@ -40,7 +40,7 @@ export class PromptTesterResolver {
 
     isOrgMemberOrThrow(user, project.organizationId);
 
-    const result = await this.promptTesterService.runTest(
+    const result = await this.promptTesterService.runGaiPlatformTest(
       data,
       project.id,
       project.organizationId
