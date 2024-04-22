@@ -1,9 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { TestPromptInput } from "../prompts/inputs/test-prompt.input";
-import { Pezzo, PezzoOpenAI } from "@pezzo/client";
+import {GetPromptCompletionResult, Pezzo, PezzoOpenAI} from "@pezzo/client";
 import { ReportingService } from "../reporting/reporting.service";
 import { ProviderApiKeysService } from "../credentials/provider-api-keys.service";
 import { SerializedReport } from "@pezzo/types";
+import { GaiPlatform } from "@pezzo/client";
 
 @Injectable()
 export class PromptTesterService {
@@ -25,6 +26,8 @@ export class PromptTesterService {
 
     const testerApiKey =
       await this.providerApiKeysService.decryptProviderApiKey(providerApiKey);
+
+    console.log("api-key: " + testerApiKey);
 
     let promptExecutionData;
 
@@ -63,6 +66,52 @@ export class PromptTesterService {
 
     const report = await this.reportingService.saveReport(
       promptExecutionData,
+      {
+        organizationId,
+        projectId,
+      },
+      true
+    );
+
+    return report;
+  }
+
+  async runGaiPlatformTest(
+    testData: TestPromptInput,
+    projectId: string,
+    organizationId: string
+  ): Promise<SerializedReport> {
+    const provider = "OpenAI";
+    const providerApiKey = await this.providerApiKeysService.getByProvider(
+      provider,
+      organizationId
+    );
+
+    const testerApiKey =
+      await this.providerApiKeysService.decryptProviderApiKey(providerApiKey);
+
+    console.log("api-key: " + testerApiKey);
+
+    // let promptExecutionData;
+    let result: GetPromptCompletionResult;
+
+    try {
+      const gaiPlatform = new GaiPlatform({});
+      result =  await gaiPlatform.getPromptCompletion(
+        {
+          model: testData.settings.model,
+          system_hint: "",
+          prompt: testData.content.prompt,
+          temperature: testData.settings.temperature,
+          max_tokens: testData.settings.max_tokens,
+        }
+      );
+    } catch (err) {
+      //
+    }
+
+    const report = await this.reportingService.saveGaiPlatformReport(
+      result,
       {
         organizationId,
         projectId,

@@ -1,5 +1,5 @@
 import fetch from "cross-fetch";
-import {GetModelsResult} from "../types/prompts";
+import { GetModelsResult, GetPromptCompletionInput, GetPromptCompletionResult } from "../types/prompts";
 
 export interface GaiClientOptions {
   apiKey?: string;
@@ -47,6 +47,45 @@ export class GaiPlatform {
     return {
       models: data.models,
       gai_req_id: data.gai_req_id,
+    };
+  }
+
+  async getPromptCompletion(dto: GetPromptCompletionInput): Promise<GetPromptCompletionResult> {
+    const url = new URL(`${this.options.serverUrl}/v3/text/completion`);
+
+    const response = await fetch(url.toString(), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(
+        {
+          model: dto.model,
+          project: "llm-ops",
+          system_hint: dto.system_hint,
+          prompt: dto.prompt,
+          temperature: dto.temperature,
+          max_tokens: dto.max_tokens,
+        }
+      ),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      if (data?.message) {
+        throw new Error(data.message);
+      } else {
+        throw new Error(
+          `Error fetching model list for environment "${this.options.environment}" (${data.statusCode}).`
+        );
+      }
+    }
+
+    return {
+      gai_req_id: data.gai_req_id,
+      model: data.model,
+      completion: data.completion,
+      prompt_tokens: data.prompt_tokens,
+      completion_tokens: data.completion_tokens,
     };
   }
 

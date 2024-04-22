@@ -21,6 +21,7 @@ import {
   serializeReport,
 } from "@pezzo/types";
 import { PaginatedReportsResult } from "./object-types/request-report-result.model";
+import {GetPromptCompletionResult} from "@pezzo/client";
 
 @Injectable()
 export class ReportingService {
@@ -67,6 +68,63 @@ export class ReportingService {
       cacheEnabled: cacheEnabled,
       cacheHit: cacheHit,
       promptId: report.metadata.promptId || null,
+    };
+
+    try {
+      await this.clickHouseService.client.insert({
+        format: "JSONEachRow",
+        table: "reports",
+        values: [reportToSave],
+      });
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException(`Could not save report`);
+    }
+
+    return serializeReport(reportToSave);
+  }
+
+  async saveGaiPlatformReport(
+    dto: GetPromptCompletionResult,
+    ownership: {
+      organizationId: string;
+      projectId: string;
+    },
+    isTestPrompt = false
+  ): Promise<SerializedReport> {
+    const reportId = randomUUID();
+    // const { report, calculated } = buildRequestReport(dto);
+
+    // const { metadata, request, response, cacheEnabled, cacheHit } = report;
+
+    const reportToSave: ReportSchema = {
+      id: reportId,
+      timestamp: "",
+      organizationId: ownership.organizationId,
+      projectId: ownership.projectId,
+      promptCost: null,
+      completionCost: null,
+      totalCost: null,
+      promptTokens: dto.prompt_tokens,
+      completionTokens: dto.completion_tokens,
+      totalTokens: (dto.prompt_tokens + dto.completion_tokens),
+      duration: null,
+      environment: "PLAYGROUND",
+      client: null,
+      clientVersion: null,
+      model: dto.model,
+      provider: "GAI Platform",
+      modelAuthor: "GAI Platform",
+      type: "ChatCompletion",
+      requestTimestamp: null,
+      requestBody: null,
+      isError: null,
+      responseStatusCode: null,
+      responseTimestamp: null,
+      responseBody: dto.completion,
+      cacheEnabled: null,
+      cacheHit: null,
+      promptId: null,
     };
 
     try {

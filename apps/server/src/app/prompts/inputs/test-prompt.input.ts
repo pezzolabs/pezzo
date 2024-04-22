@@ -17,7 +17,7 @@ export class TestPromptInput {
   type: PromptType;
 
   @Field(() => GraphQLJSON, { nullable: false })
-  settings: { model: string; modelSettings: unknown };
+  settings: { model: string; temperature: number, max_tokens: number, modelSettings: unknown };
 
   @Field(() => GraphQLJSON, { nullable: true })
   variables: Record<string, string>;
