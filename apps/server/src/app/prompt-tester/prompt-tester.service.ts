@@ -110,11 +110,6 @@ export class PromptTesterService {
       //
     }
 
-    console.log("model: " + result.model);
-    console.log("completion: " + result.completion);
-    console.log("prompt_tokens: " + result.prompt_tokens);
-    console.log("completion_tokens: " + result.completion_tokens);
-
     const report = await this.reportingService.saveGaiPlatformReport(
       result,
       {
