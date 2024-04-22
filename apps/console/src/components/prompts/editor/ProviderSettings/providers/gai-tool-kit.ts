@@ -44,6 +44,11 @@ const gaiToolkit = () => {
       completionsCostPer1000Tokens: 0.0020,
       maxTokens: 4096,
     }),
+    ["gpt-3.5-turbo-0125"]: defineModel<OpenAIGptModelSettings>({
+      promptCostPer1000Tokens: 0.0010,
+      completionsCostPer1000Tokens: 0.0020,
+      maxTokens: 4096,
+    }),
     /**
      * GPT-4
      */
@@ -51,6 +56,11 @@ const gaiToolkit = () => {
       promptCostPer1000Tokens: 0.03,
       completionsCostPer1000Tokens: 0.06,
       maxTokens: 8192,
+    }),
+    ["gpt-4-turbo"]: defineModel<OpenAIGptModelSettings>({
+      promptCostPer1000Tokens: 0.06,
+      completionsCostPer1000Tokens: 0.12,
+      maxTokens: 4096,
     }),
     ["gpt-4-32k"]: defineModel<OpenAIGptModelSettings>({
       promptCostPer1000Tokens: 0.06,
@@ -63,11 +73,62 @@ const gaiToolkit = () => {
       completionsCostPer1000Tokens: 0.03,
       maxTokens: 4096,
     }),
+    ["gpt-4-0125-preview"]: defineModel<OpenAIGptModelSettings>({
+      promptCostPer1000Tokens: 0.01,
+      completionsCostPer1000Tokens: 0.03,
+      maxTokens: 4096,
+    }),
     // Same as above
     ["gpt-4-vision-preview"]: defineModel<OpenAIGptModelSettings>({
       promptCostPer1000Tokens: 0.01,
       completionsCostPer1000Tokens: 0.03,
       maxTokens: 4096,
+    }),
+    /**
+     * claude
+     */
+    ["claude-3-haiku-20240307"]: defineModel<OpenAIGptModelSettings>({
+      promptCostPer1000Tokens: 0.01,
+      completionsCostPer1000Tokens: 0.03,
+      maxTokens: 4096,
+    }),
+    ["claude-3-sonnet-20240229"]: defineModel<OpenAIGptModelSettings>({
+      promptCostPer1000Tokens: 0.01,
+      completionsCostPer1000Tokens: 0.03,
+      maxTokens: 4096,
+    }),
+    ["claude-3-opus-20240229"]: defineModel<OpenAIGptModelSettings>({
+      promptCostPer1000Tokens: 0.01,
+      completionsCostPer1000Tokens: 0.03,
+      maxTokens: 4096,
+    }),
+    ["claude-3-haiku-20240307-bedrock"]: defineModel<OpenAIGptModelSettings>({
+      promptCostPer1000Tokens: 0.01,
+      completionsCostPer1000Tokens: 0.03,
+      maxTokens: 4096,
+    }),
+    ["claude-3-sonnet-20240229-bedrock"]: defineModel<OpenAIGptModelSettings>({
+      promptCostPer1000Tokens: 0.01,
+      completionsCostPer1000Tokens: 0.03,
+      maxTokens: 4096,
+    }),
+    ["claude-3-opus-20240229-bedrock"]: defineModel<OpenAIGptModelSettings>({
+      promptCostPer1000Tokens: 0.01,
+      completionsCostPer1000Tokens: 0.03,
+      maxTokens: 4096,
+    }),
+    /**
+     * gemini
+     */
+    ["gemini-pro"]: defineModel<OpenAIGptModelSettings>({
+      promptCostPer1000Tokens: 0.01,
+      completionsCostPer1000Tokens: 0.03,
+      maxTokens: 2048,
+    }),
+    ["gemini-1.5-pro-preview-0409"]: defineModel<OpenAIGptModelSettings>({
+      promptCostPer1000Tokens: 0.01,
+      completionsCostPer1000Tokens: 0.03,
+      maxTokens: 8192,
     }),
   };
 
