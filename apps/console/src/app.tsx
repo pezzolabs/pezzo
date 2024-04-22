@@ -134,13 +134,13 @@ export function App() {
                 element={
                   <Suspense fallback={<FullScreenLoader />}>
                     <CurrentPromptProvider>
-                      {/*<RequiredProviderApiKeyModalProvider>*/}
+                      <RequiredProviderApiKeyModalProvider>
                       <LayoutWrapper withSideNav={true}>
                         <WaitlistWrapper>
                           <Outlet />
                         </WaitlistWrapper>
                       </LayoutWrapper>
-                      {/*</RequiredProviderApiKeyModalProvider>*/}
+                      </RequiredProviderApiKeyModalProvider>
                     </CurrentPromptProvider>
                   </Suspense>
                 }
