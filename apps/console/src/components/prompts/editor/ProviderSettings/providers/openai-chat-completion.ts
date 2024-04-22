@@ -46,7 +46,6 @@ export const GenerateFormSchema = (
       max: 1,
       step: 0.1,
     },
-    // TODO: make sure if this is needed, if need have to make new toolkit to show each model promptCostPer1000Tokens / completionsCostPer1000Tokens / maxTokens
     {
       label: "Max Response Length",
       name: "max_tokens",
@@ -55,30 +54,31 @@ export const GenerateFormSchema = (
       max: maxResponseTokensValue,
       step: 1,
     },
-    {
-      label: "Top P",
-      name: "top_p",
-      type: "slider",
-      min: 0,
-      max: 1,
-      step: 0.1,
-    },
-    {
-      label: "Frequency Penalty",
-      name: "frequency_penalty",
-      type: "slider",
-      min: 0,
-      max: 1,
-      step: 0.1,
-    },
-    {
-      label: "Presence Penalty",
-      name: "presence_penalty",
-      type: "slider",
-      min: 0,
-      max: 1,
-      step: 0.1,
-    },
+    // TODO: enable the following settings if need in the future
+    // {
+    //   label: "Top P",
+    //   name: "top_p",
+    //   type: "slider",
+    //   min: 0,
+    //   max: 1,
+    //   step: 0.1,
+    // },
+    // {
+    //   label: "Frequency Penalty",
+    //   name: "frequency_penalty",
+    //   type: "slider",
+    //   min: 0,
+    //   max: 1,
+    //   step: 0.1,
+    // },
+    // {
+    //   label: "Presence Penalty",
+    //   name: "presence_penalty",
+    //   type: "slider",
+    //   min: 0,
+    //   max: 1,
+    //   step: 0.1,
+    // },
   ];
 };
 
