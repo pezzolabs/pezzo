@@ -4,31 +4,31 @@ export async function up(knex: Knex): Promise<void> {
   /* Create reports table */
   await knex.schema.createTable("reports", (table) => {
     table.string("id");
-    table.dateTime("timestamp");
-    table.string("environment");
+    table.dateTime("timestamp").nullable();
+    table.string("environment").nullable();
     table.string("organizationId");
     table.string("projectId");
-    table.specificType("promptTokens", "Float64");
-    table.specificType("completionTokens", "Float64");
-    table.specificType("totalTokens", "Float64");
-    table.specificType("promptCost", "Float64");
-    table.specificType("completionCost", "Float64");
-    table.specificType("totalCost", "Float64");
-    table.specificType("duration", "UInt32");
-    table.string("type");
-    table.string("client");
-    table.string("clientVersion");
-    table.string("model");
-    table.string("provider");
-    table.string("modelAuthor");
-    table.dateTime("requestTimestamp");
-    table.string("requestBody");
-    table.boolean("isError");
-    table.specificType("responseStatusCode", "UInt32");
-    table.dateTime("responseTimestamp");
-    table.string("responseBody");
-    table.boolean("cacheEnabled");
-    table.boolean("cacheHit");
+    table.specificType("promptTokens", "Float64").nullable();
+    table.specificType("completionTokens", "Float64").nullable();
+    table.specificType("totalTokens", "Float64").nullable();
+    table.specificType("promptCost", "Float64").nullable();
+    table.specificType("completionCost", "Float64").nullable();
+    table.specificType("totalCost", "Float64").nullable();
+    table.specificType("duration", "UInt32").nullable();
+    table.string("type").nullable();
+    table.string("client").nullable();
+    table.string("clientVersion").nullable();
+    table.string("model").nullable();
+    table.string("provider").nullable();
+    table.string("modelAuthor").nullable();
+    table.dateTime("requestTimestamp").nullable();
+    table.string("requestBody").nullable();
+    table.boolean("isError").nullable();
+    table.specificType("responseStatusCode", "UInt32").nullable();
+    table.dateTime("responseTimestamp").nullable();
+    table.string("responseBody").nullable();
+    table.boolean("cacheEnabled").nullable();
+    table.boolean("cacheHit").nullable();
   });
 }
 
