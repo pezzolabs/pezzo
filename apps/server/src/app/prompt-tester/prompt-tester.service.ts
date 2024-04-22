@@ -81,16 +81,16 @@ export class PromptTesterService {
     projectId: string,
     organizationId: string
   ): Promise<SerializedReport> {
-    const provider = "OpenAI";
-    const providerApiKey = await this.providerApiKeysService.getByProvider(
-      provider,
-      organizationId
-    );
+    // const provider = "OpenAI";
+    // const providerApiKey = await this.providerApiKeysService.getByProvider(
+    //   provider,
+    //   organizationId
+    // );
 
-    const testerApiKey =
-      await this.providerApiKeysService.decryptProviderApiKey(providerApiKey);
+    // const testerApiKey =
+    //   await this.providerApiKeysService.decryptProviderApiKey(providerApiKey);
 
-    console.log("api-key: " + testerApiKey);
+    // console.log("api-key: " + testerApiKey);
 
     // let promptExecutionData;
     let result: GetPromptCompletionResult;
@@ -109,6 +109,11 @@ export class PromptTesterService {
     } catch (err) {
       //
     }
+
+    console.log("model: " + result.model);
+    console.log("completion: " + result.completion);
+    console.log("prompt_tokens: " + result.prompt_tokens);
+    console.log("completion_tokens: " + result.completion_tokens);
 
     const report = await this.reportingService.saveGaiPlatformReport(
       result,
