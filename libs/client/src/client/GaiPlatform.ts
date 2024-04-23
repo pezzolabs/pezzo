@@ -63,7 +63,7 @@ export class GaiPlatform {
         {
           model: dto.model,
           // project: "llm-ops",
-          prompt: "ai_infra_dev",
+          project: "ai_infra_dev",
           system_hint: dto.system_hint,
           prompt: dto.prompt,
           temperature: dto.temperature,
