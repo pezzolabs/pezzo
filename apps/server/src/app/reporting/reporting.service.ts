@@ -22,6 +22,7 @@ import {
 } from "@pezzo/types";
 import { PaginatedReportsResult } from "./object-types/request-report-result.model";
 import {GetPromptCompletionResult} from "@pezzo/client";
+import moment from "moment";
 
 @Injectable()
 export class ReportingService {
@@ -90,7 +91,8 @@ export class ReportingService {
       organizationId: string;
       projectId: string;
     },
-    isTestPrompt = false
+    isTestPrompt = false,
+    promptId: string
   ): Promise<SerializedReport> {
     const reportId = randomUUID();
     // const { report, calculated } = buildRequestReport(dto);
@@ -99,37 +101,37 @@ export class ReportingService {
 
     const reportToSave: ReportSchema = {
       id: reportId,
-      timestamp: "2024-01-01 00:00:00",
+      timestamp: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
       organizationId: ownership.organizationId,
       projectId: ownership.projectId,
       promptCost: 0,
       completionCost: 0,
       totalCost: 0,
-      // promptTokens: dto.prompt_tokens,
-      promptTokens: 0,
-      // completionTokens: dto.completion_tokens,
-      completionTokens: 0,
-      // totalTokens: (dto.prompt_tokens + dto.completion_tokens),
-      totalTokens: 0,
+      promptTokens: dto.prompt_tokens,
+      // promptTokens: 0,
+      completionTokens: dto.completion_tokens,
+      // completionTokens: 0,
+      totalTokens: (dto.prompt_tokens + dto.completion_tokens),
+      // totalTokens: 0,
       duration: 0,
       environment: "PLAYGROUND",
       client: "",
       clientVersion: "",
-      // model: dto.model,
-      model: "",
+      model: dto.model,
+      // model: "",
       provider: "GAI Platform",
       modelAuthor: "GAI Platform",
       type: "ChatCompletion",
-      requestTimestamp: "2024-01-01 00:00:00",
-      requestBody: "{'request': 'test'}",
+      requestTimestamp: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+      requestBody: "{}",
       isError: false,
       responseStatusCode: 200,
-      responseTimestamp: "2024-01-01 00:00:00",
-      responseBody: "{'response': 'test'}",
+      responseTimestamp: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+      responseBody: `{response: ${dto.completion}`,
       // responseBody: dto.completion,
       cacheEnabled: false,
       cacheHit: false,
-      promptId: "",
+      promptId: promptId,
     };
 
     try {
@@ -159,7 +161,7 @@ export class ReportingService {
       })
       .limit(1);
 
-    const result = serializeReport(rows[0]);
+    const result = serializeGaiReport(rows[0]);
     return result;
   }
 

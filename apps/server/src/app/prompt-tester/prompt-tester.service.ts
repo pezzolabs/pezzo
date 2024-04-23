@@ -116,7 +116,8 @@ export class PromptTesterService {
         organizationId,
         projectId,
       },
-      true
+      true,
+      testData.promptId
     );
 
     return report;
