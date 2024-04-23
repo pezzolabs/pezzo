@@ -99,7 +99,7 @@ export class ReportingService {
 
     const reportToSave: ReportSchema = {
       id: reportId,
-      timestamp: new Date().toString(),
+      timestamp: "2024-01-01 00:00:00",
       organizationId: ownership.organizationId,
       projectId: ownership.projectId,
       promptCost: 0,
