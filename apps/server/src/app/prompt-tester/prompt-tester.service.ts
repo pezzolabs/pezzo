@@ -6,7 +6,6 @@ import { ProviderApiKeysService } from "../credentials/provider-api-keys.service
 import { SerializedReport } from "@pezzo/types";
 import { GaiPlatform } from "@pezzo/client";
 import { PinoLogger } from "../logger/pino-logger";
-import { logger } from "nx/src/utils/logger";
 
 @Injectable()
 export class PromptTesterService {
