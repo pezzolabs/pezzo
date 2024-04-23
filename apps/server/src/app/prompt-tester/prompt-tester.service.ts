@@ -5,13 +5,15 @@ import { ReportingService } from "../reporting/reporting.service";
 import { ProviderApiKeysService } from "../credentials/provider-api-keys.service";
 import { SerializedReport } from "@pezzo/types";
 import { GaiPlatform } from "@pezzo/client";
-import {log} from "next/dist/server/typescript/utils";
+import { PinoLogger } from "../logger/pino-logger";
+import { logger } from "nx/src/utils/logger";
 
 @Injectable()
 export class PromptTesterService {
   constructor(
     private reportingService: ReportingService,
-    private providerApiKeysService: ProviderApiKeysService
+    private providerApiKeysService: ProviderApiKeysService,
+    private logger: PinoLogger
   ) {}
 
   async runTest(
@@ -98,6 +100,10 @@ export class PromptTesterService {
 
     try {
       const gaiPlatform = new GaiPlatform({});
+      this.logger.info("mode: " + testData.settings.model)
+      this.logger.info("prompt: " + testData.content.prompt)
+      this.logger.info("temperature: " + testData.settings.temperature)
+      this.logger.info("max_tokens: " + testData.settings.max_tokens)
       result =  await gaiPlatform.getPromptCompletion(
         {
           model: testData.settings.model,
@@ -111,11 +117,11 @@ export class PromptTesterService {
       //
     }
 
-    // console.log("result: " + result)
-    // console.log("model: " + result.model);
-    // console.log("completion: " + result.completion);
-    // console.log("prompt_tokens: " + result.prompt_tokens);
-    // console.log("completion_tokens: " + result.completion_tokens);
+    this.logger.info("result: " + result)
+    this.logger.info("model: " + result.model);
+    this.logger.info("completion: " + result.completion);
+    this.logger.info("prompt_tokens: " + result.prompt_tokens);
+    this.logger.info("completion_tokens: " + result.completion_tokens);
 
     // const report = await this.reportingService.saveGaiPlatformReport(
     //   result,
