@@ -34,6 +34,7 @@ export class GaiPlatform {
       },
     });
     const data = await response.json();
+    console.log("getModels data: " + data);
     if (!response.ok) {
       if (data?.message) {
         throw new Error(data.message);
@@ -70,6 +71,9 @@ export class GaiPlatform {
       ),
     });
     const data = await response.json();
+    if (data) {
+      console.log("getPromptCompletion data: " + data);
+    }
     if (!response.ok) {
       if (data?.message) {
         throw new Error(data.message);
