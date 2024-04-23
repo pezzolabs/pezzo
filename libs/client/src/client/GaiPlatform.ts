@@ -71,7 +71,7 @@ export class GaiPlatform {
         }
       ),
     });
-    console.log("getPromptCompletion text data: " + await response.text());
+    // console.log("getPromptCompletion text data: " + await response.text());
     const data = await response.json();
     if (data) {
       console.log("getPromptCompletion data: " + data.toString());
