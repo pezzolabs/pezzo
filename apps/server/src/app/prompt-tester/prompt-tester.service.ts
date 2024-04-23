@@ -5,6 +5,7 @@ import { ReportingService } from "../reporting/reporting.service";
 import { ProviderApiKeysService } from "../credentials/provider-api-keys.service";
 import { SerializedReport } from "@pezzo/types";
 import { GaiPlatform } from "@pezzo/client";
+import {log} from "next/dist/server/typescript/utils";
 
 @Injectable()
 export class PromptTesterService {
@@ -109,6 +110,12 @@ export class PromptTesterService {
     } catch (err) {
       //
     }
+
+    console.log("result: " + result)
+    console.log("model: " + result.model);
+    console.log("completion: " + result.completion);
+    console.log("prompt_tokens: " + result.prompt_tokens);
+    console.log("completion_tokens: " + result.completion_tokens);
 
     const report = await this.reportingService.saveGaiPlatformReport(
       result,
