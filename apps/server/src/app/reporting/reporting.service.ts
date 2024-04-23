@@ -99,7 +99,7 @@ export class ReportingService {
 
     const reportToSave: ReportSchema = {
       id: reportId,
-      timestamp: "2024-01-01 00:00:00",
+      timestamp: new Date().toString(),
       organizationId: ownership.organizationId,
       projectId: ownership.projectId,
       promptCost: 0,
@@ -121,11 +121,11 @@ export class ReportingService {
       modelAuthor: "GAI Platform",
       type: "ChatCompletion",
       requestTimestamp: "2024-01-01 00:00:00",
-      requestBody: "",
+      requestBody: "{'request': 'test'}",
       isError: false,
       responseStatusCode: 200,
       responseTimestamp: "2024-01-01 00:00:00",
-      responseBody: "",
+      responseBody: "{'response': 'test'}",
       // responseBody: dto.completion,
       cacheEnabled: false,
       cacheHit: false,
