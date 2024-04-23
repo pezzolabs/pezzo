@@ -62,7 +62,8 @@ export class GaiPlatform {
       body: JSON.stringify(
         {
           model: dto.model,
-          project: "llm-ops",
+          // project: "llm-ops",
+          project: "ai_infra_dev",
           system_hint: dto.system_hint,
           prompt: dto.prompt,
           temperature: dto.temperature,
