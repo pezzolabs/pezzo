@@ -42,6 +42,14 @@ export const serializeReport = (doc: ReportSchema): SerializedReport => {
   };
 };
 
+export const serializeGaiReport = (doc: ReportSchema): SerializedReport => {
+  return {
+    ...doc,
+    requestBody: {},
+    responseBody: {},
+  };
+};
+
 export interface PaginatedReportsSchema {
   id: string;
   environment: string;
