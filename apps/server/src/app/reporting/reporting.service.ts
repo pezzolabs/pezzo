@@ -16,7 +16,7 @@ import { ClickHouseService } from "../clickhouse/clickhouse.service";
 import {
   PaginatedReportsSchema,
   ReportSchema,
-  SerializedReport,
+  SerializedReport, serializeGaiReport,
   serializePaginatedReport,
   serializeReport,
 } from "@pezzo/types";
@@ -143,7 +143,7 @@ export class ReportingService {
       throw new InternalServerErrorException(`Could not save report`);
     }
 
-    return serializeReport(reportToSave);
+    return serializeGaiReport(reportToSave);
   }
 
   async getReportById(
