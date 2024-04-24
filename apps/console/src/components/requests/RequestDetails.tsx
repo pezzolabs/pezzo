@@ -235,7 +235,7 @@ export const RequestDetails = (props: Props) => {
           <Alert className="my-4 border-blue-900 bg-blue-950/40 text-blue-500">
             <AlertDescription className="flex items-center gap-1">
               <InfoIcon className="h-4 w-4" />
-              This is a test request from the Pezzo Console
+              This is a test request from the GAI Platform
             </AlertDescription>
           </Alert>
         )}
