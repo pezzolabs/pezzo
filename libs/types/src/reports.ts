@@ -75,3 +75,18 @@ export const serializePaginatedReport = (
     ...doc,
   };
 };
+
+export interface TestPromptRequest {
+  content: TestPromptRequestContent;
+}
+
+export interface TestPromptRequestContent {
+  model: string;
+  prompt: string;
+  max_tokens?: number;
+  temperature?: number;
+}
+
+export interface TestPromptResponse {
+  data: string;
+}

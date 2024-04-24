@@ -18,7 +18,7 @@ import {
   ReportSchema,
   SerializedReport, serializeGaiReport,
   serializePaginatedReport,
-  serializeReport,
+  serializeReport, TestPromptRequest, TestPromptResponse,
 } from "@pezzo/types";
 import { PaginatedReportsResult } from "./object-types/request-report-result.model";
 import {GetPromptCompletionResult} from "@pezzo/client";
@@ -101,9 +101,19 @@ export class ReportingService {
     }
   ): Promise<SerializedReport> {
     const reportId = randomUUID();
-    // const { report, calculated } = buildRequestReport(dto);
 
-    // const { metadata, request, response, cacheEnabled, cacheHit } = report;
+    const requestObject: TestPromptRequest = {
+      content: {
+        model: request.model,
+        prompt: request.prompt,
+        temperature: request.temperature,
+        max_tokens: request.max_tokens
+      }
+    };
+
+    const responseObject: TestPromptResponse = {
+      data: dto.completion
+    };
 
     const reportToSave: ReportSchema = {
       id: reportId,
@@ -125,11 +135,11 @@ export class ReportingService {
       modelAuthor: "GAI Platform",
       type: "ChatCompletion",
       requestTimestamp: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
-      requestBody: `{content: {model: ${request.model}, prompt: ${request.prompt}, temperature: ${request.temperature}, max_tokens: ${request.max_tokens}}}`,
+      requestBody: JSON.stringify(requestObject),
       isError: false,
       responseStatusCode: 200,
       responseTimestamp: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
-      responseBody: `{data: ${dto.completion}`,
+      responseBody: JSON.stringify(responseObject),
       cacheEnabled: false,
       cacheHit: false,
       promptId: request.promptId,
