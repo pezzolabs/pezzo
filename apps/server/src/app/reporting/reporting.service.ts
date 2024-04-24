@@ -125,7 +125,7 @@ export class ReportingService {
       modelAuthor: "GAI Platform",
       type: "ChatCompletion",
       requestTimestamp: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
-      requestBody: `{model: ${request.model}, prompt: ${request.prompt}, temperature: ${request.temperature}, max_tokens: ${request.max_tokens}}`,
+      requestBody: `{request: {model: ${request.model}, prompt: ${request.prompt}, temperature: ${request.temperature}, max_tokens: ${request.max_tokens}}}`,
       isError: false,
       responseStatusCode: 200,
       responseTimestamp: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
