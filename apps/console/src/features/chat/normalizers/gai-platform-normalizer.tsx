@@ -29,22 +29,32 @@ export const normalizeGAIChatResponse = (
   const messages: ChatMessage[] = [];
 
   // First, populate messages from the request
-  request.forEach((req) => {
-      messages.push({
-        icon: getIcon(),
-        role: "user",
-        content: req.content as string, // TODO: support vision model
-      });
+  messages.push({
+    icon: getIcon(),
+    role: "user",
+    content: request.content as string, // TODO: support vision model
   });
+  // request.forEach((req) => {
+  //     messages.push({
+  //       icon: getIcon(),
+  //       role: "user",
+  //       content: req.content as string, // TODO: support vision model
+  //     });
+  // });
 
   // Then, populate response messages
-  response.forEach((res) => {
-      messages.push({
-        icon: getIcon(),
-        role: "user",
-        content: res.data,
-      });
+  messages.push({
+    icon: getIcon(),
+    role: "user",
+    content: response.data,
   });
+  // response.forEach((res) => {
+  //     messages.push({
+  //       icon: getIcon(),
+  //       role: "user",
+  //       content: res.data,
+  //     });
+  // });
 
   return {
     provider: Provider.GAI,
