@@ -82,7 +82,7 @@ export class PromptTesterService {
     testData: TestPromptInput,
     projectId: string,
     organizationId: string
-  ): Promise<GetPromptCompletionResult> {
+  ): Promise<SerializedReport> {
     // const provider = "OpenAI";
     // const providerApiKey = await this.providerApiKeysService.getByProvider(
     //   provider,
@@ -99,10 +99,10 @@ export class PromptTesterService {
 
     try {
       const gaiPlatform = new GaiPlatform({});
-      this.logger.info("mode: " + testData.settings.model)
-      this.logger.info("prompt: " + testData.content.prompt)
-      this.logger.info("temperature: " + testData.settings.temperature)
-      this.logger.info("max_tokens: " + testData.settings.max_tokens)
+      // this.logger.info("mode: " + testData.settings.model)
+      // this.logger.info("prompt: " + testData.content.prompt)
+      // this.logger.info("temperature: " + testData.settings.temperature)
+      // this.logger.info("max_tokens: " + testData.settings.max_tokens)
       result =  await gaiPlatform.getPromptCompletion(
         {
           model: testData.settings.model,
@@ -116,24 +116,22 @@ export class PromptTesterService {
       //
     }
 
-    this.logger.info("result: " + result)
-    this.logger.info("model: " + result.model);
-    this.logger.info("completion: " + result.completion);
-    this.logger.info("prompt_tokens: " + result.prompt_tokens);
-    this.logger.info("completion_tokens: " + result.completion_tokens);
+    // this.logger.info("result: " + result)
+    // this.logger.info("model: " + result.model);
+    // this.logger.info("completion: " + result.completion);
+    // this.logger.info("prompt_tokens: " + result.prompt_tokens);
+    // this.logger.info("completion_tokens: " + result.completion_tokens);
 
-    // const report = await this.reportingService.saveGaiPlatformReport(
-    //   result,
-    //   {
-    //     organizationId,
-    //     projectId,
-    //   },
-    //   true,
-    //   testData.promptId
-    // );
-    //
-    // return report;
+    const report = await this.reportingService.saveGaiPlatformReport(
+      result,
+      {
+        organizationId,
+        projectId,
+      },
+      true,
+      testData.promptId
+    );
 
-    return result
+    return report;
   }
 }

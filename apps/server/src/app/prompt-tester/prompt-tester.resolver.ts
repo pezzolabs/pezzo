@@ -26,7 +26,7 @@ export class PromptTesterResolver {
   async testPrompt(
     @Args("data") data: TestPromptInput,
     @CurrentUser() user: RequestUser
-  ): Promise<GetPromptCompletionResult> {
+  ): Promise<SerializedReport> {
     this.logger
       .assign({
         projectId: data.projectId,
