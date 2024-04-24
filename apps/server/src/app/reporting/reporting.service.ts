@@ -92,7 +92,13 @@ export class ReportingService {
       projectId: string;
     },
     isTestPrompt = false,
-    promptId: string
+    request: {
+      promptId: string
+      model: string
+      prompt: any
+      temperature: number
+      max_tokens: number
+    }
   ): Promise<SerializedReport> {
     const reportId = randomUUID();
     // const { report, calculated } = buildRequestReport(dto);
@@ -108,30 +114,25 @@ export class ReportingService {
       completionCost: 0,
       totalCost: 0,
       promptTokens: dto.prompt_tokens,
-      // promptTokens: 0,
       completionTokens: dto.completion_tokens,
-      // completionTokens: 0,
       totalTokens: (dto.prompt_tokens + dto.completion_tokens),
-      // totalTokens: 0,
       duration: 0,
       environment: "PLAYGROUND",
-      client: "",
-      clientVersion: "",
+      client: "gai-platform-api",
+      clientVersion: "v3",
       model: dto.model,
-      // model: "",
       provider: "GAI Platform",
       modelAuthor: "GAI Platform",
       type: "ChatCompletion",
       requestTimestamp: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
-      requestBody: "{}",
+      requestBody: `{model: ${request.model}, prompt: ${request.prompt}, temperature: ${request.temperature}, max_tokens: ${request.max_tokens}}`,
       isError: false,
       responseStatusCode: 200,
       responseTimestamp: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
       responseBody: `{response: ${dto.completion}`,
-      // responseBody: dto.completion,
       cacheEnabled: false,
       cacheHit: false,
-      promptId: promptId,
+      promptId: request.promptId,
     };
 
     try {
@@ -145,7 +146,7 @@ export class ReportingService {
       throw new InternalServerErrorException(`Could not save report`);
     }
 
-    return serializeGaiReport(reportToSave);
+    return serializeReport(reportToSave);
   }
 
   async getReportById(
@@ -161,7 +162,7 @@ export class ReportingService {
       })
       .limit(1);
 
-    const result = serializeGaiReport(rows[0]);
+    const result = serializeReport(rows[0]);
     return result;
   }
 

@@ -99,10 +99,6 @@ export class PromptTesterService {
 
     try {
       const gaiPlatform = new GaiPlatform({});
-      // this.logger.info("mode: " + testData.settings.model)
-      // this.logger.info("prompt: " + testData.content.prompt)
-      // this.logger.info("temperature: " + testData.settings.temperature)
-      // this.logger.info("max_tokens: " + testData.settings.max_tokens)
       result =  await gaiPlatform.getPromptCompletion(
         {
           model: testData.settings.model,
@@ -129,7 +125,13 @@ export class PromptTesterService {
         projectId,
       },
       true,
-      testData.promptId
+      {
+        promptId: testData.promptId,
+        model: testData.settings.model,
+        prompt: testData.content.prompt,
+        temperature: testData.settings.temperature,
+        max_tokens: testData.settings.max_tokens
+      }
     );
 
     return report;
