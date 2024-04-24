@@ -39,6 +39,7 @@ import { ModelDetails } from "~/pages/requests/ModelDetails";
 import { useReport } from "~/graphql/hooks/queries";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
 import OpenAI from "openai";
+import {normalizeGAIChatResponse} from "~/features/chat/normalizers/gai-platform-normalizer";
 
 type Mode = "chat" | "json";
 
@@ -193,9 +194,9 @@ export const RequestDetails = (props: Props) => {
       );
     }
 
-    const chat = normalizeOpenAIChatResponse(
-      report.requestBody as OpenAI.ChatCompletionCreateParams,
-      report.responseBody as OpenAI.ChatCompletion
+    const chat = normalizeGAIChatResponse(
+      report.requestBody,
+      report.responseBody
     );
     return <ChatView chat={chat} />;
   };
