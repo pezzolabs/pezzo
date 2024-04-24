@@ -40,6 +40,7 @@ import { useReport } from "~/graphql/hooks/queries";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
 import OpenAI from "openai";
 import {normalizeGAIChatResponse} from "~/features/chat/normalizers/gai-platform-normalizer";
+import {GaiChatView} from "~/features/chat/GaiChatView";
 
 type Mode = "chat" | "json";
 
@@ -194,11 +195,15 @@ export const RequestDetails = (props: Props) => {
       );
     }
 
-    const chat = normalizeGAIChatResponse(
-      report.requestBody,
-      report.responseBody
-    );
-    return <ChatView chat={chat} />;
+    // const chat = normalizeGAIChatResponse(
+    //   report.requestBody,
+    //   report.responseBody
+    // );
+    // const chat = {
+    //   request: report.requestBody.content.provider,
+    //   response: report.responseBody.data
+    // }
+    return <GaiChatView request={report.requestBody.content.prompt} response={report.responseBody.data} />;
   };
 
   return (
