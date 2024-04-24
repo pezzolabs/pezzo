@@ -125,7 +125,7 @@ export class ReportingService {
       modelAuthor: "GAI Platform",
       type: "ChatCompletion",
       requestTimestamp: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
-      requestBody: `{model: ${request.model}, prompt: ${request.prompt}, temperature: ${request.temperature}, max_tokens: ${request.max_tokens}}`,
+      requestBody: `{content: {model: ${request.model}, prompt: ${request.prompt}, temperature: ${request.temperature}, max_tokens: ${request.max_tokens}}}`,
       isError: false,
       responseStatusCode: 200,
       responseTimestamp: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
@@ -146,7 +146,7 @@ export class ReportingService {
       throw new InternalServerErrorException(`Could not save report`);
     }
 
-    return serializeGaiReport(reportToSave);
+    return serializeReport(reportToSave);
   }
 
   async getReportById(
@@ -162,7 +162,7 @@ export class ReportingService {
       })
       .limit(1);
 
-    const result = serializeGaiReport(rows[0]);
+    const result = serializeReport(rows[0]);
     return result;
   }
 

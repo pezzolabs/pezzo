@@ -8,9 +8,13 @@ export enum Provider {
   OpenAI = "OpenAI",
   Azure = "Azure",
   Anthropic = "Anthropic",
+  GAI = "GAI Platform",
 }
 
 export const providerDetails = {
+  [Provider.GAI]: {
+    name: "GAI",
+  },
   [Provider.OpenAI]: {
     name: "OpenAI",
   },

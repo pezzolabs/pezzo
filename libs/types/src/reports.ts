@@ -43,12 +43,10 @@ export const serializeReport = (doc: ReportSchema): SerializedReport => {
 };
 
 export const serializeGaiReport = (doc: ReportSchema): SerializedReport => {
-  console.log(doc.requestBody)
-  console.log(doc.responseBody)
   return {
     ...doc,
     requestBody: {"model": "gpt-3.5-turbo"},
-    responseBody: {},
+    responseBody: {"data": "mock-data"},
   };
 };
 
