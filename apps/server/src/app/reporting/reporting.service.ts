@@ -134,7 +134,7 @@ export class ReportingService {
       duration: 0,
       environment: "PLAYGROUND",
       client: "gai-platform-api",
-      clientVersion: "v3",
+      clientVersion: "3",
       model: dto.model,
       provider: "GAI Platform",
       modelAuthor: "GAI Platform",
