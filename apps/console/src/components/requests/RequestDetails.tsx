@@ -203,7 +203,7 @@ export const RequestDetails = (props: Props) => {
     //   request: report.requestBody.content.provider,
     //   response: report.responseBody.data
     // }
-    return <GaiChatView request={report.requestBody.content.messages.prompt} response={report.responseBody.data} />;
+    return <GaiChatView request={report.requestBody.content.messages[0].prompt} response={report.responseBody.data} />;
   };
 
   return (
