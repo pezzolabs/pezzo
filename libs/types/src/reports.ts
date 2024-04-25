@@ -80,9 +80,14 @@ export interface TestPromptRequest {
   content: TestPromptRequestContent;
 }
 
-export interface TestPromptRequestContent {
-  model: string;
+export interface TestPromptRequestMessage {
+  role: string;
   prompt: string;
+}
+
+export interface TestPromptRequestContent {
+  messages: TestPromptRequestMessage[];
+  model: string;
   max_tokens?: number;
   temperature?: number;
 }

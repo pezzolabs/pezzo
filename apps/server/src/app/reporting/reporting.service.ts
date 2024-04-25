@@ -104,8 +104,13 @@ export class ReportingService {
 
     const requestObject: TestPromptRequest = {
       content: {
+        messages: [
+          {
+            prompt: request.prompt,
+            role: "user"
+          }
+        ],
         model: request.model,
-        prompt: request.prompt,
         temperature: request.temperature,
         max_tokens: request.max_tokens
       }
