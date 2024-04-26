@@ -128,6 +128,7 @@ export class PromptTesterService {
       {
         promptId: testData.promptId,
         model: testData.settings.model,
+        system_hint: "",
         prompt: testData.content.prompt,
         temperature: testData.settings.temperature,
         max_tokens: testData.settings.max_tokens

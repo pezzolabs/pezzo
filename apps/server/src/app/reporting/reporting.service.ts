@@ -96,6 +96,7 @@ export class ReportingService {
       promptId: string
       model: string
       prompt: any
+      system_hint: any
       temperature: number
       max_tokens: number
     }
