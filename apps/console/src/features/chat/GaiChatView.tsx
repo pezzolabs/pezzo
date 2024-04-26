@@ -5,7 +5,7 @@ import {
   TooltipTrigger,
 } from "@pezzo/ui";
 import {cn} from "@pezzo/ui/utils";
-import {UserIcon} from "lucide-react";
+import {BotIcon, UserIcon} from "lucide-react";
 
 interface Props {
   request: string;
@@ -18,13 +18,22 @@ export const GaiChatView = (props: Props) => {
     "w-10 h-10 flex items-center justify-center rounded-sm border"
   );
 
-  const getIcon = () => {
+  const getUserIcon = () => {
     return (
       <div className={cn(baseIconCn, "bg-purple-500")}>
-        <UserIcon className="h-6 w-6 text-white" />
+        <UserIcon className="h-6 w-6 text-white"/>
       </div>
     );
   };
+
+  const getBotIcon = () => {
+    return (
+      <div className={cn(baseIconCn, "bg-emerald-500")}>
+        <BotIcon className="h-6 w-6 text-white"/>
+      </div>
+    );
+  }
+
 
   return (
     <div>
@@ -36,9 +45,9 @@ export const GaiChatView = (props: Props) => {
           <div>
             <TooltipProvider>
               <Tooltip>
-                <TooltipTrigger>{getIcon()}</TooltipTrigger>
+                <TooltipTrigger>{getUserIcon()}</TooltipTrigger>
                 <TooltipContent className="capitalize">
-                  user
+                  request
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -56,9 +65,9 @@ export const GaiChatView = (props: Props) => {
           <div>
             <TooltipProvider>
               <Tooltip>
-                <TooltipTrigger>{getIcon()}</TooltipTrigger>
+                <TooltipTrigger>{getBotIcon()}</TooltipTrigger>
                 <TooltipContent className="capitalize">
-                  user
+                  response
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
