@@ -54,12 +54,14 @@ export class GaiPlatform {
 
   async getPromptCompletion(dto: GetPromptCompletionInput): Promise<GetPromptCompletionResult> {
     let covert_prompt = dto.prompt;
+    console.log("dto.variables: " + JSON.stringify(dto.variables));
     if (Object.keys(dto.variables).length > 0) {
       const managedMessages = [
         { role: "user", content: dto.prompt },
       ];
       covert_prompt = interpolateVariablesRecursively<string>(managedMessages, dto.variables);
     }
+    console.log("covert_prompt: " + covert_prompt);
 
     const url = new URL(`${this.options.serverUrl}/v3/text/completion`);
 
