@@ -5,10 +5,11 @@ import {
   TooltipTrigger,
 } from "@pezzo/ui";
 import {cn} from "@pezzo/ui/utils";
-import {BotIcon, UserIcon} from "lucide-react";
+import {BotIcon, UserIcon, WrenchIcon} from "lucide-react";
 
 interface Props {
-  request: string;
+  request_prompt: string;
+  request_system_hint: string;
   response: string;
 }
 
@@ -34,32 +35,57 @@ export const GaiChatView = (props: Props) => {
     );
   }
 
+  const getSystemIcon = () => {
+    return (
+      <div className={cn(baseIconCn, "bg-stone-500")}>
+        <WrenchIcon className="h-6 w-6 text-white"/>
+      </div>
+    );
+  }
 
   return (
     <div>
       <div className="rounded-md border">
         <div
-          key={'1'}
-          className="flex gap-4 p-4 first:rounded-t-md last:rounded-b-md odd:bg-black"
+          key={"1"}
+          className="flex gap-4 p-4 first:rounded-t-md last:rounded-b-md odd:bg-black mt-2"
         >
           <div>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>{getUserIcon()}</TooltipTrigger>
                 <TooltipContent className="capitalize">
-                  request
+                  request - prompt
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </div>
           <div className="flex-1">
-            {props.request}
+            {props.request_prompt}
+          </div>
+        </div>
+        <div
+          key={"2"}
+          className="flex gap-4 p-4 first:rounded-t-md last:rounded-b-md odd:bg-black"
+        >
+          <div>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>{getSystemIcon()}</TooltipTrigger>
+                <TooltipContent className="capitalize">
+                  request - system hint
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+          <div className="flex-1">
+            {props.request_system_hint}
           </div>
         </div>
       </div>
       <div className="rounded-md border">
         <div
-          key={'1'}
+          key={"1"}
           className="flex gap-4 p-4 first:rounded-t-md last:rounded-b-md odd:bg-black"
         >
           <div>

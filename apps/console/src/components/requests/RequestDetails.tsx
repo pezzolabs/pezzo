@@ -145,10 +145,10 @@ export const RequestDetails = (props: Props) => {
         </div>
       ),
     },
-    {
-      title: "Cost",
-      description: `$${report?.totalCost?.toFixed(5) ?? 0}`,
-    },
+    // {
+    //   title: "Cost",
+    //   description: `$${report?.totalCost?.toFixed(5) ?? 0}`,
+    // },
     {
       title: "Status",
       description: (
@@ -179,10 +179,10 @@ export const RequestDetails = (props: Props) => {
       title: "Environment",
       description: report.environment,
     },
-    {
-      title: "Duration",
-      description: ms(report.duration),
-    },
+    // {
+    //   title: "Duration",
+    //   description: ms(report.duration),
+    // },
   ];
 
   const renderResponse = () => {
@@ -203,7 +203,7 @@ export const RequestDetails = (props: Props) => {
     //   request: report.requestBody.content.provider,
     //   response: report.responseBody.data
     // }
-    return <GaiChatView request={report.requestBody.content.messages[0].prompt} response={report.responseBody.data} />;
+    return <GaiChatView request_prompt={report.requestBody.content.prompt} request_system_hint={report.requestBody.content.messages[0].content} response={report.responseBody.data} />;
   };
 
   return (
