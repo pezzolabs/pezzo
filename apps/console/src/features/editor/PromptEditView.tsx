@@ -205,12 +205,12 @@ export const PromptEditView = () => {
           setIsCommitModalOpen(false);
         }}
       />
-      {currentVersionSha && (
-        <PublishPromptModal
-          onClose={() => setIsPublishModalOpen(false)}
-          open={isPublishModalOpen}
-        />
-      )}
+      {/*{currentVersionSha && (*/}
+      {/*  <PublishPromptModal*/}
+      {/*    onClose={() => setIsPublishModalOpen(false)}*/}
+      {/*    open={isPublishModalOpen}*/}
+      {/*  />*/}
+      {/*)}*/}
     </>
   );
 };
