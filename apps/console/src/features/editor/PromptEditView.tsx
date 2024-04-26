@@ -137,12 +137,12 @@ export const PromptEditView = () => {
                     How to consume
                   </Button>
                 )}
-                {isPublishEnabled && (
-                  <Button onClick={handlePublishClick}>
-                    <SendHorizonalIcon className="mr-2 h-4 w-4" />
-                    Publish
-                  </Button>
-                )}
+                {/*{isPublishEnabled && (*/}
+                {/*  <Button onClick={handlePublishClick}>*/}
+                {/*    <SendHorizonalIcon className="mr-2 h-4 w-4" />*/}
+                {/*    Publish*/}
+                {/*  </Button>*/}
+                {/*)}*/}
                 <CommitButton onClick={handleCommitClick} />
               </div>
             </div>
@@ -205,12 +205,12 @@ export const PromptEditView = () => {
           setIsCommitModalOpen(false);
         }}
       />
-      {/*{currentVersionSha && (*/}
-      {/*  <PublishPromptModal*/}
-      {/*    onClose={() => setIsPublishModalOpen(false)}*/}
-      {/*    open={isPublishModalOpen}*/}
-      {/*  />*/}
-      {/*)}*/}
+      {currentVersionSha && (
+        <PublishPromptModal
+          onClose={() => setIsPublishModalOpen(false)}
+          open={isPublishModalOpen}
+        />
+      )}
     </>
   );
 };
