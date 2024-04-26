@@ -114,11 +114,11 @@ export const PromptEditView = () => {
                 render={({ field }) => (
                   <Tabs
                     className="flex flex-1 justify-center"
-                    value={field.value}
+                    value={PromptType.Prompt}
                     onValueChange={handleTypeChange}
                   >
                     <TabsList>
-                      <TabsTrigger value={PromptType.Chat}>Chat</TabsTrigger>
+                      {/*<TabsTrigger value={PromptType.Chat}>Chat</TabsTrigger>*/}
                       <TabsTrigger value={PromptType.Prompt}>
                         Prompt
                       </TabsTrigger>
