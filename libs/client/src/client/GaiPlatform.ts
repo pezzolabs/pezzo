@@ -1,5 +1,6 @@
 import fetch from "cross-fetch";
 import { GetModelsResult, GetPromptCompletionInput, GetPromptCompletionResult } from "../types/prompts";
+import { interpolateVariablesRecursively } from "../utils";
 
 export interface GaiClientOptions {
   apiKey?: string;
@@ -52,6 +53,14 @@ export class GaiPlatform {
   }
 
   async getPromptCompletion(dto: GetPromptCompletionInput): Promise<GetPromptCompletionResult> {
+    let covert_prompt = dto.prompt;
+    if (Object.keys(dto.variables).length > 0) {
+      const managedMessages = [
+        { role: "user", content: dto.prompt },
+      ];
+      covert_prompt = interpolateVariablesRecursively<string>(managedMessages, dto.variables);
+    }
+
     const url = new URL(`${this.options.serverUrl}/v3/text/completion`);
 
     const response = await fetch(url.toString(), {
@@ -65,7 +74,7 @@ export class GaiPlatform {
           // project: "llm-ops",
           project: "ai_infra_dev",
           system_hint: dto.system_hint,
-          prompt: dto.prompt,
+          prompt: covert_prompt,
           temperature: dto.temperature,
           max_tokens: dto.max_tokens,
         }
