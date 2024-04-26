@@ -137,12 +137,12 @@ export const PromptEditView = () => {
                     How to consume
                   </Button>
                 )}
-                {isPublishEnabled && (
-                  <Button onClick={handlePublishClick}>
-                    <SendHorizonalIcon className="mr-2 h-4 w-4" />
-                    Publish
-                  </Button>
-                )}
+                {/*{isPublishEnabled && (*/}
+                {/*  <Button onClick={handlePublishClick}>*/}
+                {/*    <SendHorizonalIcon className="mr-2 h-4 w-4" />*/}
+                {/*    Publish*/}
+                {/*  </Button>*/}
+                {/*)}*/}
                 <CommitButton onClick={handleCommitClick} />
               </div>
             </div>
@@ -150,7 +150,7 @@ export const PromptEditView = () => {
             <div className="grid grid-cols-12 gap-4">
               <div className="col-span-7 md:col-span-8 lg:col-span-9">
                 {type === PromptType.Prompt && <PromptEditMode />}
-                {type === PromptType.Chat && <ChatEditMode />}
+                {/*{type === PromptType.Chat && <ChatEditMode />}*/}
               </div>
               <div className="col-span-5 flex flex-col gap-4 md:col-span-4 lg:col-span-3">
                 <Card className="flex flex-col gap-4 border">
