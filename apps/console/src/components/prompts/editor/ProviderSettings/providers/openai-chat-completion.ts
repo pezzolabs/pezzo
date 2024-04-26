@@ -15,18 +15,18 @@ const defaultSettings: OpenAIProviderSettings = {
   model: "gpt-3.5-turbo",
   temperature: 0.7,
   max_tokens: 256,
-  top_p: 1,
-  frequency_penalty: 0,
-  presence_penalty: 0,
+  // top_p: 1,
+  // frequency_penalty: 0,
+  // presence_penalty: 0,
 };
 
 export const GenerateFormSchema = (
   settings: OpenAIProviderSettings
 ): FormSchema => {
   const { models } = useModels()
-  const options = Object.values(models).map((model) => ({
-    value: model,
-    label: model,
+  const options = models.map((value, index) => ({
+    value: index,
+    label: value,
   }));
 
   const maxResponseTokensValue = gptModels[settings.model].maxTokens;
