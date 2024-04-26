@@ -14,7 +14,7 @@ export const PromptEditMode = () => {
 
   return (
     <div>
-      <Card className="p-4">
+      <Card className="p-4 mb-6">
         <FormField
           control={form.control}
           name="content.prompt"
@@ -35,7 +35,6 @@ export const PromptEditMode = () => {
           )}
         ></FormField>
       </Card>
-      {/* This is the new part */}
       <Card className="p-4">
         <FormField
           control={form.control}
@@ -48,7 +47,7 @@ export const PromptEditMode = () => {
                   placeholder="Type your system hint here"
                   autoCorrect="off"
                   disableAutoComplete
-                  rows={12}
+                  rows={6}
                   {...field}
                 />
               </FormControl>

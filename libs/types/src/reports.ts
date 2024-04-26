@@ -82,7 +82,7 @@ export interface TestPromptRequest {
 
 export interface TestPromptRequestMessage {
   role: string;
-  prompt: string;
+  content: string;
 }
 
 export interface TestPromptRequestContent {
@@ -90,6 +90,7 @@ export interface TestPromptRequestContent {
   model: string;
   max_tokens?: number;
   temperature?: number;
+  prompt: string;
 }
 
 export interface TestPromptResponse {
