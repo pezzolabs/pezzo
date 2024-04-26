@@ -41,7 +41,7 @@ const roleOptions: {
 }[] = [
   { label: "System", value: "system", icon: WrenchIcon },
   { label: "User", value: "user", icon: UserIcon },
-  { label: "Assistant", value: "assistant", icon: BotIcon },
+  // { label: "Assistant", value: "assistant", icon: BotIcon },
 ];
 
 export const ChatMessage = ({ index, canDelete = true, onDelete }: Props) => {

@@ -24,9 +24,14 @@ export const GenerateFormSchema = (
   settings: OpenAIProviderSettings
 ): FormSchema => {
   const { models } = useModels()
-  const options = models.map((value, index) => ({
-    value: index,
-    label: value,
+  // const options = models.map((value, index) => ({
+  //   value: index,
+  //   label: value,
+  // }));
+
+  const options = Object.keys(gptModels).map((model) => ({
+    value: model,
+    label: model,
   }));
 
   const maxResponseTokensValue = gptModels[settings.model].maxTokens;
