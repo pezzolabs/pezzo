@@ -106,6 +106,7 @@ export class PromptTesterService {
           prompt: testData.content.prompt,
           temperature: testData.settings.temperature,
           max_tokens: testData.settings.max_tokens,
+          variables: testData.variables
         }
       );
     } catch (err) {

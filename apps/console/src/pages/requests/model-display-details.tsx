@@ -5,7 +5,7 @@ import MetaLogo from "~/assets/providers/meta-logo.png";
 export const modelAuthorDetails = {
   openai: {
     image: OpenAILogo,
-    name: "OpenAI",
+    name: "GAI Platform",
     color: "#3B976B",
   },
   mistral: {
