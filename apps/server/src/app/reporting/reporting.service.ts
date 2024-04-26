@@ -105,9 +105,10 @@ export class ReportingService {
 
     const requestObject: TestPromptRequest = {
       content: {
+        prompt: request.prompt,
         messages: [
           {
-            prompt: request.prompt,
+            content: request.system_hint,
             role: "user"
           }
         ],

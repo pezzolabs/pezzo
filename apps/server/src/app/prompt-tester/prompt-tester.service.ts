@@ -102,7 +102,7 @@ export class PromptTesterService {
       result =  await gaiPlatform.getPromptCompletion(
         {
           model: testData.settings.model,
-          system_hint: "",
+          system_hint: testData.content.messages[0].content,
           prompt: testData.content.prompt,
           temperature: testData.settings.temperature,
           max_tokens: testData.settings.max_tokens,
@@ -128,7 +128,7 @@ export class PromptTesterService {
       {
         promptId: testData.promptId,
         model: testData.settings.model,
-        system_hint: "",
+        system_hint: testData.content.messages[0].content,
         prompt: testData.content.prompt,
         temperature: testData.settings.temperature,
         max_tokens: testData.settings.max_tokens
