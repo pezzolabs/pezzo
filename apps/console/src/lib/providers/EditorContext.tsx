@@ -20,6 +20,7 @@ import { getServiceDefaultSettings } from "~/components/prompts/editor/ProviderS
 import { useCurrentPrompt } from "./CurrentPromptContext";
 import { useGetPromptVersion } from "~/graphql/hooks/queries";
 import { findVariables } from "../utils/find-variables";
+import {log} from "next/dist/server/typescript/utils";
 
 const getDefaultContent = (type: PromptType) => {
   switch (type) {
@@ -167,6 +168,8 @@ export const EditorProvider = ({ children }) => {
     }
 
     if (isFetched && currentVersion) {
+      log("currentVersion: " + JSON.stringify(currentVersion));
+      console.log("currentSetting: " + JSON.stringify(currentVersion.settings));
       form.reset({
         service: currentVersion.service,
         settings: currentVersion.settings,

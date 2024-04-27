@@ -22,6 +22,8 @@ interface Props {
 export const ProviderSettingsSchemaRenderer = ({ schema }: Props) => {
   const { getForm } = useEditorContext();
   const form = getForm();
+  const setting = form.watch("settings");
+  const model = setting.model;
 
   const renderField = (
     renderSchema: any,
@@ -39,8 +41,9 @@ export const ProviderSettingsSchemaRenderer = ({ schema }: Props) => {
     renderSchema: SelectFormField,
     field: ControllerRenderProps<FieldValues, any>
   ) => {
+    console.log("field.value: ", field.value)
     return (
-      <Select defaultValue={field.value} onValueChange={field.onChange}>
+      <Select defaultValue={model} onValueChange={field.onChange}>
         <SelectTrigger>
           <SelectValue />
         </SelectTrigger>
