@@ -16,6 +16,7 @@ export const ProviderSettingsCard = () => {
 
   const form = getForm();
   const settings = form.watch("settings");
+  console.log("settings: ", JSON.stringify(settings));
   const service = form.watch("service");
 
   if (!settings) {
