@@ -131,12 +131,12 @@ export const PromptEditView = () => {
                   <BugPlayIcon className="mr-2 h-4 w-4" />
                   Test
                 </Button>
-                {isPublishEnabled && (
-                  <Button variant="outline" onClick={handleHowToConsumeClick}>
-                    <TerminalIcon className="mr-2 h-4 w-4" />
-                    How to consume
-                  </Button>
-                )}
+                {/*{isPublishEnabled && (*/}
+                {/*  <Button variant="outline" onClick={handleHowToConsumeClick}>*/}
+                {/*    <TerminalIcon className="mr-2 h-4 w-4" />*/}
+                {/*    How to consume*/}
+                {/*  </Button>*/}
+                {/*)}*/}
                 {/*{isPublishEnabled && (*/}
                 {/*  <Button onClick={handlePublishClick}>*/}
                 {/*    <SendHorizonalIcon className="mr-2 h-4 w-4" />*/}

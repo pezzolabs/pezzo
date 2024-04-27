@@ -9,6 +9,11 @@ export interface GaiClientOptions {
   serverUrl?: string;
 }
 
+export interface ManagedMessages {
+  role: "user" | "system";
+  content: string;
+}
+
 const defaultOptions: Partial<GaiClientOptions> = {
   serverUrl: "http://sn-gai-api.ai.smartnews.net",
 };
@@ -56,10 +61,10 @@ export class GaiPlatform {
     let covert_prompt = dto.prompt;
     console.log("dto.variables: " + JSON.stringify(dto.variables));
     if (Object.keys(dto.variables).length > 0) {
-      const managedMessages = [
+      const managedMessages: ManagedMessages[] = [
         { role: "user", content: dto.prompt },
       ];
-      covert_prompt = interpolateVariablesRecursively<string>(managedMessages, dto.variables);
+      covert_prompt = interpolateVariablesRecursively<ManagedMessages[]>(managedMessages, dto.variables)[0].content;
     }
     console.log("covert_prompt: " + JSON.stringify(covert_prompt));
 
