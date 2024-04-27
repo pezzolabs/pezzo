@@ -29,7 +29,7 @@ export const GenerateFormSchema = (
   //   label: value,
   // }));
 
-  const options = Object.keys(gptModels).map((model) => ({
+  const options = Object.values(models).map((model) => ({
     value: model,
     label: model,
   }));
