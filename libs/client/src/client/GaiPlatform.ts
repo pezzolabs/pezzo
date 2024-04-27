@@ -61,7 +61,7 @@ export class GaiPlatform {
       ];
       covert_prompt = interpolateVariablesRecursively<string>(managedMessages, dto.variables);
     }
-    console.log("covert_prompt: " + covert_prompt);
+    console.log("covert_prompt: " + JSON.stringify(covert_prompt));
 
     const url = new URL(`${this.options.serverUrl}/v3/text/completion`);
 
