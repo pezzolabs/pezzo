@@ -37,12 +37,12 @@ export const SideNavigation = () => {
       icon: BoxIcon,
       isActive: (href: string) => window.location.pathname.startsWith(href),
     },
-    {
-      name: "Environments",
-      href: `/projects/${projectId}/environments`,
-      icon: HardDriveIcon,
-      isActive: (href: string) => window.location.pathname.startsWith(href),
-    },
+    // {
+    //   name: "Environments",
+    //   href: `/projects/${projectId}/environments`,
+    //   icon: HardDriveIcon,
+    //   isActive: (href: string) => window.location.pathname.startsWith(href),
+    // },
   ];
 
   return (
