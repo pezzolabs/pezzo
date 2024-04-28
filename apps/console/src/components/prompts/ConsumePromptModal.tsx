@@ -21,8 +21,6 @@ interface Props {
 export const ConsumePromptModal = ({ open, onClose }: Props) => {
   const [integration, setIntegration] = useState("typescript");
 
-  <TypeScriptOpenAIIntegrationTutorial />;
-
   const renderInsructions = () => {
     switch (integration) {
       case "typescript":

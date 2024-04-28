@@ -61,7 +61,7 @@ export class ProjectsResolver {
   }
 
   @Query(() => [Project])
-  async projects(
+  projects(
     @Args("data") data: GetProjectsInput,
     @CurrentUser() user: RequestUser
   ) {

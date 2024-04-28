@@ -55,6 +55,13 @@ export const PromptNavigation = () => {
               key={nav.name}
               onClick={() => navigate(nav.href)}
               className={getClassName(nav)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  navigate(nav.href);
+                }
+              }}
+              role="button"
+              aria-label={nav.name}
             >
               <nav.icon className="h-4 w-4" />
               {nav.name}

@@ -40,6 +40,13 @@ export const OrgSubHeader = () => {
               key={nav.href}
               onClick={() => navigate(nav.href)}
               className={getClassName(nav.href)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  navigate(nav.href);
+                }
+              }}
+              role="button"
+              aria-label={nav.name}
             >
               {nav.name}
             </li>

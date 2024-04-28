@@ -1,16 +1,3 @@
 {
-  "sqltools.connections": [
-    {
-      "server": "localhost",
-      "port": 8123,
-      "useHTTPS": false,
-      "database": "default",
-      "username": "default",
-      "password": "",
-      "tls": {},
-      "previewLimit": 50,
-      "driver": "ClickHouse",
-      "name": "Local"
-    }
-  ]
+  "css.customData": [".vscode/tailwind.json"]
 }

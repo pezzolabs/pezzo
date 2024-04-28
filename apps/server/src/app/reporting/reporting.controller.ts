@@ -31,7 +31,7 @@ export class ReportingController {
     description: "Report has been reported successfully",
   })
   @ApiResponse({ status: 500, description: "Internal server error" })
-  async reportRequest(
+  reportRequest(
     @Body() dto: CreateReportDto,
     @ApiKeyOrgId() organizationId: string,
     @ProjectId() projectId: string
