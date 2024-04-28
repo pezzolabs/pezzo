@@ -43,6 +43,7 @@ Thumbs.db
 **/@generated
 .nx-container
 
+.env
 .env.local
 schema.graphql
 
