@@ -1,0 +1,10 @@
+
+.SelectScrollButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 25px;
+  background-color: white;
+  /*color: var(--violet-11);*/
+  cursor: default;
+}
