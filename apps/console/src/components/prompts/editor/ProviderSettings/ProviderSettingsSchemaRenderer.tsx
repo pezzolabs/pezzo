@@ -42,11 +42,11 @@ export const ProviderSettingsSchemaRenderer = ({ schema }: Props) => {
     field: ControllerRenderProps<FieldValues, any>
   ) => {
     // console.log("field.value: ", field.value)
-    renderSchema.options.map((option) => {
-      if (option.value === field.value) {
-        console.log("option.label: ", option.label)
-      }
-    });
+    // renderSchema.options.map((option) => {
+    //   if (option.value === field.value) {
+    //     console.log("option.label: ", option.label)
+    //   }
+    // });
     return (
       <Select defaultValue={field.value} onValueChange={field.onChange}>
         <SelectTrigger>
