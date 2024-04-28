@@ -22,8 +22,8 @@ interface Props {
 export const ProviderSettingsSchemaRenderer = ({ schema }: Props) => {
   const { getForm } = useEditorContext();
   const form = getForm();
-  const setting = form.watch("settings");
-  const model = setting.model;
+  // const setting = form.watch("settings");
+  // const model = setting.model;
 
   const renderField = (
     renderSchema: any,
@@ -41,7 +41,7 @@ export const ProviderSettingsSchemaRenderer = ({ schema }: Props) => {
     renderSchema: SelectFormField,
     field: ControllerRenderProps<FieldValues, any>
   ) => {
-    console.log("field.value: ", field.value)
+    // console.log("field.value: ", field.value)
     renderSchema.options.map((option) => {
       if (option.value === field.value) {
         console.log("option.label: ", option.label)
