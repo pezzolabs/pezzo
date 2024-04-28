@@ -48,7 +48,7 @@ export class EncryptionService {
   async encrypt(data: string): Promise<{
     encryptedData: string;
     encryptedDataKey: string;
-    tag: string; // Include the authentication tag in the encryption result
+    encryptionTag: string;
   }> {
     this.logger.info("Encrypting data");
 
@@ -61,7 +61,7 @@ export class EncryptionService {
     return {
       encryptedData: Buffer.concat([iv, encrypted]).toString("hex"),
       encryptedDataKey: Buffer.from(dataKey.ciphertext).toString("base64"),
-      tag: cipher.getAuthTag().toString("hex"), // Store the tag for verification during decryption
+      encryptionTag: cipher.getAuthTag().toString("hex"), // Store the tag for verification during decryption
     };
   }
 
