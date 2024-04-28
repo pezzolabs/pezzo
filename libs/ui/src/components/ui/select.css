@@ -1,3 +1,4 @@
+/*@import '@radix-ui/react-select/';*/
 
 .SelectScrollButton {
   display: flex;
@@ -8,3 +9,8 @@
   /*color: var(--violet-11);*/
   cursor: default;
 }
+
+/*.SelectContent {*/
+/*  width: var(--radix-select-trigger-width);*/
+/*  max-height: var(--radix-select-content-available-height);*/
+/*}*/
