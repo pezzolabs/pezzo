@@ -43,7 +43,9 @@ Thumbs.db
 **/@generated
 .nx-container
 
+.env
 .env.local
+.env.docker
 schema.graphql
 
 # temp
