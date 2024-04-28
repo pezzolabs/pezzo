@@ -47,9 +47,10 @@ const SelectContent = React.forwardRef<
       position={position}
       {...props}
     >
-      <SelectPrimitive.ScrollUpButton className="SelectScrollButton">
-        <ChevronUpIcon />
-      </SelectPrimitive.ScrollUpButton>
+      <SelectPrimitive.ScrollUpButton />
+      {/*<SelectPrimitive.ScrollUpButton className="SelectScrollButton">*/}
+      {/*  <ChevronUpIcon />*/}
+      {/*</SelectPrimitive.ScrollUpButton>*/}
         <SelectPrimitive.Viewport
           className={cn(
             "p-1",
@@ -59,9 +60,11 @@ const SelectContent = React.forwardRef<
         >
           {children}
         </SelectPrimitive.Viewport>
-      <SelectPrimitive.ScrollDownButton className="SelectScrollButton">
-        <ChevronDownIcon />
-      </SelectPrimitive.ScrollDownButton>
+      <SelectPrimitive.ScrollDownButton />
+      <SelectPrimitive.Arrow />
+      {/*<SelectPrimitive.ScrollDownButton className="SelectScrollButton">*/}
+      {/*  <ChevronDownIcon />*/}
+      {/*</SelectPrimitive.ScrollDownButton>*/}
     </SelectPrimitive.Content>
   </SelectPrimitive.Portal>
 ));
