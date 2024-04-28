@@ -14,7 +14,7 @@ services:
       - ./apps/server/.env
       - ./apps/server/.env.local
     environment:
-      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/pezzo
+      - DATABASE_URL="${DB_URL}/pezzo"
       - SUPERTOKENS_CONNECTION_URI=http://supertokens:3567
       - CLICKHOUSE_HOST=clickhouse
       - REDIS_URL=redis://redis-stack-server:6379

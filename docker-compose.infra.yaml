@@ -25,7 +25,7 @@ services:
     entrypoint: /bin/sh
     command: -c "npx prisma migrate deploy"
     environment:
-      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/pezzo
+      - "${DB_URL}/pezzo"
     depends_on:
       postgres:
         condition: service_healthy
@@ -73,7 +73,7 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      POSTGRES_CONNECTION_URI: postgres://postgres:postgres@postgres:5432/supertokens
+      POSTGRES_CONNECTION_URI: "${DB_URL}/supertokens"
     healthcheck:
       test: >
         bash -c 'exec 3<>/dev/tcp/127.0.0.1/3567 && echo -e "GET /hello HTTP/1.1\r\nhost: 127.0.0.1:3567\r\nConnection: close\r\n\r\n" >&3 && cat <&3 | grep "Hello"'
