@@ -49,6 +49,7 @@ export const SideNavigation = () => {
     <div
       onMouseOver={() => setCollapsed(false)}
       onMouseLeave={() => setCollapsed(true)}
+      onFocus={() => setCollapsed(false)}
       className={cn(
         "z-50 flex h-full grow flex-col gap-y-4 overflow-y-auto overflow-x-hidden border-r border-border bg-stone-900 px-3 pt-2"
       )}

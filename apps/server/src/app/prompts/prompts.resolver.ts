@@ -266,7 +266,7 @@ export class PromptsResolver {
   }
 
   @ResolveField(() => [PromptVersion])
-  async versions(@Parent() prompt: PrismaPrompt) {
+  versions(@Parent() prompt: PrismaPrompt) {
     this.logger.info("Resolving prompt versions");
 
     try {
@@ -278,7 +278,7 @@ export class PromptsResolver {
   }
 
   @ResolveField(() => PromptVersion, { nullable: true })
-  async latestVersion(@Parent() prompt: PrismaPrompt) {
+  latestVersion(@Parent() prompt: PrismaPrompt) {
     this.logger.info("Resolving prompt latest version");
 
     try {

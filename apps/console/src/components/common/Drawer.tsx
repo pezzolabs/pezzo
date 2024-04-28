@@ -26,6 +26,13 @@ export const Drawer = ({ children, className, onClose, open }: Props) => {
           !open && "hidden"
         )}
         onClick={onClose}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            onClose();
+          }
+        }}
+        role="button"
+        aria-label="Close"
       ></div>
       <motion.div
         initial={{ width: 0, opacity: 0 }}
