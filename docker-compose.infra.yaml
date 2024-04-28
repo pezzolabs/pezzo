@@ -24,8 +24,8 @@ services:
       dockerfile: ./apps/server/Dockerfile
     entrypoint: /bin/sh
     command: -c "npx prisma migrate deploy"
-    environment:
-      - "${DB_URL}/pezzo"
+    env_file:
+      - ./.env.docker
     depends_on:
       postgres:
         condition: service_healthy
@@ -72,8 +72,10 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    env_file:
+      - ./.env.docker
     environment:
-      POSTGRES_CONNECTION_URI: "${DB_URL}/supertokens"
+      POSTGRES_CONNECTION_URI: "${SUPERTOKENS_DATABASE_URL}"
     healthcheck:
       test: >
         bash -c 'exec 3<>/dev/tcp/127.0.0.1/3567 && echo -e "GET /hello HTTP/1.1\r\nhost: 127.0.0.1:3567\r\nConnection: close\r\n\r\n" >&3 && cat <&3 | grep "Hello"'

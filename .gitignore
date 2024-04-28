@@ -45,6 +45,7 @@ Thumbs.db
 
 .env
 .env.local
+.env.docker
 schema.graphql
 
 # temp
