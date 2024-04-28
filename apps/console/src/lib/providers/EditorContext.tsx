@@ -167,7 +167,7 @@ export const EditorProvider = ({ children }) => {
     }
 
     if (isFetched && currentVersion) {
-      console.log("currentSetting: " + JSON.stringify(currentVersion.settings));
+      // console.log("currentSetting: " + JSON.stringify(currentVersion.settings));
       form.reset({
         service: currentVersion.service,
         settings: currentVersion.settings,
