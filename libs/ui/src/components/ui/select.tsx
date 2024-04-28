@@ -3,6 +3,7 @@ import {CaretSortIcon, CheckIcon, ChevronDownIcon, ChevronUpIcon} from "@radix-u
 import * as SelectPrimitive from "@radix-ui/react-select";
 
 import { cn } from "@pezzo/ui/utils";
+import "./select.css";
 
 const Select = SelectPrimitive.Root;
 
