@@ -31,7 +31,7 @@ export class ReportingController {
     description: "Report has been reported successfully",
   })
   @ApiResponse({ status: 500, description: "Internal server error" })
-  reportRequest(
+  async reportRequest(
     @Body() dto: CreateReportDto,
     @ApiKeyOrgId() organizationId: string,
     @ProjectId() projectId: string
@@ -44,7 +44,7 @@ export class ReportingController {
       .info("Saving report");
 
     try {
-      return this.reportingService.saveReport(dto, {
+      return await this.reportingService.saveReport(dto, {
         organizationId,
         projectId,
       });

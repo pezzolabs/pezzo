@@ -266,11 +266,11 @@ export class PromptsResolver {
   }
 
   @ResolveField(() => [PromptVersion])
-  versions(@Parent() prompt: PrismaPrompt) {
+  async versions(@Parent() prompt: PrismaPrompt) {
     this.logger.info("Resolving prompt versions");
 
     try {
-      return this.promptsService.getPromptVersions(prompt.id);
+      return await this.promptsService.getPromptVersions(prompt.id);
     } catch (error) {
       this.logger.error({ error }, "Error getting prompt versions");
       throw new InternalServerErrorException();
@@ -278,11 +278,11 @@ export class PromptsResolver {
   }
 
   @ResolveField(() => PromptVersion, { nullable: true })
-  latestVersion(@Parent() prompt: PrismaPrompt) {
+  async latestVersion(@Parent() prompt: PrismaPrompt) {
     this.logger.info("Resolving prompt latest version");
 
     try {
-      return this.promptsService.getLatestPromptVersion(prompt.id);
+      return await this.promptsService.getLatestPromptVersion(prompt.id);
     } catch (error) {
       this.logger.error({ error }, "Error getting prompt latest version");
       throw new InternalServerErrorException();

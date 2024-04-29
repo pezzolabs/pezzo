@@ -61,7 +61,7 @@ export class ProjectsResolver {
   }
 
   @Query(() => [Project])
-  projects(
+  async projects(
     @Args("data") data: GetProjectsInput,
     @CurrentUser() user: RequestUser
   ) {
@@ -70,7 +70,7 @@ export class ProjectsResolver {
     this.logger.assign({ organizationId }).info("Getting projects");
 
     try {
-      return this.projectsService.getProjectsByOrgId(organizationId);
+      return await this.projectsService.getProjectsByOrgId(organizationId);
     } catch (error) {
       this.logger.error({ error }, "Error getting projects");
       throw new InternalServerErrorException();
