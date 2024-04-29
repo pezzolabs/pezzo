@@ -11,7 +11,6 @@ import { isOrgMemberOrThrow } from "../identity/identity.utils";
 import { RequestReport } from "../reporting/object-types/request-report.model";
 import { SerializedReport } from "@pezzo/types";
 import GraphQLJSON from "graphql-type-json";
-import {GetPromptCompletionResult} from "@pezzo/client";
 
 @UseGuards(AuthGuard)
 @Resolver(() => RequestReport)

@@ -78,4 +78,6 @@ export interface GetPromptCompletionResult {
   completion: string;
   prompt_tokens: number;
   completion_tokens: number;
+  requestTimestamp?: number;
+  responseTimestamp?: number;
 }
