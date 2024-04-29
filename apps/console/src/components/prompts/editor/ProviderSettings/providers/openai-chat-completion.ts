@@ -20,16 +20,21 @@ const defaultSettings: OpenAIProviderSettings = {
   // presence_penalty: 0,
 };
 
+const latestModels = [
+  "gpt-3.5-turbo",
+  "gpt-4-turbo",
+  "claude-3-haiku-20240307-bedrock",
+  "claude-3-sonnet-20240229-bedrock",
+  "claude-3-opus-20240229-bedrock",
+  "gemini-1.5-pro-preview-0409",
+];
+
 export const GenerateFormSchema = (
   settings: OpenAIProviderSettings
 ): FormSchema => {
   const { models } = useModels()
-  // const options = models.map((value, index) => ({
-  //   value: index,
-  //   label: value,
-  // }));
 
-  const options = Object.values(models).map((model) => ({
+  const options = Object.values(latestModels).map((model) => ({
     value: model,
     label: model,
   }));
