@@ -122,6 +122,9 @@ export class ReportingService {
       data: dto.completion
     };
 
+    console.log("requestTimestamp: " + dto.requestTimestamp);
+    console.log("responseTimestamp: " + dto.responseTimestamp);
+
     const reportToSave: ReportSchema = {
       id: reportId,
       timestamp: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
