@@ -91,6 +91,8 @@ export class GaiPlatform {
     });
     const responseTimestamp = new Date().getMilliseconds();
     console.log("===responseTimestamp: " + responseTimestamp);
+    console.log("===responseTimestamp: " + responseTimestamp.toString());
+    console.log("===responseTimestamp: " + new Date().getUTCDate().toString());
     // console.log("getPromptCompletion text data: " + await response.text());
     const data = await response.json();
     // if (data) {
