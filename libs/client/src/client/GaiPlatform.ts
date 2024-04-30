@@ -68,7 +68,7 @@ export class GaiPlatform {
     }
     // console.log("covert_prompt: " + JSON.stringify(covert_prompt));
     const requestTimestamp = new Date();
-    console.log("===requestTimestamp: " + requestTimestamp);
+    // console.log("===requestTimestamp: " + requestTimestamp);
 
     const url = new URL(`${this.options.serverUrl}/v3/text/completion`);
 
@@ -90,9 +90,7 @@ export class GaiPlatform {
       ),
     });
     const responseTimestamp = new Date();
-    console.log("===responseTimestamp: " + new Date());
-    console.log("===responseTimestamp: " + responseTimestamp.getTime());
-    console.log("===responseTimestamp: " + new Date().getUTCDate().toString());
+    // console.log("===responseTimestamp: " + new Date());
     // console.log("getPromptCompletion text data: " + await response.text());
     const data = await response.json();
     // if (data) {
