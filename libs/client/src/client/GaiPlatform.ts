@@ -67,7 +67,7 @@ export class GaiPlatform {
       covert_prompt = interpolateVariablesRecursively<ManagedMessages[]>(managedMessages, dto.variables)[0].content;
     }
     // console.log("covert_prompt: " + JSON.stringify(covert_prompt));
-    const requestTimestamp = new Date().getMilliseconds();
+    const requestTimestamp = new Date();
     console.log("===requestTimestamp: " + requestTimestamp);
 
     const url = new URL(`${this.options.serverUrl}/v3/text/completion`);
@@ -89,9 +89,9 @@ export class GaiPlatform {
         }
       ),
     });
-    const responseTimestamp = new Date().getMilliseconds();
-    console.log("===responseTimestamp: " + responseTimestamp);
-    console.log("===responseTimestamp: " + responseTimestamp.toString());
+    const responseTimestamp = new Date();
+    console.log("===responseTimestamp: " + new Date());
+    console.log("===responseTimestamp: " + responseTimestamp.getTime());
     console.log("===responseTimestamp: " + new Date().getUTCDate().toString());
     // console.log("getPromptCompletion text data: " + await response.text());
     const data = await response.json();
