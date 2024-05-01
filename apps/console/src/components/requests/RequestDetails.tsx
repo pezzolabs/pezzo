@@ -179,10 +179,10 @@ export const RequestDetails = (props: Props) => {
       title: "Environment",
       description: report.environment,
     },
-    // {
-    //   title: "Duration",
-    //   description: ms(report.duration),
-    // },
+    {
+      title: "Duration",
+      description: ms(report.duration),
+    },
   ];
 
   const renderResponse = () => {
