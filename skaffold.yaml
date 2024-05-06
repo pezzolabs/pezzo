@@ -198,7 +198,7 @@ profiles:
       kustomize:
         paths:
           - ./kubernetes/base/prisma-migration
-  - name: common-0-dev-tokyo-clickhouse-migrate
+  - name: common-0-prd-tokyo-clickhouse-migrate
     build:
       tagPolicy:
         gitCommit:
