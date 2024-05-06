@@ -29,13 +29,13 @@ spec:
             - /bin/sh
           env:
             - name: CLICKHOUSE_HOST
-              value: clickhouse.dev.smartnews.com
+              value: smartnews-ops-0038ca8724e37848.elb.ap-northeast-1.amazonaws.com
             - name: CLICKHOUSE_PASSWORD
-              value: test
+              value: FyaNO3kQRJNUU5bl
             - name: CLICKHOUSE_PORT
               value: "8123"
             - name: CLICKHOUSE_USER
-              value: test
+              value: llm_ops_sa
           image: llm-ops-server:latest
           name: pezzo-clickhouse-migrate
           workingDir: /app/clickhouse
