@@ -78,8 +78,8 @@ commands:
             export PIPELINE_OIDC_TOKEN_VAR=CIRCLE_OIDC_TOKEN
             export PIPELINE_SK_CHECK_CONFIG_FILES=true
             export PIPELINE_SK_USE_CLUSTER_PROFILE=true
-            spaas skaffold build --aws-account << parameters.env >> --region << parameters.region >> --cluster << parameters.cluster >> --system realtime-streaming --component << parameters.component >> --target '' --path ''
-            spaas skaffold run --aws-account << parameters.env >> --region << parameters.region >> --cluster << parameters.cluster >> --system realtime-streaming --component << parameters.component >> --target '' --path ''
+            spaas skaffold build --aws-account << parameters.env >> --env '' --region << parameters.region >> --cluster << parameters.cluster >> --namespace '' --system realtime-streaming --component '' --target << parameters.component >>
+            spaas skaffold run --aws-account << parameters.env >> --env '' --region << parameters.region >> --cluster << parameters.cluster >> --namespace '' --system realtime-streaming --component '' --target << parameters.component >>
 
 jobs:
   deploy:
