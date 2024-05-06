@@ -2,30 +2,30 @@ export interface ReportSchema {
   id: string;
   organizationId: string;
   projectId: string;
-  environment: string;
-  timestamp: string;
-  promptTokens: number;
-  completionTokens: number;
-  totalTokens: number;
-  promptCost: number;
-  completionCost: number;
-  totalCost: number;
-  duration: number;
-  type: string;
-  client: string;
-  clientVersion: string;
-  model: string;
-  modelAuthor: string;
-  provider: string;
-  requestTimestamp: string;
-  requestBody: string;
-  isError: boolean;
-  responseStatusCode: number;
-  responseTimestamp: string;
-  responseBody: string;
-  cacheEnabled: boolean;
-  cacheHit: boolean;
-  promptId: string;
+  environment?: string;
+  timestamp?: string;
+  promptTokens?: number;
+  completionTokens?: number;
+  totalTokens?: number;
+  promptCost?: number;
+  completionCost?: number;
+  totalCost?: number;
+  duration?: number;
+  type?: string;
+  client?: string;
+  clientVersion?: string;
+  model?: string;
+  modelAuthor?: string;
+  provider?: string;
+  requestTimestamp?: string;
+  requestBody?: string;
+  isError?: boolean;
+  responseStatusCode?: number;
+  responseTimestamp?: string;
+  responseBody?: string;
+  cacheEnabled?: boolean;
+  cacheHit?: boolean;
+  promptId?: string;
 }
 
 export interface SerializedReport
@@ -39,6 +39,14 @@ export const serializeReport = (doc: ReportSchema): SerializedReport => {
     ...doc,
     requestBody: JSON.parse(doc.requestBody),
     responseBody: JSON.parse(doc.responseBody),
+  };
+};
+
+export const serializeGaiReport = (doc: ReportSchema): SerializedReport => {
+  return {
+    ...doc,
+    requestBody: {"model": "gpt-3.5-turbo"},
+    responseBody: {"data": "mock-data"},
   };
 };
 
@@ -67,3 +75,24 @@ export const serializePaginatedReport = (
     ...doc,
   };
 };
+
+export interface TestPromptRequest {
+  content: TestPromptRequestContent;
+}
+
+export interface TestPromptRequestMessage {
+  role: string;
+  content: string;
+}
+
+export interface TestPromptRequestContent {
+  messages: TestPromptRequestMessage[];
+  model: string;
+  max_tokens?: number;
+  temperature?: number;
+  prompt: string;
+}
+
+export interface TestPromptResponse {
+  data: string;
+}

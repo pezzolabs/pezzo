@@ -29,14 +29,14 @@ spec:
             - /bin/sh
           env:
             - name: CLICKHOUSE_HOST
-              value: clickhouse
+              value: clickhouse.dev.smartnews.com
             - name: CLICKHOUSE_PASSWORD
-              value: default
+              value: test
             - name: CLICKHOUSE_PORT
               value: "8123"
             - name: CLICKHOUSE_USER
-              value: default
-          image: ghcr.io/pezzolabs/pezzo/server:latest
+              value: test
+          image: llm-ops-server:latest
           name: pezzo-clickhouse-migrate
           workingDir: /app/clickhouse
       restartPolicy: Always

@@ -16,6 +16,7 @@ export const ProviderSettingsCard = () => {
 
   const form = getForm();
   const settings = form.watch("settings");
+  // console.log("settings: ", JSON.stringify(settings));
   const service = form.watch("service");
 
   if (!settings) {
@@ -30,7 +31,7 @@ export const ProviderSettingsCard = () => {
 
       {service && (
         <ProviderSettingsSchemaRenderer
-          schema={providerSettings[service].generateFormSchema(settings)}
+          schema={providerSettings[service].GenerateFormSchema(settings)}
         />
       )}
     </div>

@@ -37,12 +37,12 @@ export const SideNavigation = () => {
       icon: BoxIcon,
       isActive: (href: string) => window.location.pathname.startsWith(href),
     },
-    {
-      name: "Environments",
-      href: `/projects/${projectId}/environments`,
-      icon: HardDriveIcon,
-      isActive: (href: string) => window.location.pathname.startsWith(href),
-    },
+    // {
+    //   name: "Environments",
+    //   href: `/projects/${projectId}/environments`,
+    //   icon: HardDriveIcon,
+    //   isActive: (href: string) => window.location.pathname.startsWith(href),
+    // },
   ];
 
   return (
@@ -111,7 +111,7 @@ export const SideNavigation = () => {
             </Link>
             <Link
               className="mb-2 mt-auto flex cursor-pointer items-center rounded-md p-2 text-sm font-medium text-stone-400 transition-all hover:bg-stone-800 hover:text-white "
-              to="https://docs.pezzo.ai"
+              to="https://www.notion.so/User-Manual-d49c811d16ff4f1db415830b3f5a04b2"
               target="_blank"
             >
               <GraduationCapIcon

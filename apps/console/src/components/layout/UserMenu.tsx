@@ -34,7 +34,7 @@ export const UserMenu = () => {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <Link to="https://docs.pezzo.ai" target="_blank">
+        <Link to="https://www.notion.so/User-Manual-d49c811d16ff4f1db415830b3f5a04b2" target="_blank">
           <DropdownMenuItem>
             <GraduationCap className="mr-2 h-4 w-4" />
             <span>Documentation</span>

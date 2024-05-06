@@ -39,6 +39,8 @@ import { ModelDetails } from "~/pages/requests/ModelDetails";
 import { useReport } from "~/graphql/hooks/queries";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
 import OpenAI from "openai";
+import {normalizeGAIChatResponse} from "~/features/chat/normalizers/gai-platform-normalizer";
+import {GaiChatView} from "~/features/chat/GaiChatView";
 
 type Mode = "chat" | "json";
 
@@ -143,10 +145,10 @@ export const RequestDetails = (props: Props) => {
         </div>
       ),
     },
-    {
-      title: "Cost",
-      description: `$${report?.totalCost?.toFixed(5) ?? 0}`,
-    },
+    // {
+    //   title: "Cost",
+    //   description: `$${report?.totalCost?.toFixed(5) ?? 0}`,
+    // },
     {
       title: "Status",
       description: (
@@ -193,11 +195,15 @@ export const RequestDetails = (props: Props) => {
       );
     }
 
-    const chat = normalizeOpenAIChatResponse(
-      report.requestBody as OpenAI.ChatCompletionCreateParams,
-      report.responseBody as OpenAI.ChatCompletion
-    );
-    return <ChatView chat={chat} />;
+    // const chat = normalizeGAIChatResponse(
+    //   report.requestBody,
+    //   report.responseBody
+    // );
+    // const chat = {
+    //   request: report.requestBody.content.provider,
+    //   response: report.responseBody.data
+    // }
+    return <GaiChatView request_prompt={report.requestBody.content.prompt} request_system_hint={report.requestBody.content.messages[0].content} response={report.responseBody.data} />;
   };
 
   return (
@@ -235,7 +241,7 @@ export const RequestDetails = (props: Props) => {
           <Alert className="my-4 border-blue-900 bg-blue-950/40 text-blue-500">
             <AlertDescription className="flex items-center gap-1">
               <InfoIcon className="h-4 w-4" />
-              This is a test request from the Pezzo Console
+              This is a test request from the GAI Platform
             </AlertDescription>
           </Alert>
         )}

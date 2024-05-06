@@ -160,12 +160,14 @@ export const EditorProvider = ({ children }) => {
       form.reset({
         service,
         settings,
-        content: getDefaultContent(PromptType.Chat),
-        type: PromptType.Chat,
+        // use prompt type as default
+        content: getDefaultContent(PromptType.Prompt),
+        type: PromptType.Prompt,
       });
     }
 
     if (isFetched && currentVersion) {
+      // console.log("currentSetting: " + JSON.stringify(currentVersion.settings));
       form.reset({
         service: currentVersion.service,
         settings: currentVersion.settings,

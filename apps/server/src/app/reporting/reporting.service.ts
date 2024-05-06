@@ -16,11 +16,13 @@ import { ClickHouseService } from "../clickhouse/clickhouse.service";
 import {
   PaginatedReportsSchema,
   ReportSchema,
-  SerializedReport,
+  SerializedReport, serializeGaiReport,
   serializePaginatedReport,
-  serializeReport,
+  serializeReport, TestPromptRequest, TestPromptResponse,
 } from "@pezzo/types";
 import { PaginatedReportsResult } from "./object-types/request-report-result.model";
+import {GetPromptCompletionResult} from "@pezzo/client";
+import moment from "moment";
 
 @Injectable()
 export class ReportingService {
@@ -67,6 +69,90 @@ export class ReportingService {
       cacheEnabled: cacheEnabled,
       cacheHit: cacheHit,
       promptId: report.metadata.promptId || null,
+    };
+
+    try {
+      await this.clickHouseService.client.insert({
+        format: "JSONEachRow",
+        table: "reports",
+        values: [reportToSave],
+      });
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException(`Could not save report`);
+    }
+
+    return serializeReport(reportToSave);
+  }
+
+  async saveGaiPlatformReport(
+    dto: GetPromptCompletionResult,
+    ownership: {
+      organizationId: string;
+      projectId: string;
+    },
+    isTestPrompt = false,
+    request: {
+      promptId: string
+      model: string
+      prompt: any
+      system_hint: any
+      temperature: number
+      max_tokens: number
+    }
+  ): Promise<SerializedReport> {
+    const reportId = randomUUID();
+
+    const requestObject: TestPromptRequest = {
+      content: {
+        prompt: request.prompt,
+        messages: [
+          {
+            content: request.system_hint,
+            role: "user"
+          }
+        ],
+        model: request.model,
+        temperature: request.temperature,
+        max_tokens: request.max_tokens
+      }
+    };
+
+    const responseObject: TestPromptResponse = {
+      data: dto.completion
+    };
+
+    console.log("requestTimestamp: " + dto.requestTimestamp);
+    console.log("responseTimestamp: " + dto.responseTimestamp);
+
+    const reportToSave: ReportSchema = {
+      id: reportId,
+      timestamp: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+      organizationId: ownership.organizationId,
+      projectId: ownership.projectId,
+      promptCost: 0,
+      completionCost: 0,
+      totalCost: 0,
+      promptTokens: dto.prompt_tokens,
+      completionTokens: dto.completion_tokens,
+      totalTokens: (dto.prompt_tokens + dto.completion_tokens),
+      duration: dto.responseTimestamp.getTime() - dto.requestTimestamp.getTime(),
+      environment: "PLAYGROUND",
+      client: "gai-platform-api",
+      clientVersion: "3",
+      model: dto.model,
+      provider: "GAI Platform",
+      modelAuthor: "GAI Platform",
+      type: "ChatCompletion",
+      requestTimestamp: moment(dto.requestTimestamp).format("YYYY-MM-DD HH:mm:ss"),
+      requestBody: JSON.stringify(requestObject),
+      isError: false,
+      responseStatusCode: 200,
+      responseTimestamp: moment(dto.responseTimestamp).format("YYYY-MM-DD HH:mm:ss"),
+      responseBody: JSON.stringify(responseObject),
+      cacheEnabled: false,
+      cacheHit: false,
+      promptId: request.promptId,
     };
 
     try {

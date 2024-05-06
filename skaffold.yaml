@@ -45,7 +45,7 @@ profiles:
       statusCheckDeadlineSeconds: 1200
       kustomize:
         paths:
-          - ./kubernetes/base/server
+          - ./kubernetes/dev/server
   - name: common-0-dev-tokyo-console
     build:
       tagPolicy:
@@ -77,6 +77,15 @@ profiles:
         paths:
           - ./kubernetes/dev/proxy
   - name: common-0-dev-tokyo-prisma-migrate
+    build:
+      tagPolicy:
+        gitCommit:
+          variant: AbbrevCommitSha
+          prefix: dev-
+      artifacts:
+        - image: llm-ops-server
+          docker:
+            dockerfile: ./apps/server/Dockerfile
     deploy:
       statusCheckDeadlineSeconds: 3600
       kustomize:
@@ -94,6 +103,21 @@ profiles:
       kustomize:
         paths:
           - ./kubernetes/base/clickhouse
+  - name: common-0-dev-tokyo-clickhouse-migrate
+    build:
+      tagPolicy:
+        gitCommit:
+          variant: AbbrevCommitSha
+          prefix: dev-
+      artifacts:
+        - image: llm-ops-server
+          docker:
+            dockerfile: ./apps/server/Dockerfile
+    deploy:
+      statusCheckDeadlineSeconds: 3600
+      kustomize:
+        paths:
+          - ./kubernetes/base/clickhouse-migration
   - name: common-0-prd-tokyo-supertokens
     deploy:
       statusCheckDeadlineSeconds: 1800

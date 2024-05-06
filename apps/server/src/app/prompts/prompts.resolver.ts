@@ -29,6 +29,7 @@ import { PinoLogger } from "../logger/pino-logger";
 import { AnalyticsService } from "../analytics/analytics.service";
 import { PromptVersion } from "../../@generated/prompt-version/prompt-version.model";
 import { OrganizationsService } from "../identity/organizations.service";
+import { Models } from "./models/models.model";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Prompt)
@@ -40,6 +41,18 @@ export class PromptsResolver {
     private logger: PinoLogger,
     private analytics: AnalyticsService
   ) {}
+
+  @Query(() => Models)
+  async models() {
+    this.logger.info("Getting GAI platform models");
+
+    try {
+      return await this.promptsService.getModels();
+    } catch (error) {
+      this.logger.error({ error }, "Error getting model list");
+      throw new InternalServerErrorException();
+    }
+  }
 
   @Query(() => [Prompt])
   async prompts(

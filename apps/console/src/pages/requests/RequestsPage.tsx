@@ -97,12 +97,12 @@ const getTableColumns = (): ColumnDef<RequestReportItem>[] => {
       header: "Total Tokens",
       cell: ({ row }) => <div>{row.original.totalTokens}</div>,
     },
-    {
-      accessorKey: "cost",
-      id: "cost",
-      header: "Cost",
-      cell: ({ row }) => <div>${row.original.cost.toFixed(5)}</div>,
-    },
+    // {
+    //   accessorKey: "cost",
+    //   id: "cost",
+    //   header: "Cost",
+    //   cell: ({ row }) => <div>${row.original.cost.toFixed(5)}</div>,
+    // },
     {
       id: "tags",
       cell: ({ row }) => <RequestItemTags request={row.original} />,

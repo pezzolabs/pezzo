@@ -288,6 +288,23 @@ workflows:
           skaffold_use_cluster_profile: true
           requires:
             - approve/prisma-migrate
+      - approve:
+          <<: *dev-filter
+          name: approve/clickhouse-migrate
+          type: approval
+      - gradle/deliver:
+          <<: *dev-filter
+          name: deliver/dev/clickhouse-migrate
+          docker: *orb_docker_gradle
+          aws_account: dev
+          env: ""
+          region: tokyo
+          cluster: common-0
+          system: realtime-streaming
+          target: clickhouse-migrate
+          skaffold_use_cluster_profile: true
+          requires:
+            - approve/clickhouse-migrate
 
   deliver-prd:
     jobs:
