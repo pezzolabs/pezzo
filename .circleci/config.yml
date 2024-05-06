@@ -52,8 +52,9 @@ commands:
             export TAG=<< parameters.env >>-$(echo $CIRCLE_SHA1 | cut -c -7)
             echo $TAG
             export PIPELINE_OIDC_TOKEN_VAR=CIRCLE_OIDC_TOKEN
-            export PIPELINE_SK_CHECK_CONFIG_FILES=true
+            export PIPELINE_SK_CHECK_CONFIG_FILES=false
             export PIPELINE_SK_USE_CLUSTER_PROFILE=true
+            export PIPELINE_SK_SKIP_VERSION_CONFIG=true
             spaas skaffold build --aws-account << parameters.env >> --region << parameters.region >> --cluster << parameters.cluster >> --system realtime-streaming --component << parameters.component >> --target '' --path ''
 
   skaffold-run:
