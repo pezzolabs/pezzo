@@ -12,12 +12,9 @@ orb_dockers:
   kubernetes: &orb_docker_kubernetes 165463520094.dkr.ecr.ap-northeast-1.amazonaws.com/circleci-orbs/kubernetes:3
 
 executors:
-  deploy:
+  maven:
     docker:
-      - image: *orb_docker_kubernetes
-  test:
-    docker:
-      - image: 165463520094.dkr.ecr.ap-northeast-1.amazonaws.com/circleci-orbs/kubernetes:2
+      - image: *orb_docker_gradle
 
 workflow_filters:
   branch-filter: &branch-filter
@@ -35,101 +32,89 @@ workflow_filters:
       branches:
         only: dev
 
-jobs:
-  build:
-    executor: test
+commands:
+  skaffold-build:
     parameters:
-      Env:
+      env:
         type: string
-        default: dev
-      Repo:
+      region:
         type: string
-      DockerfilePath:
+      cluster:
         type: string
-    environment:
-      AWS_ECR_ACCOUNT_URL: 165463520094.dkr.ecr.ap-northeast-1.amazonaws.com
-      AWS_DEFAULT_REGION: ap-northeast-1
-      DOCKER_NS: realtime-streaming
+      component:
+        type: string
     steps:
-      - checkout
-      - aws-cli/setup
       - setup_remote_docker:
           docker_layer_caching: true
-      - restore_cache:
-          keys:
-            - m2-{{ checksum "pom.xml" }}
-            - m2-
       - run:
+          name: Run Skaffold
           command: |
-            unset CIRCLE_OIDC_TOKEN
-            $(spaas kubernetes configure --system realtime-streaming --env dev)
-            echo "[prd-exp]" >> ~/.aws/credentials
-            echo "aws_access_key_id = $(aws configure get default.aws_access_key_id)" >> ~/.aws/credentials
-            echo "aws_secret_access_key = $(aws configure get default.aws_secret_access_key)" >> ~/.aws/credentials
-            aws configure set --profile smartnews-global-prd-exp role_arn arn:aws:iam::165463520094:role/smartnews-global-developer
-            aws configure set --profile smartnews-global-prd-exp source_profile prd-exp
-            aws configure set --profile smartnews-global-prd-exp region ap-northeast-1
-            spaas aws ssh configure -s realtime-streaming
-            ssh -fND 8157 tunnel -4 -o StrictHostKeyChecking=no
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: m2-{{ checksum "pom.xml" }}
-      - run:
-          name: docker build
-          command: |
-            cd << parameters.DockerfilePath >>
-            docker build -t << parameters.Repo >>:latest ../..
-      - run:
-          name: Set variable
-          command: |
-            TAG=<< parameters.Env >>-$(echo $CIRCLE_SHA1 | cut -c -7)
-            echo "export TAG=$TAG" >> $BASH_ENV
-      - run: docker tag << parameters.Repo >>:latest ${AWS_ECR_ACCOUNT_URL}/${DOCKER_NS}/<< parameters.Repo >>:$TAG
+            export TAG=<< parameters.env >>-$(echo $CIRCLE_SHA1 | cut -c -7)
+            echo $TAG
+            export PIPELINE_OIDC_TOKEN_VAR=CIRCLE_OIDC_TOKEN
+            export PIPELINE_SK_CHECK_CONFIG_FILES=true
+            export PIPELINE_SK_USE_CLUSTER_PROFILE=true
+            spaas skaffold build --aws-account << parameters.env >> --region << parameters.region >> --cluster << parameters.cluster >> --system realtime-streaming --component << parameters.component >> --target '' --path ''
 
-      - run:
-          name: aws
-          command: |
-            aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ECR_ACCOUNT_URL}
-            docker push ${AWS_ECR_ACCOUNT_URL}/${DOCKER_NS}/<< parameters.Repo >>:$TAG
-
-            if [ << parameters.Env >> = "prd" ]; then
-              docker tag << parameters.Repo >>:latest ${AWS_ECR_ACCOUNT_URL}/${DOCKER_NS}/<< parameters.Repo >>:latest
-              docker push ${AWS_ECR_ACCOUNT_URL}/${DOCKER_NS}/<< parameters.Repo >>:latest
-            fi
-
-  deploy:
-    executor: deploy
-    environment:
-      AWS_ECR_ACCOUNT_URL: 165463520094.dkr.ecr.ap-northeast-1.amazonaws.com
-      AWS_DEFAULT_REGION: ap-northeast-1
-      REPO_NAME: dp-flink-platform-backend
-      DOCKER_NS: realtime-streaming
+  skaffold-run:
     parameters:
-      Env:
+      env:
         type: string
-        default: dev
-      Repo:
+      region:
+        type: string
+      cluster:
+        type: string
+      component:
         type: string
     steps:
-      - checkout
-      - attach_workspace:
-          at: /home/circleci/.aws
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run:
-          name: update deployment
+          name: Run Skaffold
           command: |
-            NAMESPACE=realtime-streaming
-            DEPLOY_ENV=<< parameters.Env >>
-            export EKS_CLUSTER_NAME=common-0
-            unset CIRCLE_OIDC_TOKEN
-            if [ << parameters.Repo >> = "llm-ops-console" ] || [ << parameters.Repo >> = "llm-ops-server" ] || [ << parameters.Repo >> = "llm-ops-proxy" ]; then
-              cd kubernetes/$DEPLOY_ENV/<< parameters.Repo >>
-            elif [ $DEPLOY_ENV = "ipv6prd" ]; then
-              cd kubernetes/base/<< parameters.Repo >>
-            fi
-            $(spaas kubernetes configure --system realtime-streaming -C common-0 -A $DEPLOY_ENV)
-            kustomize build . | kubectl apply -f -
+#            sudo apt-get update
+#            sudo apt-get install -y gettext-base
+            export env=<< parameters.env >>
+            export TAG=<< parameters.env >>-$(echo $CIRCLE_SHA1 | cut -c -7)
+            echo "TAG=$TAG"
+            export PIPELINE_OIDC_TOKEN_VAR=CIRCLE_OIDC_TOKEN
+            export PIPELINE_SK_CHECK_CONFIG_FILES=true
+            export PIPELINE_SK_USE_CLUSTER_PROFILE=true
+            spaas skaffold build --aws-account << parameters.env >> --region << parameters.region >> --cluster << parameters.cluster >> --system realtime-streaming --component << parameters.component >> --target '' --path ''
+            spaas skaffold run --aws-account << parameters.env >> --region << parameters.region >> --cluster << parameters.cluster >> --system realtime-streaming --component << parameters.component >> --target '' --path ''
 
+jobs:
+  deploy:
+    executor: maven
+    parameters:
+      env:
+        type: string
+      region:
+        type: string
+      cluster:
+        type: string
+      component:
+        type: string
+      build-only:
+        type: boolean
+        default: false
+    steps:
+      - when:
+          condition: << parameters.build-only >>
+          steps:
+            - skaffold-build:
+                env: << parameters.env >>
+                region: << parameters.region >>
+                cluster: << parameters.cluster >>
+                component: << parameters.component >>
+      - unless:
+          condition: << parameters.build-only >>
+          steps:
+            - skaffold-run:
+                env: << parameters.env >>
+                region: << parameters.region >>
+                cluster: << parameters.cluster >>
+                component: << parameters.component >>
 
 workflows:
   deliver-dev:
@@ -315,8 +300,10 @@ workflows:
       - deploy:
           <<: *master-filter
           name: deliver/prd/postgres
-          Env: prd
-          Repo: postgres
+          env: prd
+          region: tokyo
+          cluster: common-0
+          component: postgres
           requires:
             - approve/postgres
       - approve:
