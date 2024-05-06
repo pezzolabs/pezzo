@@ -72,8 +72,6 @@ commands:
       - run:
           name: Run Skaffold
           command: |
-#            sudo apt-get update
-#            sudo apt-get install -y gettext-base
             export env=<< parameters.env >>
             export TAG=<< parameters.env >>-$(echo $CIRCLE_SHA1 | cut -c -7)
             echo "TAG=$TAG"
