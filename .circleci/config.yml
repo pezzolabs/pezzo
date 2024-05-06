@@ -70,6 +70,7 @@ commands:
       - checkout
       - attach_workspace:
           at: /home/circleci/.aws
+      - restore_gradle_cache
       - setup_remote_docker:
           docker_layer_caching: true
       - run: aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin 165463520094.dkr.ecr.ap-northeast-1.amazonaws.com
@@ -80,8 +81,9 @@ commands:
             export TAG=<< parameters.env >>-$(echo $CIRCLE_SHA1 | cut -c -7)
             echo "TAG=$TAG"
             export PIPELINE_OIDC_TOKEN_VAR=CIRCLE_OIDC_TOKEN
-            export PIPELINE_SK_CHECK_CONFIG_FILES=true
+            export PIPELINE_SK_CHECK_CONFIG_FILES=false
             export PIPELINE_SK_USE_CLUSTER_PROFILE=true
+            export PIPELINE_SK_SKIP_VERSION_CONFIG=true
             spaas skaffold build --aws-account << parameters.env >> --env '' --region << parameters.region >> --cluster << parameters.cluster >> --namespace '' --system realtime-streaming --component '' --target << parameters.component >>
             spaas skaffold run --aws-account << parameters.env >> --env '' --region << parameters.region >> --cluster << parameters.cluster >> --namespace '' --system realtime-streaming --component '' --target << parameters.component >>
 
