@@ -431,40 +431,45 @@ workflows:
           requires:
             - approve/prisma-migrate
 
-  main:
+  terraform-trigger:
     when: << pipeline.parameters.workflow_main >>
     jobs:
       - terraform/trigger:
           docker: *orb_docker_terraform
-          name: terraform/trigger
+          name: terraform/trigger/dev
           system: realtime-streaming
+          path: .
+      - terraform/trigger:
+          docker: *orb_docker_terraform
+          name: terraform/trigger/prd
+          system: realtime-streaming
+          aws_account: prd
           path: .
   terraform:
     when: << pipeline.parameters.workflow_terraform >>
     jobs:
       - terraform/plan:
+          <<: *master-filter
           docker: *orb_docker_terraform
-          name: << pipeline.parameters.env >>/<< pipeline.parameters.region >>/<< pipeline.parameters.system >>/plan
-          env: << pipeline.parameters.env >>
-          region: << pipeline.parameters.region >>
+          name: << pipeline.parameters.path >>/<< pipeline.parameters.aws_account >>/<< pipeline.parameters.region >>/plan
           system: << pipeline.parameters.system >>
           path: << pipeline.parameters.path >>
+          aws_account: << pipeline.parameters.aws_account >>
       - approve:
           <<: *master-filter
-          name: << pipeline.parameters.env >>/<< pipeline.parameters.region >>/<< pipeline.parameters.system >>/approve
+          name: << pipeline.parameters.path >>/<< pipeline.parameters.aws_account >>/<< pipeline.parameters.region >>/approve
           type: approval
           requires:
-            - << pipeline.parameters.env >>/<< pipeline.parameters.region >>/<< pipeline.parameters.system >>/plan
+            - << pipeline.parameters.path >>/<< pipeline.parameters.aws_account >>/<< pipeline.parameters.region >>/plan
       - terraform/apply:
           <<: *master-filter
           docker: *orb_docker_terraform
-          name: << pipeline.parameters.env >>/<< pipeline.parameters.region >>/<< pipeline.parameters.system >>/apply
-          env: << pipeline.parameters.env >>
-          region: << pipeline.parameters.region >>
+          name: << pipeline.parameters.path >>/<< pipeline.parameters.aws_account >>/<< pipeline.parameters.region >>/apply
           system: << pipeline.parameters.system >>
           path: << pipeline.parameters.path >>
+          aws_account: << pipeline.parameters.aws_account >>
           requires:
-            - << pipeline.parameters.env >>/<< pipeline.parameters.region >>/<< pipeline.parameters.system >>/approve
+            - << pipeline.parameters.path >>/<< pipeline.parameters.aws_account >>/<< pipeline.parameters.region >>/approve
 
 parameters:
   workflow_main:
