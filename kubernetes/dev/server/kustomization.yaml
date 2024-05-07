@@ -1,5 +1,4 @@
 namespace: realtime-streaming
-#namePrefix: dev-
 
 resources:
   - ../../base/server
