@@ -6,13 +6,13 @@ locals {
 
 resource "aws_db_subnet_group" "rds_tokyo_db_subnet_group" {
   provider   = aws.primary
-  name       = "dpsh-platform-prd-db-subnet-group"
+  name       = "dpsh-llm-ops-prd-db-subnet-group"
   subnet_ids = [data.aws_subnet.news_private_b_0.id, data.aws_subnet.news_private_c_0.id, data.aws_subnet.news_private_d_0.id]
 
   tags = {
     Cost   = var.cost
     Env    = "production"
-    Name   = "dpsh-platform-prd"
+    Name   = "dpsh-llm-ops-prd"
     Team   = var.team
     System = var.system
   }
@@ -35,7 +35,7 @@ resource "aws_rds_cluster" "rds_tokyo_cluster" {
   tags = {
     Cost   = var.cost
     Env    = "production"
-    Name   = "dpsh-platform-prd"
+    Name   = "dpsh-llm-ops-prd"
     Team   = var.team
     System = var.system
     Reserve = "Yes"
@@ -51,39 +51,15 @@ resource "aws_rds_cluster_instance" "rds_tokyo_instances" {
   engine               = local.rds_engine
   engine_version       = local.rds_engine_version
   db_subnet_group_name = aws_db_subnet_group.rds_tokyo_db_subnet_group.name
-  db_parameter_group_name = aws_db_parameter_group.dpsh-platform-prd-parameter-group.name
   promotion_tier       = 0
 
 
   tags = {
     Cost   = var.cost
     Env    = "production"
-    Name   = "dpsh-platform-prd"
+    Name   = "dpsh-llm-ops-prd"
     Team   = var.team
     System = var.system
     Reserve = "Yes"
-  }
-}
-
-resource "aws_db_parameter_group" "dpsh-platform-prd-parameter-group" {
-  name        = "dpsh-platform-prd-cluster-parameter-group"
-  family      = "aurora-mysql8.0"
-  description = "dpsh-platform-prd-cluster-parameter-group"
-
-  parameter {
-    name  = "interactive_timeout"
-    value = "31536000"
-  }
-  parameter {
-    name  = "max_allowed_packet"
-    value = "1073741824"
-  }
-  parameter {
-    name  = "wait_timeout"
-    value = "31536000"
-  }
-  parameter {
-    name  = "temptable_max_mmap"
-    value = "10737418240"
   }
 }
