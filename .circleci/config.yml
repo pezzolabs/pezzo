@@ -433,11 +433,11 @@ workflows:
   terraform-trigger:
     when: << pipeline.parameters.workflow_main >>
     jobs:
-      - terraform/trigger:
-          docker: *orb_docker_terraform
-          name: terraform/trigger/dev
-          system: realtime-streaming
-          path: .
+#      - terraform/trigger:
+#          docker: *orb_docker_terraform
+#          name: terraform/trigger/dev
+#          system: realtime-streaming
+#          path: .
       - terraform/trigger:
           docker: *orb_docker_terraform
           name: terraform/trigger/prd
