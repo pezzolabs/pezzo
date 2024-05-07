@@ -365,70 +365,67 @@ workflows:
           <<: *master-filter
           name: approve/server
           type: approval
-      - gradle/deliver:
+      - deploy:
           <<: *master-filter
           name: deliver/prd/server
-          docker: *orb_docker_gradle
-          aws_account: prd
-          env: ""
+          env: prd
           region: tokyo
           cluster: common-0
-          system: realtime-streaming
-          target: server
-          skaffold_use_cluster_profile: true
+          component: server
           requires:
             - approve/server
       - approve:
           <<: *master-filter
           name: approve/console
           type: approval
-      - gradle/deliver:
+      - deploy:
           <<: *master-filter
           name: deliver/prd/console
-          docker: *orb_docker_gradle
-          aws_account: prd
-          env: ""
+          env: prd
           region: tokyo
           cluster: common-0
-          system: realtime-streaming
-          target: console
-          skaffold_use_cluster_profile: true
+          component: console
           requires:
             - approve/console
       - approve:
           <<: *master-filter
           name: approve/proxy
           type: approval
-      - gradle/deliver:
+      - deploy:
           <<: *master-filter
           name: deliver/prd/proxy
-          docker: *orb_docker_gradle
-          aws_account: prd
-          env: ""
+          env: prd
           region: tokyo
           cluster: common-0
-          system: realtime-streaming
-          target: proxy
-          skaffold_use_cluster_profile: true
+          component: proxy
           requires:
             - approve/proxy
       - approve:
           <<: *master-filter
           name: approve/prisma-migrate
           type: approval
-      - gradle/deliver:
+      - deploy:
           <<: *master-filter
           name: deliver/prd/prisma-migrate
-          docker: *orb_docker_gradle
-          aws_account: prd
-          env: ""
+          env: prd
           region: tokyo
           cluster: common-0
-          system: realtime-streaming
-          target: prisma-migrate
-          skaffold_use_cluster_profile: true
+          component: prisma-migrate
           requires:
             - approve/prisma-migrate
+      - approve:
+          <<: *dev-filter
+          name: approve/clickhouse-migrate
+          type: approval
+      - deploy:
+          <<: *dev-filter
+          name: deliver/dev/clickhouse-migrate
+          env: prd
+          region: tokyo
+          cluster: common-0
+          component: clickhouse-migrate
+          requires:
+            - approve/clickhouse-migrate
 
   terraform-trigger:
     when: << pipeline.parameters.workflow_main >>
