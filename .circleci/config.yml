@@ -314,69 +314,52 @@ workflows:
           <<: *master-filter
           name: approve/clickhouse
           type: approval
-      - gradle/deliver:
+      - deploy:
           <<: *master-filter
           name: deliver/prd/clickhouse
-          docker: *orb_docker_gradle
-          aws_account: prd
-          env: ""
+          env: prd
           region: tokyo
           cluster: common-0
-          system: realtime-streaming
-          target: clickhouse
-          skaffold_use_cluster_profile: true
+          component: clickhouse
           requires:
             - approve/clickhouse
       - approve:
           <<: *master-filter
           name: approve/supertokens
           type: approval
-      - gradle/deliver:
+      - deploy:
           <<: *master-filter
           name: deliver/prd/supertokens
-          docker: *orb_docker_gradle
-          aws_account: prd
-          env: ""
+          env: prd
           region: tokyo
           cluster: common-0
-          system: realtime-streaming
-          target: supertokens
-          skaffold_use_cluster_profile: true
+          component: supertokens
           requires:
             - approve/supertokens
       - approve:
           <<: *master-filter
           name: approve/redis
           type: approval
-      - gradle/deliver:
+      - deploy:
           <<: *master-filter
           name: deliver/prd/redis
-          docker: *orb_docker_gradle
-          aws_account: prd
-          env: ""
+          env: prd
           region: tokyo
           cluster: common-0
-          system: realtime-streaming
-          target: redis
-          #          resourceClass: large
-          skaffold_use_cluster_profile: true
+          component: redis
           requires:
             - approve/redis
       - approve:
           <<: *master-filter
           name: approve/local-kms
           type: approval
-      - gradle/deliver:
+      - deploy:
           <<: *master-filter
           name: deliver/prd/local-kms
-          docker: *orb_docker_gradle
-          aws_account: prd
-          env: ""
+          env: prd
           region: tokyo
           cluster: common-0
-          system: realtime-streaming
-          target: local-kms
-          skaffold_use_cluster_profile: true
+          component: local-kms
           requires:
             - approve/local-kms
       - approve:
