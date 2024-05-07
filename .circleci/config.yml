@@ -414,12 +414,12 @@ workflows:
           requires:
             - approve/prisma-migrate
       - approve:
-          <<: *dev-filter
+          <<: *master-filter
           name: approve/clickhouse-migrate
           type: approval
       - deploy:
-          <<: *dev-filter
-          name: deliver/dev/clickhouse-migrate
+          <<: *master-filter
+          name: deliver/prd/clickhouse-migrate
           env: prd
           region: tokyo
           cluster: common-0
