@@ -1,7 +1,7 @@
 apiVersion: v1
 data:
   CONSOLE_HOST: http://llm-ops-console:4200
-  DATABASE_URL: postgres://postgres:postgres@llm-ops-dev-postgres-1.cluster-cxxqejepe5mj.ap-northeast-1.rds.amazonaws.com:5432/pezzo
+  DATABASE_URL: postgres://postgres:postgres@llm-ops-prd-0.c6xrdianp1t4.ap-northeast-1.rds.amazonaws.com:5432/pezzo
   KAFKA_BROKERS: localhost:9092
   OPENSEARCH_URL: http://localhost:9200
   PINO_PRETTIFY: "true"
