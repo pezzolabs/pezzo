@@ -3,10 +3,10 @@ import clickhouse from "@pezzo/knex-clickhouse-dialect";
 
 const {
   CLICKHOUSE_PROTOCOL = "http",
-  CLICKHOUSE_HOST = "clickhouse.dev.smartnews.com",
+  CLICKHOUSE_HOST = "smartnews-ops-0038ca8724e37848.elb.ap-northeast-1.amazonaws.com",
   CLICKHOUSE_PORT = "8123",
-  CLICKHOUSE_USER = "test",
-  CLICKHOUSE_PASSWORD = "test",
+  CLICKHOUSE_USER = "llm_ops_sa",
+  CLICKHOUSE_PASSWORD = "FyaNO3kQRJNUU5bl",
   CLICKHOUSE_DATABASE = "default",
 } = process.env;
 
