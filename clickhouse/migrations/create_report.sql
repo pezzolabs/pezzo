@@ -1,4 +1,4 @@
-create table default.reports on cluster hacluster
+create table if not exists default.reports on cluster hacluster
 as default.reports_local
   engine = Distributed('{cluster}', 'default', 'reports_local', rand());
 CREATE TABLE default.reports_local on cluster hacluster
