@@ -1,7 +1,7 @@
 namespace: realtime-streaming
 
 resources:
-  - ../../base/console
+  - ../../base/server
   - ./-env-local-configmap.yaml
 
 patchesStrategicMerge:
