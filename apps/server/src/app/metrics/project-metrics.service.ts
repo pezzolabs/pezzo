@@ -67,8 +67,8 @@ export class ProjectMetricsService {
 
     switch (metric) {
       case DeltaMetricType.AverageRequestDuration:
-        const currentValue = /*sql*/ `avgIf(r.duration, r.isError = false AND r.requestTimestamp >= currentStartDate AND r.responseTimestamp <= currentEndDate)`;
-        const previousValue = /*sql*/ `avgIf(r.duration, r.isError = false AND r.requestTimestamp >= previousStartDate AND r.responseTimestamp <= previousEndDate)`;
+        const currentValue = /*sql*/ `avgIf(r.duration, r.isError = 0 AND r.requestTimestamp >= currentStartDate AND r.responseTimestamp <= currentEndDate)`;
+        const previousValue = /*sql*/ `avgIf(r.duration, r.isError = 0 AND r.requestTimestamp >= previousStartDate AND r.responseTimestamp <= previousEndDate)`;
 
         selectStatement = /*sql*/ `
           if(isNaN(${currentValue}), 0, ${currentValue}) AS currentValue,
@@ -89,8 +89,8 @@ export class ProjectMetricsService {
         break;
       case DeltaMetricType.SuccessResponses:
         selectStatement = /*sql*/ `
-          countIf(r.isError = false AND r.requestTimestamp >= currentStartDate AND r.responseTimestamp <= currentEndDate) AS currentSuccess,
-          countIf(r.isError = false AND r.requestTimestamp >= previousStartDate AND r.responseTimestamp <= previousEndDate) AS previousSuccess,
+          countIf(r.isError = 0 AND r.requestTimestamp >= currentStartDate AND r.responseTimestamp <= currentEndDate) AS currentSuccess,
+          countIf(r.isError = 0 AND r.requestTimestamp >= previousStartDate AND r.responseTimestamp <= previousEndDate) AS previousSuccess,
           countIf(r.requestTimestamp >= currentStartDate AND r.responseTimestamp <= currentEndDate) AS currentTotal,
           countIf(r.requestTimestamp >= previousStartDate AND r.responseTimestamp <= previousEndDate) AS previousTotal,
           if(currentTotal = 0, 0, (currentSuccess / currentTotal)) as currentValue,
