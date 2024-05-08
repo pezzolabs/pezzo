@@ -33,15 +33,15 @@ export const RequestItemTags = ({
 
   const baseCn = "rounded-sm border p-1 text-xs flex gap-1 items-center h-6";
 
-  if (!promptId) {
-    tags.push(
-      <Tooltip text="This prompt is not managed by Pezzo">
-        <div className={cn(baseCn, "border-0 text-yellow-500")}>
-          <AlertTriangleIcon className="h-3 w-3" />
-        </div>
-      </Tooltip>
-    );
-  }
+  // if (!promptId) {
+  //   tags.push(
+  //     <Tooltip text="This prompt is not managed by Pezzo">
+  //       <div className={cn(baseCn, "border-0 text-yellow-500")}>
+  //         <AlertTriangleIcon className="h-3 w-3" />
+  //       </div>
+  //     </Tooltip>
+  //   );
+  // }
 
   if (isTestPrompt) {
     tags.push(
