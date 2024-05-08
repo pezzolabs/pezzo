@@ -11,11 +11,11 @@ export const FILTER_FIELDS_LIST: FilterDefinition[] = [
     type: "number",
     label: "Duration (ms)",
   },
-  {
-    value: "environment",
-    type: "string",
-    label: "Environment",
-  },
+  // {
+  //   value: "environment",
+  //   type: "string",
+  //   label: "Environment",
+  // },
   {
     value: "responseStatusCode",
     type: "number",
@@ -26,11 +26,11 @@ export const FILTER_FIELDS_LIST: FilterDefinition[] = [
     type: "date",
     label: "Timestamp",
   },
-  {
-    value: "totalCost",
-    type: "number",
-    label: "Total Cost",
-  },
+  // {
+  //   value: "totalCost",
+  //   type: "number",
+  //   label: "Total Cost",
+  // },
   {
     value: "totalTokens",
     type: "number",
