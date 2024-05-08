@@ -91,6 +91,7 @@ export interface TestPromptRequestContent {
   max_tokens?: number;
   temperature?: number;
   prompt: string;
+  variables: any;
 }
 
 export interface TestPromptResponse {

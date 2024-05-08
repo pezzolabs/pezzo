@@ -96,6 +96,7 @@ export class ReportingService {
       promptId: string
       model: string
       prompt: any
+      variables: any
       system_hint: any
       temperature: number
       max_tokens: number
@@ -106,6 +107,7 @@ export class ReportingService {
     const requestObject: TestPromptRequest = {
       content: {
         prompt: request.prompt,
+        variables: request.variables,
         messages: [
           {
             content: request.system_hint,
