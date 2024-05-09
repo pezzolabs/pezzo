@@ -24,8 +24,8 @@ export class ApiKeyAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
 
-    if (!req.headers["x-pezzo-api-key"]) {
-      throw new UnauthorizedException("Pezzo API Key Not Provided");
+    if (!req.headers["llm-ops-api-key"]) {
+      throw new UnauthorizedException("LLM Ops API Key Not Provided");
     }
 
     return this.authorizeApiKey(req);
@@ -33,11 +33,11 @@ export class ApiKeyAuthGuard implements CanActivate {
 
   private async authorizeApiKey(req) {
     this.logger.assign({ method: AuthMethod.ApiKey });
-    const keyValue = req.headers["x-pezzo-api-key"];
+    const keyValue = req.headers["llm-ops-api-key"];
     const apiKey = await this.apiKeysService.getApiKey(keyValue);
 
     if (!apiKey) {
-      throw new UnauthorizedException("Invalid Pezzo API Key");
+      throw new UnauthorizedException("Invalid LLM Ops API Key");
     }
 
     const organization = apiKey.organization;
