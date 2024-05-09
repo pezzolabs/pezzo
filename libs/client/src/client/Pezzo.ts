@@ -41,7 +41,7 @@ export class Pezzo {
     const response = await fetch(url.toString(), {
       headers: {
         "Content-Type": "application/json",
-        "x-pezzo-api-key": this.options.apiKey,
+        "llm-ops-api-key": this.options.apiKey,
         "x-pezzo-project-id": this.options.projectId,
       },
     });
@@ -78,7 +78,7 @@ export class Pezzo {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-pezzo-api-key": this.options.apiKey,
+          "llm-ops-api-key": this.options.apiKey,
           "x-pezzo-project-id": this.options.projectId,
         },
         body: JSON.stringify(dto),
@@ -101,7 +101,7 @@ export class Pezzo {
         body: JSON.stringify({ request }),
         headers: {
           "Content-Type": "application/json",
-          "x-pezzo-api-key": this.options.apiKey,
+          "llm-ops-api-key": this.options.apiKey,
           "x-pezzo-project-id": this.options.projectId,
         },
       }
@@ -127,7 +127,7 @@ export class Pezzo {
         }),
         headers: {
           "Content-Type": "application/json",
-          "x-pezzo-api-key": this.options.apiKey,
+          "llm-ops-api-key": this.options.apiKey,
           "x-pezzo-project-id": this.options.projectId,
         },
       }
