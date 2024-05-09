@@ -56,13 +56,13 @@ spec:
                   key: SUPERTOKENS_CONNECTION_URI
                   name: llm-ops-server-env
           image: llm-ops-server:latest
-          livenessProbe:
-            exec:
-              command:
-                - curl 'http://llm-ops-server:3000/api/healthz'
-            failureThreshold: 5
-            periodSeconds: 10
-            timeoutSeconds: 5
+#          livenessProbe:
+#            exec:
+#              command:
+#                - curl 'http://llm-ops-server:3000/api/healthz'
+#            failureThreshold: 5
+#            periodSeconds: 10
+#            timeoutSeconds: 5
           name: llm-ops-server
           ports:
             - containerPort: 3000
