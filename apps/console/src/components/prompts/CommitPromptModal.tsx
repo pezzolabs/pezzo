@@ -50,12 +50,12 @@ export const CommitPromptModal = ({ open, onClose, onCommitted }: Props) => {
   const editorForm = getEditorForm();
   const { toast } = useToast();
 
-  // fix open-source bug: no pass variable to watch
-  const [service] = editorForm.watch([
+  const [settings, content, service, type] = editorForm.watch([
+    "settings",
+    "content",
     "service",
+    "type",
   ]);
-
-  const { type, content, settings } = editorForm.getValues();
 
   const {
     mutate: createPromptVersion,

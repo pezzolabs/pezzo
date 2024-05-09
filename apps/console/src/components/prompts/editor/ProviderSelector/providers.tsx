@@ -13,24 +13,24 @@ export const providersList: ProviderProps[] = [
     value: PromptService.OpenAiChatCompletion,
     label: promptProvidersMapping[PromptService.OpenAiChatCompletion].name,
   },
-  {
-    image: (
-      <img
-        alt="Azure OpenAI"
-        src={AzureOpenAILogo}
-        className="w-6 rounded-sm"
-      />
-    ),
-    value: PromptService.AzureOpenAiChatCompletion,
-    label: promptProvidersMapping[PromptService.AzureOpenAiChatCompletion].name,
-  },
-  {
-    image: (
-      <img alt="Anthropic" src={AnthropicLogo} className=" w-6 rounded-sm" />
-    ),
-    value: PromptService.AnthropicCompletion,
-    label: promptProvidersMapping[PromptService.AnthropicCompletion].name,
-  },
+  // {
+  //   image: (
+  //     <img
+  //       alt="Azure OpenAI"
+  //       src={AzureOpenAILogo}
+  //       className="w-6 rounded-sm"
+  //     />
+  //   ),
+  //   value: PromptService.AzureOpenAiChatCompletion,
+  //   label: promptProvidersMapping[PromptService.AzureOpenAiChatCompletion].name,
+  // },
+  // {
+  //   image: (
+  //     <img alt="Anthropic" src={AnthropicLogo} className=" w-6 rounded-sm" />
+  //   ),
+  //   value: PromptService.AnthropicCompletion,
+  //   label: promptProvidersMapping[PromptService.AnthropicCompletion].name,
+  // },
 ];
 
 /**
