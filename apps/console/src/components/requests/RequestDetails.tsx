@@ -203,7 +203,7 @@ export const RequestDetails = (props: Props) => {
     //   request: report.requestBody.content.provider,
     //   response: report.responseBody.data
     // }
-    return <GaiChatView request_prompt={report.requestBody.content.prompt} request_system_hint={report.requestBody.content.messages[0].content} response={report.responseBody.data} />;
+    return <GaiChatView request_prompt={report.requestBody.content.prompt} request_prompt_variable={report.requestBody.content.variables} request_system_hint={report.requestBody.content.messages[0].content} response={report.responseBody.data} />;
   };
 
   return (
