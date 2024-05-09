@@ -7,8 +7,8 @@ export function createPezzoClientFromRequest(
   res: Response,
   next: NextFunction
 ) {
-  if (!req.headers["x-pezzo-api-key"]) {
-    return res.status(400).send("Missing x-pezzo-api-key header");
+  if (!req.headers["llm-ops-api-key"]) {
+    return res.status(400).send("Missing llm-ops-api-key header");
   }
 
   if (!req.headers["x-pezzo-project-id"]) {
@@ -25,7 +25,7 @@ export function createPezzoClientFromRequest(
     environment: string;
     serverUrl?: string;
   } = {
-    apiKey: req.headers["x-pezzo-api-key"] as string,
+    apiKey: req.headers["llm-ops-api-key"] as string,
     projectId: req.headers["x-pezzo-project-id"] as string,
     environment: req.headers["x-pezzo-environment"] as string,
   };
