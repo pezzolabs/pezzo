@@ -73,16 +73,16 @@ export const PromptEditView = () => {
     const values = form.getValues();
 
     // TODO: remove RequiredProviderApiKeyModal if don't need open AI key in the future
-    if (!hasProviderApiKey) {
-      openRequiredProviderApiKeyModal({
-        callback: () => {
-          openTestModal(values);
-        },
-        provider,
-        reason: "prompt_tester",
-      });
-      return;
-    }
+    // if (!hasProviderApiKey) {
+    //   openRequiredProviderApiKeyModal({
+    //     callback: () => {
+    //       openTestModal(values);
+    //     },
+    //     provider,
+    //     reason: "prompt_tester",
+    //   });
+    //   return;
+    // }
 
     openTestModal(values);
   };
