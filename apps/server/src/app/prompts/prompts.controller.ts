@@ -3,7 +3,7 @@ import {
   Get,
   Headers,
   InternalServerErrorException,
-  NotFoundException,
+  NotFoundException, Param,
   Query,
 } from "@nestjs/common";
 import { UseGuards } from "@nestjs/common";
@@ -176,6 +176,31 @@ export class PromptsController {
       return await this.promptsService.getModels();
     } catch (error) {
       this.logger.error({ error }, "Error getting GAI platform models");
+      throw new InternalServerErrorException();
+    }
+  }
+
+  @Get(":promptId/latest")
+  @ApiOperation({
+    summary: "Get the specific prompt latest version",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Get the specific prompt latest version successfully",
+  })
+  @ApiResponse({
+    status: 404,
+    description:
+      "Not found for the specific prompt latest version",
+  })
+  @ApiResponse({ status: 500, description: "Internal server error" })
+  async getPromptLatestVersion(@Param("promptId") promptId: string) {
+    this.logger.info("Getting specific prompt latest version");
+
+    try {
+      return await this.promptsService.getLatestPromptVersion(promptId);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting specific prompt latest version");
       throw new InternalServerErrorException();
     }
   }
