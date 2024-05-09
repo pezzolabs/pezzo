@@ -1,4 +1,4 @@
 namespace: realtime-streaming
 
 resources:
-  - ../../base/console
+  - ../../base/proxy
