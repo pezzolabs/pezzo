@@ -180,7 +180,7 @@ export class PromptsController {
     }
   }
 
-  @Get(":promptId/latest")
+  @Get("/:promptId/latest")
   @ApiOperation({
     summary: "Get the specific prompt latest version",
   })
@@ -201,6 +201,31 @@ export class PromptsController {
       return await this.promptsService.getLatestPromptVersion(promptId);
     } catch (error) {
       this.logger.error({ error }, "Error getting specific prompt latest version");
+      throw new InternalServerErrorException();
+    }
+  }
+
+  @Get("/version/:sha")
+  @ApiOperation({
+    summary: "Get the specific prompt version by SHA",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Get the specific prompt version by SHA successfully",
+  })
+  @ApiResponse({
+    status: 404,
+    description:
+      "Not found for the specific prompt specific version",
+  })
+  @ApiResponse({ status: 500, description: "Internal server error" })
+  async getPromptSpecificVersion(@Param("sha") sha: string) {
+    this.logger.info("Getting specific prompt version by SHA");
+
+    try {
+      return await this.promptsService.getPromptVersion(sha);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting specific prompt version by SHA");
       throw new InternalServerErrorException();
     }
   }

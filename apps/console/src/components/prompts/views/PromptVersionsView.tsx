@@ -28,7 +28,9 @@ const getTableColumns = (): ColumnDef<PromptVersion>[] => {
       header: "SHA",
       cell: ({ row }) => (
         <div>
-          <InlineCodeSnippet>{row.original.sha.slice(0, 7)}</InlineCodeSnippet>
+          {/*<InlineCodeSnippet>{row.original.sha.slice(0, 7)}</InlineCodeSnippet>*/}
+          {/*use full sha instead of slice because api need full sha get specific version*/}
+          <InlineCodeSnippet>{row.original.sha}</InlineCodeSnippet>
         </div>
       ),
     },
