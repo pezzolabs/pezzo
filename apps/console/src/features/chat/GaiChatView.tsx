@@ -9,7 +9,7 @@ import {BotIcon, UserIcon, WrenchIcon,PencilIcon} from "lucide-react";
 
 interface Props {
   request_prompt: string;
-  request_prompt_variable: string;
+  request_prompt_variable: Record<any, any>;
   request_system_hint: string;
   response: string;
 }
@@ -88,7 +88,7 @@ export const GaiChatView = (props: Props) => {
             </TooltipProvider>
           </div>
           <div className="flex-1">
-            {props.request_prompt_variable}
+            {JSON.stringify(props.request_prompt_variable)}
           </div>
         </div>
         <div
