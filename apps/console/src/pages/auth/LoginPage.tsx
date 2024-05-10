@@ -120,6 +120,11 @@ export const LoginPage = () => {
   };
 
   const emailPasswordSignIn = async (email: string, password: string) => {
+    // limit only smartnews.com can access
+    if (!email.endsWith("@smartnews.com")) {
+      setError("Invalid email. Please try again.");
+      return;
+    }
     const response = await ThirdPartyEmailPassword.emailPasswordSignIn({
       formFields: [
         {
