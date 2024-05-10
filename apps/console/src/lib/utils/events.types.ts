@@ -67,4 +67,5 @@ export enum AnalyticsEvent {
   organization_member_invite_modal_opened,
   organization_api_key_copied,
   organization_settings_form_submitted,
+  prompt_id_copied
 }
