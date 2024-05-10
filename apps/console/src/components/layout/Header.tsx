@@ -9,10 +9,13 @@ import { UserMenu } from "./UserMenu";
 import { useAuthContext } from "~/lib/providers/AuthProvider";
 import { ProjectCopy } from "../projects/ProjectCopy";
 import { OrgSelector } from "./OrgSelector";
+import { usePrompts } from "~/lib/hooks/usePrompts";
+import { PromptCopy } from "~/components/prompts/PromptCopy";
 
 export const Header = () => {
   const { organization } = useCurrentOrganization();
   const { project } = useCurrentProject();
+  const { prompts } = usePrompts();
   const { currentUser } = useAuthContext();
 
   return (
@@ -61,6 +64,12 @@ export const Header = () => {
           </Popover>
         )}
       </div>
+
+      {prompts && (
+        <div className="text-sm">
+          <PromptCopy />
+        </div>
+      )}
 
       {project && (
         <div className="text-sm">
