@@ -4,7 +4,7 @@ metadata:
   name: llm-ops-console-ingress
   annotations:
     kubernetes.io/ingress.class: alb
-    alb.ingress.kubernetes.io/scheme: internal
+    alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
 #    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-1:226604077721:certificate/6b062dcc-c020-4580-bee0-34fd5a6a23a8
