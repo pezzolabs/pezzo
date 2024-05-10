@@ -7,7 +7,7 @@ import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
 import { Button } from "@pezzo/ui";
 
 export const PromptCopy = () => {
-  const { prompts, isLoading } = useCurrentPrompt();
+  const { promptId, isLoading } = useCurrentPrompt();
   const [clicked, setClicked] = useState(false);
 
   if (isLoading) return null;
@@ -17,9 +17,9 @@ export const PromptCopy = () => {
       size="sm"
       variant="outline"
       onClick={() => {
-        copyToClipboard(prompts.id);
+        copyToClipboard(promptId);
         setClicked(true);
-        trackEvent("prompt_id_copied", { promptId: prompts.id });
+        trackEvent("prompt_id_copied", { promptId: promptId });
 
         setTimeout(() => {
           setClicked(false);
