@@ -21,9 +21,9 @@ async function bootstrap() {
 
   // Swagger setup
   const config = new DocumentBuilder()
-    .setTitle("Pezzo API")
+    .setTitle("LLM Ops API")
     .setDescription(
-      "Specification of the Pezzo REST API, used by various clients."
+      "Specification of the LLM Ops REST API, used by various clients."
     )
     .setVersion("1.0")
     .build();
