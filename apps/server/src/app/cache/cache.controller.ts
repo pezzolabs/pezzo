@@ -14,11 +14,11 @@ import { ProjectIdAuthGuard } from "../auth/project-id-auth.guard";
 import { ProjectId } from "../identity/project-id.decorator";
 import { CacheRequestResult, FetchCachedRequestResult } from "@pezzo/client";
 import { RetrieveCacheRequestDto } from "./dto/retrieve-cache-request.dto";
-import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+// import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 @UseGuards(ApiKeyAuthGuard)
 @UseGuards(ProjectIdAuthGuard)
-@ApiTags("Cache")
+// @ApiTags("Cache")
 @Controller("/cache/v1")
 export class CacheController {
   constructor(
@@ -27,12 +27,12 @@ export class CacheController {
   ) {}
 
   @Post("/request/retrieve")
-  @ApiOperation({ summary: "Retrieve cached request" })
-  @ApiResponse({
-    status: 200,
-    description: "Returns the cached request data.",
-  })
-  @ApiResponse({ status: 404, description: "Cached request not found." })
+  // @ApiOperation({ summary: "Retrieve cached request" })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: "Returns the cached request data.",
+  // })
+  // @ApiResponse({ status: 404, description: "Cached request not found." })
   async retrieveCachedRequest(
     @ApiKeyOrgId() organizationId: string,
     @ProjectId() projectId: string,
@@ -60,11 +60,11 @@ export class CacheController {
   }
 
   @Post("/request/save")
-  @ApiOperation({ summary: "Save request to cache" })
-  @ApiResponse({
-    status: 200,
-    description: "Returns the cache request result.",
-  })
+  // @ApiOperation({ summary: "Save request to cache" })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: "Returns the cache request result.",
+  // })
   async saveRequestToCache(
     @ApiKeyOrgId() organizationId: string,
     @ProjectId() projectId: string,
