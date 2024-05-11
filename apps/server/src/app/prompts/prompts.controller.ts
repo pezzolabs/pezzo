@@ -15,10 +15,14 @@ import { AnalyticsService } from "../analytics/analytics.service";
 import { PrismaService } from "../prisma.service";
 import { ApiKeyOrgId } from "../identity/api-key-org-id.decoator";
 import { GetPromptDeploymentDto } from "./dto/get-prompt-deployment.dto";
-import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiHeader, ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
 
 @UseGuards(ApiKeyAuthGuard)
 @ApiTags("Prompts")
+@ApiHeader({
+  name: "llm-ops-api-key",
+  description: "anthentication header",
+})
 @Controller("prompts/v2")
 export class PromptsController {
   constructor(
