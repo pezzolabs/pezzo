@@ -22,35 +22,35 @@ export class ReportingController {
     private readonly logger: PinoLogger
   ) {}
 
-  @UseGuards(ApiKeyAuthGuard)
-  @UseGuards(ProjectIdAuthGuard)
-  @Post("/request")
-  @ApiOperation({ summary: "Report a request" })
-  @ApiResponse({
-    status: 200,
-    description: "Report has been reported successfully",
-  })
-  @ApiResponse({ status: 500, description: "Internal server error" })
-  async reportRequest(
-    @Body() dto: CreateReportDto,
-    @ApiKeyOrgId() organizationId: string,
-    @ProjectId() projectId: string
-  ) {
-    this.logger
-      .assign({
-        organizationId,
-        projectId,
-      })
-      .info("Saving report");
-
-    try {
-      return this.reportingService.saveReport(dto, {
-        organizationId,
-        projectId,
-      });
-    } catch (error) {
-      this.logger.error(error, "Error saving report");
-      throw new InternalServerErrorException();
-    }
-  }
+  // @UseGuards(ApiKeyAuthGuard)
+  // @UseGuards(ProjectIdAuthGuard)
+  // @Post("/request")
+  // @ApiOperation({ summary: "Report a request" })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: "Report has been reported successfully",
+  // })
+  // @ApiResponse({ status: 500, description: "Internal server error" })
+  // async reportRequest(
+  //   @Body() dto: CreateReportDto,
+  //   @ApiKeyOrgId() organizationId: string,
+  //   @ProjectId() projectId: string
+  // ) {
+  //   this.logger
+  //     .assign({
+  //       organizationId,
+  //       projectId,
+  //     })
+  //     .info("Saving report");
+  //
+  //   try {
+  //     return this.reportingService.saveReport(dto, {
+  //       organizationId,
+  //       projectId,
+  //     });
+  //   } catch (error) {
+  //     this.logger.error(error, "Error saving report");
+  //     throw new InternalServerErrorException();
+  //   }
+  // }
 }
