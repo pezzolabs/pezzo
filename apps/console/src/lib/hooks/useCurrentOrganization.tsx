@@ -17,12 +17,14 @@ export const useCurrentOrganization = ({
 } = defaultProps) => {
   const { organizations } = useOrganizations();
   const { orgId } = useParams<{ orgId: string }>();
+  console.log("orgId: " + orgId)
 
   // TODO: currentOrgId in local storage might be different than the actual org if customer has multiple orgs for multiple users
   const [currentOrgId, setCurrentOrgId] = useLocalStorage(
     "currentOrgId",
     orgId
   );
+  console.log("currentOrgId: " + currentOrgId)
 
   useEffect(() => {
     if (organizations && !currentOrgId) {
