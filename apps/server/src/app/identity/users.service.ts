@@ -46,7 +46,7 @@ export class UsersService {
       },
     });
 
-    const apiKeyValue = `pez_${randomBytes(16).toString("hex")}`;
+    const apiKeyValue = `llm_ops_${randomBytes(16).toString("hex")}`;
     await this.prisma.apiKey.create({
       data: {
         id: apiKeyValue,
