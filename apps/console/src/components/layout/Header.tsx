@@ -16,11 +16,11 @@ import {Spin} from "antd";
 export const Header = () => {
   const { organization } = useCurrentOrganization();
   const { project } = useCurrentProject();
-  const { prompts } = usePrompts(project.id);
+  const { prompts } = usePrompts(project?.id);
   const { currentUser } = useAuthContext();
 
   return (
-    <Spin spinning={!!project.id}>
+    <Spin spinning={!!project?.id}>
       <nav className="flex h-[56px] items-center gap-x-2 border-b border-b-border">
         <div className={cn("mx-auto ml-2 h-10 w-10")}>
           <img src={LogoSquare} alt="Pezzo"/>
