@@ -68,7 +68,7 @@ export const ProjectsPage = () => {
   };
 
   const handleProjectClick = (projectId: string) => {
-    navigate(`/projects/${projectId}/prompts`);
+    navigate(`/projects/${projectId}`);
     trackEvent("project_nav_clicked", { projectId });
   };
 
