@@ -7,7 +7,7 @@ export const usePrompts = () => {
   const { projectId } = useCurrentProject();
 
   let enabled = true
-  if (!projectId) {
+  if (projectId === null) {
     enabled = false;
   }
 
