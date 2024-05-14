@@ -10,6 +10,7 @@ export const usePrompts = () => {
   if (projectId === null) {
     enabled = false;
   }
+  console.log("enabled: " + enabled)
 
   const { data, isLoading } = useQuery({
     queryKey: ["prompts", projectId],
