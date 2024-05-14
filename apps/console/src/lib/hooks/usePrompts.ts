@@ -12,7 +12,7 @@ export const usePrompts = () => {
       gqlClient.request(GET_ALL_PROMPTS, {
         data: { projectId: project.id },
       }),
-    enabled: !!project,
+    enabled: !!project.id,
   });
 
   return {
