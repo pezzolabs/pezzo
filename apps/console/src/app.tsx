@@ -130,7 +130,7 @@ export function App() {
 
               {/* In-project routes */}
               <Route
-                path="/projects/:projectId"
+                path="/projects/:projectId/prompts"
                 element={
                   <Suspense fallback={<FullScreenLoader />}>
                     <CurrentPromptProvider>
