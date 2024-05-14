@@ -17,8 +17,8 @@ type Prompt = GetAllPromptsQuery["prompts"][0];
 
 export const PromptsPage = () => {
   usePageTitle("Prompts");
-  const { projectId, isLoading } = useCurrentProject();
-  const { prompts } = usePrompts();
+  const { projectId } = useCurrentProject();
+  const { prompts } = usePrompts(projectId);
   const navigate = useNavigate();
   const [isCreatePromptModalOpen, setIsCreatePromptModalOpen] = useState(false);
   const [promptToDelete, setPromptToDelete] = useState<Prompt | null>(null);
@@ -55,7 +55,7 @@ export const PromptsPage = () => {
   };
 
   return (
-    <Spin spinning={isLoading}>
+    <Spin spinning={!!projectId}>
       <CreatePromptModal
         open={isCreatePromptModalOpen}
         onClose={() => setIsCreatePromptModalOpen(false)}
