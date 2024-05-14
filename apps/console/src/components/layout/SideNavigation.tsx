@@ -20,10 +20,10 @@ export const SideNavigation = () => {
 
   const projectNavigation = [
     {
-      name: "Dashboard",
-      href: `/projects/${projectId}`,
-      icon: BarChart2,
-      isActive: (href: string) => window.location.pathname === href,
+      name: "Prompts",
+      href: `/projects/${projectId}/prompts`,
+      icon: BoxIcon,
+      isActive: (href: string) => window.location.pathname.startsWith(href),
     },
     {
       name: "Requests",
@@ -32,10 +32,10 @@ export const SideNavigation = () => {
       isActive: (href: string) => window.location.pathname.startsWith(href),
     },
     {
-      name: "Prompts",
-      href: `/projects/${projectId}/prompts`,
-      icon: BoxIcon,
-      isActive: (href: string) => window.location.pathname.startsWith(href),
+      name: "Dashboard",
+      href: `/projects/${projectId}`,
+      icon: BarChart2,
+      isActive: (href: string) => window.location.pathname === href,
     },
     // {
     //   name: "Environments",
