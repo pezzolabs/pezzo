@@ -4,15 +4,15 @@ import { useCurrentProject } from "./useCurrentProject";
 import { GET_ALL_PROMPTS } from "~/graphql/definitions/queries/prompts";
 
 export const usePrompts = () => {
-  const { project } = useCurrentProject();
+  const { projectId } = useCurrentProject();
 
   const { data, isLoading } = useQuery({
     queryKey: ["prompts"],
     queryFn: () =>
       gqlClient.request(GET_ALL_PROMPTS, {
-        data: { projectId: project?.id },
+        data: { projectId: projectId },
       }),
-    enabled: !!project,
+    enabled: !!projectId,
     retryDelay: 1500,
   });
 
