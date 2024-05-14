@@ -11,14 +11,13 @@ import { useNavigate } from "react-router-dom";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
 import { GenericDestructiveConfirmationModal } from "~/components/common/GenericDestructiveConfirmationModal";
 import { useDeletePromptMutation } from "~/graphql/hooks/mutations";
-import {Spin} from "antd";
 
 type Prompt = GetAllPromptsQuery["prompts"][0];
 
 export const PromptsPage = () => {
   usePageTitle("Prompts");
   const { projectId } = useCurrentProject();
-  const { prompts } = usePrompts(projectId);
+  const { prompts } = usePrompts();
   const navigate = useNavigate();
   const [isCreatePromptModalOpen, setIsCreatePromptModalOpen] = useState(false);
   const [promptToDelete, setPromptToDelete] = useState<Prompt | null>(null);
@@ -55,7 +54,7 @@ export const PromptsPage = () => {
   };
 
   return (
-    <Spin spinning={!!projectId}>
+    <>
       <CreatePromptModal
         open={isCreatePromptModalOpen}
         onClose={() => setIsCreatePromptModalOpen(false)}
@@ -115,6 +114,6 @@ export const PromptsPage = () => {
           )}
         </div>
       </div>
-    </Spin>
+    </>
   );
 };

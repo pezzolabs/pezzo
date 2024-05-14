@@ -11,76 +11,73 @@ import { ProjectCopy } from "../projects/ProjectCopy";
 import { OrgSelector } from "./OrgSelector";
 import { usePrompts } from "~/lib/hooks/usePrompts";
 import { PromptCopy } from "~/components/prompts/PromptCopy";
-import {Spin} from "antd";
 
 export const Header = () => {
   const { organization } = useCurrentOrganization();
   const { project } = useCurrentProject();
-  const { prompts } = usePrompts(project?.id);
+  const { prompts } = usePrompts();
   const { currentUser } = useAuthContext();
 
   return (
-    <Spin spinning={!!project?.id}>
-      <nav className="flex h-[56px] items-center gap-x-2 border-b border-b-border">
-        <div className={cn("mx-auto ml-2 h-10 w-10")}>
-          <img src={LogoSquare} alt="Pezzo"/>
-        </div>
-        <div className="flex flex-1 items-center gap-x-2">
-          {organization && (
-            <Popover>
-              <div className="mx-2 text-lg text-stone-700">{"/"}</div>
-              <div className="flex items-center gap-x-2">
-                <BriefcaseIcon className="h-4 w-4 text-stone-500"/>
-                <Link
-                  to={`/orgs/${organization.id}`}
-                  className="cursor-pointer text-sm font-medium hover:underline"
-                >
-                  {organization.name}
-                </Link>
-                <PopoverTrigger className="cursor-pointer" asChild>
-                  <ChevronsUpDown className="h-4 w-4 text-stone-500"/>
-                </PopoverTrigger>
-              </div>
-              <PopoverContent className="w-auto p-0">
-                <OrgSelector/>
-              </PopoverContent>
-            </Popover>
-          )}
-          {project && (
-            <Popover>
-              <div className="mx-2 text-lg text-stone-700">{"/"}</div>
-              <div className="flex items-center gap-x-2">
-                <Link
-                  to={`/projects/${project.id}`}
-                  className="cursor-pointer text-sm font-medium hover:underline"
-                >
-                  {project.name}
-                </Link>
-                <PopoverTrigger className="cursor-pointer" asChild>
-                  <ChevronsUpDown className="h-4 w-4 text-stone-500"/>
-                </PopoverTrigger>
-              </div>
-              <PopoverContent className="w-auto p-0">
-                <OrgSelector/>
-              </PopoverContent>
-            </Popover>
-          )}
-        </div>
-
-        {prompts && (
-          <div className="text-sm">
-            <PromptCopy/>
-          </div>
+    <nav className="flex h-[56px] items-center gap-x-2 border-b border-b-border">
+      <div className={cn("mx-auto ml-2 h-10 w-10")}>
+        <img src={LogoSquare} alt="Pezzo" />
+      </div>
+      <div className="flex flex-1 items-center gap-x-2">
+        {organization && (
+          <Popover>
+            <div className="mx-2 text-lg text-stone-700">{"/"}</div>
+            <div className="flex items-center gap-x-2">
+              <BriefcaseIcon className="h-4 w-4 text-stone-500" />
+              <Link
+                to={`/orgs/${organization.id}`}
+                className="cursor-pointer text-sm font-medium hover:underline"
+              >
+                {organization.name}
+              </Link>
+              <PopoverTrigger className="cursor-pointer" asChild>
+                <ChevronsUpDown className="h-4 w-4 text-stone-500" />
+              </PopoverTrigger>
+            </div>
+            <PopoverContent className="w-auto p-0">
+              <OrgSelector />
+            </PopoverContent>
+          </Popover>
         )}
-
         {project && (
-          <div className="text-sm">
-            <ProjectCopy/>
-          </div>
+          <Popover>
+            <div className="mx-2 text-lg text-stone-700">{"/"}</div>
+            <div className="flex items-center gap-x-2">
+              <Link
+                to={`/projects/${project.id}`}
+                className="cursor-pointer text-sm font-medium hover:underline"
+              >
+                {project.name}
+              </Link>
+              <PopoverTrigger className="cursor-pointer" asChild>
+                <ChevronsUpDown className="h-4 w-4 text-stone-500" />
+              </PopoverTrigger>
+            </div>
+            <PopoverContent className="w-auto p-0">
+              <OrgSelector />
+            </PopoverContent>
+          </Popover>
         )}
+      </div>
 
-        {currentUser && <UserMenu/>}
-      </nav>
-    </Spin>
+      {prompts && (
+        <div className="text-sm">
+          <PromptCopy />
+        </div>
+      )}
+
+      {project && (
+        <div className="text-sm">
+          <ProjectCopy />
+        </div>
+      )}
+
+      {currentUser && <UserMenu />}
+    </nav>
   );
 };
