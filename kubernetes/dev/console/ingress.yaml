@@ -14,18 +14,13 @@ metadata:
     external-dns.alpha.kubernetes.io/hostname: llm-ops.dev.smartnews.net
     alb.ingress.kubernetes.io/ip-address-type: dualstack
     alb.ingress.kubernetes.io/auth-session-timeout: '86400'
+    alb.ingress.kubernetes.io/actions.redirect-to-portal: >
+      {"type":"redirect","redirectConfig":{"host":"llm-ops-portal.dev.smartnews.net","path":"/","port":"443","protocol":"HTTPS","query":"","statusCode":"HTTP_302"}}
 spec:
   rules:
     - host: llm-ops.dev.smartnews.net
       http:
         paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: llm-ops-console
-                port:
-                  number: 4200
           - path: /api/
             pathType: Prefix
             backend:
@@ -40,3 +35,10 @@ spec:
                 name: llm-ops-server
                 port:
                   number: 3000
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: redirect-to-portal
+                port:
+                  name: use-annotation
