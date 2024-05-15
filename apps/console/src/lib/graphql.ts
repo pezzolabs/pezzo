@@ -4,7 +4,7 @@ import { BASE_API_URL } from "~/env";
 import { attemptRefreshingSession } from "supertokens-auth-react/recipe/session";
 import { signOut } from "./utils/sign-out";
 
-export const gqlClient = new GraphQLClient(`${BASE_API_URL}/graphql`, {
+export const gqlClient = new GraphQLClient(`https://${BASE_API_URL}/graphql`, {
   credentials: "include",
   fetch: async (url, options) => {
     const res = await fetch(url, options);
