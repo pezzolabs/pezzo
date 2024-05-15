@@ -7,7 +7,7 @@ export const usePrompts = () => {
   const { projectId } = useCurrentProject();
   console.log("projectId: " + projectId)
   let enabled = true
-  if (projectId === null) {
+  if (projectId === undefined || projectId === null) {
     enabled = false;
   }
   console.log("enabled: " + enabled)
