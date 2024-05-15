@@ -233,4 +233,29 @@ export class PromptsController {
       throw new InternalServerErrorException();
     }
   }
+
+  @Get("/:projectId/all")
+  @ApiOperation({
+    summary: "Get all the prompts in specific project",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Get all the prompts in specific project successfully",
+  })
+  @ApiResponse({
+    status: 404,
+    description:
+      "Not found for all the prompts in specific project",
+  })
+  @ApiResponse({ status: 500, description: "Internal server error" })
+  async getAllPrompts(@Param("projectId") projectId: string) {
+    this.logger.info("Getting all the prompts in specific project");
+
+    try {
+      return await this.promptsService.getAllPrompts(projectId);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting specific project all prompts");
+      throw new InternalServerErrorException();
+    }
+  }
 }

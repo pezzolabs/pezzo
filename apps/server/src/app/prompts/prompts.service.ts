@@ -1,13 +1,17 @@
 import {PrismaService} from "../prisma.service";
 import sha256 from "sha256";
-import {Injectable} from "@nestjs/common";
+import {Injectable, InternalServerErrorException} from "@nestjs/common";
 import {CreatePromptVersionInput} from "./inputs/create-prompt-version.input";
 import {CreatePromptInput} from "./inputs/create-prompt.input";
 import {GaiPlatform} from "@pezzo/client";
+import {PinoLogger} from "../logger/pino-logger";
 
 @Injectable()
 export class PromptsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private logger: PinoLogger
+  ) {}
 
   async getPrompt(promptId: string) {
     const prompt = await this.prisma.prompt.findUnique({
@@ -121,5 +125,22 @@ export class PromptsService {
   async getModels() {
     const gaiPlatform = new GaiPlatform({});
     return await gaiPlatform.getModels();
+  }
+
+  async getAllPrompts(projectId: string) {
+    try {
+      const prompts = await this.prisma.prompt.findMany({
+        where: {
+          projectId: projectId,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+      return prompts;
+    } catch (error) {
+      this.logger.error({ error }, "Error getting prompts");
+      throw new InternalServerErrorException();
+    }
   }
 }
