@@ -23,7 +23,7 @@ export const SideNavigation = () => {
       name: "Prompts",
       href: `/projects/${projectId}`,
       icon: BoxIcon,
-      isActive: (href: string) => window.location.pathname.startsWith(href),
+      isActive: (href: string) => window.location.pathname === href,
     },
     {
       name: "Requests",
@@ -35,7 +35,7 @@ export const SideNavigation = () => {
       name: "Dashboard",
       href: `/projects/${projectId}/dashboard`,
       icon: BarChart2,
-      isActive: (href: string) => window.location.pathname === href,
+      isActive: (href: string) => window.location.pathname.startsWith(href),
     },
     // {
     //   name: "Environments",
