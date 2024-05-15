@@ -145,8 +145,8 @@ export function App() {
                   </Suspense>
                 }
               >
-                // TODO: decide if need DashboardPage or not, and change the index page
-                <Route index element={<DashboardPage />} />
+                // TODO: decide if need DashboardPage or not, and change the index page to PromptPage
+                <Route index element={<PromptsPage />} />
                 <Route path="environments" element={<EnvironmentsPage />} />
                 <Route path={"dashboard"} element={<DashboardPage />} />
                 <Route path={"requests"} element={<RequestsPage />} />
