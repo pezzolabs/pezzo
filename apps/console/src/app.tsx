@@ -76,96 +76,84 @@ export function App() {
           </Routes>
           {/* Authorized routes */}
           <Routes>
+            <Route index element={<RootHandler />} />
+
             <Route
+              path="/invitations/:token/accept"
               element={
-                <SessionAuth>
-                  <AuthProvider>
-                    <OptionalIntercomProvider>
+                <LayoutWrapper withSideNav={false}>
+                  <AcceptInvitationPage />
+                </LayoutWrapper>
+              }
+            />
+
+            <Route
+              path="/onboarding"
+              element={
+                <LayoutWrapper withSideNav={false}>
+                  <WaitlistWrapper>
+                    <OnboardingPage />
+                  </WaitlistWrapper>
+                </LayoutWrapper>
+              }
+            />
+
+            {/* Organizations */}
+            <Route
+              path="/orgs/:orgId"
+              element={
+                <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
+                  <Suspense fallback={<FullScreenLoader />}>
+                    <WaitlistWrapper>
                       <Outlet />
-                    </OptionalIntercomProvider>
-                  </AuthProvider>
-                </SessionAuth>
+                    </WaitlistWrapper>
+                  </Suspense>
+                </LayoutWrapper>
               }
             >
-              <Route index element={<RootHandler />} />
+              <Route index element={<OrgPage />} />
+              <Route path="members" element={<OrgMembersPage />} />
+              <Route path="api-keys" element={<OrgApiKeysPage />} />
+              <Route path="settings" element={<OrgSettingsPage />} />
+            </Route>
 
-              <Route
-                path="/invitations/:token/accept"
-                element={
-                  <LayoutWrapper withSideNav={false}>
-                    <AcceptInvitationPage />
-                  </LayoutWrapper>
-                }
-              />
-
-              <Route
-                path="/onboarding"
-                element={
-                  <LayoutWrapper withSideNav={false}>
-                    <WaitlistWrapper>
-                      <OnboardingPage />
-                    </WaitlistWrapper>
-                  </LayoutWrapper>
-                }
-              />
-
-              {/* Organizations */}
-              <Route
-                path="/orgs/:orgId"
-                element={
-                  <LayoutWrapper withSideNav={false} withOrgSubHeader={true}>
-                    <Suspense fallback={<FullScreenLoader />}>
+            {/* In-project routes */}
+            <Route
+              path="/projects/:projectId"
+              element={
+                <Suspense fallback={<FullScreenLoader />}>
+                  <CurrentPromptProvider>
+                    <RequiredProviderApiKeyModalProvider>
+                    <LayoutWrapper withSideNav={true}>
                       <WaitlistWrapper>
                         <Outlet />
                       </WaitlistWrapper>
-                    </Suspense>
-                  </LayoutWrapper>
-                }
-              >
-                <Route index element={<OrgPage />} />
-                <Route path="members" element={<OrgMembersPage />} />
-                <Route path="api-keys" element={<OrgApiKeysPage />} />
-                <Route path="settings" element={<OrgSettingsPage />} />
-              </Route>
-
-              {/* In-project routes */}
-              <Route
-                path="/projects/:projectId"
-                element={
-                  <Suspense fallback={<FullScreenLoader />}>
-                    <CurrentPromptProvider>
-                      <RequiredProviderApiKeyModalProvider>
-                      <LayoutWrapper withSideNav={true}>
-                        <WaitlistWrapper>
-                          <Outlet />
-                        </WaitlistWrapper>
-                      </LayoutWrapper>
-                      </RequiredProviderApiKeyModalProvider>
-                    </CurrentPromptProvider>
-                  </Suspense>
-                }
-              >
-                // TODO: decide if need DashboardPage or not, and change the index page to PromptPage
-                <Route index element={<PromptsPage />} />
-                <Route path="environments" element={<EnvironmentsPage />} />
-                <Route path={"dashboard"} element={<DashboardPage />} />
-                <Route path={"requests"} element={<RequestsPage />} />
-                <Route path="prompts" element={<PromptsPage />} />
-                <Route path="prompts/:promptId" element={<PromptPage />}>
-                  <Route index element={<Navigate to="edit" />} />
-                  <Route
-                    index
-                    path="edit"
-                    element={
-                      <EditorProvider>
-                        <PromptTesterProvider>
-                          <PromptEditView />
-                        </PromptTesterProvider>
-                      </EditorProvider>
-                    }
-                  />
-                  <Route path="versions" element={<PromptVersionsView />} />
-                </Route>
+                    </LayoutWrapper>
+                    </RequiredProviderApiKeyModalProvider>
+                  </CurrentPromptProvider>
+                </Suspense>
+              }
+            >
+              // TODO: decide if need DashboardPage or not, and change the index page to PromptPage
+              <Route index element={<PromptsPage />} />
+              <Route path="environments" element={<EnvironmentsPage />} />
+              <Route path={"dashboard"} element={<DashboardPage />} />
+              <Route path={"requests"} element={<RequestsPage />} />
+              <Route path="prompts" element={<PromptsPage />} />
+              <Route path="prompts/:promptId" element={<PromptPage />}>
+                <Route index element={<Navigate to="edit" />} />
+                <Route
+                  index
+                  path="edit"
+                  element={
+                    <EditorProvider>
+                      <PromptTesterProvider>
+                        <PromptEditView />
+                      </PromptTesterProvider>
+                    </EditorProvider>
+                  }
+                />
+                <Route path="versions" element={<PromptVersionsView />} />
               </Route>
             </Route>
           </Routes>
