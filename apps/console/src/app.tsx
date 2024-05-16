@@ -8,7 +8,7 @@ import { Toaster } from "@pezzo/ui";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { SuperTokensWrapper } from "supertokens-auth-react";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
-import { initSuperTokens } from "./lib/auth/supertokens";
+// import { initSuperTokens } from "./lib/auth/supertokens";
 
 // Pages
 import { EnvironmentsPage } from "./pages/environments/EnvironmentsPage";
@@ -19,7 +19,7 @@ import { LogoutPage } from "./pages/auth/LogoutPage";
 import { RequestsPage } from "./pages/requests/RequestsPage";
 import { DashboardPage } from "./pages/projects/overview/DashboardPage";
 import { LoginPage } from "./pages/auth/LoginPage";
-import { AuthCallbackPage } from "./pages/auth/AuthCallbackPage";
+// import { AuthCallbackPage } from "./pages/auth/AuthCallbackPage";
 import { queryClient } from "./lib/graphql";
 import { AuthProvider } from "./lib/providers/AuthProvider";
 import { OptionalIntercomProvider } from "./lib/providers/OptionalIntercomProvider";
@@ -66,15 +66,15 @@ export function App() {
       <SuperTokensWrapper>
         <QueryClientProvider client={queryClient}>
           {/* Non-authorized routes */}
-          <Routes>
-            {/* We don't render the LayoutWrapper for non-authorized routes */}
-            <Route
-              path="/login/callback/:providerId"
-              element={<AuthCallbackPage />}
-            />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/logout" element={<LogoutPage />} />
-          </Routes>
+          {/*<Routes>*/}
+          {/*  /!* We don't render the LayoutWrapper for non-authorized routes *!/*/}
+          {/*  <Route*/}
+          {/*    path="/login/callback/:providerId"*/}
+          {/*    element={<AuthCallbackPage />}*/}
+          {/*  />*/}
+          {/*  <Route path="/login" element={<LoginPage />} />*/}
+          {/*  <Route path="/logout" element={<LogoutPage />} />*/}
+          {/*</Routes>*/}
           {/* Authorized routes */}
           <Routes>
             <Route index element={<RootHandler />} />
