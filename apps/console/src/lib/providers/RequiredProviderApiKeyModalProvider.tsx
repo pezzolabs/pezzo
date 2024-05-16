@@ -36,8 +36,8 @@ const RequiredProviderApiKeyModalContext =
     closeRequiredProviderApiKeyModal: () => void 0,
   });
 
-export const useRequiredProviderApiKeyModal = () =>
-  useContext(RequiredProviderApiKeyModalContext);
+// export const useRequiredProviderApiKeyModal = () =>
+//   useContext(RequiredProviderApiKeyModalContext);
 
 export const RequiredProviderApiKeyModalProvider = ({ children }) => {
   const reasonRef = useRef<keyof typeof Reason>(null);

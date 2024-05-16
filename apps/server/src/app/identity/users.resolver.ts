@@ -47,14 +47,21 @@ export class UsersResolver {
     // const { metadata } = (await UserMetadata.getUserMetadata(
     //   userInfo.supertokensUserId
     // )) as SupertokensMetadata;
-    //
-    // if (metadata) {
-    //   return {
-    //     ...user,
-    //     ...metadata.profile,
-    //     organizationIds,
-    //   };
-    // }
+
+    const metadata = {
+      profile: {
+        name: userInfo.email.split("@")[0],
+        photoUrl: "",
+      },
+    };
+
+    if (metadata) {
+      return {
+        ...user,
+        ...metadata.profile,
+        organizationIds,
+      };
+    }
 
     return {
       ...user,
