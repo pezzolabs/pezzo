@@ -1,4 +1,4 @@
-import { signOut as supertokensSignOut } from "supertokens-auth-react/recipe/session";
+// import { signOut as supertokensSignOut } from "supertokens-auth-react/recipe/session";
 import { trackEvent } from "./analytics";
 
 export async function signOut() {
