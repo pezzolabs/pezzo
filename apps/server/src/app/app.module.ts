@@ -66,7 +66,7 @@ const isCloud = process.env.PEZZO_CLOUD === "true";
       ],
       formatError,
     }),
-    AuthModule.forRoot(),
+    // AuthModule.forRoot(),
     AnalyticsModule,
     PromptsModule,
     PromptTesterModule,

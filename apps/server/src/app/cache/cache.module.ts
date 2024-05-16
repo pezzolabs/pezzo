@@ -6,7 +6,7 @@ import { AuthModule } from "../auth/auth.module";
 import { RedisModule } from "../redis/redis.module";
 
 @Module({
-  imports: [IdentityModule, AuthModule, RedisModule],
+  imports: [IdentityModule, RedisModule],
   controllers: [CacheController],
   providers: [CacheService],
 })
