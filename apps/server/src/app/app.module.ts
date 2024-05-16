@@ -12,7 +12,7 @@ import { HealthController } from "./health.controller";
 import { formatError } from "../lib/gql-format-error";
 import { PromptEnvironmentsModule } from "./prompt-environments/prompt-environments.module";
 import { CredentialsModule } from "./credentials/credentials.module";
-import { AuthModule } from "./auth/auth.module";
+// import { AuthModule } from "./auth/auth.module";
 import { IdentityModule } from "./identity/identity.module";
 import { MetricsModule } from "./metrics/metrics.module";
 import { LoggerModule } from "./logger/logger.module";

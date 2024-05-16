@@ -8,10 +8,10 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { CONTEXT, GqlExecutionContext } from "@nestjs/graphql";
-import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
+// import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
 import { UsersService } from "../identity/users.service";
 import { RequestUser } from "../identity/users.types";
-import Session, { SessionContainer } from "supertokens-node/recipe/session";
+// import Session, { SessionContainer } from "supertokens-node/recipe/session";
 import { PinoLogger } from "../logger/pino-logger";
 import { updateRequestContext } from "../cls.utils";
 import fetch from "cross-fetch";
