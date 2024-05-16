@@ -16,7 +16,7 @@ async function bootstrap() {
   });
 
   app.setGlobalPrefix(globalPrefix);
-  app.useGlobalFilters(new SupertokensExceptionFilter());
+  // app.useGlobalFilters(new SupertokensExceptionFilter());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   // Swagger setup
