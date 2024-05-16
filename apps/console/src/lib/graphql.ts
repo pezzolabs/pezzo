@@ -6,9 +6,9 @@ import { signOut } from "./utils/sign-out";
 
 export const gqlClient = new GraphQLClient(`https://${BASE_API_URL}/graphql`, {
   credentials: "include",
-  headers: {
-    "Access-Control-Allow-Origin": "*",
-  },
+  // headers: {
+  //   "Access-Control-Allow-Origin": "*",
+  // },
   fetch: async (url, options) => {
     const res = await fetch(url, options);
     const json = await res.clone().json();
