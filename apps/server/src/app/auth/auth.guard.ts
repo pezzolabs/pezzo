@@ -61,23 +61,23 @@ export class AuthGuard implements CanActivate {
     // this.logger.info("req: " + JSON.stringify(req.user));
     // this.logger.info("res: " + JSON.stringify(res));
 
-    const oktaUrl = "https://llm-ops-portal.dev.smartnews.net/oauth2/userinfo"
-    const response = await fetch(oktaUrl, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
-    console.log("user info from Okta: " + JSON.stringify(data));
-    if (!response.ok) {
-      if (data?.message) {
-        throw new Error(data.message);
-      } else {
-        throw new Error(
-          `Error fetching user info from Okta.`
-        );
-      }
-    }
+    // const oktaUrl = "https://llm-ops-portal.dev.smartnews.net/oauth2/userinfo"
+    // const response = await fetch(oktaUrl, {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // });
+    // const data = await response.json();
+    // console.log("user info from Okta: " + JSON.stringify(data));
+    // if (!response.ok) {
+    //   if (data?.message) {
+    //     throw new Error(data.message);
+    //   } else {
+    //     throw new Error(
+    //       `Error fetching user info from Okta.`
+    //     );
+    //   }
+    // }
 
     const supertokensUser = {
       id: "",
