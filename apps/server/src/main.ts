@@ -1,6 +1,6 @@
 import { Logger, ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
-import supertokens from "supertokens-node";
+// import supertokens from "supertokens-node";
 import { AppModule } from "./app/app.module";
 import { SupertokensExceptionFilter } from "./app/auth/auth.filter";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
@@ -12,7 +12,7 @@ async function bootstrap() {
   app.enableCors({
     origin: true,
     credentials: true,
-    allowedHeaders: ["content-type", ...supertokens.getAllCORSHeaders()],
+    // allowedHeaders: ["content-type", ...supertokens.getAllCORSHeaders()],
   });
 
   app.setGlobalPrefix(globalPrefix);
