@@ -3,8 +3,8 @@ import { PrismaService } from "../prisma.service";
 import { OrganizationMember, User } from "@prisma/client";
 import { UserCreateRequest } from "./users.types";
 import { ExtendedUser } from "./models/extended-user.model";
-import UserMetadata from "supertokens-node/recipe/usermetadata";
-import { SupertokensMetadata } from "../auth/auth.types";
+// import UserMetadata from "supertokens-node/recipe/usermetadata";
+// import { SupertokensMetadata } from "../auth/auth.types";
 import { randomBytes } from "crypto";
 import { ConfigService } from "@nestjs/config";
 
