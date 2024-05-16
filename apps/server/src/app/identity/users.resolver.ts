@@ -1,5 +1,5 @@
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
-import UserMetadata from "supertokens-node/recipe/usermetadata";
+// import UserMetadata from "supertokens-node/recipe/usermetadata";
 import { AuthGuard } from "../auth/auth.guard";
 import { NotFoundException, UseGuards } from "@nestjs/common";
 import { CurrentUser } from "./current-user.decorator";
