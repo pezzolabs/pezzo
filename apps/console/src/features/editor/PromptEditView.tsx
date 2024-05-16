@@ -31,7 +31,7 @@ import { PromptVersionSelector } from "~/components/prompts/PromptVersionSelecto
 import { CommitButton } from "./CommitButton";
 import { trackEvent } from "~/lib/utils/analytics";
 import { useProviderApiKeys } from "~/graphql/hooks/queries";
-import { useRequiredProviderApiKeyModal } from "~/lib/providers/RequiredProviderApiKeyModalProvider";
+// import { useRequiredProviderApiKeyModal } from "~/lib/providers/RequiredProviderApiKeyModalProvider";
 import { PromptTesterModal } from "~/components/prompts/prompt-tester/PromptTesterModal";
 import { ConsumePromptModal } from "~/components/prompts/ConsumePromptModal";
 import { CommitPromptModal } from "~/components/prompts/CommitPromptModal";
@@ -47,8 +47,8 @@ export const PromptEditView = () => {
     isPublishEnabled,
     currentVersionSha,
   } = useEditorContext();
-  const { providerApiKeys } = useProviderApiKeys();
-  const { openRequiredProviderApiKeyModal } = useRequiredProviderApiKeyModal();
+  // const { providerApiKeys } = useProviderApiKeys();
+  // const { openRequiredProviderApiKeyModal } = useRequiredProviderApiKeyModal();
 
   const form = getForm();
   const [type] = useWatch({
@@ -64,10 +64,10 @@ export const PromptEditView = () => {
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
 
   const handleRunTest = () => {
-    const provider = "OpenAI";
-    const hasProviderApiKey = !!providerApiKeys.find(
-      (key) => key.provider === provider
-    );
+    // const provider = "OpenAI";
+    // const hasProviderApiKey = !!providerApiKeys.find(
+    //   (key) => key.provider === provider
+    // );
 
     trackEvent("prompt_run_test_clicked");
     const values = form.getValues();
