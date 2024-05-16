@@ -40,7 +40,8 @@ import { OrgPage } from "./pages/projects/OrgPage";
 import { useCurrentOrganization } from "./lib/hooks/useCurrentOrganization";
 import { WaitlistWrapper } from "~/pages/WaitlistWrapper";
 
-initSuperTokens();
+// use Okta for auth instead of SuperTokens
+// initSuperTokens();
 
 if (HOTJAR_SITE_ID && HOTJAR_VERSION) {
   hotjar.initialize(Number(HOTJAR_SITE_ID), Number(HOTJAR_VERSION));
