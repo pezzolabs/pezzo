@@ -57,11 +57,11 @@ export class AuthGuard implements CanActivate {
     // const supertokensUser = await ThirdPartyEmailPassword.getUserById(
     //   session.getUserId()
     // );
-    this.logger.info("req: " + JSON.stringify(req));
-    this.logger.info("res: " + JSON.stringify(res));
+    // this.logger.info("req: " + JSON.stringify(req.user));
+    // this.logger.info("res: " + JSON.stringify(res));
 
     const supertokensUser = {
-      id: "3e1dec6a-a86b-402d-9825-a813208a39c4",
+      id: "",
       email: "dp-admin@smartnews.com"
     }
 
@@ -80,7 +80,8 @@ export class AuthGuard implements CanActivate {
 
       const reqUser: RequestUser = {
         id: user.id,
-        supertokensUserId: supertokensUser.id,
+        // supertokensUserId: supertokensUser.id,
+        supertokensUserId: user.id, // use user.id as supertokensUserId
         email: user.email,
         orgMemberships: memberships.map((m) => ({
           organizationId: m.organizationId,
