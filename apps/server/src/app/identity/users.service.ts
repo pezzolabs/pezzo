@@ -91,9 +91,16 @@ export class UsersService {
   ): Promise<ExtendedUser> {
     const organizationIds = user.orgMemberships.map((m) => m.organizationId);
 
-    const { metadata } = (await UserMetadata.getUserMetadata(
-      user.id
-    )) as SupertokensMetadata;
+    // const { metadata } = (await UserMetadata.getUserMetadata(
+    //   user.id
+    // )) as SupertokensMetadata;
+
+    const metadata = {
+      profile: {
+        name: "",
+        photoUrl: ""
+      }
+    }
 
     return {
       ...user,
