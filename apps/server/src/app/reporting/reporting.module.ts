@@ -8,7 +8,7 @@ import { RequestReportsResolver } from "./requests.resolver";
 import { ClickhHouseModule } from "../clickhouse/clickhouse.module";
 
 @Module({
-  imports: [ClickhHouseModule, LoggerModule, AuthModule, IdentityModule],
+  imports: [ClickhHouseModule, LoggerModule, IdentityModule],
   exports: [ReportingService],
   controllers: [ReportingController],
   providers: [ReportingService, RequestReportsResolver],
