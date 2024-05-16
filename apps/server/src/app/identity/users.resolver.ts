@@ -44,17 +44,17 @@ export class UsersResolver {
       (m) => m.organizationId
     );
 
-    const { metadata } = (await UserMetadata.getUserMetadata(
-      userInfo.supertokensUserId
-    )) as SupertokensMetadata;
-
-    if (metadata) {
-      return {
-        ...user,
-        ...metadata.profile,
-        organizationIds,
-      };
-    }
+    // const { metadata } = (await UserMetadata.getUserMetadata(
+    //   userInfo.supertokensUserId
+    // )) as SupertokensMetadata;
+    //
+    // if (metadata) {
+    //   return {
+    //     ...user,
+    //     ...metadata.profile,
+    //     organizationIds,
+    //   };
+    // }
 
     return {
       ...user,
@@ -74,22 +74,22 @@ export class UsersResolver {
       throw new NotFoundException();
     }
 
-    const { metadata } = (await UserMetadata.getUserMetadata(
-      user.id
-    )) as SupertokensMetadata;
+    // const { metadata } = (await UserMetadata.getUserMetadata(
+    //   user.id
+    // )) as SupertokensMetadata;
 
-    const profileMetadata = metadata?.profile ?? {
-      name,
-      photoUrl: null,
-    };
+    // const profileMetadata = metadata?.profile ?? {
+    //   name,
+    //   photoUrl: null,
+    // };
 
-    await UserMetadata.updateUserMetadata(user.id, {
-      ...metadata,
-      profile: {
-        ...profileMetadata,
-        name,
-      },
-    });
+    // await UserMetadata.updateUserMetadata(user.id, {
+    //   ...metadata,
+    //   profile: {
+    //     ...profileMetadata,
+    //     name,
+    //   },
+    // });
 
     return {
       ...user,
