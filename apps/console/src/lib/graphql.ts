@@ -34,8 +34,11 @@ export const gqlClient = new GraphQLClient(`https://${BASE_API_URL}/graphql`, {
       ...options.headers,
       "email": user,
     }
+    console.log("fetching: " + url);
     const res = await fetch(url, options);
+    console.log("response status: " + res.status);
     const json = await res.clone().json();
+    console.log("response json: " + JSON.stringify(json));
 
     if (json.errors && json.errors.length > 0) {
       // Check if auth error
