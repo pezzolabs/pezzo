@@ -31,8 +31,6 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    // const req = context.switchToHttp().getRequest();
-    // this.logger.info("req: " + JSON.stringify(req));
     return this.authorizeBearerToken(context);
   }
 
@@ -41,9 +39,8 @@ export class AuthGuard implements CanActivate {
     const ctx = gqlCtx.getContext();
     const req = ctx.req;
     const res = ctx.res;
-    this.logger.info("======req request id: " + req.headers["x-request-id"]);
-    this.logger.info("======req user: " + req.headers["user"]);
-    this.logger.info("======req: " + req.headers);
+    this.logger.info("======req user: " + req.headers["email"]);
+    this.logger.info("======req: " + JSON.stringify(req.headers));
 
     // let session: SessionContainer;
 
@@ -63,30 +60,12 @@ export class AuthGuard implements CanActivate {
     // const supertokensUser = await ThirdPartyEmailPassword.getUserById(
     //   session.getUserId()
     // );
-    // this.logger.info("req: " + JSON.stringify(req.user));
-    // this.logger.info("res: " + JSON.stringify(res));
 
-    // const oktaUrl = "https://llm-ops-portal.dev.smartnews.net/oauth2/userinfo"
-    // const response = await fetch(oktaUrl, {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // });
-    // const data = await response.json();
-    // console.log("user info from Okta: " + JSON.stringify(data));
-    // if (!response.ok) {
-    //   if (data?.message) {
-    //     throw new Error(data.message);
-    //   } else {
-    //     throw new Error(
-    //       `Error fetching user info from Okta.`
-    //     );
-    //   }
-    // }
 
+    // build supertokensUser object by call okta userinfo endpoint in UI
     const supertokensUser = {
       id: "",
-      email: "dp-admin@smartnews.com"
+      email: req.headers["email"],
     }
 
     req["supertokensUser"] = supertokensUser;
