@@ -41,7 +41,7 @@ export class AuthGuard implements CanActivate {
     const ctx = gqlCtx.getContext();
     const req = ctx.req;
     const res = ctx.res;
-    this.logger.info("req: " + req.user);
+    this.logger.info("======req: " + req.user);
 
     // let session: SessionContainer;
 
