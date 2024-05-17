@@ -32,7 +32,7 @@ export const gqlClient = new GraphQLClient(`https://${BASE_API_URL}/graphql`, {
     getOktaUserInfo();
     options.headers = {
       ...options.headers,
-      "user": user,
+      "email": user,
     }
     const res = await fetch(url, options);
     const json = await res.clone().json();
