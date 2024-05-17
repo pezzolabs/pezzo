@@ -3,7 +3,9 @@ import { GraphQLClient } from "graphql-request";
 import { BASE_API_URL } from "~/env";
 // import { attemptRefreshingSession } from "supertokens-auth-react/recipe/session";
 import { signOut } from "./utils/sign-out";
+import { useState } from "react";
 
+const [user, setUser] = useState<string>('');
 const oktaUrl = "/oauth2/userinfo";
 
 const getOktaUserInfo = async () => {
@@ -12,8 +14,10 @@ const getOktaUserInfo = async () => {
   }).then((res) => {
     if (res.ok) {
       res.json().then((resp) => {
-        console.log(resp);
-        console.log(resp.email);
+        // console.log(resp);
+        // console.log(resp.email);
+        setUser(resp.email);
+        // return resp.email;
       });
     } else {
       console.error(`error message: ${res.text()}`);
@@ -23,9 +27,9 @@ const getOktaUserInfo = async () => {
 
 export const gqlClient = new GraphQLClient(`https://${BASE_API_URL}/graphql`, {
   credentials: "include",
-  // headers: {
-  //   "Access-Control-Allow-Origin": "*",
-  // },
+  headers: {
+    "user": user,
+  },
   fetch: async (url, options) => {
     await getOktaUserInfo();
     const res = await fetch(url, options);
