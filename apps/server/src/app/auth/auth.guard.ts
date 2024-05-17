@@ -31,8 +31,8 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const req = context.switchToHttp().getRequest();
-    this.logger.info("req: " + JSON.stringify(req));
+    // const req = context.switchToHttp().getRequest();
+    // this.logger.info("req: " + JSON.stringify(req));
     return this.authorizeBearerToken(context);
   }
 
@@ -41,7 +41,7 @@ export class AuthGuard implements CanActivate {
     const ctx = gqlCtx.getContext();
     const req = ctx.req;
     const res = ctx.res;
-    this.logger.info("req: " + req.toString());
+    this.logger.info("req: " + req.user);
 
     // let session: SessionContainer;
 
