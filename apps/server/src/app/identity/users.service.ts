@@ -66,6 +66,14 @@ export class UsersService {
     return user;
   }
 
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const user = await this.prisma.user.findUnique({
+      where: { email }
+    });
+
+    return user;
+  }
+
   async getById(id: string): Promise<UserWithOrgMemberships | undefined> {
     const user = await this.prisma.user.findUnique({
       where: { id },

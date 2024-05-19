@@ -80,7 +80,7 @@ export class UsersResolver {
       "Getting user by email"
     );
 
-    const user = await this.usersService.getUser(data);
+    const user = await this.usersService.getUserByEmail(data);
 
     // if (!user) {
     //   throw new NotFoundException();
