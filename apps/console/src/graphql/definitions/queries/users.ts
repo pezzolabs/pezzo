@@ -17,8 +17,6 @@ export const GET_USER = graphql(/* GraphQL */ `
     getUser(data: $data) {
       id
       email
-      photoUrl
-      name
     }
   }
 `);

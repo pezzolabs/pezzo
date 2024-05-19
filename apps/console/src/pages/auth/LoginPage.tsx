@@ -12,7 +12,7 @@ import {
   Input,
 } from "@pezzo/ui";
 import GoogleIcon from "~/assets/icons/google.svg";
-import ThirdPartyEmailPassword from "supertokens-auth-react/recipe/thirdpartyemailpassword";
+// import ThirdPartyEmailPassword from "supertokens-auth-react/recipe/thirdpartyemailpassword";
 import { Form, FormField } from "@pezzo/ui";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,6 +21,7 @@ import { motion } from "framer-motion";
 import { useSearchParams } from "react-router-dom";
 import { trackEvent } from "~/lib/utils/analytics";
 import clsx from "clsx";
+import {useGetUserByEmail} from "~/graphql/hooks/queries";
 // import { googleEnabled } from "~/lib/auth/supertokens";
 
 const googleEnabled = false;
@@ -43,6 +44,7 @@ export const LoginPage = () => {
     email: z.string().email({ message: "Invalid email address" }),
     // password: z.string().min(1, "Password is required"),
     // confirm_password: mode === "signup" ? z.string() : z.string().optional(),
+    name: z.string(),
   });
 
   const signUpSchema = z
@@ -92,7 +94,7 @@ export const LoginPage = () => {
 
     if (mode === "signup") {
       const values: z.infer<typeof signUpSchema> = formValues;
-      await emailPasswordSignUp(values.email, values.name);
+      await EmailPasswordSignUp(values.email, values.name);
     } else {
       const values: z.infer<typeof signInSchema> = formValues;
       await emailPasswordSignIn(values.email);
@@ -101,24 +103,24 @@ export const LoginPage = () => {
     setEmailPasswordLoading(false);
   };
 
-  const handleThirdPartySignIn = async (providerId: "google") => {
-    setError(null);
-    setThirdPartyLoading(true);
-
-    try {
-      const url =
-        await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState(
-          {
-            providerId,
-            authorisationURL: `${window.location.origin}/login/callback/${providerId}`,
-          }
-        );
-
-      window.location.href = url;
-    } catch (error) {
-      setError(GENERIC_ERROR);
-    }
-  };
+  // const handleThirdPartySignIn = async (providerId: "google") => {
+  //   setError(null);
+  //   setThirdPartyLoading(true);
+  //
+  //   try {
+  //     const url =
+  //       await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState(
+  //         {
+  //           providerId,
+  //           authorisationURL: `${window.location.origin}/login/callback/${providerId}`,
+  //         }
+  //       );
+  //
+  //     window.location.href = url;
+  //   } catch (error) {
+  //     setError(GENERIC_ERROR);
+  //   }
+  // };
 
   const emailPasswordSignIn = async (email: string) => {
     // limit only smartnews.com can access
@@ -126,74 +128,80 @@ export const LoginPage = () => {
       setError("Invalid email. Please try again.");
       return;
     }
-    const response = await ThirdPartyEmailPassword.emailPasswordSignIn({
-      formFields: [
-        {
-          id: "email",
-          value: email,
-        },
-        // {
-        //   id: "password",
-        //   value: password,
-        // },
-      ],
-    });
+    // const response = await ThirdPartyEmailPassword.emailPasswordSignIn({
+    //   formFields: [
+    //     {
+    //       id: "email",
+    //       value: email,
+    //     },
+    //     // {
+    //     //   id: "password",
+    //     //   value: password,
+    //     // },
+    //   ],
+    // });
 
-    if (response.status === "WRONG_CREDENTIALS_ERROR") {
-      // the input email / password combination did not match,
-      // so we show an appropriate error message to the user
-      setError("Invalid email or password. Please try again.");
-      return;
-    }
-    if (response.status === "FIELD_ERROR") {
-      response.formFields.forEach((item) => {
-        if (item.id === "email") {
-          // this means that something was wrong with the entered email.
-          // probably that it's not a valid email (from a syntax point of view)
-          setError(item.error);
-        } else if (item.id === "password") {
-          setError(item.error);
-        }
-      });
-
-      return;
-    }
+    // if (response.status === "WRONG_CREDENTIALS_ERROR") {
+    //   // the input email / password combination did not match,
+    //   // so we show an appropriate error message to the user
+    //   setError("Invalid email or password. Please try again.");
+    //   return;
+    // }
+    // if (response.status === "FIELD_ERROR") {
+    //   response.formFields.forEach((item) => {
+    //     if (item.id === "email") {
+    //       // this means that something was wrong with the entered email.
+    //       // probably that it's not a valid email (from a syntax point of view)
+    //       setError(item.error);
+    //     } else if (item.id === "password") {
+    //       setError(item.error);
+    //     }
+    //   });
+    //
+    //   return;
+    // }
 
     trackEvent("user_login", { method: "email_password" });
     window.location.assign("/");
   };
 
-  const emailPasswordSignUp = async (
+  const EmailPasswordSignUp = async (
     email: string,
     // password: string,
     name: string
   ) => {
-    const response = await ThirdPartyEmailPassword.emailPasswordSignUp({
-      formFields: [
-        {
-          id: "email",
-          value: email,
-        },
-        // {
-        //   id: "password",
-        //   value: password,
-        // },
-        {
-          id: "name",
-          value: name,
-        },
-      ],
-    });
-
-    if (response.status === "FIELD_ERROR") {
-      let error = "";
-      response.formFields.forEach((item) => {
-        error += item.error + "\n";
-      });
-
-      setError(error);
+    // check if user already exist
+    const user = useGetUserByEmail(email);
+    if (user) {
+      setError("User already exist.");
       return;
     }
+    // const response = await ThirdPartyEmailPassword.emailPasswordSignUp({
+    //   formFields: [
+    //     {
+    //       id: "email",
+    //       value: email,
+    //     },
+    //     // {
+    //     //   id: "password",
+    //     //   value: password,
+    //     // },
+    //     {
+    //       id: "name",
+    //       value: name,
+    //     },
+    //   ],
+    // });
+
+    // if (response.status === "FIELD_ERROR") {
+    //   let error = "";
+    //   response.formFields.forEach((item) => {
+    //     error += item.error + "\n";
+    //   });
+    //
+    //   setError(error);
+    //   return;
+    // }
 
     trackEvent("user_signup", { method: "email_password" });
     window.location.assign("/");
