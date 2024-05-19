@@ -67,6 +67,7 @@ export class AuthGuard implements CanActivate {
     //   id: "",
     //   email: req.headers["email"],
     // }
+    this.logger.info("======req email: " + req.headers["email"]);
 
     const supertokensUser = {
       id: "",
