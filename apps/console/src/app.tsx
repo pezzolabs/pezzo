@@ -18,7 +18,7 @@ import { OnboardingPage } from "./pages/organizations/onboarding";
 import { LogoutPage } from "./pages/auth/LogoutPage";
 import { RequestsPage } from "./pages/requests/RequestsPage";
 import { DashboardPage } from "./pages/projects/overview/DashboardPage";
-// import { LoginPage } from "./pages/auth/LoginPage";
+import { LoginPage } from "./pages/auth/LoginPage";
 // import { AuthCallbackPage } from "./pages/auth/AuthCallbackPage";
 import { queryClient } from "./lib/graphql";
 import { AuthProvider } from "./lib/providers/AuthProvider";
@@ -65,15 +65,15 @@ export function App() {
       <Toaster />
       <QueryClientProvider client={queryClient}>
         {/* Non-authorized routes */}
-        {/*<Routes>*/}
-        {/*  /!* We don't render the LayoutWrapper for non-authorized routes *!/*/}
-        {/*  <Route*/}
-        {/*    path="/login/callback/:providerId"*/}
-        {/*    element={<AuthCallbackPage />}*/}
-        {/*  />*/}
-        {/*  <Route path="/login" element={<LoginPage />} />*/}
-        {/*  <Route path="/logout" element={<LogoutPage />} />*/}
-        {/*</Routes>*/}
+        <Routes>
+          {/* We don't render the LayoutWrapper for non-authorized routes */}
+          {/*<Route*/}
+          {/*  path="/login/callback/:providerId"*/}
+          {/*  element={<AuthCallbackPage />}*/}
+          {/*/>*/}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/logout" element={<LogoutPage />} />
+        </Routes>
         {/* Authorized routes */}
         <Routes>
           <Route

@@ -8,12 +8,14 @@ import { UsersService } from "./users.service";
 import { UpdateProfileInput } from "./inputs/update-profile.input";
 import { PinoLogger } from "../logger/pino-logger";
 import { ExtendedUser } from "./models/extended-user.model";
+import {GetProjectPromptsInput} from "../prompts/inputs/get-project-prompts.input";
+import {User} from "../../@generated/user/user.model";
 
-type SupertokensMetadata = {
-  metadata:
-    | { profile: { name: string | null; photoUrl: string | null } }
-    | undefined;
-};
+// type SupertokensMetadata = {
+//   metadata:
+//     | { profile: { name: string | null; photoUrl: string | null } }
+//     | undefined;
+// };
 
 @UseGuards(AuthGuard)
 @Resolver(() => ExtendedUser)
@@ -66,6 +68,26 @@ export class UsersResolver {
     return {
       ...user,
       organizationIds,
+    };
+  }
+
+  @Query(() => User)
+  async getUser(@Args("data") data: string) {
+    this.logger.info(
+      {
+        email: data,
+      },
+      "Getting user by email"
+    );
+
+    const user = await this.usersService.getUserByEmail(data);
+
+    // if (!user) {
+    //   throw new NotFoundException();
+    // }
+
+    return {
+      ...user,
     };
   }
 

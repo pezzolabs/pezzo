@@ -12,6 +12,15 @@ export const GET_ME = graphql(/* GraphQL */ `
   }
 `);
 
+export const GET_USER = graphql(/* GraphQL */ `
+  query GetUser($data: String!) {
+    getUser(data: $data) {
+      id
+      email
+    }
+  }
+`);
+
 export const UPDATE_PROFILE = graphql(/* GraphQL */ `
   mutation UpdateProfile($data: UpdateProfileInput!) {
     updateProfile(data: $data) {
