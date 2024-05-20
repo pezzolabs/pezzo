@@ -12,10 +12,10 @@ export const gqlClient = new GraphQLClient(`https://${BASE_API_URL}/graphql`, {
   // },
   fetch: async (url, options) => {
     // getOktaUserInfo();
-    // options.headers = {
-    //   ...options.headers,
-    //   "email": user,
-    // }
+    options.headers = {
+      ...options.headers,
+    }
+    console.log("===header: " + options.headers);
     const res = await fetch(url, options);
     // console.log("response status: " + res.status);
     const json = await res.clone().json();
