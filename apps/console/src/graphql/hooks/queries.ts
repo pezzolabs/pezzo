@@ -63,6 +63,9 @@ export const usePezzoApiKeys = () => {
 export const useGetCurrentUser = () =>
   useQuery({ queryKey: ["me"], queryFn: () => gqlClient.request(GET_ME) });
 
+export const useGetCurrentUserWithHeader = (email: string) =>
+  useQuery({ queryKey: ["me"], queryFn: () => gqlClient.request(GET_ME, {}, {"email": email} ) });
+
 export const useGetUserByEmail = (email: string) =>
   useQuery({ queryKey: ["getUser"], queryFn: () => gqlClient.request(GET_USER, {data: email}) });
 
