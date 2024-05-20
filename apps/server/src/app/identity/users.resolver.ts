@@ -115,9 +115,7 @@ export class UsersResolver {
     });
 
     return {
-      id: userWithOrg.id,
-      email: userWithOrg.email,
-      orgId: userWithOrg.orgMemberships[0].organizationId
+      ...userWithOrg
     };
   }
 

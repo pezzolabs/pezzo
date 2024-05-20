@@ -28,6 +28,7 @@ import {
   DeleteOrgMemberMutation,
   OrganizationMemberWhereUniqueInput,
   DeleteInvitationMutation,
+  SignupUserInput,
 } from "~/@generated/graphql/graphql";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { gqlClient } from "~/lib/graphql";
@@ -53,6 +54,7 @@ import {
 } from "../definitions/mutations/prompts";
 import { DELETE_ENVIRONMENT } from "../definitions/mutations/environments";
 import { DELETE_PROVIDER_API_KEY } from "../definitions/mutations/api-keys";
+import { SIGN_UP_USER } from "../definitions/mutations/users";
 import { useCurrentPrompt } from "~/lib/providers/CurrentPromptContext";
 import { TEST_PROMPT } from "../definitions/queries/prompt-executions";
 import { useEditorContext } from "~/lib/providers/EditorContext";
@@ -61,6 +63,17 @@ export const useUpdateCurrentUserMutation = () =>
   useMutation({
     mutationFn: ({ name }: UpdateProfileInput) =>
       gqlClient.request(UPDATE_PROFILE, { data: { name } }),
+  });
+
+export const useSignupUserMutation = () =>
+  useMutation({
+    mutationFn: (data: SignupUserInput) =>
+      gqlClient.request(SIGN_UP_USER, {
+        data: {
+          email: data.email,
+          name: data.name,
+        },
+      }),
   });
 
 export const useCreateProjectMutation = (props?: {
