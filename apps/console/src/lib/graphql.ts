@@ -1,27 +1,9 @@
 import { QueryClient } from "@tanstack/react-query";
 import { GraphQLClient } from "graphql-request";
 import { BASE_API_URL } from "~/env";
-// import { attemptRefreshingSession } from "supertokens-auth-react/recipe/session";
 import { signOut } from "./utils/sign-out";
-// import { useState } from "react";
 
-let user = "";
-const oktaUrl = "/oauth2/userinfo";
 
-const getOktaUserInfo = () => {
-  fetch(oktaUrl, {
-    method: "GET",
-  }).then((res) => {
-    if (res.ok) {
-      res.json().then((resp) => {
-        // console.log(resp);
-        user = resp.email;
-      });
-    } else {
-      console.error(`error message: ${res.text()}`);
-    }
-  });
-}
 
 export const gqlClient = new GraphQLClient(`https://${BASE_API_URL}/graphql`, {
   credentials: "include",
@@ -29,13 +11,13 @@ export const gqlClient = new GraphQLClient(`https://${BASE_API_URL}/graphql`, {
   //   "user": user,
   // },
   fetch: async (url, options) => {
-    getOktaUserInfo();
-    options.headers = {
-      ...options.headers,
-      "email": user,
-    }
+    // getOktaUserInfo();
+    // options.headers = {
+    //   ...options.headers,
+    //   "email": user,
+    // }
     const res = await fetch(url, options);
-    console.log("response status: " + res.status);
+    // console.log("response status: " + res.status);
     const json = await res.clone().json();
     console.log("response json: " + JSON.stringify(json));
 

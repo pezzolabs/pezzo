@@ -1,15 +1,16 @@
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 // import UserMetadata from "supertokens-node/recipe/usermetadata";
 import { AuthGuard } from "../auth/auth.guard";
-import { NotFoundException, UseGuards } from "@nestjs/common";
+import {ForbiddenException, NotFoundException, UseGuards} from "@nestjs/common";
 import { CurrentUser } from "./current-user.decorator";
 import { RequestUser } from "./users.types";
 import { UsersService } from "./users.service";
 import { UpdateProfileInput } from "./inputs/update-profile.input";
 import { PinoLogger } from "../logger/pino-logger";
 import { ExtendedUser } from "./models/extended-user.model";
-import {GetProjectPromptsInput} from "../prompts/inputs/get-project-prompts.input";
 import {User} from "../../@generated/user/user.model";
+import {SignupUserInput} from "./inputs/signup-user.input";
+import { randomUUID } from "crypto";
 
 // type SupertokensMetadata = {
 //   metadata:
@@ -88,6 +89,33 @@ export class UsersResolver {
 
     return {
       ...user,
+    };
+  }
+
+  @Mutation(() => User)
+  async signupUser(@Args("data") data: SignupUserInput) {
+    this.logger.info(
+      {
+        email: data.email,
+        name: data.name
+      },
+      "Sign-up user by email and name"
+    );
+
+    const user = await this.usersService.getUserByEmail(data.email);
+
+    if (user) {
+      throw new ForbiddenException("User already exists");
+    }
+
+    const userWithOrg=  await this.usersService.createUser({
+      email: data.email,
+      id: randomUUID(),
+      name: data.name,
+    });
+
+    return {
+      ...userWithOrg
     };
   }
 

@@ -63,18 +63,22 @@ export class AuthGuard implements CanActivate {
 
 
     // build supertokensUser object by call okta userinfo endpoint in UI
-    // const supertokensUser = {
-    //   id: "",
-    //   email: req.headers["email"],
-    // }
-    this.logger.info("======req email: " + req.headers["email"]);
-
     const supertokensUser = {
       id: "",
-      email: "dp-admin@smartnews.com",
+      email: req.headers["email"],
     }
+    this.logger.info("======req email: " + req.headers["email"]);
+
+    // const supertokensUser = {
+    //   id: "",
+    //   email: "dp-admin@smartnews.com",
+    // }
 
     req["supertokensUser"] = supertokensUser;
+
+    if (!supertokensUser.email) {
+      throw new UnauthorizedException("User email is null");
+    }
 
     const user = await this.usersService.getUser(supertokensUser.email);
 

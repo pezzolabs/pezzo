@@ -11,8 +11,6 @@ import {
   FormMessage,
   Input,
 } from "@pezzo/ui";
-import GoogleIcon from "~/assets/icons/google.svg";
-// import ThirdPartyEmailPassword from "supertokens-auth-react/recipe/thirdpartyemailpassword";
 import { Form, FormField } from "@pezzo/ui";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,7 +34,6 @@ export const LoginPage = () => {
   const [error, setError] = useState<string | undefined>(undefined);
   const [emailPasswordLoading, setEmailPasswordLoading] =
     useState<boolean>(false);
-  const [thirdPartyLoading, setThirdPartyLoading] = useState<boolean>(false);
 
   const verb = mode === "signin" ? "Sign in" : "Sign up";
   usePageTitle(verb);
@@ -102,25 +99,6 @@ export const LoginPage = () => {
 
     setEmailPasswordLoading(false);
   };
-
-  // const handleThirdPartySignIn = async (providerId: "google") => {
-  //   setError(null);
-  //   setThirdPartyLoading(true);
-  //
-  //   try {
-  //     const url =
-  //       await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState(
-  //         {
-  //           providerId,
-  //           authorisationURL: `${window.location.origin}/login/callback/${providerId}`,
-  //         }
-  //       );
-  //
-  //     window.location.href = url;
-  //   } catch (error) {
-  //     setError(GENERIC_ERROR);
-  //   }
-  // };
 
   const emailPasswordSignIn = async (email: string) => {
     // limit only smartnews.com can access
