@@ -63,7 +63,8 @@ export const AuthCallbackPage = () => {
         setRegisterSuccess("You have successfully registered your account!");
         setEmailPasswordLoading(false);
         setTimeout(() => {
-          window.location.href = `/orgs/${user.signupUser.orgMemberships[0].organizationId}`;
+          // window.location.href = `/orgs/${user.signupUser.orgMemberships[0].organizationId}`;
+          window.location.href = "/";
         }, 1500);
       }
     } catch (e) {

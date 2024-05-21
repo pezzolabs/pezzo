@@ -135,7 +135,8 @@ export const LoginPage = () => {
       const newUser = await signupUser({ email: email, name: name });
       if (newUser.signupUser.email && signupLoading === false) {
         sessionStorage.setItem("email", email);
-        navigate(`/orgs/${newUser.signupUser.orgMemberships[0].organizationId}`);
+        // navigate(`/orgs/${newUser.signupUser.orgMemberships[0].organizationId}`);
+        window.location.href = "/";
       }
     } catch (e) {
       setError(e.message);
