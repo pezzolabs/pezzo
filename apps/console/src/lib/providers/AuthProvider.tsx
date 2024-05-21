@@ -4,6 +4,9 @@ import { useGetCurrentUserWithHeader } from "~/graphql/hooks/queries";
 import { GetMeQuery } from "~/@generated/graphql/graphql";
 import { useIdentify } from "~/lib/utils/analytics";
 import {useNavigate} from "react-router-dom";
+import {useQuery} from "@tanstack/react-query";
+import {gqlClient} from "~/lib/graphql";
+import {GET_ME} from "~/graphql/definitions/queries/users";
 
 const AuthProviderContext = createContext<{
   currentUser: GetMeQuery["me"];
@@ -37,7 +40,10 @@ export const AuthProvider = ({ children }) => {
     });
   });
 
-  const { data, isLoading, error } = useGetCurrentUserWithHeader(email);
+  const { data, isLoading, error }  =
+    useQuery({ queryKey: ["me"], queryFn: () => gqlClient.request(GET_ME, {}, {"email": email}), enabled: !!email });
+
+  // const { data, isLoading, error } = useGetCurrentUserWithHeader(email);
   if (error) {
     console.error("Error fetching current user ", error);
     // navigate to register page after user first SSO login
