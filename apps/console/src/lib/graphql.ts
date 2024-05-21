@@ -5,7 +5,7 @@ import { signOut } from "./utils/sign-out";
 
 let email: string | null = null;
 const oktaUrl = "/oauth2/userinfo";
-const getOktaUserInfo = () => {
+const getOktaUserInfo = async () => {
   if (!sessionStorage.getItem("email")) {
     fetch(oktaUrl, {
       method: "GET",
@@ -29,7 +29,7 @@ export const gqlClient = new GraphQLClient(`https://${BASE_API_URL}/graphql`, {
   //   "user": user,
   // },
   fetch: async (url, options) => {
-    getOktaUserInfo();
+    await getOktaUserInfo();
     options.headers = {
       ...options.headers,
       "email": sessionStorage.getItem("email") || email,
