@@ -15,7 +15,7 @@ export const gqlClient = new GraphQLClient(`https://${BASE_API_URL}/graphql`, {
     options.headers = {
       ...options.headers,
     }
-    console.log("===header: " + options.headers);
+    console.log("===header: " + JSON.stringify(options.headers));
     const res = await fetch(url, options);
     // console.log("response status: " + res.status);
     const json = await res.clone().json();
