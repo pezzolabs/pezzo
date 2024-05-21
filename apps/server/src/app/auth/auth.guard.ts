@@ -67,7 +67,7 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-    const user = await this.usersService.getUser(supertokensUser.email);
+    const user = await this.usersService.getUser(supertokensUser.email, false);
 
     if (!user) {
       // throw new UnauthorizedException("User not found");

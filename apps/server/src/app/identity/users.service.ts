@@ -57,10 +57,10 @@ export class UsersService {
     return user;
   }
 
-  async getUser(email: string): Promise<UserWithOrgMemberships | undefined> {
+  async getUser(email: string, includeOrg: boolean): Promise<UserWithOrgMemberships | undefined> {
     const user = await this.prisma.user.findUnique({
       where: { email },
-      include: { orgMemberships: true },
+      include: { orgMemberships: includeOrg },
     });
 
     return user;
