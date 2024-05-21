@@ -31,7 +31,7 @@ export const gqlClient = new GraphQLClient(`https://${BASE_API_URL}/graphql`, {
         //   await signOut();
         //   return;
         // }
-        await signOut();
+        // await signOut();
         return;
 
         // Retry request
