@@ -16,17 +16,18 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion } from "framer-motion";
-import { useSearchParams } from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
 import { trackEvent } from "~/lib/utils/analytics";
 import clsx from "clsx";
 import {useGetUserByEmail} from "~/graphql/hooks/queries";
-// import { googleEnabled } from "~/lib/auth/supertokens";
+import {useSignupUserMutation} from "~/graphql/hooks/mutations";
 
 const googleEnabled = false;
 const GENERIC_ERROR = "Something went wrong. Please try again later.";
 
 export const LoginPage = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [mode, setMode] = useState<"signin" | "signup" | "forgot_password">(
     "signin"
   );
@@ -34,6 +35,7 @@ export const LoginPage = () => {
   const [error, setError] = useState<string | undefined>(undefined);
   const [emailPasswordLoading, setEmailPasswordLoading] =
     useState<boolean>(false);
+  const { mutateAsync: signupUser, isLoading: signupLoading} = useSignupUserMutation();
 
   const verb = mode === "signin" ? "Sign in" : "Sign up";
   usePageTitle(verb);
@@ -83,7 +85,6 @@ export const LoginPage = () => {
   const handleSetMode = (mode: "signin" | "signup" | "forgot_password") => {
     setMode(mode);
     setError(undefined);
-    // emailPasswordForm.clearErrors();
   };
 
   const onEmailPasswordSubmit = async (formValues) => {
@@ -94,50 +95,25 @@ export const LoginPage = () => {
       await EmailPasswordSignUp(values.email, values.name);
     } else {
       const values: z.infer<typeof signInSchema> = formValues;
-      await emailPasswordSignIn(values.email);
+      await EmailPasswordSignIn(values.email);
     }
 
     setEmailPasswordLoading(false);
   };
 
-  const emailPasswordSignIn = async (email: string) => {
+  const EmailPasswordSignIn = async (email: string) => {
     // limit only smartnews.com can access
-    if (!email.endsWith("@smartnews.com")) {
-      setError("Invalid email. Please try again.");
+    // if (!email.endsWith("@smartnews.com")) {
+    //   setError("Invalid email. Please try again.");
+    //   return;
+    // }
+    const {data, isLoading, isError} = useGetUserByEmail(email);
+    if (data?.getUser?.id === "") {
+      setError("User not exist.");
       return;
     }
-    // const response = await ThirdPartyEmailPassword.emailPasswordSignIn({
-    //   formFields: [
-    //     {
-    //       id: "email",
-    //       value: email,
-    //     },
-    //     // {
-    //     //   id: "password",
-    //     //   value: password,
-    //     // },
-    //   ],
-    // });
-
-    // if (response.status === "WRONG_CREDENTIALS_ERROR") {
-    //   // the input email / password combination did not match,
-    //   // so we show an appropriate error message to the user
-    //   setError("Invalid email or password. Please try again.");
-    //   return;
-    // }
-    // if (response.status === "FIELD_ERROR") {
-    //   response.formFields.forEach((item) => {
-    //     if (item.id === "email") {
-    //       // this means that something was wrong with the entered email.
-    //       // probably that it's not a valid email (from a syntax point of view)
-    //       setError(item.error);
-    //     } else if (item.id === "password") {
-    //       setError(item.error);
-    //     }
-    //   });
-    //
-    //   return;
-    // }
+    sessionStorage.setItem("email", email);
+    navigate(`/}`);
 
     trackEvent("user_login", { method: "email_password" });
     window.location.assign("/");
@@ -149,37 +125,22 @@ export const LoginPage = () => {
     name: string
   ) => {
     // check if user already exist
-    const user = useGetUserByEmail(email);
-    if (user) {
+    const {data, isLoading, isError} = useGetUserByEmail(email);
+    if (data?.getUser?.id !== "") {
       setError("User already exist.");
       return;
     }
-    // const response = await ThirdPartyEmailPassword.emailPasswordSignUp({
-    //   formFields: [
-    //     {
-    //       id: "email",
-    //       value: email,
-    //     },
-    //     // {
-    //     //   id: "password",
-    //     //   value: password,
-    //     // },
-    //     {
-    //       id: "name",
-    //       value: name,
-    //     },
-    //   ],
-    // });
 
-    // if (response.status === "FIELD_ERROR") {
-    //   let error = "";
-    //   response.formFields.forEach((item) => {
-    //     error += item.error + "\n";
-    //   });
-    //
-    //   setError(error);
-    //   return;
-    // }
+    try {
+      const newUser = await signupUser({ email: email, name: name });
+      if (newUser.signupUser.email && signupLoading === false) {
+        sessionStorage.setItem("email", email);
+        navigate(`/orgs/${newUser.signupUser.orgMemberships[0].organizationId}`);
+      }
+    } catch (e) {
+      setError(e.message);
+      return;
+    }
 
     trackEvent("user_signup", { method: "email_password" });
     window.location.assign("/");
@@ -212,21 +173,6 @@ export const LoginPage = () => {
               </div>
 
               <div className="mt-2 flex flex-col space-y-2">
-                {/*{googleEnabled && (*/}
-                {/*  <Button*/}
-                {/*    size="lg"*/}
-                {/*    className="w-full bg-neutral-200 text-neutral-800 hover:bg-neutral-200 hover:text-neutral-700"*/}
-                {/*    onClick={() => handleThirdPartySignIn("google")}*/}
-                {/*    loading={thirdPartyLoading}*/}
-                {/*  >*/}
-                {/*    <img*/}
-                {/*      src={GoogleIcon}*/}
-                {/*      alt="Google Logo"*/}
-                {/*      className="mr-3 h-5"*/}
-                {/*    />*/}
-                {/*    {verb} with Google*/}
-                {/*  </Button>*/}
-                {/*)}*/}
 
                 <motion.div
                   key={[mode, isEmail].join("_")}
