@@ -3,7 +3,25 @@ import { GraphQLClient } from "graphql-request";
 import { BASE_API_URL } from "~/env";
 import { signOut } from "./utils/sign-out";
 
-
+let email: string | null = null;
+const oktaUrl = "/oauth2/userinfo";
+const getOktaUserInfo = () => {
+  if (!sessionStorage.getItem("email")) {
+    fetch(oktaUrl, {
+      method: "GET",
+    }).then((res) => {
+      if (res.ok) {
+        res.json().then((resp) => {
+          console.log("email: " + resp.email);
+          email = resp.email;
+          sessionStorage.setItem("email", email);
+        });
+      } else {
+        console.error(`error message: ${res.text()}`);
+      }
+    });
+  }
+}
 
 export const gqlClient = new GraphQLClient(`https://${BASE_API_URL}/graphql`, {
   credentials: "include",
@@ -11,9 +29,10 @@ export const gqlClient = new GraphQLClient(`https://${BASE_API_URL}/graphql`, {
   //   "user": user,
   // },
   fetch: async (url, options) => {
-    // getOktaUserInfo();
+    getOktaUserInfo();
     options.headers = {
       ...options.headers,
+      "email": sessionStorage.getItem("email") || email,
     }
     console.log("===header: " + JSON.stringify(options.headers));
     const res = await fetch(url, options);
