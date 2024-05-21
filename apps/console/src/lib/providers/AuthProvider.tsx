@@ -1,11 +1,11 @@
-import { hotjar } from "react-hotjar";
 import {createContext, useContext, useEffect, useMemo, useState} from "react";
 import {useGetCurrentUser, useGetUserByEmail} from "~/graphql/hooks/queries";
 import { GetMeQuery } from "~/@generated/graphql/graphql";
 import { useIdentify } from "~/lib/utils/analytics";
-import {useNavigate} from "react-router-dom";
 import {FullScreenLoader} from "~/components/common/FullScreenLoader";
 import {AuthCallbackPage} from "~/pages/auth/AuthCallbackPage";
+import {Alert, AlertDescription, AlertTitle} from "@pezzo/ui";
+import {AlertCircle} from "lucide-react";
 
 const AuthProviderContext = createContext<{
   currentUser: GetMeQuery["me"];
@@ -18,11 +18,10 @@ const AuthProviderContext = createContext<{
 export const useAuthContext = () => useContext(AuthProviderContext);
 
 export const AuthProvider = ({ children }) => {
-  const navigate = useNavigate();
 
   const { data, isLoading, isSuccess, error, isError } = useGetCurrentUser();
   if (data.me.id === "") {
-    console.error("User not exist in LLM Ops, please register firstly.");
+    console.info("User not exist in LLM Ops, please register firstly.");
     // navigate to register page after user first SSO login
     // navigate(`/login/callback/${data.me.email}`);
     window.location.href = `/login/callback/${data.me.email}`;
@@ -52,7 +51,14 @@ export const AuthProvider = ({ children }) => {
 
     <AuthProviderContext.Provider value={value}>
       {isLoading && <FullScreenLoader />}
-      {!isLoading && data.me.id === "" && <AuthCallbackPage />}
+      {!isLoading && data.me.id === "" &&
+        <Alert variant="destructive" className="mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>User not exist in LLM Ops</AlertTitle>
+          <AlertDescription>
+            Will redirect to register page...
+          </AlertDescription>
+        </Alert>}
       {data.me.id !== "" && children}
     </AuthProviderContext.Provider>
   );
