@@ -38,8 +38,8 @@ export class UsersResolver {
     // }
     if (!userInfo?.email) {
       return {
-        email: null,
-        id: null,
+        email: "",
+        id: "",
         name: null,
       }
     }
@@ -49,7 +49,7 @@ export class UsersResolver {
     if (!user) {
       return {
         email: userInfo.email,
-        id: null,
+        id: "",
         name: null,
       }
       // throw new NotFoundException();

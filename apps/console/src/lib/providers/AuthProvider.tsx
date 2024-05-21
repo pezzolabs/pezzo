@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   const { data, isLoading, isSuccess, error, isError } = useGetCurrentUser();
-  if (!data.me.id) {
+  if (data.me.id === "") {
     console.error("User not exist in LLM Ops, please register firstly.");
     // navigate to register page after user first SSO login
     navigate(`/login/callback/${data.me.email}`);
