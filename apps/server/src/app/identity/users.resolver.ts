@@ -41,6 +41,7 @@ export class UsersResolver {
         email: "",
         id: "",
         name: null,
+        organizationIds: [],
       }
     }
 
@@ -51,6 +52,7 @@ export class UsersResolver {
         email: userInfo.email,
         id: "",
         name: null,
+        organizationIds: [],
       }
       // throw new NotFoundException();
     }
@@ -98,7 +100,7 @@ export class UsersResolver {
     if (!user) {
       return {
         email: data,
-        id: null,
+        id: "",
         name: null,
       }
     }
