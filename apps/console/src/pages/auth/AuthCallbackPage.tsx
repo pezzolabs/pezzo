@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import { trackEvent } from "~/lib/utils/analytics";
-import {useNavigate, useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   Alert,
   AlertDescription,
@@ -32,7 +32,6 @@ export const AuthCallbackPage = () => {
   const email = params.email;
   const name = email?.split("@")[0];
   const {mutateAsync: signupUser, isLoading} = useSignupUserMutation();
-  const navigate = useNavigate();
 
   const formSchema = z
     .object({
@@ -64,7 +63,7 @@ export const AuthCallbackPage = () => {
         setRegisterSuccess("You have successfully registered your account!");
         setEmailPasswordLoading(false);
         setTimeout(() => {
-          navigate(`/orgs/${user.signupUser.orgMemberships[0].organizationId}`);
+          window.location.href = `/orgs/${user.signupUser.orgMemberships[0].organizationId}`;
         }, 1500);
       }
     } catch (e) {
