@@ -4,6 +4,8 @@ import {useGetCurrentUser, useGetUserByEmail} from "~/graphql/hooks/queries";
 import { GetMeQuery } from "~/@generated/graphql/graphql";
 import { useIdentify } from "~/lib/utils/analytics";
 import {useNavigate} from "react-router-dom";
+import {FullScreenLoader} from "~/components/common/FullScreenLoader";
+import {AuthCallbackPage} from "~/pages/auth/AuthCallbackPage";
 
 const AuthProviderContext = createContext<{
   currentUser: GetMeQuery["me"];
@@ -46,8 +48,11 @@ export const AuthProvider = ({ children }) => {
   useIdentify(value.currentUser);
 
   return (
+
     <AuthProviderContext.Provider value={value}>
-      {children}
+      {isLoading && <FullScreenLoader />}
+      {!isLoading && data.me.id === "" && <AuthCallbackPage />}
+      {data.me.id !== "" && children}
     </AuthProviderContext.Provider>
   );
 };

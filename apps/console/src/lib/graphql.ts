@@ -43,16 +43,8 @@ export const gqlClient = new GraphQLClient(`https://${BASE_API_URL}/graphql`, {
     if (json.errors && json.errors.length > 0) {
       // Check if auth error
       if (json.errors[0].extensions?.code === "UNAUTHORIZED") {
-        // Attempt to refresh the session
-        // const isSuccessful = await attemptRefreshingSession();
-
-        // if (!isSuccessful) {
-        //   await signOut();
-        //   return;
-        // }
         // await signOut();
         return;
-
         // Retry request
         // return fetch(url, options);
       }
