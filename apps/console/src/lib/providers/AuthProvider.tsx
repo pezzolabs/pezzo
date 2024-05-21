@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
     }).then((res) => {
       if (res.ok) {
         res.json().then((resp) => {
-          // console.log(resp);
+          console.log("email: " + resp.email);
           setEmail(resp.email);
         });
       } else {

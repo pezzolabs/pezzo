@@ -8,7 +8,6 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { CONTEXT, GqlExecutionContext } from "@nestjs/graphql";
-// import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
 import { UsersService } from "../identity/users.service";
 import { RequestUser } from "../identity/users.types";
 // import Session, { SessionContainer } from "supertokens-node/recipe/session";
@@ -40,7 +39,7 @@ export class AuthGuard implements CanActivate {
     const req = ctx.req;
     const res = ctx.res;
     // this.logger.info("======req user: " + req.headers["email"]);
-    // this.logger.info("======req: " + JSON.stringify(req.headers));
+    this.logger.info("======req: " + JSON.stringify(req.headers));
 
     // let session: SessionContainer;
 
