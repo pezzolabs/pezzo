@@ -40,7 +40,12 @@ export class UsersResolver {
     const user = await this.usersService.getUser(userInfo.email);
 
     if (!user) {
-      throw new NotFoundException();
+      return {
+        email: userInfo.email,
+        id: null,
+        name: null,
+      }
+      // throw new NotFoundException();
     }
 
     const organizationIds = userInfo.orgMemberships.map(
@@ -83,9 +88,13 @@ export class UsersResolver {
 
     const user = await this.usersService.getUserByEmail(data);
 
-    // if (!user) {
-    //   throw new NotFoundException();
-    // }
+    if (!user) {
+      return {
+        email: data,
+        id: null,
+        name: null,
+      }
+    }
 
     return {
       ...user,
