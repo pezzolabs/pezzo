@@ -59,14 +59,14 @@ export const AuthProvider = ({ children }) => {
     [data, isLoading]
   );
 
-  useEffect(() => {
-    if (hotjar.initialized() && value.currentUser) {
-      hotjar.identify(value.currentUser.id, {
-        name: value.currentUser?.name,
-        email: value.currentUser?.email,
-      });
-    }
-  }, [value.currentUser]);
+  // useEffect(() => {
+  //   if (hotjar.initialized() && value.currentUser) {
+  //     hotjar.identify(value.currentUser.id, {
+  //       name: value.currentUser?.name,
+  //       email: value.currentUser?.email,
+  //     });
+  //   }
+  // }, [value.currentUser]);
 
 
   useIdentify(value.currentUser);
