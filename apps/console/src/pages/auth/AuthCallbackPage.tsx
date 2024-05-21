@@ -183,11 +183,9 @@ export const AuthCallbackPage = () => {
                 exit={{opacity: 0}}
                 transition={{duration: 0.3}}
               >
-                (
-                  <p className="mt-2 text-center text-sm leading-6">
-                    Please register because your account still not exist in LLM Ops.
-                  </p>
-                )
+                <p className="mt-2 text-center text-sm leading-6">
+                  Please register after first-time login, because your account still not exist in LLM Ops.
+                </p>
               </motion.div>
             </div>
           </div>
