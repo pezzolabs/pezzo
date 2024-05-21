@@ -61,6 +61,10 @@ export class AuthGuard implements CanActivate {
         email: null,
         orgMemberships: [],
       };
+      req["user"] = reqUser;
+      this.logger.assign({ userId: reqUser.id });
+      req.authMethod = AuthMethod.BearerToken;
+      return true;
     }
 
     const user = await this.usersService.getUser(supertokensUser.email);
@@ -73,6 +77,11 @@ export class AuthGuard implements CanActivate {
         email: supertokensUser.email,
         orgMemberships: [],
       };
+      this.logger.info("======req user: " + JSON.stringify(reqUser));
+      req["user"] = reqUser;
+      this.logger.assign({ userId: reqUser.id });
+      req.authMethod = AuthMethod.BearerToken;
+      return true;
     } else {
       const memberships = await this.usersService.getUserOrgMemberships(
         supertokensUser.email
