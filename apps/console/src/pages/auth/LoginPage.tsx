@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion } from "framer-motion";
-import {useNavigate, useSearchParams} from "react-router-dom";
+import { useSearchParams} from "react-router-dom";
 import { trackEvent } from "~/lib/utils/analytics";
 import clsx from "clsx";
 import {useGetUserByEmail} from "~/graphql/hooks/queries";
@@ -27,7 +27,7 @@ const GENERIC_ERROR = "Something went wrong. Please try again later.";
 
 export const LoginPage = () => {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [mode, setMode] = useState<"signin" | "signup" | "forgot_password">(
     "signin"
   );
@@ -113,7 +113,8 @@ export const LoginPage = () => {
       return;
     }
     sessionStorage.setItem("email", email);
-    navigate(`/}`);
+    // navigate(`/}`);
+    window.location.href = "/";
 
     trackEvent("user_login", { method: "email_password" });
     window.location.assign("/");
