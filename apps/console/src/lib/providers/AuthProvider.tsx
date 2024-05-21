@@ -24,7 +24,8 @@ export const AuthProvider = ({ children }) => {
   if (data.me.id === "") {
     console.error("User not exist in LLM Ops, please register firstly.");
     // navigate to register page after user first SSO login
-    navigate(`/login/callback/${data.me.email}`);
+    // navigate(`/login/callback/${data.me.email}`);
+    window.location.href = `/login/callback/${data.me.email}`;
   }
 
   const value = useMemo(
