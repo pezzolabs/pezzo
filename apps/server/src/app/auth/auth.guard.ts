@@ -73,9 +73,7 @@ export class AuthGuard implements CanActivate {
         email: supertokensUser.email,
         orgMemberships: [],
       };
-    }
-
-    try {
+    } else {
       const memberships = await this.usersService.getUserOrgMemberships(
         supertokensUser.email
       );
@@ -91,6 +89,9 @@ export class AuthGuard implements CanActivate {
           role: m.role,
         })),
       };
+    }
+
+    try {
       const eventContext = {
         userId: reqUser.id,
         organizationId: reqUser.orgMemberships[0].organizationId,
