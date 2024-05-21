@@ -45,7 +45,7 @@ export class UsersResolver {
       }
     }
 
-    const user = await this.usersService.getUser(userInfo.email);
+    let user = await this.usersService.getUser(userInfo.email, false);
 
     if (!user) {
       return {
@@ -55,6 +55,8 @@ export class UsersResolver {
         organizationIds: [],
       }
       // throw new NotFoundException();
+    } else {
+      user = await this.usersService.getUser(userInfo.email, true);
     }
 
     const organizationIds = userInfo.orgMemberships.map(
@@ -143,7 +145,7 @@ export class UsersResolver {
     @Args("data") { name }: UpdateProfileInput
   ) {
     this.logger.info({ name }, "Updating profile");
-    const user = await this.usersService.getUser(userInfo.email);
+    const user = await this.usersService.getUser(userInfo.email, true);
 
     if (!user) {
       throw new NotFoundException();
