@@ -33,8 +33,15 @@ export class UsersResolver {
       },
       "Getting user"
     );
-    if (!userInfo.email.endsWith("@smartnews.com")) {
-      throw new NotFoundException();
+    // if (!userInfo.email.endsWith("@smartnews.com")) {
+    //   throw new NotFoundException();
+    // }
+    if (!userInfo?.email) {
+      return {
+        email: null,
+        id: null,
+        name: null,
+      }
     }
 
     const user = await this.usersService.getUser(userInfo.email);

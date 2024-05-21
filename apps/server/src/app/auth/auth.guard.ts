@@ -41,24 +41,7 @@ export class AuthGuard implements CanActivate {
     // this.logger.info("======req user: " + req.headers["email"]);
     this.logger.info("======req: " + JSON.stringify(req.headers));
 
-    // let session: SessionContainer;
-
-    // try {
-    //   session = await Session.getSession(req, res, {
-    //     sessionRequired: false,
-    //     antiCsrfCheck: process.env.NODE_ENV === "development" ? false : true,
-    //   });
-    // } catch (error) {
-    //   throw new UnauthorizedException();
-    // }
-
-    // if (!session) {
-    //   throw new UnauthorizedException();
-    // }
-
-    // const supertokensUser = await ThirdPartyEmailPassword.getUserById(
-    //   session.getUserId()
-    // );
+    let reqUser: RequestUser;
 
 
     // build supertokensUser object by call okta userinfo endpoint in UI
@@ -68,21 +51,28 @@ export class AuthGuard implements CanActivate {
     }
     this.logger.info("======req email: " + req.headers["email"]);
 
-    // const supertokensUser = {
-    //   id: "",
-    //   email: "dp-admin@smartnews.com",
-    // }
-
     req["supertokensUser"] = supertokensUser;
 
     if (!supertokensUser.email) {
-      throw new UnauthorizedException("User email is null");
+      // throw new UnauthorizedException("User email is null");
+      reqUser = {
+        id: null,
+        supertokensUserId: null,
+        email: null,
+        orgMemberships: [],
+      };
     }
 
     const user = await this.usersService.getUser(supertokensUser.email);
 
     if (!user) {
-      throw new UnauthorizedException("User not found");
+      // throw new UnauthorizedException("User not found");
+      reqUser = {
+        id: null,
+        supertokensUserId: null,
+        email: supertokensUser.email,
+        orgMemberships: [],
+      };
     }
 
     try {
@@ -90,7 +80,7 @@ export class AuthGuard implements CanActivate {
         supertokensUser.email
       );
 
-      const reqUser: RequestUser = {
+      reqUser = {
         id: user.id,
         // supertokensUserId: supertokensUser.id,
         supertokensUserId: user.id, // use user.id as supertokensUserId
