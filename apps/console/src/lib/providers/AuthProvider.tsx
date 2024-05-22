@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
     console.info("User not exist in LLM Ops, please register firstly.");
     // navigate to register page after user first SSO login
     window.location.href = `/login/callback/${data.me.email}`;
-  } else if (data.me.id === "" && data.me.email === null) {
+  } else if (data.me.id === "" && data.me.email === "null") {
     console.info("User not exist in LLM Ops, please register firstly.");
     getOktaUserInfo();
     const email = sessionStorage.getItem("email");
@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }) => {
   return (
 
     <AuthProviderContext.Provider value={value}>
-      {isLoading && <FullScreenLoader />}
+      {!data.me.email && <FullScreenLoader />}
       {!isLoading && data.me.id === "" &&
         <Alert variant="destructive" className="mb-4">
           <AlertCircle className="h-4 w-4" />
