@@ -11,55 +11,57 @@ import {
   FormMessage,
   Input,
 } from "@pezzo/ui";
-import GoogleIcon from "~/assets/icons/google.svg";
-import ThirdPartyEmailPassword from "supertokens-auth-react/recipe/thirdpartyemailpassword";
 import { Form, FormField } from "@pezzo/ui";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion } from "framer-motion";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams} from "react-router-dom";
 import { trackEvent } from "~/lib/utils/analytics";
 import clsx from "clsx";
-import { googleEnabled } from "~/lib/auth/supertokens";
+import {useGetUserByEmail} from "~/graphql/hooks/queries";
+import {useSignupUserMutation} from "~/graphql/hooks/mutations";
 
+const googleEnabled = false;
 const GENERIC_ERROR = "Something went wrong. Please try again later.";
 
 export const LoginPage = () => {
   const [searchParams] = useSearchParams();
+  // const navigate = useNavigate();
   const [mode, setMode] = useState<"signin" | "signup" | "forgot_password">(
     "signin"
   );
-  const [isEmail, setIsEmail] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
+  const [registerSuccess, setRegisterSuccess] = useState<string | null>(null);
   const [emailPasswordLoading, setEmailPasswordLoading] =
     useState<boolean>(false);
-  const [thirdPartyLoading, setThirdPartyLoading] = useState<boolean>(false);
+  const { mutateAsync: signupUser, isLoading: signupLoading} = useSignupUserMutation();
 
   const verb = mode === "signin" ? "Sign in" : "Sign up";
   usePageTitle(verb);
   const signInSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
-    password: z.string().min(1, "Password is required"),
-    confirm_password: mode === "signup" ? z.string() : z.string().optional(),
+    // password: z.string().min(1, "Password is required"),
+    // confirm_password: mode === "signup" ? z.string() : z.string().optional(),
+    name: z.string().optional(),
   });
 
   const signUpSchema = z
     .object({
       email: z.string().email({ message: "Invalid email address" }),
-      password: z
-        .string()
-        .regex(
-          /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}[\]:;<>,.?~\\-]).{8,}$/,
-          "Password must contain at least 8 characters, one uppercase, one lowercase, one number, and one special symbol"
-        ),
-      confirm_password: z.string().min(1, "Confirm password is required"),
+      // password: z
+      //   .string()
+      //   .regex(
+      //     /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}[\]:;<>,.?~\\-]).{8,}$/,
+      //     "Password must contain at least 8 characters, one uppercase, one lowercase, one number, and one special symbol"
+      //   ),
+      // confirm_password: z.string().min(1, "Confirm password is required"),
       name: z.string().min(1, "Display name is required"),
-    })
-    .refine((data) => data.password === data.confirm_password, {
-      message: "Passwords do not match",
-      path: ["confirm_password"],
     });
+    // .refine((data) => data.password === data.confirm_password, {
+    //   message: "Passwords do not match",
+    //   path: ["confirm_password"],
+    // });
 
   const formSchema = mode === "signin" ? signInSchema : signUpSchema;
 
@@ -76,7 +78,7 @@ export const LoginPage = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
-      password: "",
+      // password: "",
     },
   });
 
@@ -91,111 +93,59 @@ export const LoginPage = () => {
 
     if (mode === "signup") {
       const values: z.infer<typeof signUpSchema> = formValues;
-      await emailPasswordSignUp(values.email, values.password, values.name);
+      await EmailPasswordSignUp(values.email, values.name);
     } else {
       const values: z.infer<typeof signInSchema> = formValues;
-      await emailPasswordSignIn(values.email, values.password);
+      await EmailPasswordSignIn(values.email);
     }
 
     setEmailPasswordLoading(false);
   };
 
-  const handleThirdPartySignIn = async (providerId: "google") => {
-    setError(null);
-    setThirdPartyLoading(true);
-
-    try {
-      const url =
-        await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState(
-          {
-            providerId,
-            authorisationURL: `${window.location.origin}/login/callback/${providerId}`,
-          }
-        );
-
-      window.location.href = url;
-    } catch (error) {
-      setError(GENERIC_ERROR);
-    }
-  };
-
-  const emailPasswordSignIn = async (email: string, password: string) => {
+  const EmailPasswordSignIn = async (email: string) => {
     // limit only smartnews.com can access
-    if (!email.endsWith("@smartnews.com")) {
-      setError("Invalid email. Please try again.");
-      return;
-    }
-    const response = await ThirdPartyEmailPassword.emailPasswordSignIn({
-      formFields: [
-        {
-          id: "email",
-          value: email,
-        },
-        {
-          id: "password",
-          value: password,
-        },
-      ],
-    });
-
-    if (response.status === "WRONG_CREDENTIALS_ERROR") {
-      // the input email / password combination did not match,
-      // so we show an appropriate error message to the user
-      setError("Invalid email or password. Please try again.");
-      return;
-    }
-    if (response.status === "FIELD_ERROR") {
-      response.formFields.forEach((item) => {
-        if (item.id === "email") {
-          // this means that something was wrong with the entered email.
-          // probably that it's not a valid email (from a syntax point of view)
-          setError(item.error);
-        } else if (item.id === "password") {
-          setError(item.error);
-        }
-      });
-
-      return;
-    }
-
+    // if (!email.endsWith("@smartnews.com")) {
+    //   setError("Invalid email. Please try again.");
+    //   return;
+    // }
+    // const {data, isLoading, isError} = useGetUserByEmail(email);
+    // if (data?.getUser?.id === "") {
+    //   setError("User not exist.");
+    //   return;
+    // }
+    sessionStorage.setItem("email", email);
     trackEvent("user_login", { method: "email_password" });
     window.location.assign("/");
+    // window.location.href = "/";
   };
 
-  const emailPasswordSignUp = async (
+  const EmailPasswordSignUp = async (
     email: string,
-    password: string,
+    // password: string,
     name: string
   ) => {
-    const response = await ThirdPartyEmailPassword.emailPasswordSignUp({
-      formFields: [
-        {
-          id: "email",
-          value: email,
-        },
-        {
-          id: "password",
-          value: password,
-        },
-        {
-          id: "name",
-          value: name,
-        },
-      ],
-    });
+    // check if user already exist
+    // const {data, isLoading, isError} = useGetUserByEmail(email);
+    // if (data?.getUser?.id !== "") {
+    //   setError("User already exist.");
+    //   return;
+    // }
 
-    if (response.status === "FIELD_ERROR") {
-      let error = "";
-      response.formFields.forEach((item) => {
-        error += item.error + "\n";
-      });
-
-      setError(error);
+    try {
+      const newUser = await signupUser({ email: email, name: name });
+      if (newUser.signupUser.email && signupLoading === false) {
+        setRegisterSuccess("You have successfully registered your account!");
+        sessionStorage.setItem("email", email);
+        // navigate(`/orgs/${newUser.signupUser.orgMemberships[0].organizationId}`);
+        trackEvent("user_signup", { method: "email_password" });
+        setTimeout(() => {
+          window.location.assign("/");
+        }, 1500);
+      }
+    } catch (e) {
+      setError(e.message);
       return;
     }
-
-    trackEvent("user_signup", { method: "email_password" });
-    window.location.assign("/");
   };
 
   return (
@@ -222,33 +172,22 @@ export const LoginPage = () => {
                     <AlertDescription>{error}</AlertDescription>
                   </Alert>
                 )}
+                {registerSuccess && (
+                  <Alert variant="default">
+                    <AlertTitle>Success!</AlertTitle>
+                    <AlertDescription>{registerSuccess}</AlertDescription>
+                  </Alert>
+                )}
               </div>
 
               <div className="mt-2 flex flex-col space-y-2">
-                {googleEnabled && (
-                  <Button
-                    size="lg"
-                    className="w-full bg-neutral-200 text-neutral-800 hover:bg-neutral-200 hover:text-neutral-700"
-                    onClick={() => handleThirdPartySignIn("google")}
-                    loading={thirdPartyLoading}
-                  >
-                    <img
-                      src={GoogleIcon}
-                      alt="Google Logo"
-                      className="mr-3 h-5"
-                    />
-                    {verb} with Google
-                  </Button>
-                )}
-
                 <motion.div
-                  key={[mode, isEmail].join("_")}
+                  key={mode}
                   initial={{ height: 10, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {isEmail && (
                     <>
                       <div className="-mt-2 py-4">
                         <div
@@ -281,59 +220,23 @@ export const LoginPage = () => {
                               </FormItem>
                             )}
                           />
-                          <FormField
-                            control={emailPasswordForm.control}
-                            name="password"
-                            render={({ field }) => (
-                              <FormItem>
-                                <Input
-                                  {...field}
-                                  size="lg"
-                                  type="password"
-                                  placeholder="Password"
-                                  className="w-full"
-                                />
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-
                           {mode === "signup" && (
-                            <>
-                              <FormField
-                                control={emailPasswordForm.control}
-                                name="confirm_password"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <Input
-                                      {...field}
-                                      autoComplete="off"
-                                      size="lg"
-                                      type="password"
-                                      placeholder="Confirm Password"
-                                      className="w-full"
-                                    />
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                              <FormField
-                                control={emailPasswordForm.control}
-                                name="name"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <Input
-                                      {...field}
-                                      size="lg"
-                                      type="text"
-                                      placeholder="Display Name (e.g. John Doe)"
-                                      className="w-full"
-                                    />
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            </>
+                            <FormField
+                              control={emailPasswordForm.control}
+                              name="name"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <Input
+                                    {...field}
+                                    size="lg"
+                                    type="text"
+                                    placeholder="Display Name (e.g. John Doe)"
+                                    className="w-full"
+                                  />
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
                           )}
 
                           <Button
@@ -348,20 +251,7 @@ export const LoginPage = () => {
                         </form>
                       </Form>
                     </>
-                  )}
                 </motion.div>
-
-                {!isEmail && (
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="mb-2 w-full"
-                    loading={emailPasswordLoading}
-                    onClick={() => setIsEmail(true)}
-                  >
-                    {verb} with Email
-                  </Button>
-                )}
               </div>
 
               <motion.div

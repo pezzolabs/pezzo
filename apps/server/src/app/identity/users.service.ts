@@ -3,8 +3,8 @@ import { PrismaService } from "../prisma.service";
 import { OrganizationMember, User } from "@prisma/client";
 import { UserCreateRequest } from "./users.types";
 import { ExtendedUser } from "./models/extended-user.model";
-import UserMetadata from "supertokens-node/recipe/usermetadata";
-import { SupertokensMetadata } from "../auth/auth.types";
+// import UserMetadata from "supertokens-node/recipe/usermetadata";
+// import { SupertokensMetadata } from "../auth/auth.types";
 import { randomBytes } from "crypto";
 import { ConfigService } from "@nestjs/config";
 
@@ -57,10 +57,18 @@ export class UsersService {
     return user;
   }
 
-  async getUser(email: string): Promise<UserWithOrgMemberships | undefined> {
+  async getUser(email: string, includeOrg: boolean): Promise<UserWithOrgMemberships | undefined> {
     const user = await this.prisma.user.findUnique({
       where: { email },
-      include: { orgMemberships: true },
+      include: { orgMemberships: includeOrg },
+    });
+
+    return user;
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const user = await this.prisma.user.findUnique({
+      where: { email }
     });
 
     return user;
@@ -91,9 +99,16 @@ export class UsersService {
   ): Promise<ExtendedUser> {
     const organizationIds = user.orgMemberships.map((m) => m.organizationId);
 
-    const { metadata } = (await UserMetadata.getUserMetadata(
-      user.id
-    )) as SupertokensMetadata;
+    // const { metadata } = (await UserMetadata.getUserMetadata(
+    //   user.id
+    // )) as SupertokensMetadata;
+
+    const metadata = {
+      profile: {
+        name: "",
+        photoUrl: ""
+      }
+    }
 
     return {
       ...user,

@@ -8,12 +8,12 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { CONTEXT, GqlExecutionContext } from "@nestjs/graphql";
-import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
 import { UsersService } from "../identity/users.service";
 import { RequestUser } from "../identity/users.types";
-import Session, { SessionContainer } from "supertokens-node/recipe/session";
+// import Session, { SessionContainer } from "supertokens-node/recipe/session";
 import { PinoLogger } from "../logger/pino-logger";
 import { updateRequestContext } from "../cls.utils";
+import fetch from "cross-fetch";
 
 export enum AuthMethod {
   ApiKey = "ApiKey",
@@ -38,42 +38,59 @@ export class AuthGuard implements CanActivate {
     const ctx = gqlCtx.getContext();
     const req = ctx.req;
     const res = ctx.res;
+    // this.logger.info("======req user: " + req.headers["email"]);
+    this.logger.info("======req: " + JSON.stringify(req.headers));
 
-    let session: SessionContainer;
+    let reqUser: RequestUser;
 
-    try {
-      session = await Session.getSession(req, res, {
-        sessionRequired: false,
-        antiCsrfCheck: process.env.NODE_ENV === "development" ? false : true,
-      });
-    } catch (error) {
-      throw new UnauthorizedException();
+
+    // build supertokensUser object by call okta userinfo endpoint in UI
+    const supertokensUser = {
+      id: "",
+      email: req.headers["email"],
     }
-
-    if (!session) {
-      throw new UnauthorizedException();
-    }
-
-    const supertokensUser = await ThirdPartyEmailPassword.getUserById(
-      session.getUserId()
-    );
+    this.logger.info("======req email: " + req.headers["email"]);
 
     req["supertokensUser"] = supertokensUser;
 
-    const user = await this.usersService.getUser(supertokensUser.email);
-
-    if (!user) {
-      throw new UnauthorizedException("User not found");
+    if (!supertokensUser.email) {
+      // throw new UnauthorizedException("User email is null");
+      reqUser = {
+        id: null,
+        supertokensUserId: null,
+        email: null,
+        orgMemberships: [],
+      };
+      req["user"] = reqUser;
+      this.logger.assign({ userId: reqUser.id });
+      req.authMethod = AuthMethod.BearerToken;
+      return true;
     }
 
-    try {
+    const user = await this.usersService.getUser(supertokensUser.email, false);
+
+    if (!user) {
+      // throw new UnauthorizedException("User not found");
+      reqUser = {
+        id: null,
+        supertokensUserId: null,
+        email: supertokensUser.email,
+        orgMemberships: [],
+      };
+      this.logger.info("======req user: " + JSON.stringify(reqUser));
+      req["user"] = reqUser;
+      this.logger.assign({ userId: reqUser.id });
+      req.authMethod = AuthMethod.BearerToken;
+      return true;
+    } else {
       const memberships = await this.usersService.getUserOrgMemberships(
         supertokensUser.email
       );
 
-      const reqUser: RequestUser = {
+      reqUser = {
         id: user.id,
-        supertokensUserId: supertokensUser.id,
+        // supertokensUserId: supertokensUser.id,
+        supertokensUserId: user.id, // use user.id as supertokensUserId
         email: user.email,
         orgMemberships: memberships.map((m) => ({
           organizationId: m.organizationId,
@@ -81,6 +98,9 @@ export class AuthGuard implements CanActivate {
           role: m.role,
         })),
       };
+    }
+
+    try {
       const eventContext = {
         userId: reqUser.id,
         organizationId: reqUser.orgMemberships[0].organizationId,

@@ -5,12 +5,12 @@ import { GET_ALL_PROMPTS } from "~/graphql/definitions/queries/prompts";
 
 export const usePrompts = () => {
   const { projectId } = useCurrentProject();
-  console.log("projectId: " + projectId)
+  // console.log("projectId: " + projectId)
   let enabled = true
   if (projectId === undefined || projectId === null) {
     enabled = false;
   }
-  console.log("enabled: " + enabled)
+  // console.log("enabled: " + enabled)
 
   const { data, isLoading } = useQuery({
     queryKey: ["prompts", projectId],

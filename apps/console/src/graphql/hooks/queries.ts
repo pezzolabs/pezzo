@@ -4,7 +4,7 @@ import {
   GET_ALL_API_KEYS,
   GET_ALL_PROVIDER_API_KEYS,
 } from "../definitions/queries/api-keys";
-import { GET_ME } from "../definitions/queries/users";
+import {GET_ME, GET_USER} from "../definitions/queries/users";
 import { GET_ALL_PROJECTS } from "../definitions/queries/projects";
 import { useCurrentOrganization } from "~/lib/hooks/useCurrentOrganization";
 import { useCurrentProject } from "~/lib/hooks/useCurrentProject";
@@ -62,6 +62,12 @@ export const usePezzoApiKeys = () => {
 
 export const useGetCurrentUser = () =>
   useQuery({ queryKey: ["me"], queryFn: () => gqlClient.request(GET_ME) });
+
+export const useGetCurrentUserWithHeader = (email: string) =>
+  useQuery({ queryKey: ["me"], queryFn: () => gqlClient.request(GET_ME, {}, {"email": email} ) });
+
+export const useGetUserByEmail = (email: string) =>
+  useQuery({ queryKey: ["getUser"], queryFn: () => gqlClient.request(GET_USER, {data: email}) });
 
 export const useGetProjects = () => {
   const { organization } = useCurrentOrganization();
