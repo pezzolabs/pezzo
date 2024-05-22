@@ -70,6 +70,10 @@ export function App() {
             path="/login/callback/:email"
             element={<AuthCallbackPage />}
           />
+          <Route
+            path="/login/callback"
+            element={<AuthCallbackPage />}
+          />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/logout" element={<LogoutPage />} />
         </Routes>
