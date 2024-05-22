@@ -45,12 +45,23 @@ export const AuthCallbackPage = () => {
     }
   }, [email]);
 
-  const emailPasswordForm = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
+  let formDefaultValues;
+
+  if (email) {
+    formDefaultValues = {
       email: email,
       name: name,
-    },
+    }
+  } else {
+    formDefaultValues = {
+      email: "your-smartnews-email",
+      name: "",
+    }
+  }
+
+  const emailPasswordForm = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: formDefaultValues,
   });
 
   const OnEmailPasswordSubmit = async (formValues) => {

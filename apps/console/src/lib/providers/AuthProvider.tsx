@@ -20,11 +20,14 @@ export const useAuthContext = () => useContext(AuthProviderContext);
 export const AuthProvider = ({ children }) => {
 
   const { data, isLoading, isSuccess, error, isError } = useGetCurrentUser();
-  if (data.me.id === "") {
+  if (data.me.id === "" && data.me.email) {
     console.info("User not exist in LLM Ops, please register firstly.");
     // navigate to register page after user first SSO login
-    // navigate(`/login/callback/${data.me.email}`);
     window.location.href = `/login/callback/${data.me.email}`;
+  } else if (data.me.id === "" && !data.me.email) {
+    console.info("User not exist in LLM Ops, please register firstly.");
+    // navigate to register page after user first SSO login
+    window.location.href = `/login/callback/`;
   }
 
   const value = useMemo(
