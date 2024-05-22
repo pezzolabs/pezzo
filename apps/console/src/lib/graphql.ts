@@ -12,7 +12,7 @@ export const getOktaUserInfo = async () => {
     }).then((res) => {
       if (res.ok) {
         res.json().then((resp) => {
-          console.log("email: " + resp.email);
+          // console.log("email: " + resp.email);
           email = resp.email;
           sessionStorage.setItem("email", email);
         });
@@ -34,16 +34,16 @@ export const gqlClient = new GraphQLClient(`https://${BASE_API_URL}/graphql`, {
       ...options.headers,
       "email": sessionStorage.getItem("email") || email,
     }
-    console.log("===header: " + JSON.stringify(options.headers));
+    // console.log("===header: " + JSON.stringify(options.headers));
     const res = await fetch(url, options);
     // console.log("response status: " + res.status);
     const json = await res.clone().json();
-    console.log("response json: " + JSON.stringify(json));
+    // console.log("response json: " + JSON.stringify(json));
 
     if (json.errors && json.errors.length > 0) {
       // Check if auth error
       if (json.errors[0].extensions?.code === "UNAUTHORIZED") {
-        // await signOut();
+        await signOut();
         return;
         // Retry request
         // return fetch(url, options);
