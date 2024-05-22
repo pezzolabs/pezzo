@@ -146,8 +146,8 @@ const pezzo = new Pezzo({
 const openai = new PezzoOpenAI(pezzo);
 
 async function main() {
-  // Get the deployed "GenerateFacts" prompt version
-  const prompt = await pezzo.getPrompt("GenerateFacts");
+  // Get the deployed "FactGenerator" prompt version
+  const prompt = await pezzo.getPrompt("FactGenerator");
 
   // Call the OpenAI API, passing the prompt as an argument. You can override parameters if you wish.
   const response = await openai.chat.completions.create(prompt, {
