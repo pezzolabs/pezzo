@@ -31,7 +31,6 @@ export const LoginPage = () => {
   const [mode, setMode] = useState<"signin" | "signup" | "forgot_password">(
     "signin"
   );
-  const [isEmail, setIsEmail] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [emailPasswordLoading, setEmailPasswordLoading] =
     useState<boolean>(false);
@@ -113,11 +112,9 @@ export const LoginPage = () => {
       return;
     }
     sessionStorage.setItem("email", email);
-    // navigate(`/}`);
-    window.location.href = "/";
-
     trackEvent("user_login", { method: "email_password" });
     window.location.assign("/");
+    window.location.href = "/";
   };
 
   const EmailPasswordSignUp = async (
@@ -137,15 +134,14 @@ export const LoginPage = () => {
       if (newUser.signupUser.email && signupLoading === false) {
         sessionStorage.setItem("email", email);
         // navigate(`/orgs/${newUser.signupUser.orgMemberships[0].organizationId}`);
+        trackEvent("user_signup", { method: "email_password" });
+        window.location.assign("/");
         window.location.href = "/";
       }
     } catch (e) {
       setError(e.message);
       return;
     }
-
-    trackEvent("user_signup", { method: "email_password" });
-    window.location.assign("/");
   };
 
   return (
@@ -215,24 +211,22 @@ export const LoginPage = () => {
                             )}
                           />
                           {mode === "signup" && (
-                            <>
-                              <FormField
-                                control={emailPasswordForm.control}
-                                name="name"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <Input
-                                      {...field}
-                                      size="lg"
-                                      type="text"
-                                      placeholder="Display Name (e.g. John Doe)"
-                                      className="w-full"
-                                    />
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            </>
+                            <FormField
+                              control={emailPasswordForm.control}
+                              name="name"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <Input
+                                    {...field}
+                                    size="lg"
+                                    type="text"
+                                    placeholder="Display Name (e.g. John Doe)"
+                                    className="w-full"
+                                  />
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
                           )}
 
                           <Button
