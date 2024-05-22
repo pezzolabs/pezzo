@@ -141,7 +141,6 @@ export const LoginPage = () => {
         setTimeout(() => {
           window.location.assign("/");
         }, 1500);
-        // window.location.href = "/";
       }
     } catch (e) {
       setError(e.message);
