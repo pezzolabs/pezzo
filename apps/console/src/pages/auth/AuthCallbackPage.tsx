@@ -54,7 +54,7 @@ export const AuthCallbackPage = () => {
     }
   } else {
     formDefaultValues = {
-      email: "your-smartnews-email",
+      email: "your-smartnews-email@smartnews.com",
       name: "",
     }
   }
