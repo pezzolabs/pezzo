@@ -175,15 +175,13 @@ export const LoginPage = () => {
               </div>
 
               <div className="mt-2 flex flex-col space-y-2">
-
                 <motion.div
-                  key={[mode, isEmail].join("_")}
+                  key={mode}
                   initial={{ height: 10, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {isEmail && (
                     <>
                       <div className="-mt-2 py-4">
                         <div
@@ -216,42 +214,8 @@ export const LoginPage = () => {
                               </FormItem>
                             )}
                           />
-                          {/*<FormField*/}
-                          {/*  control={emailPasswordForm.control}*/}
-                          {/*  name="password"*/}
-                          {/*  render={({ field }) => (*/}
-                          {/*    <FormItem>*/}
-                          {/*      <Input*/}
-                          {/*        {...field}*/}
-                          {/*        size="lg"*/}
-                          {/*        type="password"*/}
-                          {/*        placeholder="Password"*/}
-                          {/*        className="w-full"*/}
-                          {/*      />*/}
-                          {/*      <FormMessage />*/}
-                          {/*    </FormItem>*/}
-                          {/*  )}*/}
-                          {/*/>*/}
-
                           {mode === "signup" && (
                             <>
-                              {/*<FormField*/}
-                              {/*  control={emailPasswordForm.control}*/}
-                              {/*  name="confirm_password"*/}
-                              {/*  render={({ field }) => (*/}
-                              {/*    <FormItem>*/}
-                              {/*      <Input*/}
-                              {/*        {...field}*/}
-                              {/*        autoComplete="off"*/}
-                              {/*        size="lg"*/}
-                              {/*        type="password"*/}
-                              {/*        placeholder="Confirm Password"*/}
-                              {/*        className="w-full"*/}
-                              {/*      />*/}
-                              {/*      <FormMessage />*/}
-                              {/*    </FormItem>*/}
-                              {/*  )}*/}
-                              {/*/>*/}
                               <FormField
                                 control={emailPasswordForm.control}
                                 name="name"
@@ -283,20 +247,7 @@ export const LoginPage = () => {
                         </form>
                       </Form>
                     </>
-                  )}
                 </motion.div>
-
-                {!isEmail && (
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="mb-2 w-full"
-                    loading={emailPasswordLoading}
-                    onClick={() => setIsEmail(true)}
-                  >
-                    {verb} with Email
-                  </Button>
-                )}
               </div>
 
               <motion.div

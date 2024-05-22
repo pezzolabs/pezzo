@@ -21,13 +21,13 @@ export const useAuthContext = () => useContext(AuthProviderContext);
 export const AuthProvider = ({ children }) => {
 
   const { data, isLoading, isSuccess, error, isError } = useGetCurrentUser();
-  console.log("data.me: " + JSON.stringify(data?.me));
+  // console.log("data.me: " + JSON.stringify(data?.me));
   if (data.me.id === "" && data.me.email !== "null") {
-    console.info("User not exist in LLM Ops, please register firstly.");
+    // console.info("User not exist in LLM Ops, please register firstly.");
     // navigate to register page after user first SSO login
     window.location.href = `/login/callback/${data.me.email}`;
   } else if (data.me.id === "" && data.me.email === "null") {
-    console.info("User not exist in LLM Ops, please register firstly.");
+    // console.info("User not exist in LLM Ops, please register firstly.");
     getOktaUserInfo();
     const email = sessionStorage.getItem("email");
     // navigate to register page after user first SSO login
