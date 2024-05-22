@@ -84,6 +84,7 @@ export const LoginPage = () => {
   const handleSetMode = (mode: "signin" | "signup" | "forgot_password") => {
     setMode(mode);
     setError(undefined);
+    emailPasswordForm.clearErrors();
   };
 
   const onEmailPasswordSubmit = async (formValues) => {
@@ -114,7 +115,7 @@ export const LoginPage = () => {
     sessionStorage.setItem("email", email);
     trackEvent("user_login", { method: "email_password" });
     window.location.assign("/");
-    window.location.href = "/";
+    // window.location.href = "/";
   };
 
   const EmailPasswordSignUp = async (
@@ -136,7 +137,7 @@ export const LoginPage = () => {
         // navigate(`/orgs/${newUser.signupUser.orgMemberships[0].organizationId}`);
         trackEvent("user_signup", { method: "email_password" });
         window.location.assign("/");
-        window.location.href = "/";
+        // window.location.href = "/";
       }
     } catch (e) {
       setError(e.message);
