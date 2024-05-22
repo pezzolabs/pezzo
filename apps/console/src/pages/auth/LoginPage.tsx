@@ -42,7 +42,7 @@ export const LoginPage = () => {
     email: z.string().email({ message: "Invalid email address" }),
     // password: z.string().min(1, "Password is required"),
     // confirm_password: mode === "signup" ? z.string() : z.string().optional(),
-    name: z.string(),
+    name: z.string().optional(),
   });
 
   const signUpSchema = z
