@@ -23,7 +23,7 @@ export const getOktaUserInfo = async () => {
   }
 }
 
-export const gqlClient = new GraphQLClient(`https://${BASE_API_URL}/graphql`, {
+export const gqlClient = new GraphQLClient(`https://llm-ops.smartnews.net/graphql`, {
   credentials: "include",
   // headers: {
   //   "user": user,
