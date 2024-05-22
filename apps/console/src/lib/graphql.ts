@@ -5,7 +5,7 @@ import { signOut } from "./utils/sign-out";
 
 let email: string | null = null;
 const oktaUrl = "/oauth2/userinfo";
-const getOktaUserInfo = async () => {
+export const getOktaUserInfo = async () => {
   if (!sessionStorage.getItem("email")) {
     fetch(oktaUrl, {
       method: "GET",
