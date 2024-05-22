@@ -32,6 +32,7 @@ export const LoginPage = () => {
     "signin"
   );
   const [error, setError] = useState<string | undefined>(undefined);
+  const [registerSuccess, setRegisterSuccess] = useState<string | null>(null);
   const [emailPasswordLoading, setEmailPasswordLoading] =
     useState<boolean>(false);
   const { mutateAsync: signupUser, isLoading: signupLoading} = useSignupUserMutation();
@@ -107,11 +108,11 @@ export const LoginPage = () => {
     //   setError("Invalid email. Please try again.");
     //   return;
     // }
-    const {data, isLoading, isError} = useGetUserByEmail(email);
-    if (data?.getUser?.id === "") {
-      setError("User not exist.");
-      return;
-    }
+    // const {data, isLoading, isError} = useGetUserByEmail(email);
+    // if (data?.getUser?.id === "") {
+    //   setError("User not exist.");
+    //   return;
+    // }
     sessionStorage.setItem("email", email);
     trackEvent("user_login", { method: "email_password" });
     window.location.assign("/");
@@ -124,19 +125,22 @@ export const LoginPage = () => {
     name: string
   ) => {
     // check if user already exist
-    const {data, isLoading, isError} = useGetUserByEmail(email);
-    if (data?.getUser?.id !== "") {
-      setError("User already exist.");
-      return;
-    }
+    // const {data, isLoading, isError} = useGetUserByEmail(email);
+    // if (data?.getUser?.id !== "") {
+    //   setError("User already exist.");
+    //   return;
+    // }
 
     try {
       const newUser = await signupUser({ email: email, name: name });
       if (newUser.signupUser.email && signupLoading === false) {
+        setRegisterSuccess("You have successfully registered your account!");
         sessionStorage.setItem("email", email);
         // navigate(`/orgs/${newUser.signupUser.orgMemberships[0].organizationId}`);
         trackEvent("user_signup", { method: "email_password" });
-        window.location.assign("/");
+        setTimeout(() => {
+          window.location.assign("/");
+        }, 1500);
         // window.location.href = "/";
       }
     } catch (e) {
@@ -167,6 +171,12 @@ export const LoginPage = () => {
                   <Alert variant="destructive">
                     <AlertTitle>Oops!</AlertTitle>
                     <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
+                {registerSuccess && (
+                  <Alert variant="default">
+                    <AlertTitle>Success!</AlertTitle>
+                    <AlertDescription>{registerSuccess}</AlertDescription>
                   </Alert>
                 )}
               </div>
