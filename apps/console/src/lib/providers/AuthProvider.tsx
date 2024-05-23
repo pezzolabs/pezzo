@@ -30,8 +30,9 @@ export const AuthProvider = ({ children }) => {
     // console.info("User not exist in LLM Ops, please register firstly.");
     getOktaUserInfo();
     const email = sessionStorage.getItem("email");
+    console.log("email: " + email);
     // navigate to register page after user first SSO login
-    window.location.href = `/login/callback/${email}`;
+    window.location.href = `/`;
   }
 
   const value = useMemo(
