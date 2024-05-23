@@ -39,7 +39,7 @@ export class AuthGuard implements CanActivate {
     const req = ctx.req;
     const res = ctx.res;
     // this.logger.info("======req user: " + req.headers["email"]);
-    this.logger.info("======req: " + JSON.stringify(req.headers));
+    // this.logger.info("======req: " + JSON.stringify(req.headers));
 
     let reqUser: RequestUser;
 
@@ -53,7 +53,7 @@ export class AuthGuard implements CanActivate {
 
     req["supertokensUser"] = supertokensUser;
 
-    if (!supertokensUser.email) {
+    if (!supertokensUser.email || supertokensUser.email === "null") {
       // throw new UnauthorizedException("User email is null");
       reqUser = {
         id: null,
