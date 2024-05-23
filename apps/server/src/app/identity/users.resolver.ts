@@ -36,7 +36,7 @@ export class UsersResolver {
     // if (!userInfo.email.endsWith("@smartnews.com")) {
     //   throw new NotFoundException();
     // }
-    if (!userInfo?.email) {
+    if (userInfo?.email === "null" || !userInfo?.email) {
       return {
         email: "",
         id: "",
