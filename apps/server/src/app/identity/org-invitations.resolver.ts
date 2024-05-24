@@ -76,6 +76,8 @@ export class OrgInvitationsResolver {
       );
     }
 
+    const member = await this.usersService.getUserByEmail(email);
+
     // let exists: boolean;
     // try {
     //   this.logger.info("Checking if invitation exists");
@@ -108,7 +110,7 @@ export class OrgInvitationsResolver {
     try {
       await this.organizationService.addMember(
         organizationId,
-        email,
+        member.id,
         "Member" // Member as default role, admin can change it later
       );
     } catch (error) {
