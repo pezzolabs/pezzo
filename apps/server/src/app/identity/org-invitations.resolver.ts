@@ -76,32 +76,43 @@ export class OrgInvitationsResolver {
       );
     }
 
-    let exists: boolean;
-    try {
-      this.logger.info("Checking if invitation exists");
-      exists = !!(await this.invitationsService.getInvitationByEmail(
-        email,
-        organizationId
-      ));
-    } catch (error) {
-      this.logger.error({ error }, "Failed to get invitation");
-      throw new InternalServerErrorException();
-    }
-
-    if (exists) {
-      throw new ConflictException("Invitation to this email already exists");
-    }
+    // let exists: boolean;
+    // try {
+    //   this.logger.info("Checking if invitation exists");
+    //   exists = !!(await this.invitationsService.getInvitationByEmail(
+    //     email,
+    //     organizationId
+    //   ));
+    // } catch (error) {
+    //   this.logger.error({ error }, "Failed to get invitation");
+    //   throw new InternalServerErrorException();
+    // }
+    //
+    // if (exists) {
+    //   throw new ConflictException("Invitation to this email already exists");
+    // }
 
     let invitation: Invitation;
+    // try {
+    //   this.logger.info("Creating invitation");
+    //   invitation = await this.invitationsService.createInvitation(
+    //     email,
+    //     organizationId,
+    //     user.id
+    //   );
+    // } catch (error) {
+    //   this.logger.error({ error }, "Error getting invitation");
+    //   throw new InternalServerErrorException();
+    // }
+
     try {
-      this.logger.info("Creating invitation");
-      invitation = await this.invitationsService.createInvitation(
-        email,
+      await this.organizationService.addMember(
         organizationId,
-        user.id
+        user.id,
+        "Member" // Member as default role, admin can change it later
       );
     } catch (error) {
-      this.logger.error({ error }, "Error getting invitation");
+      this.logger.error({ error }, "Error adding member to organization");
       throw new InternalServerErrorException();
     }
 
