@@ -66,8 +66,9 @@ export const InviteOrgMemberModal = ({ open, onClose }: Props) => {
           onClose();
           toast({
             title: "Invitation sent",
-            description: `An invitation has been sent to ${inviteeEmail}`,
+            description: `Will add ${inviteeEmail} into ${organization.name} soon...`,
           });
+          window.location.assign(`/orgs/${organization.id}`);
         },
       }
     );
@@ -109,7 +110,7 @@ export const InviteOrgMemberModal = ({ open, onClose }: Props) => {
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="mt-4">
-              <Button type="submit">Send Invitation</Button>
+              <Button type="submit">Add Member</Button>
             </DialogFooter>
           </form>
         </Form>
