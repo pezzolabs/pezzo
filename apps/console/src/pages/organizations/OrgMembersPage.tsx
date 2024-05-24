@@ -49,7 +49,7 @@ export const OrgMembersPage = () => {
                 {isOrgAdmin && (
                   <Button onClick={onOpenInviteModal}>
                     <Plus className="mr-2 h-4 w-4" />
-                    Invite Member
+                    Add Member
                   </Button>
                 )}
               </div>

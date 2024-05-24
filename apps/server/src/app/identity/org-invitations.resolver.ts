@@ -47,7 +47,7 @@ export class OrgInvitationsResolver {
   async createOrgInvitation(
     @Args("data") data: CreateOrgInvitationInput,
     @CurrentUser() user: RequestUser
-  ): Promise<Invitation> {
+  ): Promise<Organization> {
     this.logger.assign({ userId: user.id }).info("Creating org invitation");
 
     const { organizationId, email } = data;
@@ -76,58 +76,71 @@ export class OrgInvitationsResolver {
       );
     }
 
-    let exists: boolean;
-    try {
-      this.logger.info("Checking if invitation exists");
-      exists = !!(await this.invitationsService.getInvitationByEmail(
-        email,
-        organizationId
-      ));
-    } catch (error) {
-      this.logger.error({ error }, "Failed to get invitation");
-      throw new InternalServerErrorException();
-    }
+    const member = await this.usersService.getUserByEmail(email);
 
-    if (exists) {
-      throw new ConflictException("Invitation to this email already exists");
-    }
+    // let exists: boolean;
+    // try {
+    //   this.logger.info("Checking if invitation exists");
+    //   exists = !!(await this.invitationsService.getInvitationByEmail(
+    //     email,
+    //     organizationId
+    //   ));
+    // } catch (error) {
+    //   this.logger.error({ error }, "Failed to get invitation");
+    //   throw new InternalServerErrorException();
+    // }
+    //
+    // if (exists) {
+    //   throw new ConflictException("Invitation to this email already exists");
+    // }
 
-    let invitation: Invitation;
+    // let invitation: Invitation;
+    // try {
+    //   this.logger.info("Creating invitation");
+    //   invitation = await this.invitationsService.createInvitation(
+    //     email,
+    //     organizationId,
+    //     user.id
+    //   );
+    // } catch (error) {
+    //   this.logger.error({ error }, "Error getting invitation");
+    //   throw new InternalServerErrorException();
+    // }
+
     try {
-      this.logger.info("Creating invitation");
-      invitation = await this.invitationsService.createInvitation(
-        email,
+      await this.organizationService.addMember(
         organizationId,
-        user.id
+        member.id,
+        "Member" // Member as default role, admin can change it later
       );
     } catch (error) {
-      this.logger.error({ error }, "Error getting invitation");
+      this.logger.error({ error }, "Error adding member to organization");
       throw new InternalServerErrorException();
     }
 
-    const consoleHost = this.config.get("CONSOLE_HOST");
-    const invitationUrl = new URL(consoleHost);
-    invitationUrl.pathname = `/invitations/${invitation.id}/accept`;
+    // const consoleHost = this.config.get("CONSOLE_HOST");
+    // const invitationUrl = new URL(consoleHost);
+    // invitationUrl.pathname = `/invitations/${invitation.id}/accept`;
 
-    const topic = "org-invitation-created";
+    // const topic = "org-invitation-created";
 
-    this.logger
-      .assign({ topic })
-      .info("Sending kafka invitation created event");
+    // this.logger
+    //   .assign({ topic })
+    //   .info("Sending kafka invitation created event");
 
-    const payload: KafkaSchemas["org-invitation-created"] = {
-      key: invitation.id,
-      invitationUrl: invitationUrl.toString(),
-      invitationId: invitation.id,
-      organizationId,
-      organizationName: organization.name,
-      email,
-      role: invitation.role,
-    };
+    // const payload: KafkaSchemas["org-invitation-created"] = {
+    //   key: invitation.id,
+    //   invitationUrl: invitationUrl.toString(),
+    //   invitationId: invitation.id,
+    //   organizationId,
+    //   organizationName: organization.name,
+    //   email,
+    //   role: invitation.role,
+    // };
 
-    this.eventEmitter.emit("org-invitation-created", payload);
+    // this.eventEmitter.emit("org-invitation-created", payload);
 
-    return invitation;
+    return organization;
   }
 
   @Mutation(() => Invitation)
