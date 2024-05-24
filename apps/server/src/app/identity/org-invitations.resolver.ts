@@ -116,27 +116,27 @@ export class OrgInvitationsResolver {
       throw new InternalServerErrorException();
     }
 
-    const consoleHost = this.config.get("CONSOLE_HOST");
-    const invitationUrl = new URL(consoleHost);
-    invitationUrl.pathname = `/invitations/${invitation.id}/accept`;
+    // const consoleHost = this.config.get("CONSOLE_HOST");
+    // const invitationUrl = new URL(consoleHost);
+    // invitationUrl.pathname = `/invitations/${invitation.id}/accept`;
 
-    const topic = "org-invitation-created";
+    // const topic = "org-invitation-created";
 
-    this.logger
-      .assign({ topic })
-      .info("Sending kafka invitation created event");
+    // this.logger
+    //   .assign({ topic })
+    //   .info("Sending kafka invitation created event");
 
-    const payload: KafkaSchemas["org-invitation-created"] = {
-      key: invitation.id,
-      invitationUrl: invitationUrl.toString(),
-      invitationId: invitation.id,
-      organizationId,
-      organizationName: organization.name,
-      email,
-      role: invitation.role,
-    };
+    // const payload: KafkaSchemas["org-invitation-created"] = {
+    //   key: invitation.id,
+    //   invitationUrl: invitationUrl.toString(),
+    //   invitationId: invitation.id,
+    //   organizationId,
+    //   organizationName: organization.name,
+    //   email,
+    //   role: invitation.role,
+    // };
 
-    this.eventEmitter.emit("org-invitation-created", payload);
+    // this.eventEmitter.emit("org-invitation-created", payload);
 
     return invitation;
   }
