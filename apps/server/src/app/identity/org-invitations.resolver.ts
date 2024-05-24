@@ -108,7 +108,7 @@ export class OrgInvitationsResolver {
     try {
       await this.organizationService.addMember(
         organizationId,
-        user.id,
+        email,
         "Member" // Member as default role, admin can change it later
       );
     } catch (error) {
