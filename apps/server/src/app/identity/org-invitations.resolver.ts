@@ -47,7 +47,7 @@ export class OrgInvitationsResolver {
   async createOrgInvitation(
     @Args("data") data: CreateOrgInvitationInput,
     @CurrentUser() user: RequestUser
-  ): Promise<Invitation> {
+  ): Promise<Organization> {
     this.logger.assign({ userId: user.id }).info("Creating org invitation");
 
     const { organizationId, email } = data;
@@ -94,7 +94,7 @@ export class OrgInvitationsResolver {
     //   throw new ConflictException("Invitation to this email already exists");
     // }
 
-    let invitation: Invitation;
+    // let invitation: Invitation;
     // try {
     //   this.logger.info("Creating invitation");
     //   invitation = await this.invitationsService.createInvitation(
@@ -140,7 +140,7 @@ export class OrgInvitationsResolver {
 
     // this.eventEmitter.emit("org-invitation-created", payload);
 
-    return invitation;
+    return organization;
   }
 
   @Mutation(() => Invitation)
