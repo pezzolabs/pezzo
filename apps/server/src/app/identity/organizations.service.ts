@@ -67,7 +67,7 @@ export class OrganizationsService {
   }
 
   async deleteOrgMember(id: string) {
-    // return await this.prisma.organizationMember.delete({ where: { id } });
+    return await this.prisma.organizationMember.delete({ where: { id } });
   }
 
   async addMember(organizationId: string, userId: string, role: OrgRole) {
