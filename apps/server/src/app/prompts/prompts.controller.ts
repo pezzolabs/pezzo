@@ -209,6 +209,48 @@ export class PromptsController {
     }
   }
 
+  @Get("/:promptId/versions")
+  @ApiOperation({
+    summary: "Get the specific prompt all versions",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Get the specific prompt all versions by SHA successfully",
+  })
+  @ApiResponse({
+    status: 404,
+    description:
+      "Not found for the specific prompt all versions",
+  })
+  @ApiResponse({ status: 500, description: "Internal server error" })
+  async getSpecificPromptVersions(@Param("promptId") promptId: string) {
+    this.logger.info("Getting specific prompt all versions");
+
+    let prompt: Prompt;
+
+    try {
+      prompt = await this.promptsService.getPrompt(promptId);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting prompt");
+      throw new InternalServerErrorException();
+    }
+
+    if (!prompt) {
+      throw new NotFoundException();
+    }
+
+    let promptVersions;
+
+    try {
+      promptVersions = await this.promptsService.getPromptVersions(promptId);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting prompt versions");
+      throw new InternalServerErrorException();
+    }
+
+    return promptVersions;
+  }
+
   @Get("/version/:sha")
   @ApiOperation({
     summary: "Get the specific prompt version by SHA",
