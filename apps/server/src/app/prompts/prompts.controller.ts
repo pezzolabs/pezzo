@@ -246,13 +246,16 @@ export class PromptsController {
       throw new InternalServerErrorException();
     }
 
-    return promptVersions.forEach((version) => {
-      return {
+    const versions = [];
+    promptVersions.forEach((version) => {
+      versions.push({
         sha: version.sha,
         message: version.message,
         createdAt: version.createdAt,
-      };
+      });
     });
+
+    return versions;
   }
 
   @Get("/version/:sha")
