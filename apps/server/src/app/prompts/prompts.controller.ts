@@ -1,10 +1,11 @@
 import {
+  Body,
   Controller,
   Get,
   Headers,
   InternalServerErrorException,
   NotFoundException,
-  Param,
+  Param, Post,
   UseGuards,
 } from "@nestjs/common";
 import {ApiKeyAuthGuard} from "../auth/api-key-auth.guard";
@@ -14,6 +15,8 @@ import {Prompt} from "@prisma/client";
 import {AnalyticsService} from "../analytics/analytics.service";
 import {PrismaService} from "../prisma.service";
 import {ApiHeader, ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {CreatePromptVersionWithUserInput} from "./inputs/create-prompt-version-with-user.input";
+import {UsersService} from "../identity/users.service";
 
 @UseGuards(ApiKeyAuthGuard)
 @ApiTags("Prompts")
@@ -27,7 +30,8 @@ export class PromptsController {
     private logger: PinoLogger,
     private prisma: PrismaService,
     private promptsService: PromptsService,
-    private analytics: AnalyticsService
+    private analytics: AnalyticsService,
+    private usersService: UsersService,
   ) {}
 
   // @Get("/deployment")
@@ -304,6 +308,67 @@ export class PromptsController {
       return await this.promptsService.getAllPrompts(projectId);
     } catch (error) {
       this.logger.error({ error }, "Error getting specific project all prompts");
+      throw new InternalServerErrorException();
+    }
+  }
+
+  @Post("/promptVersion")
+  @ApiOperation({ summary: "Commit specific prompt new version" })
+  @ApiResponse({
+    status: 200,
+    description: "Commit specific prompt new version successfully",
+  })
+  @ApiResponse({
+    status: 404,
+    description:
+      "Not found for the specific prompt Id",
+  })
+  @ApiResponse({ status: 500, description: "Internal server error" })
+  async createPromptVersion(
+    @Body() dto: CreatePromptVersionWithUserInput,
+  ) {
+    this.logger
+      .assign({
+        promptId: dto.promptId,
+      })
+      .info("Creating prompt version");
+
+    // check if prompt exist
+    let prompt: Prompt;
+    try {
+      prompt = await this.promptsService.getPrompt(dto.promptId);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting existing prompt");
+      throw new InternalServerErrorException();
+    }
+    if (!prompt) {
+      throw new NotFoundException();
+    }
+
+    // check if user exist
+    let user;
+    try {
+      user = await this.usersService.getUserByEmail(dto.userEmail);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting user");
+      throw new InternalServerErrorException();
+    }
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    try {
+      const promptVersion = await this.promptsService.createPromptVersion(
+        dto,
+        user.id
+      );
+      this.analytics.trackEvent("prompt_version_created", {
+        projectId: prompt.projectId,
+        promptId: prompt.id,
+      });
+      return promptVersion;
+    } catch (error) {
+      this.logger.error({ error }, "Error creating prompt version");
       throw new InternalServerErrorException();
     }
   }
