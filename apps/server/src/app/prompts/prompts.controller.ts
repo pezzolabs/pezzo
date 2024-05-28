@@ -3,19 +3,17 @@ import {
   Get,
   Headers,
   InternalServerErrorException,
-  NotFoundException, Param,
-  Query,
+  NotFoundException,
+  Param,
+  UseGuards,
 } from "@nestjs/common";
-import { UseGuards } from "@nestjs/common";
-import { ApiKeyAuthGuard } from "../auth/api-key-auth.guard";
-import { PinoLogger } from "../logger/pino-logger";
-import { PromptsService } from "./prompts.service";
-import { Prompt, PromptEnvironment, PromptVersion } from "@prisma/client";
-import { AnalyticsService } from "../analytics/analytics.service";
-import { PrismaService } from "../prisma.service";
-import { ApiKeyOrgId } from "../identity/api-key-org-id.decoator";
-import { GetPromptDeploymentDto } from "./dto/get-prompt-deployment.dto";
-import { ApiHeader, ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {ApiKeyAuthGuard} from "../auth/api-key-auth.guard";
+import {PinoLogger} from "../logger/pino-logger";
+import {PromptsService} from "./prompts.service";
+import {Prompt} from "@prisma/client";
+import {AnalyticsService} from "../analytics/analytics.service";
+import {PrismaService} from "../prisma.service";
+import {ApiHeader, ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
 
 @UseGuards(ApiKeyAuthGuard)
 @ApiTags("Prompts")
@@ -248,7 +246,13 @@ export class PromptsController {
       throw new InternalServerErrorException();
     }
 
-    return promptVersions;
+    return promptVersions.forEach((version) => {
+      return {
+        sha: version.sha,
+        message: version.message,
+        createdAt: version.createdAt,
+      };
+    });
   }
 
   @Get("/version/:sha")
