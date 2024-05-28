@@ -15,8 +15,10 @@ import {Prompt} from "@prisma/client";
 import {AnalyticsService} from "../analytics/analytics.service";
 import {PrismaService} from "../prisma.service";
 import {ApiHeader, ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {CreatePromptVersionWithUserInput} from "./inputs/create-prompt-version-with-user.input";
+import {CreatePromptVersionWithUserDto} from "./dto/create-prompt-version-with-user.dto";
 import {UsersService} from "../identity/users.service";
+import {PromptType} from "../../@generated/prisma/prompt-type.enum";
+import {PromptService} from "@pezzo/types";
 
 @UseGuards(ApiKeyAuthGuard)
 @ApiTags("Prompts")
@@ -325,7 +327,7 @@ export class PromptsController {
   })
   @ApiResponse({ status: 500, description: "Internal server error" })
   async createPromptVersion(
-    @Body() dto: CreatePromptVersionWithUserInput,
+    @Body() dto: CreatePromptVersionWithUserDto,
   ) {
     this.logger
       .assign({
@@ -357,9 +359,17 @@ export class PromptsController {
       throw new NotFoundException();
     }
 
+    const promptVersionDto = {
+      promptId: dto.promptId,
+      type: PromptType.Prompt,
+      service: PromptService.OpenAIChatCompletion,
+      message: dto.message,
+      content: dto.content,
+      settings: dto.settings,
+    }
     try {
       const promptVersion = await this.promptsService.createPromptVersion(
-        dto,
+        promptVersionDto,
         user.id
       );
       this.analytics.trackEvent("prompt_version_created", {
