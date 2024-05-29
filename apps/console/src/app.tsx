@@ -74,7 +74,7 @@ export function App() {
             path="/login/callback"
             element={<AuthCallbackPage />}
           />
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/admin/login" element={<LoginPage />} />
           <Route path="/logout" element={<LogoutPage />} />
         </Routes>
         {/* Authorized routes */}
