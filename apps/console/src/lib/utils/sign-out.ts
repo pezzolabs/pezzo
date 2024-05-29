@@ -6,5 +6,5 @@ export async function signOut() {
   localStorage.clear();  // Clear all local storage when login out to avoid use old user id when login again
   // localStorage.removeItem("currentOrgId");
   sessionStorage.clear();  // Clear all session storage when login out to remove sso user session
-  window.location.href = "/login";
+  window.location.href = "/";
 }

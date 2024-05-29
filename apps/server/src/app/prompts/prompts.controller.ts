@@ -1,21 +1,24 @@
 import {
+  Body,
   Controller,
   Get,
   Headers,
   InternalServerErrorException,
-  NotFoundException, Param,
-  Query,
+  NotFoundException,
+  Param, Post,
+  UseGuards,
 } from "@nestjs/common";
-import { UseGuards } from "@nestjs/common";
-import { ApiKeyAuthGuard } from "../auth/api-key-auth.guard";
-import { PinoLogger } from "../logger/pino-logger";
-import { PromptsService } from "./prompts.service";
-import { Prompt, PromptEnvironment, PromptVersion } from "@prisma/client";
-import { AnalyticsService } from "../analytics/analytics.service";
-import { PrismaService } from "../prisma.service";
-import { ApiKeyOrgId } from "../identity/api-key-org-id.decoator";
-import { GetPromptDeploymentDto } from "./dto/get-prompt-deployment.dto";
-import { ApiHeader, ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {ApiKeyAuthGuard} from "../auth/api-key-auth.guard";
+import {PinoLogger} from "../logger/pino-logger";
+import {PromptsService} from "./prompts.service";
+import {Prompt} from "@prisma/client";
+import {AnalyticsService} from "../analytics/analytics.service";
+import {PrismaService} from "../prisma.service";
+import {ApiHeader, ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {CreatePromptVersionWithUserDto} from "./dto/create-prompt-version-with-user.dto";
+import {UsersService} from "../identity/users.service";
+import {PromptType} from "../../@generated/prisma/prompt-type.enum";
+import {PromptService} from "@pezzo/types";
 
 @UseGuards(ApiKeyAuthGuard)
 @ApiTags("Prompts")
@@ -29,7 +32,8 @@ export class PromptsController {
     private logger: PinoLogger,
     private prisma: PrismaService,
     private promptsService: PromptsService,
-    private analytics: AnalyticsService
+    private analytics: AnalyticsService,
+    private usersService: UsersService,
   ) {}
 
   // @Get("/deployment")
@@ -209,6 +213,57 @@ export class PromptsController {
     }
   }
 
+  @Get("/:promptId/versions")
+  @ApiOperation({
+    summary: "Get the specific prompt all versions",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Get the specific prompt all versions by SHA successfully",
+  })
+  @ApiResponse({
+    status: 404,
+    description:
+      "Not found for the specific prompt all versions",
+  })
+  @ApiResponse({ status: 500, description: "Internal server error" })
+  async getSpecificPromptVersions(@Param("promptId") promptId: string) {
+    this.logger.info("Getting specific prompt all versions");
+
+    let prompt: Prompt;
+
+    try {
+      prompt = await this.promptsService.getPrompt(promptId);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting prompt");
+      throw new InternalServerErrorException();
+    }
+
+    if (!prompt) {
+      throw new NotFoundException();
+    }
+
+    let promptVersions;
+
+    try {
+      promptVersions = await this.promptsService.getPromptVersions(promptId);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting prompt versions");
+      throw new InternalServerErrorException();
+    }
+
+    const versions = [];
+    promptVersions.forEach((version) => {
+      versions.push({
+        sha: version.sha,
+        message: version.message,
+        createdAt: version.createdAt,
+      });
+    });
+
+    return versions;
+  }
+
   @Get("/version/:sha")
   @ApiOperation({
     summary: "Get the specific prompt version by SHA",
@@ -255,6 +310,75 @@ export class PromptsController {
       return await this.promptsService.getAllPrompts(projectId);
     } catch (error) {
       this.logger.error({ error }, "Error getting specific project all prompts");
+      throw new InternalServerErrorException();
+    }
+  }
+
+  @Post("/promptVersion")
+  @ApiOperation({ summary: "Commit specific prompt new version" })
+  @ApiResponse({
+    status: 200,
+    description: "Commit specific prompt new version successfully",
+  })
+  @ApiResponse({
+    status: 404,
+    description:
+      "Not found for the specific prompt Id",
+  })
+  @ApiResponse({ status: 500, description: "Internal server error" })
+  async createPromptVersion(
+    @Body() dto: CreatePromptVersionWithUserDto,
+  ) {
+    this.logger
+      .assign({
+        promptId: dto.promptId,
+      })
+      .info("Creating prompt version");
+
+    // check if prompt exist
+    let prompt: Prompt;
+    try {
+      prompt = await this.promptsService.getPrompt(dto.promptId);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting existing prompt");
+      throw new InternalServerErrorException();
+    }
+    if (!prompt) {
+      throw new NotFoundException();
+    }
+
+    // check if user exist
+    let user;
+    try {
+      user = await this.usersService.getUserByEmail(dto.userEmail);
+    } catch (error) {
+      this.logger.error({ error }, "Error getting user");
+      throw new InternalServerErrorException();
+    }
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    const promptVersionDto = {
+      promptId: dto.promptId,
+      type: PromptType.Prompt,
+      service: PromptService.OpenAIChatCompletion,
+      message: dto.message,
+      content: dto.content,
+      settings: dto.settings,
+    }
+    try {
+      const promptVersion = await this.promptsService.createPromptVersion(
+        promptVersionDto,
+        user.id
+      );
+      this.analytics.trackEvent("prompt_version_created", {
+        projectId: prompt.projectId,
+        promptId: prompt.id,
+      });
+      return promptVersion;
+    } catch (error) {
+      this.logger.error({ error }, "Error creating prompt version");
       throw new InternalServerErrorException();
     }
   }

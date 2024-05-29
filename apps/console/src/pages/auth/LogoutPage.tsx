@@ -4,11 +4,13 @@ import { signOut } from "~/lib/utils/sign-out";
 
 export const LogoutPage = () => {
   useEffect(() => {
-    const _signOut = async () => {
-      await signOut();
-      window.location.href = "/login";
-    };
-    _signOut();
+    signOut();
+    // window.location.reload();
+    // const _signOut = async () => {
+    //   await signOut();
+    //
+    // };
+    // _signOut();
   }, []);
 
   return <FullScreenLoader />;
