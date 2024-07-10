@@ -22,11 +22,11 @@ export const AuthProvider = ({ children }) => {
 
   const { data, isLoading, isSuccess, error, isError } = useGetCurrentUser();
   // console.log("data.me: " + JSON.stringify(data?.me));
-  if (data.me.id === "" && data.me.email !== "null" && data.me.email) {
+  if (data && data.me.id === "" && data.me.email !== "null" && data.me.email) {
     // console.info("User not exist in LLM Ops, please register firstly.");
     // navigate to register page after user first SSO login
     window.location.href = `/login/callback/${data.me.email}`;
-  } else if (data.me.id === "" && data.me.email === "") {
+  } else if (data && data.me.id === "" && data.me.email === "") {
     // console.info("Okta get email failed, please try again.);
     getOktaUserInfo();
     const email = sessionStorage.getItem("email");
