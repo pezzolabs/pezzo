@@ -134,6 +134,13 @@ Install NPM dependencies by running:
 npm install
 ```
 
+### Set up the environment files
+
+Pezzo uses a .env file to store environment variables.
+When using docker, you should also create a .env.docker file.
+
+See the .env.example file for reference.
+
 ### Spin up infrastructure dependencies via Docker Compose
 
 Pezzo is entirely cloud-native and relies solely on open-source technologies such as [PostgreSQL](https://www.postgresql.org/), [ClickHouse](https://github.com/ClickHouse/ClickHouse), [Redis](https://github.com/redis/redis) and [Supertokens](https://supertokens.com/).
