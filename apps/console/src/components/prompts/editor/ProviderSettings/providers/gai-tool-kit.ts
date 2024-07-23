@@ -89,6 +89,11 @@ const gaiToolkit = () => {
       completionsCostPer1000Tokens: 0.03,
       maxTokens: 4096,
     }),
+    ["gpt-4o-mini"]: defineModel<OpenAIGptModelSettings>({
+      promptCostPer1000Tokens: 0.00015,
+      completionsCostPer1000Tokens: 0.0006,
+      maxTokens: 4096,
+    }),
     /**
      * claude
      */
