@@ -36,7 +36,7 @@ export class UsersService {
 
     const organization = await this.prisma.organization.create({
       data: {
-        name: `${userCreateRequest.name}`,
+        name: `${userCreateRequest.name}'s Organization`,
         waitlisted,
         members: {
           create: {
