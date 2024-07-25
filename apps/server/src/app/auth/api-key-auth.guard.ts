@@ -43,7 +43,7 @@ export class ApiKeyAuthGuard implements CanActivate {
     const organization = apiKey.organization;
 
     // Give super admin access to api keys from gai-admin
-    if (organization.name == "gai-admin") {
+    if (organization.name === "gai-admin") {
       return true
     }
 
