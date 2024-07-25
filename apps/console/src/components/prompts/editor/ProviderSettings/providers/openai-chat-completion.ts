@@ -21,9 +21,9 @@ const defaultSettings: OpenAIProviderSettings = {
 };
 
 const latestModels = [
+  "gpt-4o-mini",
   "gpt-3.5-turbo",
   "gpt-4-turbo",
-  "gpt-4o-mini",
   "gpt-4o",
   "claude-3-haiku-20240307-bedrock",
   "claude-3-sonnet-20240229-bedrock",
