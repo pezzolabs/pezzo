@@ -12,7 +12,7 @@ type OpenAIProviderSettings = Omit<
 >;
 
 const defaultSettings: OpenAIProviderSettings = {
-  model: "gpt-3.5-turbo",
+  model: "gpt-4o-mini",
   temperature: 0.7,
   max_tokens: 256,
   // top_p: 1,
