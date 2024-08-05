@@ -116,7 +116,7 @@ Looking for a client that's not listed here? [Open an issue](https://github.com/
 
 # Getting Started - Docker Compose
 
-If you simplay want to run the full Pezzo stack locally, check out [Running With Docker Compose](http://docs.pezzo.ai/introduction/docker-compose) in the documentation.
+If you simplay want to run the full Pezzo stack locally, check out [Running With Docker Compose](https://docs.pezzo.ai/deployment/docker-compose) in the documentation.
 
 If you want to run Pezzo in development mode, continue reading.
 
