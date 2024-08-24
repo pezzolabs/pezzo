@@ -359,7 +359,7 @@ export const LoginPage = () => {
                 )}
               </div>
 
-              <motion.div
+              {/* <motion.div
                 key={mode}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -393,7 +393,7 @@ export const LoginPage = () => {
                     .
                   </p>
                 )}
-              </motion.div>
+              </motion.div> */}
             </div>
           </div>
           <div className="relative hidden flex-1 bg-neutral-950 lg:flex">
