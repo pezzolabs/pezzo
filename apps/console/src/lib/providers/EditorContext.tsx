@@ -105,7 +105,7 @@ export const EditorProvider = ({ children }) => {
 
   const [type, promptContent, chatContent] = useWatch({
     control: form.control,
-    name: ["type", "content.prompt", "content.messages"],
+    name: ["type", "content.prompt", "content.messages", "content.extra"],
   });
 
   const handleTypeChange = (type: PromptType) => {
@@ -114,11 +114,13 @@ export const EditorProvider = ({ children }) => {
 
     if (type === PromptType.Chat) {
       const promptContent = form.getValues("content.prompt");
+      const promptExtra = form.getValues("content.extra");
       content = {
         messages: [
           {
             role: "user",
             content: promptContent ?? "",
+            extra: promptExtra ?? "",
           },
         ],
       };
@@ -126,11 +128,14 @@ export const EditorProvider = ({ children }) => {
       form.setValue("content.messages", content.messages);
     } else if (type === PromptType.Prompt) {
       const firstMessageContent = form.getValues("content.messages.0.content");
+      const extraContent = form.getValues("content.messages.0.extra");
       content = {
         prompt: firstMessageContent ?? "",
+        extra: extraContent ?? "",
       };
 
       form.setValue("content.prompt", content.prompt);
+      form.setValue("content.extra", content.extra);
     }
   };
 
