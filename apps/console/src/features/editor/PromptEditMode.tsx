@@ -56,6 +56,27 @@ export const PromptEditMode = () => {
           )}
         ></FormField>
       </Card>
+      <Card className="p-4">
+        <FormField
+          control={form.control}
+          name="content.messages.0.extra"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Textarea
+                  className="border-none"
+                  placeholder="Any other extra config you want to store. This will be also used within gen ai platform"
+                  autoCorrect="off"
+                  disableAutoComplete
+                  rows={6}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        ></FormField>
+      </Card>
     </div>
   );
 };

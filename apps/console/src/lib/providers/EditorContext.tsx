@@ -31,6 +31,7 @@ const getDefaultContent = (type: PromptType) => {
           {
             role: "user",
             content: "",
+            extra: "",
           },
         ],
       };
@@ -50,6 +51,7 @@ const formSchema = z.object({
         z.object({
           content: z.string().min(1, "Message content is required"),
           role: z.enum(["user", "assistant", "system"]),
+          extra: z.any()
         })
       ),
     }),
@@ -114,11 +116,13 @@ export const EditorProvider = ({ children }) => {
 
     if (type === PromptType.Chat) {
       const promptContent = form.getValues("content.prompt");
+      const promptExtra = form.getValues("content.messages.0.extra");
       content = {
         messages: [
           {
             role: "user",
             content: promptContent ?? "",
+            extra: promptExtra ?? "",
           },
         ],
       };
