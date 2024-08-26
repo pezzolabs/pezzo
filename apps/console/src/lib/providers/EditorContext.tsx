@@ -31,6 +31,7 @@ const getDefaultContent = (type: PromptType) => {
           {
             role: "user",
             content: "",
+            extra: "",
           },
         ],
       };
