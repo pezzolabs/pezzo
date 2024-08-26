@@ -47,7 +47,7 @@ export const PromptEditMode = () => {
                   placeholder="Type your system hint here"
                   autoCorrect="off"
                   disableAutoComplete
-                  rows={4}
+                  rows={6}
                   {...field}
                 />
               </FormControl>
@@ -65,10 +65,10 @@ export const PromptEditMode = () => {
               <FormControl>
                 <Textarea
                   className="border-none"
-                  placeholder="Any other extra config you want to store. This will be also used within gen ai platform. Should be a valid json."
+                  placeholder="Any other extra config you want to store. This will be also used within gen ai platform"
                   autoCorrect="off"
                   disableAutoComplete
-                  rows={8}
+                  rows={6}
                   {...field}
                 />
               </FormControl>
