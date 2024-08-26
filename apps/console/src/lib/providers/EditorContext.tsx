@@ -51,16 +51,7 @@ const formSchema = z.object({
         z.object({
           content: z.string().min(1, "Message content is required"),
           role: z.enum(["user", "assistant", "system"]),
-          extra: z.string().refine((data) => {
-            try {
-              JSON.parse(data);
-              return true;
-            } catch {
-              return false;
-            }
-          }, {
-            message: "Invalid JSON format"
-          })
+          extra: z.any()
         })
       ),
     }),
