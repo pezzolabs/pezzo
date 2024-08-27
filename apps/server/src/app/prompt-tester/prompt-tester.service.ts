@@ -106,14 +106,14 @@ export class PromptTesterService {
           prompt: testData.content.prompt,
           temperature: testData.settings.temperature,
           max_tokens: testData.settings.max_tokens,
-          variables: testData.variables
+          variables: testData.variables,
+          extra: testData.content.messages[0].extra
         }
       );
     } catch (err) {
       //
     }
 
-    // this.logger.info("result: " + result)
     // this.logger.info("model: " + result.model);
     // this.logger.info("completion: " + result.completion);
     // this.logger.info("prompt_tokens: " + result.prompt_tokens);
@@ -133,7 +133,8 @@ export class PromptTesterService {
         prompt: testData.content.prompt,
         variables: testData.variables,
         temperature: testData.settings.temperature,
-        max_tokens: testData.settings.max_tokens
+        max_tokens: testData.settings.max_tokens,
+        extra: testData.content.messages[0].extra
       }
     );
 

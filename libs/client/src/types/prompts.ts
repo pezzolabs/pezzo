@@ -70,6 +70,7 @@ export interface GetPromptCompletionInput {
   temperature: number;
   max_tokens: number;
   variables: Record<string, boolean | number | string>;
+  extra: object;
 }
 
 export interface GetPromptCompletionResult {
