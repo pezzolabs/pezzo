@@ -81,4 +81,5 @@ export interface GetPromptCompletionResult {
   completion_tokens: number;
   requestTimestamp?: Date;
   responseTimestamp?: Date;
+  isError?: boolean;
 }

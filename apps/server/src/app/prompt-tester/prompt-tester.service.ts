@@ -111,7 +111,16 @@ export class PromptTesterService {
         }
       );
     } catch (err) {
-      //
+      result = {
+        model: testData.settings.model,
+        completion: err.toString(),
+        prompt_tokens: 0,
+        completion_tokens: 0,
+        gai_req_id: "0",
+        requestTimestamp: new Date(),
+        responseTimestamp: new Date(),
+        isError: true,
+      }
     }
 
     // this.logger.info("model: " + result.model);

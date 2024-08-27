@@ -101,7 +101,7 @@ export class GaiPlatform {
         throw new Error(data.message);
       } else {
         throw new Error(
-          `Error fetching prompt completion for environment "${this.options.environment}" (${data.statusCode}).`
+          `Error fetching prompt completion. Response from GAI Platform = ${JSON.stringify(data)}`
         );
       }
     }
