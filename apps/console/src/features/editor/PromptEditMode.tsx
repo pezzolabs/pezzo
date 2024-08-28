@@ -68,7 +68,7 @@ export const PromptEditMode = () => {
               <FormControl>
                 <Textarea
                   className="border-none"
-                  placeholder="Any other extra config you want to store. This will be also used within gen ai platform. Should be a valid json."
+                  placeholder="Any other extra config you want to store. This will be also used within gen ai platform. Usually this is something specific to a model. Should be a valid json."
                   autoCorrect="off"
                   disableAutoComplete
                   rows={8}
