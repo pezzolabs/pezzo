@@ -83,6 +83,7 @@ export interface TestPromptRequest {
 export interface TestPromptRequestMessage {
   role: string;
   content: string;
+  extra: object;
 }
 
 export interface TestPromptRequestContent {

@@ -100,6 +100,7 @@ export class ReportingService {
       system_hint: any
       temperature: number
       max_tokens: number
+      extra: any
     }
   ): Promise<SerializedReport> {
     const reportId = randomUUID();
@@ -111,7 +112,8 @@ export class ReportingService {
         messages: [
           {
             content: request.system_hint,
-            role: "user"
+            role: "user",
+            extra: request.extra
           }
         ],
         model: request.model,
@@ -148,8 +150,8 @@ export class ReportingService {
       type: "ChatCompletion",
       requestTimestamp: moment(dto.requestTimestamp).format("YYYY-MM-DD HH:mm:ss"),
       requestBody: JSON.stringify(requestObject),
-      isError: false,
-      responseStatusCode: 200,
+      isError: dto.isError || false,
+      responseStatusCode: dto.isError ? 400 : 200,
       responseTimestamp: moment(dto.responseTimestamp).format("YYYY-MM-DD HH:mm:ss"),
       responseBody: JSON.stringify(responseObject),
       cacheEnabled: false,

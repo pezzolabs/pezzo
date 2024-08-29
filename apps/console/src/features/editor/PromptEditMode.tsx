@@ -15,6 +15,7 @@ export const PromptEditMode = () => {
   return (
     <div>
       <Card className="p-4 mb-6">
+      <div className="flex flex-col space-y-1.5 border-b border-muted p-2 font-semibold">Prompt Content</div>
         <FormField
           control={form.control}
           name="content.prompt"
@@ -36,6 +37,7 @@ export const PromptEditMode = () => {
         ></FormField>
       </Card>
       <Card className="p-4">
+      <div className="flex flex-col space-y-1.5 border-b border-muted p-2 font-semibold">System Hint</div>
         <FormField
           control={form.control}
           name="content.messages.0.content"
@@ -57,6 +59,7 @@ export const PromptEditMode = () => {
         ></FormField>
       </Card>
       <Card className="p-4">
+      <div className="flex flex-col space-y-1.5 border-b border-muted p-2 font-semibold">Extra</div>
         <FormField
           control={form.control}
           name="content.messages.0.extra"
@@ -65,7 +68,7 @@ export const PromptEditMode = () => {
               <FormControl>
                 <Textarea
                   className="border-none"
-                  placeholder="Any other extra config you want to store. This will be also used within gen ai platform. Should be a valid json."
+                  placeholder="Any other extra config you want to store. This will be also used within gen ai platform. Usually this is something specific to a model. Should be a valid json."
                   autoCorrect="off"
                   disableAutoComplete
                   rows={8}
