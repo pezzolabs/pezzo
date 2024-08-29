@@ -2,12 +2,30 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Attach - Examples - Task Generator App",
-      "port": 9230,
-      "request": "attach",
-      "skipFiles": ["<node_internals>/**"],
       "type": "node",
-      "cwd": "${workspaceFolder}/examples/task-generator-app"
-    }
+      "request": "launch",
+      "name": "Debug: PMS : Server",
+      // if using nvm npx path can be different. Please check
+      // "runtimeExecutable": "/Users/anand.joshi/.nvm/versions/node/v18.20.4/bin/npx",
+      "runtimeExecutable": "npx",
+      "args": ["nx", "serve", "server"],
+      "cwd": "${workspaceFolder}/apps/server",
+      "autoAttachChildProcesses": true,
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "sourceMaps": true,
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "runtimeArgs": ["--inspect-brk=9229"],
+      "skipFiles": ["<node_internals>/**"],
+
+    },
+    // {
+    //   "name": "Attach - Examples - Task Generator App",
+    //   "port": 9230,
+    //   "request": "attach",
+    //   "skipFiles": ["<node_internals>/**"],
+    //   "type": "node",
+    //   "cwd": "${workspaceFolder}/examples/task-generator-app"
+    // }
   ]
 }

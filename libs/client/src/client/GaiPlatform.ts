@@ -23,7 +23,7 @@ export class GaiPlatform {
 
   constructor(options: GaiClientOptions) {
     this.options = {
-      serverUrl: defaultOptions.serverUrl,
+      serverUrl: process.env["NX_GAI_PLATFORM_URL"] || defaultOptions.serverUrl,
       apiKey: options.apiKey || process.env["PEZZO_API_KEY"],
       projectId: options.projectId || process.env["PEZZO_PROJECT_ID"],
       environment: options.environment || process.env["PEZZO_ENVIRONMENT"],

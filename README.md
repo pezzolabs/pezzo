@@ -128,9 +128,30 @@ If you want to run Pezzo in development mode, continue reading.
 
 ### Install dependencies
 
+
+Install nvm to manage different versions of node
+
+```
+brew install nvm
+
+## Add below lines to your ~/.zshrc or ~/.bashrc files
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+```
+
+
+
 Install NPM dependencies by running:
 
 ```
+nvm use
+
+## Confirm node version
+node -v
+>> v18.16.0
+
+
 npm install
 ```
 
@@ -142,6 +163,20 @@ You can run these dependencies via Docker Compose:
 
 ```
 docker-compose -f docker-compose.infra.yaml up
+```
+
+GAI API dependecy
+
+You may set up GAI platform locally and execute it. Follow [this guide](https://github.com/smartnews/gai-api-backend) for set up.
+
+
+Or you can use port forwarding to access the dev service
+
+```
+
+## Yes dev service is in prd env :)
+$(spaas aws configure --system sn-feature --env prd)
+kubectl -n sn-feature port-forward service/gai-api-backend-dev 8081:80
 ```
 
 ### Start Pezzo
@@ -173,6 +208,11 @@ Finally, you are ready to run the Pezzo Console:
 ```
 npx nx serve console
 ```
+
+Login via http://localhost:4200/admin/login and sign up to create a new admin user. Also use the same URL and chose sign in if having any issues accessing the UI
+
+
+For debugging server app in vscode confirm `runtimeExecutable` inside [debug config](./vscode/launch.json)
 
 That's it! The Pezzo Console is now accessible at http://localhost:4200 🚀
 
