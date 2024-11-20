@@ -1,6 +1,6 @@
 import fs from "fs";
 
-console.log("Syncing version");
+console.log("Synchronizing version");
 const packageJsonFile = fs.readFileSync("./package.json", "utf8");
 const packageJson = JSON.parse(packageJsonFile);
 const version = packageJson.version;

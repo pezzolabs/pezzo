@@ -1,6 +1,6 @@
 # Contributing
 
-We opened sourced Pezzo because we believe in the power of community. We believe you can help making Pezzo better!
+We open sourced Pezzo because we believe in the power of community. We believe you can help making Pezzo better!
 We are excited to see what you will build with Pezzo and we are looking forward to your contributions. We want to make contributing to this project as easy and transparent as possible, whether it's features, bug fixes, documentation updates, guides, examples and more.
 
 ## How can I contribute?

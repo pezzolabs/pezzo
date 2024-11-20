@@ -44,4 +44,4 @@ The Pezzo Documentation contains useful information on how to use the Pezzo clie
 
 ## License
 
-The `@pezzo/client` library is provided under the Apache 2.0 licesnse.
+The `@pezzo/client` library is provided under the Apache 2.0 license.
