@@ -3,6 +3,8 @@ import { RequestWithPezzoClient } from "../types/common.types";
 import { Response } from "express";
 import axios from "axios";
 
+const baseUrl = process.env.OPENAI_API_BASE_URL ?? "https://api.openai.com/v1";
+
 export class OpenAIV1Handler {
   constructor(private req: RequestWithPezzoClient, private res: Response) {}
 
@@ -16,7 +18,7 @@ export class OpenAIV1Handler {
       try {
         const result = await axios({
           method,
-          url: `https://api.openai.com/v1/${url}`,
+          url: `${baseUrl}/${url}`,
           data: this.req.body,
           headers: {
             Authorization: headers.authorization,
