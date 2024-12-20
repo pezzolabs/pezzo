@@ -25,9 +25,15 @@ spec:
             - name: CLICKHOUSE_PORT
               value: "8123"
             - name: CLICKHOUSE_PASSWORD
-              value: test
+              valueFrom:
+                secretKeyRef:
+                  name: llm-ops-secret
+                  key: CLICKHOUSE_PASSWORD
             - name: CLICKHOUSE_USER
-              value: test
+              valueFrom:
+                secretKeyRef:
+                  name: llm-ops-secret
+                  key: CLICKHOUSE_USER
             - name: CLICKHOUSE_PROTOCOL
               value: "http"
             - name: CLICKHOUSE_DATABASE
