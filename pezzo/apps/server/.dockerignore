@@ -1,0 +1,4 @@
+.env
+.env.example
+project.json
+volumes

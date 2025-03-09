@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "postinstall": "node tools/scripts/patch-rollup",
-    "docs:dev": "cd docs && mintlify dev --port 3200",
+    "docs:dev": "cd pezzo/docs && mintlify dev --port 3200",
     "graphql:generate": "nx graphql:generate server",
     "graphql:codegen:watch": "nx graphql:codegen:watch server"
   },

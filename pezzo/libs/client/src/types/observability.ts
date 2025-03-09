@@ -1,0 +1,24 @@
+import { ValueType, PromptExecutionType, ProviderType } from "./index";
+
+export type ObservabilityReportProperties = Record<string, ValueType>;
+export type ObservabilityReportMetadata = {
+  provider: ProviderType;
+  type: PromptExecutionType;
+  [key: string]: ValueType;
+};
+
+export interface ReportData {
+  cacheEnabled: boolean;
+  cacheHit: boolean;
+  metadata: ObservabilityReportMetadata;
+  properties?: ObservabilityReportProperties;
+  request: {
+    timestamp: string;
+    body: unknown;
+  };
+  response: {
+    timestamp: string;
+    body: unknown;
+    status: number;
+  };
+}
