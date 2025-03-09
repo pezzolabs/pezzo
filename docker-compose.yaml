@@ -6,14 +6,14 @@ services:
     image: ghcr.io/pezzolabs/pezzo/server:latest
     build:
       context: .
-      dockerfile: pezzo/apps/server/Dockerfile
+      dockerfile: ./apps/server/Dockerfile
     restart: always
     env_file:
       - ./.env
       - ./.env.local
       - ./.env.docker
-      - pezzo/apps/server/.env
-      - pezzo/apps/server/.env.local
+      - ./apps/server/.env
+      - ./apps/server/.env.local
     environment:
       - SUPERTOKENS_CONNECTION_URI=http://supertokens:3567
       - CLICKHOUSE_HOST=clickhouse
@@ -44,11 +44,11 @@ services:
     image: ghcr.io/pezzolabs/pezzo/console:latest
     build:
       context: .
-      dockerfile: pezzo/apps/console/Dockerfile
+      dockerfile: ./apps/console/Dockerfile
     restart: always
     env_file:
       - ./.env
-      - pezzo/apps/console/.env
+      - ./apps/console/.env
     ports:
       - "4200:8080"
     depends_on:
@@ -59,11 +59,11 @@ services:
     image: ghcr.io/pezzolabs/pezzo/proxy:latest
     build:
       context: .
-      dockerfile: pezzo/apps/proxy/Dockerfile
+      dockerfile: ./apps/proxy/Dockerfile
     restart: always
     env_file:
       - ./.env
-      - pezzo/apps/proxy/.env
+      - ./apps/proxy/.env
     ports:
       - "3001:3000"
     depends_on:

@@ -4,7 +4,7 @@ services:
     image: ghcr.io/pezzolabs/pezzo/server:latest
     build:
       context: .
-      dockerfile: pezzo/apps/server/Dockerfile
+      dockerfile: ./apps/server/Dockerfile
     entrypoint: /bin/sh
     working_dir: /app/clickhouse
     command: -c "./migrate.sh"
@@ -21,7 +21,7 @@ services:
     image: ghcr.io/pezzolabs/pezzo/server:latest
     build:
       context: .
-      dockerfile: pezzo/apps/server/Dockerfile
+      dockerfile: ./apps/server/Dockerfile
     entrypoint: /bin/sh
     command: -c "npx prisma migrate deploy"
     env_file:
