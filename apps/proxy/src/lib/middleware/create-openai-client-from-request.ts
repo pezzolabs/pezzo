@@ -23,16 +23,12 @@ export function createPezzoClientFromRequest(
     apiKey: string;
     projectId: string;
     environment: string;
-    serverUrl?: string;
   } = {
     apiKey: req.headers["x-pezzo-api-key"] as string,
     projectId: req.headers["x-pezzo-project-id"] as string,
     environment: req.headers["x-pezzo-environment"] as string,
   };
 
-  if (req.headers["x-pezzo-server-url"]) {
-    options.serverUrl = req.headers["x-pezzo-server-url"] as string;
-  }
 
   req.pezzo = new Pezzo(options);
   next();
