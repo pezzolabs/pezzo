@@ -33,7 +33,8 @@ export const averageRequestDurationQuery = (
     .leftJoin("reports as r", (join) =>
       join.on(
         knex.raw(
-          `${timeProps.roundFn}(r.requestTimestamp) = b.timestamp AND r."projectId" = '${projectId}'`
+          `${timeProps.roundFn}(r.requestTimestamp) = b.timestamp AND r."projectId" = ?`,
+          [projectId]
         )
       )
     )
