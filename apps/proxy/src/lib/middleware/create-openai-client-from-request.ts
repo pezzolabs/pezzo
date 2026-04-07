@@ -15,6 +15,10 @@ export function createPezzoClientFromRequest(
     return res.status(400).send("Missing x-pezzo-project-id header");
   }
 
+  if (Array.isArray(req.headers["x-pezzo-project-id"])) {
+    return res.status(400).send("Invalid x-pezzo-project-id header");
+  }
+
   if (!req.headers["x-pezzo-environment"]) {
     return res.status(400).send("Missing x-pezzo-environment header");
   }
