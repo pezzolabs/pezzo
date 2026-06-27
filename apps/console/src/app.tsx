@@ -16,6 +16,7 @@ import { PromptPage } from "./pages/prompts/PromptPage";
 import { PromptsPage } from "./pages/prompts/PromptsPage";
 import { OnboardingPage } from "./pages/organizations/onboarding";
 import { LogoutPage } from "./pages/auth/LogoutPage";
+import { ResetPasswordPage } from "./pages/auth/ResetPasswordPage";
 import { RequestsPage } from "./pages/requests/RequestsPage";
 import { DashboardPage } from "./pages/projects/overview/DashboardPage";
 import { LoginPage } from "./pages/auth/LoginPage";
@@ -72,6 +73,7 @@ export function App() {
               element={<AuthCallbackPage />}
             />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/login/reset-password" element={<ResetPasswordPage />} />
             <Route path="/logout" element={<LogoutPage />} />
           </Routes>
           {/* Authorized routes */}
