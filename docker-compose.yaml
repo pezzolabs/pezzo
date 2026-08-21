@@ -64,6 +64,8 @@ services:
     env_file:
       - ./.env
       - ./apps/proxy/.env
+    environment:
+      - PEZZO_SERVER_URL=http://pezzo-server:3000
     ports:
       - "3001:3000"
     depends_on:
