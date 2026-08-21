@@ -74,6 +74,9 @@ export class ReportingService {
         format: "JSONEachRow",
         table: "reports",
         values: [reportToSave],
+        clickhouse_settings: {
+          date_time_input_format: "best_effort",
+        },
       });
     } catch (error) {
       console.error(error);
