@@ -55,6 +55,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: pezzo
     ports:
       - "5433:5432"
     volumes:
@@ -75,7 +76,7 @@ services:
     env_file:
       - ./.env.docker
     environment:
-      POSTGRES_CONNECTION_URI: "${SUPERTOKENS_DATABASE_URL}"
+      POSTGRES_CONNECTION_URI: "${SUPERTOKENS_DATABASE_URL:-postgresql://postgres:postgres@postgres:5432/pezzo}"
     healthcheck:
       test: >
         bash -c 'exec 3<>/dev/tcp/127.0.0.1/3567 && echo -e "GET /hello HTTP/1.1\r\nhost: 127.0.0.1:3567\r\nConnection: close\r\n\r\n" >&3 && cat <&3 | grep "Hello"'
