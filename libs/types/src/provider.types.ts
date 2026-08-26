@@ -2,12 +2,14 @@ export enum PromptService {
   OpenAIChatCompletion = "OpenAIChatCompletion",
   AzureOpenAIChatCompletion = "AzureOpenAIChatCompletion",
   AnthropicCompletion = "AnthropicCompletion",
+  MiniMaxChatCompletion = "MiniMaxChatCompletion",
 }
 
 export enum Provider {
   OpenAI = "OpenAI",
   Azure = "Azure",
   Anthropic = "Anthropic",
+  MiniMax = "MiniMax",
 }
 
 export const providerDetails = {
@@ -19,6 +21,9 @@ export const providerDetails = {
   },
   [Provider.Anthropic]: {
     name: "Anthropic",
+  },
+  [Provider.MiniMax]: {
+    name: "MiniMax",
   },
 };
 
@@ -36,6 +41,11 @@ export const promptProvidersMapping = {
   [PromptService.AnthropicCompletion]: {
     name: "Anthropic (Coming Soon)",
     provider: Provider.Anthropic,
+    defaultSettings: {},
+  },
+  [PromptService.MiniMaxChatCompletion]: {
+    name: "MiniMax Chat Completion",
+    provider: Provider.MiniMax,
     defaultSettings: {},
   },
 };
