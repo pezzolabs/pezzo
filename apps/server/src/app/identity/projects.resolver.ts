@@ -78,8 +78,12 @@ export class ProjectsResolver {
   }
 
   @Mutation(() => Project)
-  async createProject(@Args("data") data: CreateProjectInput) {
+  async createProject(
+    @Args("data") data: CreateProjectInput,
+    @CurrentUser() user: RequestUser
+  ) {
     const { organizationId, name } = data;
+    isOrgAdminOrThrow(user, organizationId);
 
     this.logger.assign({ organizationId, name }).info("Creating project");
 
