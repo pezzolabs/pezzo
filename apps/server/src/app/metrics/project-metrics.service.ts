@@ -105,7 +105,7 @@ export class ProjectMetricsService {
       WITH (
         parseDateTimeBestEffort('${startDate.toISOString()}') AS currentStartDate,
         parseDateTimeBestEffort('${endDate.toISOString()}') AS currentEndDate,
-        datediff(second, currentStartDate, currentEndDate) AS diff,
+        datediff('second', currentStartDate, currentEndDate) AS diff,
         subtractSeconds(currentStartDate, diff) AS previousStartDate,
         subtractSeconds(currentEndDate, diff) AS previousEndDate
       )
