@@ -6,6 +6,7 @@ import { PromptService } from "~/@generated/graphql/graphql";
 import OpenAILogo from "~/assets/providers/openai-logo.png";
 import AzureOpenAILogo from "~/assets/providers/azure-logo.png";
 import AnthropicLogo from "~/assets/providers/anthropic-logo.png";
+import MiniMaxLogo from "~/assets/providers/minimax-logo.png";
 
 export const providersList: ProviderProps[] = [
   {
@@ -30,6 +31,13 @@ export const providersList: ProviderProps[] = [
     ),
     value: PromptService.AnthropicCompletion,
     label: promptProvidersMapping[PromptService.AnthropicCompletion].name,
+  },
+  {
+    image: (
+      <img alt="MiniMax" src={MiniMaxLogo} className="w-6 rounded-sm" />
+    ),
+    value: PromptService.MiniMaxChatCompletion,
+    label: promptProvidersMapping[PromptService.MiniMaxChatCompletion].name,
   },
 ];
 

@@ -114,6 +114,17 @@ In the documentation, you can find information on how to use Pezzo, its architec
 
 Looking for a client that's not listed here? [Open an issue](https://github.com/pezzolabs/pezzo/issues/new/choose) and let us know!
 
+# Supported LLM Providers
+
+| Provider | Chat Completion | Observability | Cost Tracking | Proxy |
+| --- | --- | --- | --- | --- |
+| OpenAI | ✅ | ✅ | ✅ | ✅ |
+| [MiniMax](https://www.minimaxi.com) | ✅ | ✅ | ✅ | ✅ |
+| Azure OpenAI | Coming Soon | Coming Soon | Coming Soon | Coming Soon |
+| Anthropic | Coming Soon | Coming Soon | Coming Soon | Coming Soon |
+
+MiniMax models supported: `MiniMax-M2.7`, `MiniMax-M2.7-highspeed`, `MiniMax-M2.5`, `MiniMax-M2.5-highspeed`
+
 # Getting Started - Docker Compose
 
 If you simply want to run the full Pezzo stack locally, check out [Running With Docker Compose](http://docs.pezzo.ai/introduction/docker-compose) in the documentation.

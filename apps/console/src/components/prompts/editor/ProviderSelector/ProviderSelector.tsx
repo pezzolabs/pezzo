@@ -23,7 +23,9 @@ export const ProviderSelector = () => {
   );
 
   const renderProvider = (provider: ProviderProps) => {
-    const isAvailable = provider.value === PromptService.OpenAiChatCompletion;
+    const isAvailable =
+      provider.value === PromptService.OpenAiChatCompletion ||
+      provider.value === PromptService.MiniMaxChatCompletion;
 
     return (
       <SelectItem

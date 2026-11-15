@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import express from "express";
 import { openaiRouter } from "./routers/openai.router";
+import { minimaxRouter } from "./routers/minimax.router";
 
 const host = process.env.HOST ?? "localhost";
 const port = process.env.PORT ? Number(process.env.PORT) : 3001;
@@ -11,6 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/openai/v1", openaiRouter);
+app.use("/minimax/v1", minimaxRouter);
 
 app.get("/healthz", (_, res) => {
   res.status(200).send("OK");
