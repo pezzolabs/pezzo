@@ -18,7 +18,7 @@ So, you've got an awesome feature in mind? Throw it over to us by [creating an i
 Planning to code a feature yourself? We love the enthusiasm, but hang on, always good to have a little chinwag with us before you burn that midnight oil. Unfortunately, not every feature might fit into our plans.
 
 - Dreaming big? Kick off by opening an issue and sketch out your cool ideas. Helps us all stay on the same page, avoid doing the same thing twice, and ensures your hard work gels well into the project.
-- Cooking up something small? Just craft it and [shoot it straight as a Pull Request](#submit-pr).
+- Cooking up something small? Just craft it and [shoot it straight as a Pull Request](#step-9-create-pull-request).
 
 ## What do you need to know to help?
 
